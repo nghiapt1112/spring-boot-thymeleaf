@@ -1,0 +1,27 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-milestone" }
+    }
+
+    tasks.withType(Jar) {
+      destinationDir = file("$rootDir/build/")
+    }
+
+    tasks.withType(JavaExec) {
+        if (System.getProperty('debug', '0') == '1') {
+            jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+        }
+    }
+
+
+}

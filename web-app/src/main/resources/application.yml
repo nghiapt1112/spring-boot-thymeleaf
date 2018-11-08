@@ -1,0 +1,19 @@
+server:
+  port: 20124
+
+spring:
+  application:
+    name: lyna-spring-boot-thymeleaf
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://nghia.ms:3306/lyna_dev?createDatabaseIfNotExist=true&useSSL=false
+  jpa:
+    show-sql: true
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
