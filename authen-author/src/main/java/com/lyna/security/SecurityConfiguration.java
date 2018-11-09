@@ -14,6 +14,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private static final String[] STATIC_RESOURCES = new String[]{"/resources/**"};
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -28,13 +31,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers(STATIC_RESOURCES).permitAll()
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .formLogin().loginPage("/login").permitAll()
                 .successForwardUrl("/index")
-            .and()
+                .and()
                 .logout().permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
-            .and()
+                .and()
                 .sessionManagement().invalidSessionUrl("/invalidSession")
                 .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
                 .sessionFixation().none()
