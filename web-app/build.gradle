@@ -22,7 +22,10 @@ sourceCompatibility = 1.8
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
-//    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('mysql:mysql-connector-java:5.1.47')
+    implementation ("org.flywaydb:flyway-core")
+
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
@@ -31,4 +34,12 @@ dependencies {
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
+
+
+//task qa {
+//    doLast {
+//        bootRun { systemProperty "spring.profiles.active", "qa" }
+//    }
+//    qa.finalizedBy bootRun
+//}
 

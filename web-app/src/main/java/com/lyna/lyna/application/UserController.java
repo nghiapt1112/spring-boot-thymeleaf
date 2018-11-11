@@ -1,6 +1,7 @@
 package com.lyna.lyna.application;
 
 import com.nghia.libraries.commons.mss.infrustructure.controller.AbstractCustomController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.support.BindingAwareModelMap;
@@ -9,17 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/user/")
+@RequestMapping("/user")
 public class UserController extends AbstractCustomController {
 
-    @GetMapping
+    @GetMapping(name = "/")
     public String getUserByEmail(Model model, @RequestParam String param) {
+
         model.addAttribute("appName", param.concat(UUID.randomUUID().toString()));
         return "/home";
     }
-
 
 }

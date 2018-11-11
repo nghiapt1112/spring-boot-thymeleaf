@@ -2,11 +2,6 @@ buildscript {
     ext {
         springBootVersion = '1.5.14.RELEASE'
         springCloudVersion = 'Edgware.SR3'
-
-        groupName = 'com.nghia.tut.utils'
-        artifact = 'common-utils'
-        nghiaVersion = 'RC2'
-
     }
     repositories {
         mavenCentral()
@@ -17,40 +12,13 @@ buildscript {
     }
 }
 
-apply plugin: 'maven-publish'
 apply plugin: 'org.springframework.boot'
-
-jar {
-    baseName = "${artifact}"
-    version = "${nghiaVersion}"
-}
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.nghia.tut.utils'
-            artifactId = "${artifact}"
-            version = "${nghiaVersion}"
-
-            from components.java
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-
-        }
-    }
-}
 
 dependencies {
 
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-    compile('org.springframework.boot:spring-boot-starter-amqp')
+//    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+//    compile('org.springframework.boot:spring-boot-starter-amqp')
     implementation('org.springframework.cloud:spring-cloud-commons:2.1.0.M1')
 
     compile('javax.validation:validation-api:2.0.1.Final')
