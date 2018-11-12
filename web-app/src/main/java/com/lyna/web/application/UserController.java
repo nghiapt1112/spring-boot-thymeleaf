@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
@@ -17,7 +18,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping
 //    @PreAuthorize("hasRole('ADMIN')")
-    public String getUserByEmail(Model model, @RequestParam String param) {
+    public String getUserByEmail(Model model, @RequestParam String param, Principal principal) {
         model.addAttribute("appName", param.concat(UUID.randomUUID().toString()));
         return "/home";
     }

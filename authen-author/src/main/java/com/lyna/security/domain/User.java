@@ -2,13 +2,16 @@ package com.lyna.security.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.lyna.security.SecurityUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +20,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name="user")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id", nullable = false)
@@ -48,15 +51,19 @@ public class User {
     )
     private List<Roles> roles;
 
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = this.roles
-                .stream()
-                .map(r -> new SimpleGrantedAuthority(r.getRoleName()))
-                .collect(Collectors.toList());
-        return grantedAuthorities;
+    @Transient
+    private String tenantId = "test_fake";
+
+    public User() {
     }
 
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -114,8 +121,34 @@ public class User {
         this.roles = roles;
     }
 
-    public boolean isEnable(){
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return SecurityUtils.generateGrantedAuthorities(this.getRoles());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail();
+    }
+
+    @Override
+    public boolean isEnabled() {
         return this.isDisabled == 0;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.isEnabled();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
 }
