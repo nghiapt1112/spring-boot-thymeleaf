@@ -3,6 +3,7 @@
 /target/
 *.class
 bin/
+.log
 
 ### IntelliJ IDEA ###
 .idea

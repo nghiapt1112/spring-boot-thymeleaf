@@ -12,15 +12,18 @@ spring:
     check-template: true
     check-template-location: true
     encoding: UTF-8
-    mode: HTML-5
+    mode: HTML
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    dbcp2:
+      driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root
     url: jdbc:mysql://localhost:3306/lyna_dev?createDatabaseIfNotExist=true&useSSL=false
   jpa:
     show-sql: true
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: validate
 
 ---
 #######################

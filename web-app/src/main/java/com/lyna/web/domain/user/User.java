@@ -6,8 +6,8 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
-@Table
-@Data
+//@Entity
+//@Table
+//@Data
 public class User extends AbstractEntity {
 }
