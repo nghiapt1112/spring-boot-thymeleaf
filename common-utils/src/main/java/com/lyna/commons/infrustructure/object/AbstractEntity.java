@@ -11,48 +11,83 @@ import java.util.Date;
 
 @MappedSuperclass
 public class AbstractEntity extends AbstractObject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    protected int id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Column(name = "id")
+//    protected int id;
 
-    @Column(name = "modified_at")
+    @Column(name = "tenant_id")
+    protected int tenantId;
+
+    @Column(name = "update_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    protected Date modifiedAt;
+    protected Date updateDate;
 
-    @Column(name = "created_at")
+    @Column(name = "create_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    protected Date createdAt;
+    protected Date createDate;
 
-    @Column(name = "is_delete")
-    protected boolean isDeleted;
 
-    public int getId() {
-        return id;
-    }
+    @Column(name = "create_user")
+    protected String createUser;
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getModifiedAt() {
-        return modifiedAt;
-    }
+    @Column(name = "update_user")
+    protected String updateUser;
 
     public void initDefaultFieldsCreate() {
         //TODO: create dateTimeUtils to get currentDate
-        this.createdAt = new Date();
+        this.createDate = new Date();
     }
 
     public void initDefaultFieldsModify() {
-        this.modifiedAt = new Date();
+        this.updateDate = new Date();
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
     }
 }

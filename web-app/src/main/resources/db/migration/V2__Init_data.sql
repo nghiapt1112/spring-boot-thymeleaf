@@ -1,22 +1,21 @@
-INSERT INTO roles(role_id, role_name, role_description)
+INSERT INTO m_tenant (`tenant_id`, `name`, `user_limit_number`, `create_date`, `create_user`) 
 VALUES
-(1, 'ADMIN', 'Admin of system'),
-(2, 'USER', 'Normal user'),
-(3, 'VIEW', 'View only')
+(1, 'tenant1.com', 1000, '2018-11-13 15:51:06', '1'),
+(2, 'tenant2.com', 1000, '2018-11-13 15:51:06', '1'),
+(3, 'tenant3.com', 1000, '2018-11-13 15:51:06', '1')
 ;
--- Test data for user, default password is: "test"
-INSERT INTO user(user_id, email, password, first_name, last_name) 
+
+INSERT INTO m_user (`tenant_id`, `user_id`, `email`, `password`, `name`, `authority`, `create_date`)
 VALUES
-(1, 'admin@lyna.com', '$2a$10$fhJ2NAuBS2KSa6aUDKxjYOBAe6FbyiqComjIVjpOPPF8iSPxmu3D2', 'admin_user', 'admin_last_name'),
-(2, 'user@lyna.com', '$2a$10$fhJ2NAuBS2KSa6aUDKxjYOBAe6FbyiqComjIVjpOPPF8iSPxmu3D2', 'user_1', 'user1_last_name'),
-(3, 'view1@lyna.com', '$2a$10$fhJ2NAuBS2KSa6aUDKxjYOBAe6FbyiqComjIVjpOPPF8iSPxmu3D2', 'view1', 'view1_last_name'),
-(4, 'view2@lyna.com', '$2a$10$fhJ2NAuBS2KSa6aUDKxjYOBAe6FbyiqComjIVjpOPPF8iSPxmu3D2', 'view2', 'view2_last_name')
+(1, '507f191e810c19729de860ea', 'admin@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_admin', 1, '2018-11-13 16:07:42'),
+(1, '507f191e810c19729de860eb', 'user@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_user', 1, '2018-11-13 16:07:42'),
+(1, '507f191e810c19729de860ec', 'view@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_view_only', 1, '2018-11-13 16:07:42'),
+(1, '507f191e810c19729de860ed', 'free@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_free', 1, '2018-11-13 16:07:42')
 ;
---
-INSERT INTO users_roles (user_id, role_id)
+
+INSERT INTO m_user_store_authority(`tenant_id`, `user_store_authority_id`, `store_id`, `user_id`, `authority`, `create_date`, `create_user`)
 VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 3)
+(1, '507f1f77bcf86cd799439011', '1', '507f191e810c19729de860ea', 1, '2018-11-13 16:18:08', '-1'),
+(1, '507f1f77bcf86cd799439012', '1', '507f191e810c19729de860eb', 1, '2018-11-13 16:18:08', '-1'),
+(1, '507f1f77bcf86cd799439013', '1', '507f191e810c19729de860ec', 1, '2018-11-13 16:18:08', '-1')
 ;

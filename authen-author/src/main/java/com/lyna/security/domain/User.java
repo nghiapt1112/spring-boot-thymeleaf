@@ -2,128 +2,60 @@ package com.lyna.security.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.lyna.security.SecurityUtils;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import com.lyna.commons.infrustructure.object.AbstractEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Arrays;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
-@Table(name="user")
+@Table(name = "m_user")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class User implements UserDetails {
+public class User extends AbstractEntity implements UserDetails {
 
     @Id
     @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private String userId;
 
-    @Column(name = "email", nullable = false)
+    @Column
     private String email;
 
-    @NotNull
-    @Column(name = "password", nullable = false)
+    @Column
     private String password;
 
-    @Column(name = "first_name", nullable = true)
-    private String firstName;
+    @Column
+    private String name;
 
-    @Column(name = "last_name", nullable = true)
-    private String lastName;
-
-    @Column(name = "is_disabled")
-    private Integer isDisabled;
+    @Column
+    private short authority;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")}
-    )
-    private List<Roles> roles;
-
-    @Transient
-    private String tenantId = "test_fake";
+    @OneToMany
+    @JoinColumn(name="user_id")
+    private Set<UserStoreAuthority> userStoreAuthorities;
 
     public User() {
     }
 
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Integer getIsDisabled() {
-        return isDisabled;
-    }
-
-    public void setIsDisabled(Integer isDisabled) {
-        this.isDisabled = isDisabled;
-    }
-
-    public List<Roles> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Roles> roles) {
-        this.roles = roles;
-    }
-
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return SecurityUtils.generateGrantedAuthorities(this.getRoles());
+//        return SecurityUtils.generateGrantedAuthorities(this.getRoles());
+        return Collections.emptyList();
     }
 
     @Override
@@ -133,7 +65,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isDisabled == 0;
+        return true;
     }
 
     @Override
@@ -151,4 +83,52 @@ public class User implements UserDetails {
         return true;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public short getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(short authority) {
+        this.authority = authority;
+    }
+
+    public Set<UserStoreAuthority> getUserStoreAuthorities() {
+        return userStoreAuthorities;
+    }
+
+    public void setUserStoreAuthorities(Set<UserStoreAuthority> userStoreAuthorities) {
+        this.userStoreAuthorities = userStoreAuthorities;
+    }
 }
