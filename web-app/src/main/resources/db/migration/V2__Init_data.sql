@@ -5,7 +5,7 @@ VALUES
 (3, 'tenant3.com', 1000, '2018-11-13 15:51:06', '1')
 ;
 
-INSERT INTO m_user (`tenant_id`, `user_id`, `email`, `password`, `name`, `authority`, `create_date`)
+INSERT INTO m_user (`tenant_id`, `user_id`, `email`, `password`, `name`, `role`, `create_date`)
 VALUES
 (1, '507f191e810c19729de860ea', 'admin@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_admin', 1, '2018-11-13 16:07:42'),
 (1, '507f191e810c19729de860eb', 'user@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_user', 1, '2018-11-13 16:07:42'),

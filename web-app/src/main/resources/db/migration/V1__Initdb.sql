@@ -57,7 +57,7 @@ CREATE TABLE `m_user`  (
   `email` varchar(255)   COMMENT 'メール',
   `password` varchar(100)   COMMENT 'パスワード',
   `name` varchar(255)  NULL DEFAULT NULL COMMENT '名前',
-  `authority` smallint(2) NULL DEFAULT NULL COMMENT '権限',
+  `role` smallint(2) NULL DEFAULT NULL COMMENT '権限',
   `create_date` timestamp(0) NULL DEFAULT NULL COMMENT '作成日時',
   `create_user` varchar(36)  NULL DEFAULT NULL COMMENT '作成ユーザーID',
   `update_date` timestamp(0) NULL DEFAULT NULL COMMENT '更新日時',
