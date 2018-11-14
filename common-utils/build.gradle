@@ -1,60 +1,33 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.14.RELEASE'
-        springCloudVersion = 'Edgware.SR3'
-
-        groupName = 'com.nghia.tut.utils'
-        artifact = 'common-utils'
-        nghiaVersion = 'RC2'
-
+        springBootVersion = '1.5.10.RELEASE'
+//        springBootVersion = '2.0.6.RELEASE'
     }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-
-apply plugin: 'maven-publish'
+apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-
-jar {
-    baseName = "${artifact}"
-    version = "${nghiaVersion}"
-}
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.nghia.tut.utils'
-            artifactId = "${artifact}"
-            version = "${nghiaVersion}"
-
-            from components.java
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-
-        }
-    }
-}
+//apply plugin: 'io.spring.dependency-management'
 
 dependencies {
+//Mysql
+    implementation('mysql:mysql-connector-java')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 
     compile('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.cloud:spring-cloud-commons:2.1.0.M1')
+//    implementation('org.springframework.cloud:spring-cloud-commons:2.1.0.M1')
 
     compile('javax.validation:validation-api:2.0.1.Final')
 
     compile("org.apache.commons:commons-collections4:4.1")
     compile("commons-io:commons-io:2.6")
     compile("org.apache.commons:commons-lang3:3.7")
+
 }
 

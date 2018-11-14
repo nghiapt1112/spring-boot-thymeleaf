@@ -1,6 +1,6 @@
-subprojects {
+
+allprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -14,7 +14,7 @@ subprojects {
     }
 
     tasks.withType(Jar) {
-      destinationDir = file("$rootDir/build/")
+        destinationDir = file("$rootDir/build/")
     }
 
     tasks.withType(JavaExec) {
@@ -22,6 +22,5 @@ subprojects {
             jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
         }
     }
-
 
 }

@@ -2,4 +2,3 @@ rootProject.name = 'lyna-project'
 
 include "common-utils"
 include "web-app"
-include "authen-author"
