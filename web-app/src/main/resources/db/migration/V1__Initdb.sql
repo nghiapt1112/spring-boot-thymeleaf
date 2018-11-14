@@ -18,10 +18,10 @@ CREATE TABLE `m_tenant`  (
   `tenant_id` int(11) NOT NULL COMMENT 'ID',
   `name` varchar(255) COMMENT '名称\r\n',
   `user_limit_number` int(5) NOT NULL,
-  `create_date` datetime(0) NULL COMMENT '作成日時\r\n',
-  `create_user` int(11) NULL COMMENT '作成ユーザーID',
-  `update_date` datetime(0) NULL COMMENT '更新日時',
-  `update_user` int(5) NULL COMMENT '更新ユーザーID',
+  `create_date` timestamp(0) NULL COMMENT '作成日時',
+  `create_user` varchar(36)  NULL COMMENT '作成ユーザーID',
+  `update_date` timestamp(0) NULL COMMENT '更新日時',
+  `update_user` varchar(36)  NULL COMMENT '更新ユーザーID',
   PRIMARY KEY (`tenant_id`) USING BTREE
 ) ;
 
