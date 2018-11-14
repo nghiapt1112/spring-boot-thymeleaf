@@ -1,6 +1,8 @@
-package com.lyna.web.security.domain;
+package com.lyna.web.domain.user;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "m_user_store_authority")
+@Data
+@NoArgsConstructor
 public class UserStoreAuthority extends AbstractEntity {
 
     @Id
@@ -27,39 +31,8 @@ public class UserStoreAuthority extends AbstractEntity {
     @Column(name = "authority")
     private short authority;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public short getAuthority() {
-        return authority;
-    }
-
     public String storeAuthorityToUserAuthority() {
         return StoreRoleType.fromVal(this.authority).name();
     }
 
-    public void setAuthority(short authority) {
-        this.authority = authority;
-    }
 }

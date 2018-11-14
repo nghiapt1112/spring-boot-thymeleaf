@@ -1,4 +1,4 @@
-package com.lyna.web.security.domain;
+package com.lyna.web.domain.user;
 
 public enum UserType {
     USER(1), ADMIN(2);
@@ -12,6 +12,5 @@ public enum UserType {
     public int getVal() {
         return val;
     }
-
 
 }

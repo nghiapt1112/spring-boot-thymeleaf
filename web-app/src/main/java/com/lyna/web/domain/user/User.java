@@ -1,172 +1,93 @@
 package com.lyna.web.domain.user;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.security.SecurityUtils;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Objects;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "m_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @NamedQueries({
         @NamedQuery(name = "User.countAll", query = "SELECT COUNT(x) FROM User x")
 })
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Data
+@NoArgsConstructor
+public class User extends AbstractEntity implements UserDetails {
 
     @Id
-    @Column(name = "user_id", nullable = false, length = 36)
-    public String userId;
+    @Column(name = "user_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String userId;
 
+    @Column
+    private String email;
 
-    @Basic
-    @Column(name = "email", nullable = true, length = 255)
-    public String email;
+    @Column
+    private String password;
 
+    @Column
+    private String name;
 
-    @Basic
-    @Column(name = "password", nullable = true, length = 50)
-    public String password;
+    @Column
+    private short role;
 
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name="user_id")
+    private Set<UserStoreAuthority> userStoreAuthorities;
 
-    @Basic
-    @Column(name = "name", nullable = true, length = 255)
-    public String name;
-
-
-    @Basic
-    @Column(name = "role", nullable = true)
-    public Short role;
-
-
-    @Basic
-    @Column(name = "created_date", nullable = true)
-    public Timestamp createdDate;
-
-
-    @Basic
-    @Column(name = "create_user", nullable = true, length = 36)
-    public String createUser;
-
-
-    @Basic
-    @Column(name = "update_date", nullable = true)
-    public Timestamp updateDate;
-
-
-    @Basic
-    @Column(name = "update_user", nullable = true, length = 36)
-    public String updateUser;
-
-    public String getUserId() {
-        return userId;
+    @JsonIgnore
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return SecurityUtils.populateGrantedAuthorities(this.userStoreAuthorities);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    @Override
+    public String getUsername() {
+        return this.getEmail();
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Short getRole() {
-        return role;
-    }
-
-    public void setRole(Short role) {
-        this.role = role;
-    }
-
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public Timestamp getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Timestamp updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", role=" + role +
-                ", createdDate=" + createdDate +
-                ", createUser='" + createUser + '\'' +
-                ", updateDate=" + updateDate +
-                ", updateUser='" + updateUser + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(getUserId(), user.getUserId()) &&
-                Objects.equals(getEmail(), user.getEmail()) &&
-                Objects.equals(getPassword(), user.getPassword()) &&
-                Objects.equals(getName(), user.getName()) &&
-                Objects.equals(getRole(), user.getRole()) &&
-                Objects.equals(getCreatedDate(), user.getCreatedDate()) &&
-                Objects.equals(getCreateUser(), user.getCreateUser()) &&
-                Objects.equals(getUpdateDate(), user.getUpdateDate()) &&
-                Objects.equals(getUpdateUser(), user.getUpdateUser());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUserId(), getEmail(), getPassword(), getName(), getRole(), getCreatedDate(), getCreateUser(), getUpdateDate(), getUpdateUser());
-    }
 }

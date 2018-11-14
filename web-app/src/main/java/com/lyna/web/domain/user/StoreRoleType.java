@@ -1,4 +1,4 @@
-package com.lyna.web.security.domain;
+package com.lyna.web.domain.user;
 
 import java.util.HashMap;
 import java.util.Map;

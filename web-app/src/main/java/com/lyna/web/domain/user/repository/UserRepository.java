@@ -1,7 +1,8 @@
 package com.lyna.web.domain.user.repository;
 
 import com.lyna.web.domain.user.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 }

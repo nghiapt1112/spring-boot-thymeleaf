@@ -1,6 +1,6 @@
 package com.lyna.web.security;
 
-import com.lyna.web.security.domain.UserStoreAuthority;
+import com.lyna.web.domain.user.UserStoreAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -19,6 +19,7 @@ public class SecurityUtils {
         return grantedAuthorities;
     }
 
+    // TODO: =>Nghia.Pham implement getCurrentTenant for currentAuthenticated user.
     public String getCurrentTenant(Principal principal) {
         return null;
     }

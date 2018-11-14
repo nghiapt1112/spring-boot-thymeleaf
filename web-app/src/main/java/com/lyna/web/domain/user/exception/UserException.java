@@ -1,4 +1,4 @@
-package com.lyna.web.security;
+package com.lyna.web.domain.user.exception;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 

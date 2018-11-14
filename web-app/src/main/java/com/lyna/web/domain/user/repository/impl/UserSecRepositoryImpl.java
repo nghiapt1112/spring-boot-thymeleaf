@@ -1,5 +1,6 @@
-package com.lyna.web.security.domain;
+package com.lyna.web.domain.user.repository.impl;
 
+import com.lyna.web.domain.user.User;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 

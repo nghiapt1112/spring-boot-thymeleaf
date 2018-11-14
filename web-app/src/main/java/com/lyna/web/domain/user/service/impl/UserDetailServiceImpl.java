@@ -1,5 +1,6 @@
-package com.lyna.web.security.domain;
+package com.lyna.web.domain.user.service.impl;
 
+import com.lyna.web.domain.user.repository.impl.UserSecRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +16,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("Finding user with" + username);
-        // TODO: using service instead of repository, handle exception when fall in EntityNotFoundException.
-        User user = userSecRepository.findByEmail(username);
 
-//        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.isEnable(), true,
-//                true, true, this.generateGrantedAuthorities(user.getRoles()));
-        return user;
+        //  TODO: 1. Nghia.Pham using service instead of repository,
+        //  TODO: 2. handle exception when fall in EntityNotFoundException.
+        return userSecRepository.findByEmail(username);
     }
 
 
