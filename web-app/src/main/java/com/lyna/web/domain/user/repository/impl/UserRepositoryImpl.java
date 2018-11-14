@@ -17,7 +17,8 @@ public class UserRepositoryImpl extends BaseRepository<User, Long> implements Us
 
     @Override
     public User findByEmail(String email) {
-        return null;
+        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities WHERE u.email = :email";
+        return (User) entityManager.createQuery(query).setParameter("email", email).getSingleResult();
     }
 
 }
