@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum StoreRoleType {
-    VIEW(1), EDIT(2);
+    VIEW(0), EDIT(1);
 
     private static final Map<Integer, StoreRoleType> storeRoleByValue = new HashMap<>();
 

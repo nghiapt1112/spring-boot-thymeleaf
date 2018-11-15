@@ -12,18 +12,15 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<h2>Welcome</h2>
-<div class="lyna-text">
-    <p>Spring Security Thymeleaf tutorial</p>
-</div>
-<div sec:authorize="hasRole('USER')">Text visible to user.</div>
-<div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
-<div sec:authorize="isAuthenticated()">Text visible only to
-    authenticated users.
-</div>
-Authenticated username:
-<div sec:authentication="name"></div>
-Authenticated user roles:
-<div sec:authentication="principal.authorities"></div>
+    <h2>Welcome to Lyna</h2>
+    <hr>
+    </div>
+    <div sec:authorize="hasRole('USER')" class="lyna-text">Text visible to user.</div>
+    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+    <div sec:authorize="isAuthenticated()">Text visible only to
+        authenticated users.
+    </div>
+    <div>Authenticated username:<p sec:authentication="name"></p></div>
+    <div>Authenticated user roles:<p sec:authentication="principal.authorities"></p></div>
 </body>
 </html>

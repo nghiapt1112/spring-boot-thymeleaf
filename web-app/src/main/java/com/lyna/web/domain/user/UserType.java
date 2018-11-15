@@ -1,7 +1,7 @@
 package com.lyna.web.domain.user;
 
 public enum UserType {
-    USER(1), ADMIN(2);
+    GENERAL_USER(0), ADMIN(1);
 
     private int val;
 
