@@ -1,5 +1,8 @@
 package com.lyna.web.domain.user.service.impl;
 
+import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.user.User;
+import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.impl.UserSecRepositoryImpl;
 import com.lyna.web.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailServiceImpl extends BaseService implements UserDetailsService {
 
     @Autowired
     private UserService userService;
@@ -17,10 +22,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("Finding user with" + username);
-
-        //  TODO: 1. Nghia.Pham using service instead of repository,
-        //  TODO: 2. handle exception when fall in EntityNotFoundException.
-        return userService.findByEmail(username);
+        User user = userService.findByEmail(username);
+        if (Objects.isNull(user)) {
+            //  TODO: throw authenticate Exception cause by: User not existed.
+            throw new UserException(toInteger(""), toStr(""));
+        } else {
+            return user;
+        }
     }
 
 

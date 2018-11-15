@@ -19,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -38,6 +40,7 @@ public class User extends AbstractEntity implements UserDetails {
     private String userId;
 
     @Column
+    @NotEmpty(message = "Nghia dep trai, email khong the null dau")
     private String email;
 
     @Column
