@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ApplicationController {
     @RequestMapping("/login")
     public String login() {
-        return "login";
+        return "login/login";
     }
 
     @RequestMapping({ "/index", "/" })
@@ -20,4 +20,16 @@ public class ApplicationController {
     public String invalidSession() {
         return "invalidSession";
     }
+
+    @RequestMapping({ "/layout", "/" })
+    public String layout() {
+        return "layout";
+    }
+
+
+    @RequestMapping({ "/listUser", "/" })
+    public String listUser() {
+        return "user/listUser";
+    }
+
 }
