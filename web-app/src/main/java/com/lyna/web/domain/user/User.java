@@ -65,6 +65,10 @@ public class User extends AbstractEntity implements UserDetails {
         return this.getEmail();
     }
 
+    private String getEmail() {
+        return email;
+    }
+
     @Override
     public boolean isEnabled() {
         return true;
