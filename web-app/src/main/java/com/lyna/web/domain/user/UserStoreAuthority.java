@@ -34,35 +34,4 @@ public class UserStoreAuthority extends AbstractEntity {
     public String storeAuthorityToUserAuthority() {
         return StoreRoleType.fromVal(this.authority).name();
     }
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public short getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(short authority) {
-        this.authority = authority;
-    }
 }

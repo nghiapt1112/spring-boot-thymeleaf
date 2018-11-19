@@ -33,45 +33,5 @@ public class Store extends AbstractEntity {
 
     @Column(name = "area")
     private String area;
-
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMajorArea() {
-        return majorArea;
-    }
-
-    public void setMajorArea(String majorArea) {
-        this.majorArea = majorArea;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 }
 
