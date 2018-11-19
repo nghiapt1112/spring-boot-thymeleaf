@@ -57,6 +57,7 @@ $(function () {
 
 
 });
+
 $(function () {
     $('#listUser').DataTable({
         'paging': true,
@@ -64,7 +65,10 @@ $(function () {
         'searching': true,
         'ordering': true,
         'info': true,
-        'autoWidth': true
+        'autoWidth': true,
+
+        'order': [],
+        "columnDefs": [{'orderable': false, 'targets': [0, 3, 4,5]}]
     })
 })
  
