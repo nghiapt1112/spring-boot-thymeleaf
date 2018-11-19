@@ -81,4 +81,47 @@ public class User extends AbstractEntity implements UserDetails {
         return password;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public short getRole() {
+        return role;
+    }
+
+    public void setRole(short role) {
+        this.role = role;
+    }
+
+    public Set<UserStoreAuthority> getUserStoreAuthorities() {
+        return userStoreAuthorities;
+    }
+
+    public void setUserStoreAuthorities(Set<UserStoreAuthority> userStoreAuthorities) {
+        this.userStoreAuthorities = userStoreAuthorities;
+    }
 }

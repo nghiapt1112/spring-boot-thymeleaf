@@ -39,7 +39,6 @@ public class UserList extends AbstractCustomController {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-
         List<Store> storeListAll = storeRepository.getAll();
 
         Page<com.lyna.web.domain.user.UserList> userPage =
