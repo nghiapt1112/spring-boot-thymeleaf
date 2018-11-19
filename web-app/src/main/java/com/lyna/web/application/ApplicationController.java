@@ -23,13 +23,7 @@ public class ApplicationController {
 
     @RequestMapping({ "/layout", "/" })
     public String layout() {
+
         return "layout";
     }
-
-
-    @RequestMapping({ "/listUser", "/" })
-    public String listUser() {
-        return "user/listUser";
-    }
-
 }

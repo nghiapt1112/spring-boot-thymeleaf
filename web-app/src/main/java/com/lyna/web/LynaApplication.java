@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.lyna.commons", "com.lyna.web", "com.lyna.security"})
+@ComponentScan(basePackages = {"com.lyna.commons", "com.lyna.web"})
 public class LynaApplication {
 
     @Bean
