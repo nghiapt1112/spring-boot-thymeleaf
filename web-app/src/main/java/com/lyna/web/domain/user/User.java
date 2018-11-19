@@ -9,16 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 
@@ -51,7 +42,7 @@ public class User extends AbstractEntity implements UserDetails {
 
     @JsonIgnore
     @OneToMany
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private Set<UserStoreAuthority> userStoreAuthorities;
 
     @JsonIgnore
@@ -63,10 +54,6 @@ public class User extends AbstractEntity implements UserDetails {
     @Override
     public String getUsername() {
         return this.getEmail();
-    }
-
-    private String getEmail() {
-        return email;
     }
 
     @Override

@@ -27,7 +27,6 @@ public class AbstractEntity extends AbstractObject {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     protected Date createDate;
 
-
     @Column(name = "create_user")
     protected String createUser;
 
@@ -42,14 +41,6 @@ public class AbstractEntity extends AbstractObject {
     public void initDefaultFieldsModify() {
         this.updateDate = new Date();
     }
-
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
 
     public Date getUpdateDate() {
         return updateDate;

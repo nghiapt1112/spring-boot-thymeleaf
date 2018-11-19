@@ -34,5 +34,4 @@ public class UserStoreAuthority extends AbstractEntity {
     public String storeAuthorityToUserAuthority() {
         return StoreRoleType.fromVal(this.authority).name();
     }
-
 }
