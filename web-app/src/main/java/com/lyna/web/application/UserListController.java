@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-public class UserList extends AbstractCustomController {
+public class UserListController extends AbstractCustomController {
 
     private static int currentPage = 1;
     private static int pageSize = 5;

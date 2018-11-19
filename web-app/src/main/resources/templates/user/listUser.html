@@ -18,16 +18,16 @@
             <div class="row">
                 <!-- <form th:action="@{/deleteuser}">-->
                 <div class="col-md-12 button_top">
-                     <div class="col-md-2 burron-top-order">
-                         <a type="submit" class="btn btn-primary" th:href="@{/registerzUser}">Register</a>
-                     </div>
+                    <div class="col-md-2 button-top-order">
+                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary" th:href="@{/registerUser}">Register</a>
+                    </div>
                     <div class="col-md-2 button-top-delivery">
-                         <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">
-                             Delete
-                         </button>
+                        <button type="submit" class="btn btn-primary" onclick="deleteUser()">
+                            Delete
+                        </button>
 
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-8">
                     </div>
                 </div>
 
@@ -84,6 +84,22 @@
                 $('.chkCheckBoxId').prop('checked', false);
         });
     });
+
+    function deleteUser() {
+        var pickedOne = false;
+        var inputs = document.getElementsByClassName('chkCheckBoxId');
+        for (var i = 0, l = inputs.length; i < l; ++i) {
+            if (inputs[i].checked) {
+                pickedOne = true;
+                break;
+            }
+        }
+
+        if (!pickedOne) {
+            alert('1つ星で1点満点中2人の評価があります。!');
+        } else
+            return confirm('本気ですか?')
+    }
 </script>
 </body>
 </html>
