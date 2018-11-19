@@ -38,7 +38,7 @@ public final class JsonUtils {
         try {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new DomainException(DomainException.Domain.General.getDomainCode(), e);
+            throw new DomainException(DomainException.Domain.General.code(), e);
         }
     }
 
@@ -46,7 +46,7 @@ public final class JsonUtils {
         try {
             return OBJECT_MAPPER.<T>readValue(json, type);
         } catch (Exception e) {
-            throw new DomainException(DomainException.Domain.General.getDomainCode(), e);
+            throw new DomainException(DomainException.Domain.General.code(), e);
         }
     }
 
@@ -54,7 +54,7 @@ public final class JsonUtils {
         try {
             return OBJECT_MAPPER.writeValueAsBytes(object);
         } catch (JsonProcessingException e) {
-            throw new DomainException(DomainException.Domain.General.getDomainCode(), e);
+            throw new DomainException(DomainException.Domain.General.code(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public final class JsonUtils {
         try {
             return OBJECT_MAPPER.<T>readValue(json, type);
         } catch (Exception e) {
-            throw new DomainException(DomainException.Domain.General.getDomainCode(), e);
+            throw new DomainException(DomainException.Domain.General.code(), e);
         }
     }
 

@@ -1,24 +1,24 @@
 package com.lyna.commons.config;
 
+import com.lyna.commons.infrustructure.exception.DomainValidateExeption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import javax.validation.*;
-import java.util.Map;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.Set;
 
 @Component
-public class BaseValidator implements org.springframework.validation.Validator, InitializingBean,
-        ApplicationContextAware, ConstraintValidatorFactory {
+public class BaseValidator implements org.springframework.validation.Validator {
 
     protected final Logger LOGGER = LoggerFactory.getLogger(BaseValidator.class);
     protected ApplicationContext applicationContext;
+
+    @Autowired
     protected Validator validator;
 
     @Override
@@ -28,11 +28,10 @@ public class BaseValidator implements org.springframework.validation.Validator, 
 
     @Override
     public void validate(Object target, Errors errors) {
-        LOGGER.warn("AbstractCustomValidator.validate");
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(target);
-//        if (constraintViolations.size() > 0) {
-//            throw new UserException(123, "Validation failded");
-//        }
+        if (constraintViolations.size() > 0) {
+            throw new DomainValidateExeption("Requested object is invalid.");
+        }
         for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
             String propertyPath = constraintViolation.getPropertyPath().toString();
             String message = constraintViolation.getMessage();
@@ -40,50 +39,6 @@ public class BaseValidator implements org.springframework.validation.Validator, 
         }
         addExtraValidation(target, errors);
 
-    }
-
-
-    @Override
-    public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
-        LOGGER.warn("AbstractCustomValidator.getInstance");
-        Map<String, T> beansByNames = applicationContext.getBeansOfType(key);
-        if (beansByNames.isEmpty()) {
-            try {
-                return key.newInstance();
-            } catch (InstantiationException e) {
-                throw new RuntimeException("Could not instantiate constraint validator class '" + key.getName() + "'", e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Could not instantiate constraint validator class '" + key.getName() + "'", e);
-            }
-        } else if (beansByNames.size() > 1) {
-            throw new RuntimeException("Only one bean of type '" + key.getName() + "' is allowed in the application context");
-        }
-        return beansByNames.values().iterator().next();
-    }
-
-    @Override
-    public void releaseInstance(ConstraintValidator<?, ?> instance) {
-        LOGGER.warn("AbstractCustomValidator.releaseInstance");
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        LOGGER.warn("AbstractCustomValidator.afterPropertiesSet");
-        ValidatorFactory validatorFactory = Validation
-                .byDefaultProvider()
-                .configure()
-                .constraintValidatorFactory(this)
-                .buildValidatorFactory();
-
-        this.validator = validatorFactory
-                .usingContext()
-                .getValidator();
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        LOGGER.warn("AbstractCustomValidator.setApplicationContext");
-        this.applicationContext = applicationContext;
     }
 
     public void addExtraValidation(Object target, Errors errors) {

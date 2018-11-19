@@ -19,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Set;
 
@@ -31,6 +33,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {
+    private static final String EMAIL_REGEX = "[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z]{2,3}[.] {0,1}[a-zA-Z]+";
 
     @Id
     @Column(name = "user_id", nullable = false)
@@ -38,6 +41,8 @@ public class User extends AbstractEntity implements UserDetails {
     private String userId;
 
     @Column
+    @NotEmpty(message = "Nghia dep trai, email khong the null dau")
+    @Email(regexp = EMAIL_REGEX)
     private String email;
 
     @Column
@@ -51,7 +56,7 @@ public class User extends AbstractEntity implements UserDetails {
 
     @JsonIgnore
     @OneToMany
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private Set<UserStoreAuthority> userStoreAuthorities;
 
     @JsonIgnore
@@ -88,6 +93,14 @@ public class User extends AbstractEntity implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public void hideSensitiveFields() {
+        this.createDate = null;
+        this.createUser = null;
+        this.updateDate = null;
+        this.updateUser = null;
+        this.name = null;
     }
 
 }

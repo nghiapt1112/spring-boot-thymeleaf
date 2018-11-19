@@ -15,7 +15,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `m_tenant`;
 CREATE TABLE `m_tenant`  (
-  `tenant_id` int(11) NOT NULL COMMENT 'ID',
+  `tenant_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) COMMENT '名称\r\n',
   `user_limit_number` int(5) NOT NULL,
   `create_date` timestamp(0) NULL COMMENT '作成日時',
@@ -65,7 +65,7 @@ CREATE TABLE `m_post_course`  (
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   INDEX `store_id`(`store_id`) USING BTREE,
   CONSTRAINT `m_post_course_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `m_post_course_ibfk_2` FOREIGN KEY (`store_id`) REFERENCES `m_stores` (`storeid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `m_post_course_ibfk_2` FOREIGN KEY (`store_id`) REFERENCES `m_store` (`store_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 -- ----------------------------
@@ -95,25 +95,24 @@ CREATE TABLE `m_product`  (
 
 
 -- ----------------------------
--- Table structure for m_stores
+-- Table structure for m_store
 -- ----------------------------
-DROP TABLE IF EXISTS `m_stores`;
-CREATE TABLE `m_stores`  (
-  `storeId` varchar(36) COMMENT 'ID',
+DROP TABLE IF EXISTS `m_store`;
+CREATE TABLE `m_store`  (
+  `store_id` varchar(36) COMMENT 'ID',
   `tenant_id` int(11) NOT NULL COMMENT 'テナントID',
   `code` varchar(50)  NULL COMMENT 'コード',
   `name` varchar(255)  NULL COMMENT '名称',
   `major_area` varchar(255)  NULL COMMENT '大アレア',
   `area` varchar(255)  NULL,
-  `post_course_id` varchar(36)  NULL,
   `create_date` timestamp(0) NULL COMMENT '作成日時',
   `create_user` varchar(36)  NULL COMMENT '作成ユーザーID',
   `update_date` timestamp(0) NULL COMMENT '更新日時',
   `update_user` varchar(36)  NULL COMMENT '更新ユーザーID',
-  PRIMARY KEY (`storeId`) USING BTREE,
+  PRIMARY KEY (`store_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
-  INDEX `storeId`(`storeId`) USING BTREE, 
-  CONSTRAINT `m_stores_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  INDEX `store_id`(`store_id`) USING BTREE, 
+  CONSTRAINT `m_store_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 
@@ -156,7 +155,7 @@ CREATE TABLE `m_user_store_authority`  (
   INDEX `store_id`(`store_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE,
-  CONSTRAINT `m_user_store_authority_ibfk_1` FOREIGN KEY (`store_id`) REFERENCES `m_stores` (`storeid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `m_user_store_authority_ibfk_1` FOREIGN KEY (`store_id`) REFERENCES `m_store` (`store_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `m_user_store_authority_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `m_user_store_authority_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `m_user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
@@ -206,8 +205,8 @@ CREATE TABLE `t_delivery_detail`  (
 -- ----------------------------
 -- Table structure for t_logicstic
 -- ----------------------------
-DROP TABLE IF EXISTS `t_logicstics`;
-CREATE TABLE `t_logicstics`  (
+DROP TABLE IF EXISTS `t_logistics`;
+CREATE TABLE `t_logistics`  (
   `tenant_id` int(11) NOT NULL,
   `logistics_id` varchar(36) COMMENT '物流ID',
   `order_id` varchar(36) COMMENT '発注ID',
@@ -218,8 +217,8 @@ CREATE TABLE `t_logicstics`  (
   PRIMARY KEY (`logistics_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   INDEX `order_id`(`order_id`) USING BTREE,
-  CONSTRAINT `t_logicstics_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_logicstics_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `t_order` (`order_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `t_logistics_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `t_logistics_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `t_order` (`order_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 -- ----------------------------
@@ -229,7 +228,7 @@ DROP TABLE IF EXISTS `t_logistics_detail`;
 CREATE TABLE `t_logistics_detail`  (
   `tenant_id` int(11) NOT NULL,
   `logistics_detail_id` varchar(11) COMMENT 'ID',
-  `logicstics_id` varchar(36)  NULL COMMENT '物流ID',
+  `logistics_id` varchar(36)  NULL COMMENT '物流ID',
   `package_id` varchar(36)  NULL COMMENT '荷姿ID',
   `amount` decimal(11, 0) NULL COMMENT '個数',
   `create_date` timestamp(0) NULL COMMENT '作成日時',
@@ -237,10 +236,10 @@ CREATE TABLE `t_logistics_detail`  (
   `update_date` timestamp(0) NULL COMMENT '更新日時',
   `update_user` varchar(36)  NULL COMMENT '更新ユーザーID',
   PRIMARY KEY (`logistics_detail_id`) USING BTREE,
-  INDEX `logicstics_id`(`logicstics_id`) USING BTREE,
+  INDEX `logistics_id`(`logistics_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   INDEX `package_id`(`package_id`) USING BTREE,
-  CONSTRAINT `t_logistics_detail_ibfk_1` FOREIGN KEY (`logicstics_id`) REFERENCES `t_logicstics` (`logistics_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `t_logistics_detail_ibfk_1` FOREIGN KEY (`logistics_id`) REFERENCES `t_logistics` (`logistics_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_logistics_detail_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_logistics_detail_ibfk_3` FOREIGN KEY (`package_id`) REFERENCES `m_package` (`pakage_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
@@ -266,7 +265,7 @@ CREATE TABLE `t_order`  (
   INDEX `order_date`(`order_date`) USING BTREE,
   INDEX `post`(`post`) USING BTREE,
   CONSTRAINT `t_order_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_order_ibfk_2` FOREIGN KEY (`store_id`) REFERENCES `m_stores` (`storeid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `t_order_ibfk_2` FOREIGN KEY (`store_id`) REFERENCES `m_store` (`store_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 -- ----------------------------

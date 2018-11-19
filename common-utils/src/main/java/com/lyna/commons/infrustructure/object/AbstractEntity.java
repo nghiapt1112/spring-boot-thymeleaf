@@ -3,9 +3,6 @@ package com.lyna.commons.infrustructure.object;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
@@ -27,7 +24,6 @@ public class AbstractEntity extends AbstractObject {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     protected Date createDate;
 
-
     @Column(name = "create_user")
     protected String createUser;
 
@@ -42,14 +38,6 @@ public class AbstractEntity extends AbstractObject {
     public void initDefaultFieldsModify() {
         this.updateDate = new Date();
     }
-
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
 
     public Date getUpdateDate() {
         return updateDate;

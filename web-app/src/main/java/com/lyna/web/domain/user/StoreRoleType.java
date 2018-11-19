@@ -19,6 +19,7 @@ public enum StoreRoleType {
         this.val = val;
     }
 
+
     public int getVal() {
         return val;
     }
@@ -26,4 +27,13 @@ public enum StoreRoleType {
     public static StoreRoleType fromVal(int val) {
         return storeRoleByValue.get(val);
     }
+
+    public static short shortOf(String value) {
+        return (short) StoreRoleType.valueOf(value).getVal();
+    }
+
+    public static int intOf(String val) {
+        return StoreRoleType.valueOf(val).getVal();
+    }
+
 }

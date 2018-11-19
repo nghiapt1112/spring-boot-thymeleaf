@@ -32,4 +32,7 @@ public class PostCourse extends AbstractEntity {
     @Column
     public String course;
 
+    @Column(name = "store_id", nullable = false)
+    public String storeId;
+
 }

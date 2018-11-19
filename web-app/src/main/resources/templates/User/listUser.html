@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('List User')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listUser.css}"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <header th:replace="layout :: header"></header>
+    <div th:replace="layout :: content-left"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                List User
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <!-- <form th:action="@{/deleteuser}">-->
+                <div class="col-md-12 button_top">
+                     <div class="col-md-2 burron-top-order">
+                         <a type="submit" class="btn btn-primary" th:href="@{/registerzUser}">Register</a>
+                     </div>
+                    <div class="col-md-2 button-top-delivery">
+                         <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">
+                             Delete
+                         </button>
+
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div style="border-top: 3px solid #337ab7;" class="box">
+                        <div class="box-body">
+                            <table id="listUser" class="table table-bordered table-hover">
+                                <thead style="background: #337ab7">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="checkBoxAll">
+                                    </th>
+                                    <th>Mail</th>
+                                    <th>Username</th>
+                                    <th th:each="item: ${storeModel}">
+                                        <span th:text="${item.getName()}"></span>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item: ${userPage}">
+                                    <td style="text-align: center;">
+                                        <input type="checkbox" th:id="${item.userId}" class="chkCheckBoxId"
+                                               name="userid">
+                                    </td>
+                                    <td th:text="${item.email}">join@gmail.com</td>
+                                    <td th:text="${item.name}">Join username</td>
+                                    <td th:each="element : ${item.mapStore}">
+                                        <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+                <!--</form>-->
+            </div>
+        </section>
+    </div>
+
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#checkBoxAll').click(function () {
+            if ($(this).is(":checked"))
+                $('.chkCheckBoxId').prop('checked', true);
+            else
+                $('.chkCheckBoxId').prop('checked', false);
+        });
+    });
+</script>
+</body>
+</html>

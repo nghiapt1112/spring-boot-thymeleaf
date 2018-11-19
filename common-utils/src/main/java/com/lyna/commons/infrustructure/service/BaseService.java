@@ -6,22 +6,18 @@ import org.springframework.core.env.Environment;
 
 import java.util.Objects;
 
-public abstract class GenericAbstractService {
+public abstract class BaseService {
     @Autowired
     protected Environment env;
 
 
     public String toStr(String p) {
         String val = env.getProperty(p);
-        if (StringUtils.isEmpty(val)) {
-            return p;
-        } else return val;
+        return StringUtils.isEmpty(val) ? p : val;
     }
 
     public Integer toInteger(String p) {
         Integer val = env.getProperty(p, Integer.class);
-        if (Objects.isNull(val)) {
-            return -1;
-        } else return val;
+        return Objects.isNull(val) ? -1 : val;
     }
 }

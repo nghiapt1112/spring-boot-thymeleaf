@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('VIEW')")
-public @interface IsPermitToView {
+@PreAuthorize("hasRole('EDIT')")
+public @interface IsEditAble {
 }

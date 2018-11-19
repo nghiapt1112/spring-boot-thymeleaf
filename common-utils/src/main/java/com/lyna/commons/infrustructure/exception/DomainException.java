@@ -16,13 +16,13 @@ public class DomainException extends RuntimeException {
 
     public DomainException(int errorCode, Throwable e) {
         super(e);
-        this.domainCode = Domain.General.getDomainCode();
+        this.domainCode = Domain.General.code();
         this.errorCode = errorCode;
     }
 
     protected DomainException(String message) {
         super(message);
-        this.domainCode = Domain.General.getDomainCode();
+        this.domainCode = Domain.General.code();
         this.errorCode = UNKNOWN_ERROR;
     }
 
@@ -62,7 +62,7 @@ public class DomainException extends RuntimeException {
     }
 
     public enum Domain {
-        General(1), Project(2), Mail(3), Allocation(4), Visualizer(5);
+        General(1), Validate(2), User(3), CSV(4), Store(5), Product(6);
 
         private int domainCode;
 
@@ -70,7 +70,7 @@ public class DomainException extends RuntimeException {
             this.domainCode = domainCode;
         }
 
-        public int getDomainCode() {
+        public int code() {
             return domainCode;
         }
 

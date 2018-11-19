@@ -35,4 +35,10 @@ public class UserStoreAuthority extends AbstractEntity {
         return StoreRoleType.fromVal(this.authority).name();
     }
 
+    public void initDefaultCreateFields(User currentUser) {
+        this.tenantId = currentUser.getTenantId();
+        this.initDefaultFieldsCreate();
+        this.createUser = currentUser.getUserId();
+    }
+
 }

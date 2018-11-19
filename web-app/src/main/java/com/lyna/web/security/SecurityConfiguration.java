@@ -39,10 +39,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(STATIC_RESOURCES).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
-                .successForwardUrl("/index")
+                .successForwardUrl("/layout")
                 .and()
                 .logout().permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
                 .and()

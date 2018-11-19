@@ -1,8 +1,8 @@
 package com.lyna.commons.infrustructure.controller;
 
+import com.lyna.commons.config.BaseValidator;
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.object.AbstractObject;
-import com.lyna.commons.config.BaseValidator;
 import com.lyna.commons.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,8 +32,15 @@ public class AbstractCustomController {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         if (binder.getTarget() instanceof AbstractObject) {
-            CONTROLLER_LOGGER.info("\n\n****InitBinder added customValidator****\n\n");
-            binder.addValidators(baseValidator);
+            boolean included = false;
+            for (Validator validator : binder.getValidators()) {
+                if (validator instanceof BaseValidator) {
+                    included = true;
+                }
+            }
+            if (!included) {
+                binder.addValidators(baseValidator);
+            }
         }
 
 //        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(PATTERN);
@@ -46,6 +54,8 @@ public class AbstractCustomController {
     @ExceptionHandler
     public ResponseEntity<String> handle(DomainException ex) {
         CONTROLLER_LOGGER.info("exception: exCode {}, exMessage {}", ex.getCode(), ex.getErrorResponse());
-        return ResponseEntity.status(500).body(JsonUtils.toJson(ex.getErrorResponse()));
+        return ResponseEntity
+                .status(500)
+                .body(JsonUtils.toJson(ex.getErrorResponse()));
     }
 }
