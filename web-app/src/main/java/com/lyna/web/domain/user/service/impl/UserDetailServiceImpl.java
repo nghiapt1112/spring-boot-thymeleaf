@@ -24,7 +24,7 @@ public class UserDetailServiceImpl extends BaseService implements UserDetailsSer
         System.out.println("Finding user with" + username);
         User user = userService.findByEmail(username);
         if (Objects.isNull(user)) {
-            //  TODO: throw authenticate Exception cause by: User not existed.
+            //  TODO: throw authenticate Exception cause by: user not existed.
             throw new UserException(toInteger(""), toStr(""));
         } else {
             user.hideSensitiveFields();

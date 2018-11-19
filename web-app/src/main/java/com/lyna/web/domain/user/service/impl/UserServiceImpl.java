@@ -7,6 +7,11 @@ import com.lyna.web.domain.user.UserList;
 import com.lyna.web.domain.user.UserRegisterAggregate;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
+import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.stores.repository.UserStoreAuthorityRepository;
+import com.lyna.web.domain.user.User;
+import com.lyna.web.domain.user.UserList;
+import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.repository.UserRepository;
 import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl;
 import com.lyna.web.domain.user.service.UserService;
@@ -27,13 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.ui.Model;
+
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Autowired
     private UserStoreAuthorityService userStoreAuthorityService;
@@ -48,7 +54,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-
     public User createUser(User user) {
         return userRepository.save(user);
     }

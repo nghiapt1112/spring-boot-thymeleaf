@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+
 public interface UserService {
     User findByEmail(String userEmail);
 
@@ -17,5 +18,4 @@ public interface UserService {
     User createUser(User user);
 
     Page<UserList> findPaginated(Pageable pageable, List<Store> storeList);
-
 }

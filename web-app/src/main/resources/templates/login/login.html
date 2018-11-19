@@ -247,6 +247,7 @@
 <body>
 
 <div id="wrapper">
+
     <div id="contents">
 
         <div class="frame">
@@ -281,26 +282,6 @@
         </div>
 
     </div>
-    <h1 th:text="#{greeting}"></h1>
-    <span th:text="#{lang.change}"></span>:
-    <select id="locales">
-        <option value=""></option>
-        <option value="en" th:text="#{lang.eng}"></option>
-        <option value="fr" th:text="#{lang.fr}"></option>
-    </select>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("#locales").change(function () {
-                var selectedOption = $('#locales').val();
-                if (selectedOption != ''){
-                    window.location.replace('international?lang=' + selectedOption);
-                }
-            });
-        });
-    </script>
-
 
     <!-- 			<div id="footer" style="text-align: right; background-color: #F2F2F2; border-top : 1px solid #808080; height:30px; padding-top: 8px;"> -->
     <!--		<div id="footer" style="width:100%; height:30px; text-align:right; bottom:0; position:absolute; background-color:#F2F2F2; border-top : 1px solid #808080;"> -->

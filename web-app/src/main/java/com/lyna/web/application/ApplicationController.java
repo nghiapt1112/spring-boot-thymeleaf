@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ApplicationController {
     @RequestMapping("/login")
     public String login() {
-        return "Login/login";
+        return "login/login";
     }
 
     @RequestMapping({ "/index", "/" })
@@ -24,15 +24,10 @@ public class ApplicationController {
         return "invalidSession";
     }
 
-    @GetMapping("/international")
-    public String getInternationalPage() {
-        return "international";
-    }
-
-    @GetMapping("/user-page")
+    @GetMapping("/registerUser")
     public String userPage(Model model) {
         model.addAttribute("user", new User());
-        return "user";
+        return "user/user-create";
     }
 
     @RequestMapping({ "/layout", "/" })
