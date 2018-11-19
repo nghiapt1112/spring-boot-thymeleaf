@@ -10,10 +10,10 @@ public class ApplicationController {
         return "login/login";
     }
 
-    @RequestMapping({ "/index", "/" })
+    /*@RequestMapping({ "/index", "/" })
     public String index() {
         return "index";
-    }
+    }*/
 
 
     @RequestMapping({ "/invalidSession"})
