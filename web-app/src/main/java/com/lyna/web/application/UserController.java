@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -71,38 +70,6 @@ public class UserController extends AbstractCustomController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-
-
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(
             Model model,
@@ -112,7 +79,7 @@ public class UserController extends AbstractCustomController {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-        List<Store> storeListAll = storeService.getStoreList((User)principal);
+        List<Store> storeListAll = storeService.getStoreList((User) principal);
 
         Page<UserList> userPage =
                 userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll);
@@ -143,5 +110,4 @@ public class UserController extends AbstractCustomController {
         }
         return "redirect:user/listUser";
     }
->>>>>>> .theirs
 }
