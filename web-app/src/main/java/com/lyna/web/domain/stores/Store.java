@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "m_store")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @NamedQueries({
-        @NamedQuery(name = "Store.getAll", query = "SELECT x FROM Store x")
+        @NamedQuery(name = "Store.getAll", query = "SELECT c FROM Store c WHERE c.tenantId = :tenantId")
 })
 @Data
 @NoArgsConstructor

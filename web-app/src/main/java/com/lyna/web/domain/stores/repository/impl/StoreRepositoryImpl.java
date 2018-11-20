@@ -24,9 +24,10 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public List<Store> getAll() {
+    public List<Store> getAll(User principal) {
         TypedQuery<Store> query =
-                em.createNamedQuery("Store.getAll", Store.class);
+                em.createNamedQuery("Store.getAll", Store.class)
+                        .setParameter("tenantId", principal.getTenantId());
         List<Store> results = query.getResultList();
 
         return results;
