@@ -1,20 +1,32 @@
 package com.lyna.web.domain.user;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
+import com.lyna.web.domain.stores.Store;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Data
 @NoArgsConstructor
 public class UserRegisterAggregate extends AbstractObject {
+    private static final String EMAIL_REGEX = "[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z]{2,3}[.] {0,1}[a-zA-Z]+";
+
+    @NotEmpty(message = "Lyna-Email can not be empty")
+    @Email(regexp = EMAIL_REGEX)
     private String email;
+
+    @NotEmpty
     private String userName;
+
+    @NotEmpty
     private String password;
     private boolean flagTest;
+    private String oldData = "";
     private List<UserStoreAuthorityAggregate> rolePerStore;
 
     public User toUser() {
@@ -30,18 +42,10 @@ public class UserRegisterAggregate extends AbstractObject {
                 .map(UserStoreAuthorityAggregate::toUserStoreAuthority);
     }
 
-    public UserStoreAuthorityAggregate userStoreRoleInstance() {
-        return new UserStoreAuthorityAggregate();
-    }
-
-    public List<UserStoreAuthorityAggregate> defaultRolePerStores() {
-        List<UserStoreAuthorityAggregate> testData = new ArrayList<>();
-
-        testData.add(new UserStoreAuthorityAggregate("name1", "storeID1", "EDIT"));
-        testData.add(new UserStoreAuthorityAggregate("name2","storeID2", "EDIT"));
-        testData.add(new UserStoreAuthorityAggregate("name3","storeID3", "EDIT"));
-        testData.add(new UserStoreAuthorityAggregate("name4","storeID4", "EDIT"));
-        return testData;
+    public static List<UserStoreAuthorityAggregate> toUserStoreAuthorityAggregate(List<Store> stores) {
+        return stores.stream()
+                .map(UserStoreAuthorityAggregate::fromStoreEntity)
+                .collect(Collectors.toList());
     }
 
 }
@@ -53,20 +57,28 @@ class UserStoreAuthorityAggregate {
     private String name;
     private String storeId;
     private String storeRole;
-    private boolean nFlag;
-
-    public UserStoreAuthorityAggregate(String name, String storeId, String storeRole) {
-        this.name = name;
-        this.storeId = storeId;
-        this.storeRole = storeRole;
-    }
+    private boolean canView;
+    private boolean canEdit;
 
     public UserStoreAuthority toUserStoreAuthority() {
         UserStoreAuthority userStoreAuthority = new UserStoreAuthority();
         userStoreAuthority.setStoreId(this.storeId);
-//            userStoreAuthority.setUserId();
-//        userStoreAuthority.setTenantId();
-        userStoreAuthority.setAuthority(StoreRoleType.shortOf(this.storeRole));
+
+        if (canEdit) {
+            userStoreAuthority.setAuthority(StoreRoleType.EDIT.getShortVal());
+        } else if (canView) {
+            userStoreAuthority.setAuthority(StoreRoleType.VIEW.getShortVal());
+        }
+
         return userStoreAuthority;
     }
+
+    public static UserStoreAuthorityAggregate fromStoreEntity(Store store) {
+        UserStoreAuthorityAggregate aggregate = new UserStoreAuthorityAggregate();
+        aggregate.setStoreId(store.getStoreId());
+        aggregate.setName(store.getName());
+        return aggregate;
+    }
+
+
 }

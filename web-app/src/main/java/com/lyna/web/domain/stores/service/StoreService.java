@@ -9,4 +9,5 @@ import java.util.List;
 public interface StoreService {
 
     List<Store> getStoreList(User principal);
+    List<Store> findAll(int tenantId);
 }

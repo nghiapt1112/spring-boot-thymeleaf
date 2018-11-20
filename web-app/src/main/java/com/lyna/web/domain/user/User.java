@@ -5,14 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import com.lyna.web.security.SecurityUtils;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
@@ -23,6 +20,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "m_user")
@@ -31,17 +29,15 @@ import java.util.Set;
         @NamedQuery(name = "User.countAll", query = "SELECT COUNT(x) FROM User x")
 })
 @Data
-@NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {
     private static final String EMAIL_REGEX = "[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z]{2,3}[.] {0,1}[a-zA-Z]+";
 
     @Id
     @Column(name = "user_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userId;
+    private String id;
 
     @Column
-    @NotEmpty(message = "Nghia dep trai, email khong the null dau")
+    @NotEmpty(message = "email cannot be empty")
     @Email(regexp = EMAIL_REGEX)
     private String email;
 
@@ -53,6 +49,10 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Column
     private short role;
+
+    public User() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     @JsonIgnore
     @OneToMany
@@ -103,4 +103,11 @@ public class User extends AbstractEntity implements UserDetails {
         this.name = null;
     }
 
+    //TODO: move to AbstractEntity
+    public User withDefaultFields(User currentUser) {
+        this.tenantId = currentUser.getTenantId();
+        this.initDefaultFieldsCreate();
+        this.createUser = currentUser.getId();
+        return this;
+    }
 }

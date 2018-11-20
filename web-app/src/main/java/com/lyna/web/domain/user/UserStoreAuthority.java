@@ -2,24 +2,20 @@ package com.lyna.web.domain.user;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "m_user_store_authority")
 @Data
-@NoArgsConstructor
 public class UserStoreAuthority extends AbstractEntity {
 
     @Id
     @Column(name = "user_store_authority_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "store_id")
@@ -31,6 +27,10 @@ public class UserStoreAuthority extends AbstractEntity {
     @Column(name = "authority")
     private short authority;
 
+    public UserStoreAuthority() {
+        this.id = UUID.randomUUID().toString();
+    }
+
     public String storeAuthorityToUserAuthority() {
         return StoreRoleType.fromVal(this.authority).name();
     }
@@ -38,7 +38,7 @@ public class UserStoreAuthority extends AbstractEntity {
     public void initDefaultCreateFields(User currentUser) {
         this.tenantId = currentUser.getTenantId();
         this.initDefaultFieldsCreate();
-        this.createUser = currentUser.getUserId();
+        this.createUser = currentUser.getId();
     }
 
 }

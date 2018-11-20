@@ -1,5 +1,6 @@
 package com.lyna.commons.infrustructure.object;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -77,5 +78,11 @@ public class AbstractEntity extends AbstractObject {
 
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
+    }
+
+    @JsonIgnore
+    public <E extends AbstractEntity > E withTenantId(int tenantId) {
+        this.tenantId = tenantId;
+        return (E) this;
     }
 }

@@ -7,6 +7,8 @@ import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserList;
 import com.lyna.web.domain.user.UserRegisterAggregate;
 import com.lyna.web.domain.user.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -30,41 +45,35 @@ public class UserController extends AbstractCustomController {
     private static int currentPage = 1;
     private static int pageSize = 5;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private StoreService storeService;
 
-//    @GetMapping
-////    @IsAdmin
-//    public String getUserByEmail(Model model, @RequestParam String param, Principal principal) {
-//        model.addAttribute("appName", param.concat(UUID.randomUUID().toString()));
-//        return "/home";
-//    }
-
-    @PostMapping(value = {"/user-create", "/user-create/"})
-    public void registerUser(@ModelAttribute UserRegisterAggregate userRegisterAggregate) {
-//        return this.userService.registerUser(user);
-        System.out.println("==================registerUser==================");
-        System.out.println("==================registerUser==================");
-//        return null;
+    @PostMapping(value = {"/register", "/register/"})
+    public String registerUser(@ModelAttribute @Valid UserRegisterAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal) {
+        User currentUser = (User) principal.getPrincipal();
+        this.userService.registerUser(currentUser, userRegisterAggregate);
+        return "user/user-create";
     }
 
 
-    @PostMapping(value = {"/create/"})
-    public void registerUser1(@ModelAttribute User user) {
-//        return this.userService.registerUser(user);
-        System.out.println("==================registerUser1==================");
-//        return null;
-    }
-
-
-    @GetMapping(value = {"/user-create", "/user-create/"})
-    public String userPage(Model model) {
+    @GetMapping(value = {"/register", "/register/"})
+    public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
+        User currentUser = (User) principal.getPrincipal();
         UserRegisterAggregate userRegisterAggregate = new UserRegisterAggregate();
+        //TODO: =>NghiaPT put it to ModelAttributes (Using in MVC- check thymeleaf for convention)
+        List<Store> stores = storeService.findAll(currentUser.getTenantId());
 
+        userRegisterAggregate.setRolePerStore(UserRegisterAggregate.toUserStoreAuthorityAggregate(stores));
+
+
+        //TODO: => nghiapt move to Object
+        model.addAttribute("userPerRoles", UserRegisterAggregate.toUserStoreAuthorityAggregate(stores));
         model.addAttribute("userRegisterAggregate", userRegisterAggregate);
-        model.addAttribute("userPerRoles", userRegisterAggregate.defaultRolePerStores());
 
         return "user/user-create";
     }
@@ -73,13 +82,13 @@ public class UserController extends AbstractCustomController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(
             Model model,
-            Principal principal,
+            UsernamePasswordAuthenticationToken principal,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-        List<Store> storeListAll = storeService.getStoreList((User) principal);
+        List<Store> storeListAll = storeService.getStoreList((User) principal.getPrincipal());
 
         Page<UserList> userPage =
                 userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll);

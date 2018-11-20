@@ -3,8 +3,6 @@ package com.lyna.web.domain.order;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +15,6 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "t_order_detail")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @NamedQueries({
         @NamedQuery(name = "OrderDetail.countAll", query = "SELECT COUNT(x) FROM OrderDetail x")
 })

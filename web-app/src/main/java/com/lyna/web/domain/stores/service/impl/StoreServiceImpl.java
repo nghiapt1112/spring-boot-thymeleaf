@@ -19,4 +19,9 @@ public class StoreServiceImpl implements StoreService {
     public List<Store> getStoreList(User principal) {
         return storeRepository.getAll(principal);
     }
+
+    public List<Store> findAll(int tenantId) {
+        //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
+        return this.storeRepository.getAll(null);
+    }
 }
