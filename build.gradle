@@ -19,7 +19,7 @@ allprojects {
 
     tasks.withType(JavaExec) {
         if (System.getProperty('debug', '0') == '1') {
-            jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+            jvmArgs = ["-Dspring.output.ansi.enabled=ALWAYS","-Xdebug", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" ]
         }
     }
 
