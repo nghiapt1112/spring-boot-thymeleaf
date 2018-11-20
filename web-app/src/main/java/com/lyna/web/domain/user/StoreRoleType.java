@@ -24,6 +24,10 @@ public enum StoreRoleType {
         return val;
     }
 
+    public short getShortVal() {
+        return (short) val;
+    }
+
     public static StoreRoleType fromVal(int val) {
         return storeRoleByValue.get(val);
     }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -55,15 +59,19 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Transactional
     public User registerUser(User currentUser, UserRegisterAggregate aggregate) {
         User user = aggregate.toUser();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         User userExisted = this.findByEmail(user.getEmail());
         if (Objects.nonNull(userExisted)) {
             throw new UserException(toInteger("err.user.duplicateUser.code"), toStr("err.user.duplicateUser.msg"));
         }
+
+        User createdUser = this.createUser(user.withDefaultFields(currentUser));
         userStoreAuthorityService.assignUserToStore(aggregate.toUserStoreAuthorities().peek(el -> {
-            el.setUserId(user.getUserId());
+            el.setUserId(createdUser.getId());
             el.initDefaultCreateFields(currentUser);
         }).collect(Collectors.toList()));
-        return this.createUser(user);
+        return createdUser;
     }
 
     public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll) {
@@ -92,7 +100,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             userList.setEmail(user.getEmail());
             userList.setName(user.getUsername());
 
-            UserStoreAuthority userStoreAuthority = mapStoreAuthority.get(user.getUserId());
+            UserStoreAuthority userStoreAuthority = mapStoreAuthority.get(user.getId());
             Map<String, Integer> map = new HashMap<>();
 
             //TODO Liệt kê toàn bộ store name theo id, sau đó đối với storeId thì thêm quyền của nó vào
