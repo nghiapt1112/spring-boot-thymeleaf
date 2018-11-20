@@ -43,9 +43,7 @@ public class UserController extends AbstractCustomController {
     @GetMapping(value = {"/user-create", "/user-create/"})
     public String userPage(Model model) {
         UserRegisterAggregate userRegisterAggregate = new UserRegisterAggregate();
-        userRegisterAggregate.setOldData("Nghia- Old Data");
         userRegisterAggregate.getUserPerStore(userRegisterAggregate.defaultRolePerStores());
-        userRegisterAggregate.setFlagTest(true);
 
         model.addAttribute("userInput", userRegisterAggregate);
         model.addAttribute("userRegisterAggregate", userRegisterAggregate);
