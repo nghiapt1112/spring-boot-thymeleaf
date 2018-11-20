@@ -36,6 +36,7 @@ public class AbstractCustomController {
             for (Validator validator : binder.getValidators()) {
                 if (validator instanceof BaseValidator) {
                     included = true;
+                    break;
                 }
             }
             if (!included) {

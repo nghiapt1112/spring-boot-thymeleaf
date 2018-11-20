@@ -22,17 +22,38 @@ public class UserController extends AbstractCustomController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-//    @IsAdmin
-    public String getUserByEmail(Model model, @RequestParam String param, Principal principal) {
-        model.addAttribute("appName", param.concat(UUID.randomUUID().toString()));
-        userService.registerUser((User) principal, new UserRegisterAggregate());
-        return "/home";
+//    @GetMapping
+////    @IsAdmin
+//    public String getUserByEmail(Model model, @RequestParam String param, Principal principal) {
+//        model.addAttribute("appName", param.concat(UUID.randomUUID().toString()));
+//        return "/home";
+//    }
+
+    @PostMapping(value = {"/user-create", "/user-create/"})
+    public void registerUser(@ModelAttribute UserRegisterAggregate userRegisterAggregate) {
+//        return this.userService.registerUser(user);
+        System.out.println("==================registerUser==================");
+        System.out.println("==================registerUser==================");
+//        return null;
     }
 
-    @PostMapping(name = "/")
-    public User registerUser(@ModelAttribute User user) {
+
+    @PostMapping(value = {"/create/"})
+    public void registerUser1(@ModelAttribute User user) {
 //        return this.userService.registerUser(user);
-        return null;
+        System.out.println("==================registerUser1==================");
+//        return null;
     }
+
+
+    @GetMapping(value = {"/user-create", "/user-create/"})
+    public String userPage(Model model) {
+        UserRegisterAggregate userRegisterAggregate = new UserRegisterAggregate();
+
+        model.addAttribute("userRegisterAggregate", userRegisterAggregate);
+        model.addAttribute("userPerRoles", userRegisterAggregate.defaultRolePerStores());
+
+        return "user/user-create";
+    }
+
 }

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.Collection;
 
 @Repository
 public class UserStoreAuthorityRepositoryImpl extends SimpleJpaRepository<UserStoreAuthority, String> implements UserStoreAuthorityRepository {
@@ -15,8 +14,4 @@ public class UserStoreAuthorityRepositoryImpl extends SimpleJpaRepository<UserSt
         super(UserStoreAuthority.class, em);
     }
 
-    @Override
-    public void assignUserToStore(Collection<UserStoreAuthority> userStoreAuthorities) {
-
-    }
 }

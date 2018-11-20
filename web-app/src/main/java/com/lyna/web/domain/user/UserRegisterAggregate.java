@@ -4,9 +4,8 @@ import com.lyna.commons.infrustructure.object.AbstractObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 @Data
@@ -15,6 +14,7 @@ public class UserRegisterAggregate extends AbstractObject {
     private String email;
     private String userName;
     private String password;
+    private boolean flagTest;
     private List<UserStoreAuthorityAggregate> rolePerStore;
 
     public User toUser() {
@@ -30,14 +30,36 @@ public class UserRegisterAggregate extends AbstractObject {
                 .map(UserStoreAuthorityAggregate::toUserStoreAuthority);
     }
 
+    public UserStoreAuthorityAggregate userStoreRoleInstance() {
+        return new UserStoreAuthorityAggregate();
+    }
+
+    public List<UserStoreAuthorityAggregate> defaultRolePerStores() {
+        List<UserStoreAuthorityAggregate> testData = new ArrayList<>();
+
+        testData.add(new UserStoreAuthorityAggregate("name1", "storeID1", "EDIT"));
+        testData.add(new UserStoreAuthorityAggregate("name2","storeID2", "EDIT"));
+        testData.add(new UserStoreAuthorityAggregate("name3","storeID3", "EDIT"));
+        testData.add(new UserStoreAuthorityAggregate("name4","storeID4", "EDIT"));
+        return testData;
+    }
+
 }
 
 
 @Data
 @NoArgsConstructor
 class UserStoreAuthorityAggregate {
+    private String name;
     private String storeId;
     private String storeRole;
+    private boolean nFlag;
+
+    public UserStoreAuthorityAggregate(String name, String storeId, String storeRole) {
+        this.name = name;
+        this.storeId = storeId;
+        this.storeRole = storeRole;
+    }
 
     public UserStoreAuthority toUserStoreAuthority() {
         UserStoreAuthority userStoreAuthority = new UserStoreAuthority();
