@@ -20,22 +20,28 @@
                     <p class="row"><label class="col-md-2">Name: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
                     <p class="row"><label class="col-md-2">Password: </label> <input class="col-md-3" type="text" th:field="*{password}"/></p>
                     <p class="row"><label class="col-md-2">Re-Password:</label> <input class="col-md-3" type="text" th:field="*{password}"/></p>
-                    <p class="row"><label class="col-md-2">Flag-Test:</label> <input class="col-md-3" type="checkbox" th:field="*{flagTest}"/></p>
-
+                    <p th:field="*{oldData}" th:text="${userInput.oldData}"></p>
+                    <p class="row"><label class="col-md-2">old data:</label> <p   th:text="${userInput.oldData}"/></p>
+                    <p class="row"><label class="col-md-2">Flag-Test-text:</label> <p th:text="${userInput.flagTest}"/></p>
                     <hr>
 
                     <div class="row">
+                        <label class="col-md-1 col-md-offset-1 text-center">Index</label>
                         <label class="col-md-1 col-md-offset-2 text-center">View</label>
                         <label class="col-md-1 text-center">Edit</label>
                     </div>
-                    <div class="row" th:each="item,index : ${userPerRoles}">
-                        <label class="col-md-2" th:text="${index.index}"></label>
-                        <label class="col-md-2" th:text="${item.getName()}"></label>
+
+
+                    <!--rolePerStore-->
+                    <div class="row" th:each="item,el : ${userPerRoles}">
+                    <!--<div class="row" th:each="item,el : ${userRegisterAggregate.rolePerStore}">-->
+                        <label class="col-md-2" th:text="${el.index}" ></label>
+                        <label class="col-md-2" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"   th:text="${item.name}"> </label>
                         <div class="col-md-1 text-center">
-                            <input type="checkbox" th:value="true" th:checked="${item.nFlag}">
+                            <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
                         </div>
                         <div class="col-md-1 text-center">
-                            <input type="checkbox">
+                            <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canEdit}">
                         </div>
                     </div>
 
@@ -49,11 +55,10 @@
                             <!--<input type="reset" value="Reset"/>-->
                         <!--</p>-->
                     <!--</form>-->
-
-                    <p>
+                    <br>
+                    <div class="col-md-5 text-center">
                         <input type="submit" value="Submit" class="btn btn-primary"/>
-                        <input type="reset" value="Clear" class="btn btn-danger"/>
-                    </p>
+                    </div>
 
                 </form>
             </div>

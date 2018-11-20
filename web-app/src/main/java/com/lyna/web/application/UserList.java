@@ -32,10 +32,7 @@ public class UserList extends AbstractCustomController {
     private StoreRepository storeRepository;
 
     @RequestMapping(value = "/userlist", method = RequestMethod.GET)
-    public String listUsers(
-            Model model,
-            @RequestParam("page") Optional<Integer> page,
-            @RequestParam("size") Optional<Integer> size) {
+    public String listUsers(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 

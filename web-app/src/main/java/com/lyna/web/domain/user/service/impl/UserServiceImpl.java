@@ -59,13 +59,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (Objects.nonNull(userExisted)) {
             throw new UserException(toInteger("err.user.duplicateUser.code"), toStr("err.user.duplicateUser.msg"));
         }
-        userStoreAuthorityService.assignUserToStore(aggregate.toUserStoreAuthorities().map(el -> {
+        userStoreAuthorityService.assignUserToStore(aggregate.toUserStoreAuthorities().peek(el -> {
             el.setUserId(user.getUserId());
             el.initDefaultCreateFields(currentUser);
-            return el;
         }).collect(Collectors.toList()));
-        User newUser = this.createUser(user);
-        return newUser;
+        return this.createUser(user);
     }
 
     public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll) {
