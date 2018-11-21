@@ -1,4 +1,4 @@
-package com.lyna.web.domain.user;
+package com.lyna.web.domain.view;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
 import lombok.Data;

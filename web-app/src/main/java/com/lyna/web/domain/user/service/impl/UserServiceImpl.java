@@ -3,7 +3,7 @@ package com.lyna.web.domain.user.service.impl;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.UserList;
+import com.lyna.web.domain.view.UserList;
 import com.lyna.web.domain.user.UserRegisterAggregate;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
