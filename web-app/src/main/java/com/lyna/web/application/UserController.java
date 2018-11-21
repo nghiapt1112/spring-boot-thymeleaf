@@ -64,15 +64,15 @@ public class UserController extends AbstractCustomController {
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserRegisterAggregate userRegisterAggregate = new UserRegisterAggregate();
-
-
-//        model.addAttribute("userInput", userRegisterAggregate);
-        model.addAttribute("userRegisterAggregate", userRegisterAggregate);
         //TODO: =>NghiaPT put it to ModelAttributes (Using in MVC- check thymeleaf for convention)
         List<Store> stores = storeService.findAll(currentUser.getTenantId());
 
+        userRegisterAggregate.setRolePerStore(UserRegisterAggregate.toUserStoreAuthorityAggregate(stores));
+
+
         //TODO: => nghiapt move to Object
         model.addAttribute("userPerRoles", UserRegisterAggregate.toUserStoreAuthorityAggregate(stores));
+        model.addAttribute("userRegisterAggregate", userRegisterAggregate);
 
         return "user/user-create";
     }
@@ -81,13 +81,13 @@ public class UserController extends AbstractCustomController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(
             Model model,
-            Principal principal,
+            UsernamePasswordAuthenticationToken principal,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-        List<Store> storeListAll = storeService.getStoreList((User) principal);
+        List<Store> storeListAll = storeService.getStoreList((User) principal.getPrincipal());
 
         Page<UserList> userPage =
                 userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll);
