@@ -3,6 +3,7 @@ package com.lyna.web.domain.stores.service.impl;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
+import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,11 @@ public class StoreServiceImpl implements StoreService {
 
     public List<Store> findAll(int tenantId) {
         //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
-        return this.storeRepository.getAll();
+        return this.storeRepository.findAll(tenantId);
+    }
+
+    @Override
+    public List<Store> getStoreList(User principal) {
+        return storeRepository.getAll(principal);
     }
 }

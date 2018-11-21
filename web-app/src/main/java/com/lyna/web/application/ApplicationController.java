@@ -1,10 +1,6 @@
 package com.lyna.web.application;
 
-import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.UserRegisterAggregate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -24,7 +20,6 @@ public class ApplicationController {
     public String invalidSession() {
         return "invalidSession";
     }
-
 
 
     @RequestMapping({"/layout", "/"})
