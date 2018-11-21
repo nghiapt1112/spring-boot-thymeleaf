@@ -4,25 +4,21 @@ import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.UserList;
 import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.security.authorities.IsAdmin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lyna.web.domain.view.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +33,7 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/user")
 public class UserController extends AbstractCustomController {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
 
     //ToDo: cho vào file config nhé
     private static int currentPage = 1;
@@ -54,22 +50,18 @@ public class UserController extends AbstractCustomController {
     public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         this.userService.registerUser(currentUser, userRegisterAggregate);
-        return "redirect:/user/list";
+        return REDIRECT_TO_USER_LIST_PAGE;
     }
 
 
     @GetMapping(value = {"/register", "/register/"})
     @IsAdmin
-    public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
+    public String registerUserPage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate userRegisterAggregate = new UserAggregate();
-        //TODO: =>NghiaPT put it to ModelAttributes (Using in MVC- check thymeleaf for convention)
-        List<Store> stores = storeService.findAll(currentUser.getTenantId());
+        userRegisterAggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
 
-        userRegisterAggregate.setRolePerStore(UserAggregate.toUserStoreAuthorityAggregate(stores));
-
-        //TODO: => nghiapt move to Object
-        model.addAttribute("userPerRoles", UserAggregate.toUserStoreAuthorityAggregate(stores));
+        model.addAttribute("userPerRoles", userRegisterAggregate.getRolePerStore());
         model.addAttribute("userRegisterAggregate", userRegisterAggregate);
 
         return "user/user-create";
@@ -77,7 +69,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/{userId}"})
     @IsAdmin
-    public String userUpdatePage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
+    public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
 
@@ -87,11 +79,10 @@ public class UserController extends AbstractCustomController {
 
     @PostMapping(value = {"/update", "/update/"})
     @IsAdmin
-    public String  updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
+    public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
         User currentUser = (User) principal.getPrincipal();
         userService.update(currentUser, aggregate);
-        System.out.println(aggregate);
-        return "redirect:/user/list";
+        return REDIRECT_TO_USER_LIST_PAGE;
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

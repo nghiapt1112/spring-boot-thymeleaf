@@ -30,7 +30,6 @@
                         <label class="col-md-2" th:text="${item.name}"> </label>
                         <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].name}"/>
                         <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].storeId}" />
-                        <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].storeRole}" />
                         <div class="col-md-1 text-center">
                             <input type="checkbox" th:field="${aggregate.rolePerStore[__${el.index}__].canView}" th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
                         </div>

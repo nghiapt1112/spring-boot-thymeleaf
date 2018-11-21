@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-   <!-- <meta name="_csrf" content="${_csrf.token}"/>-->
+    <!-- <meta name="_csrf" content="${_csrf.token}"/>-->
     <!-- default header name is X-CSRF-TOKEN -->
     <!--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
-    <head th:replace="layout :: head('List User')"></head>
+    <head th:replace="/fragment/head/head :: head('ユーザー 一覧')"></head>
     <link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listUser.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <header th:replace="layout :: header"></header>
-    <div th:replace="layout :: content-left"></div>
+    <header th:replace="/fragment/header/header :: header"></header>
+    <div th:replace="/fragment/menu/menu :: menu"></div>
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                List User
+                ユーザー 一覧
             </h1>
         </section>
         <section class="content content-right">
@@ -22,14 +22,14 @@
                 <!--<form action="#" th:action="@{/deleteUser/}" method="post">-->
                 <div class="col-md-12 button_top">
                     <div class="col-md-2 button-top-order">
-                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary" th:href="@{/registerUser}">Register</a>
+                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary" th:href="@{/user/register}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
                         <!--/*@thymesVar id="user" type="java"*/-->
-                        <!-- <button type="submit" class="btn btn-primary" onclick="deleteUser()">
+                        <!-- <button type="submit" class="btn btn-primary" id="customerForm">
                              Delete
                          </button>-->
-                        <a class="btn btn-primary" onclick="deleteUser()">Delete</a>
+                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteUser()">削除</a>
 
                     </div>
                     <div class="col-md-8">
@@ -45,8 +45,8 @@
                                     <th>
                                         <input type="checkbox" id="checkBoxAll">
                                     </th>
-                                    <th>Mail</th>
-                                    <th>Username</th>
+                                    <th>メールアドレス</th>
+                                    <th>ユーザー名</th>
                                     <th th:each="item: ${storeModel}">
                                         <span th:text="${item.getName()}"></span>
                                     </th>
@@ -59,8 +59,8 @@
                                         <input type="checkbox" th:id="${item.userId}" class="chkCheckBoxId"
                                                name="userid">
                                     </td>
-                                    <td th:text="${item.email}">join@gmail.com</td>
-                                    <td th:text="${item.name}">Join username</td>
+                                    <td th:text="${item.email}"></td>
+                                    <td th:text="${item.name}"></td>
                                     <td th:each="element : ${item.mapStore}">
                                         <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
                                     </td>
@@ -77,7 +77,7 @@
     </div>
 
 </div>
-<footer th:replace="layout :: footer"></footer>
+<footer th:replace="/fragment/footer/footer :: footer"></footer>
 <script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>
 
 <script type="text/javascript">
@@ -101,37 +101,44 @@
         }
 
         if (!pickedOne) {
-            alert('1つ星で1点満点中2人の評価があります。!');
+            alert('少なくともいずれか一つを選らんでください。');
             return false;
-        } else
-        if( confirm('削除してもよろしいですか？')) {
-            postDataFromAPI();
+        } else if (confirm('削除してもよろしいですか？')) {
+            ajaxPost();
         }
     }
 
-    function postDataFromAPI() {
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
-        alert(token);
-        var modelObj = {};
 
+    function ajaxPost() {
+        // PREPARE FORM DATA
+        var formData = new FormData();
+        // DO POST
         $.ajax({
             type: "POST",
-            url: "/delete",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
+            contentType: "application/json",
+            url: "/user/delete",
+            data: JSON.stringify(formData),
+            dataType: 'json',
+            success: function (result) {
+                if (result.status == "Done") {
+                    alert("削除しました。");
+                    $("#postResultDiv").html("<p style='background-color:#7FA7B0; color:white; padding:20px 20px 20px 20px'>Post Successfully! <br>}</p>");
+                } else {
+                    alert("削除できませんでした。");
+                    /*$("#postResultDiv").html("<strong>Error</strong>");*/
+                }
+                console.log(result);
             },
-            data: JSON.stringify(modelObj),
-            success: function (data) {
-                alert(" 削除しました。");
-                console.log("POST API RESPONSE::" + data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-
+            error: function (e) {
+                alert(" 削除できませんでした。")
             }
         });
+        resetData();
     }
+
+    function resetData() {
+
+    };
 </script>
 </body>
 </html>

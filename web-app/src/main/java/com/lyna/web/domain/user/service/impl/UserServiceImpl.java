@@ -4,7 +4,7 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
-import com.lyna.web.domain.user.UserList;
+import com.lyna.web.domain.view.UserList;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.UserRepository;
@@ -144,6 +144,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    @Transactional
     public void update(User currentUser, UserAggregate aggregate) {
         User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();

@@ -4,9 +4,11 @@ import com.lyna.commons.infrustructure.object.AbstractObject;
 import com.lyna.web.domain.stores.Store;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,15 +33,6 @@ public class UserAggregate extends AbstractObject {
     private String password;
 
     private List<UserStoreRole> rolePerStore;
-
-    /**
-     * Parse List< Store> to List< Aggregate>
-     */
-    public static List<UserStoreRole> toUserStoreAuthorityAggregate(List<Store> stores) {
-        return stores.stream()
-                .map(UserStoreRole::fromStoreEntity)
-                .collect(Collectors.toList());
-    }
 
     public User toUser() {
         User user = new User();
@@ -71,6 +64,17 @@ public class UserAggregate extends AbstractObject {
 
         return this;
     }
+
+    /**
+     * Parse List< Store> to List< Aggregate>
+     * Cause by entity data will be difference with data in view screen => need to convert.
+     */
+    public void updateRolePerStore(List<Store> stores) {
+        if (CollectionUtils.isEmpty(this.rolePerStore)) {
+            this.rolePerStore = new ArrayList<>();
+        }
+        this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
+    }
 }
 
 
@@ -79,7 +83,6 @@ public class UserAggregate extends AbstractObject {
 class UserStoreRole {
     private String name;
     private String storeId;
-    private String storeRole;
     private boolean canView;
     private boolean canEdit;
 

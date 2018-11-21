@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head th:replace="layout :: head('User Registration')"></head>
+		<head th:replace="/fragment/head/head :: head('User Registration')"></head>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <header th:replace="layout :: header"></header>
-    <div th:replace="layout :: content-left"></div>
+    <header th:replace="/fragment/header/header :: header"></header>
+		<div th:replace="/fragment/menu/menu :: menu"></div>
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -31,7 +31,6 @@
                         <label class="col-md-2" th:text="${item.name}"> </label>
                         <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
                         <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}" />
-                        <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeRole}" />
                         <div class="col-md-1 text-center">
                             <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
                         </div>
@@ -49,9 +48,11 @@
             </div>
         </section>
     </div>
-
 </div>
-<footer th:replace="layout :: footer"></footer>
+
+<footer th:replace="/fragment/footer/footer :: footer"></footer>
+<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>
+
 
 </body>
 </html>
