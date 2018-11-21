@@ -62,13 +62,13 @@ $(function () {
     $('#listUser').DataTable({
         'paging': true,
         'lengthChange': true,
-        'searching': true,
+        'searching': false,
         'ordering': true,
         'info': true,
         'autoWidth': true,
 
         'order': [],
-        "columnDefs": [{'orderable': false, 'targets': [0, 3, 4,5]}]
+        "columnDefs": [{'orderable': false, 'targets': [0, 3]}]
     })
 })
  
