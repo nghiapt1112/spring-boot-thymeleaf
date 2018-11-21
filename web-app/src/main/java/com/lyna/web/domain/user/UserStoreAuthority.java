@@ -41,4 +41,9 @@ public class UserStoreAuthority extends AbstractEntity {
         this.createUser = currentUser.getId();
     }
 
+    public void initDefaultUpdateFields(User currentUser) {
+        this.initDefaultFieldsUpdate();
+        this.updateUser = currentUser.getId();
+    }
+
 }

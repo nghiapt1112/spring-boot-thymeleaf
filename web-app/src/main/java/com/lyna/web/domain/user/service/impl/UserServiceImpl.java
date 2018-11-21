@@ -4,13 +4,13 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
-import com.lyna.web.domain.view.UserList;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.UserRepository;
 import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
+import com.lyna.web.domain.view.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -63,17 +63,24 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = aggregate.toUser();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        User userExisted = this.findByEmail(user.getEmail());
+        this.throwIfExisted(user.getEmail());
+
+        User createdUser = this.createUser(user.withDefaultFields(currentUser));
+        userStoreAuthorityService.assignUserToStore(
+                user.getStoreAuthoritiesAsStream()
+                        .peek(el -> {
+                            el.setUserId(createdUser.getId());
+                            el.initDefaultCreateFields(currentUser);
+                        })
+                        .collect(Collectors.toList()));
+        return createdUser;
+    }
+
+    private void throwIfExisted(String email) {
+        User userExisted = this.findByEmail(email);
         if (Objects.nonNull(userExisted)) {
             throw new UserException(toInteger("err.user.duplicateUser.code"), toStr("err.user.duplicateUser.msg"));
         }
-
-        User createdUser = this.createUser(user.withDefaultFields(currentUser));
-        userStoreAuthorityService.assignUserToStore(aggregate.toUserStoreAuthorities().peek(el -> {
-            el.setUserId(createdUser.getId());
-            el.initDefaultCreateFields(currentUser);
-        }).collect(Collectors.toList()));
-        return createdUser;
     }
 
     public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll) {
@@ -150,19 +157,21 @@ public class UserServiceImpl extends BaseService implements UserService {
         User userToUpdate = aggregate.toUser();
         oldUser.updateInfo(userToUpdate);
         this.userRepository.save(oldUser);
-        this.updateAuthorityInfo(oldUser, aggregate.toUserStoreAuthorities());
+
+
+        Map<String, Short> authorityById = userToUpdate.getStoreAuthoritiesAsStream()
+                .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
+
+        this.userStoreAuthorityService.assignUserToStore(
+                oldUser.getStoreAuthoritiesAsStream()
+                        .filter(el -> authorityById.containsKey(el.getId()))
+                        .peek(el -> {
+                            el.setAuthority(authorityById.get(el.getId()));
+                            el.initDefaultUpdateFields(currentUser);
+                        })
+                        .collect(Collectors.toList())
+        );
+
     }
-
-    private void updateAuthorityInfo(User oldUser, Stream<UserStoreAuthority> newAuthority) {
-        Map<String, Short> authorityById = newAuthority.collect(Collectors.toMap(UserStoreAuthority::getStoreId, o -> o.getAuthority(), (v1, v2) -> v1));
-
-        oldUser.getStoreAuthoritiesAsStream()
-                .filter(el -> authorityById.containsKey(el.getStoreId()))
-                .peek(el -> el.setAuthority(authorityById.get(el.getStoreId())))
-                .collect(Collectors.toList());
-
-        this.userStoreAuthorityService.assignUserToStore(oldUser.getUserStoreAuthorities());
-    }
-
 
 }

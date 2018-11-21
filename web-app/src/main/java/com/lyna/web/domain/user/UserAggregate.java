@@ -11,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,7 +30,6 @@ public class UserAggregate extends AbstractObject {
     @NotEmpty
     private String userName;
 
-    @NotEmpty
     private String password;
 
     private List<UserStoreRole> rolePerStore;
@@ -39,6 +39,7 @@ public class UserAggregate extends AbstractObject {
         user.setEmail(this.email);
         user.setName(this.userName);
         user.setPassword(this.password);
+        user.setUserStoreAuthorities(toUserStoreAuthorities().collect(Collectors.toSet()));
         return user;
     }
 
@@ -81,6 +82,7 @@ public class UserAggregate extends AbstractObject {
 @Data
 @NoArgsConstructor
 class UserStoreRole {
+    private String id;
     private String name;
     private String storeId;
     private boolean canView;
@@ -95,6 +97,7 @@ class UserStoreRole {
 
     public static UserStoreRole fromStoreAuthorityEntity(UserStoreAuthority entity, Map<String, String> storeNameById) {
         UserStoreRole aggregate = new UserStoreRole();
+        aggregate.setId(entity.getId());
         aggregate.setStoreId(entity.getStoreId());
         aggregate.setName(storeNameById.get(entity.getStoreId()));
         aggregate.parseRole(entity.getAuthority());
@@ -103,6 +106,9 @@ class UserStoreRole {
 
     public UserStoreAuthority toUserStoreAuthority() {
         UserStoreAuthority userStoreAuthority = new UserStoreAuthority();
+        if (Objects.nonNull(this.id)) {
+            userStoreAuthority.setId(this.id);
+        }
         userStoreAuthority.setStoreId(this.storeId);
 
         if (canEdit) {
