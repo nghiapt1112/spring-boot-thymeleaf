@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class UserDetailServiceImpl extends BaseService implements UserDetailsSer
         User user = userService.findByEmail(username);
         if (Objects.isNull(user)) {
             //  TODO: throw authenticate Exception cause by: user not existed.
-            throw new UserException(toInteger(""), toStr(""));
+            throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
         } else {
             user.hideSensitiveFields();
             return user;

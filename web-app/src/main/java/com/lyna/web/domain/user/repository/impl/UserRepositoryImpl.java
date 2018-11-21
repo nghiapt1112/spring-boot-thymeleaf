@@ -7,7 +7,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -19,9 +18,19 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public User findByEmail(String email) {
-        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities WHERE u.email = :email";
+        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.email = :email";
         List<User> users = entityManager.createQuery(query, User.class).setParameter("email", email).getResultList();
-        return CollectionUtils.isEmpty(users) ? null: users.get(0);
+        return CollectionUtils.isEmpty(users) ? null : users.get(0);
+    }
+
+    @Override
+    public User findById(int tenantId, String userId) {
+        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.tenantId = :tenantId AND u.id = :id";
+        List<User> users = entityManager.createQuery(query, User.class)
+                .setParameter("tenantId", tenantId)
+                .setParameter("id", userId)
+                .getResultList();
+        return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }
 
 }

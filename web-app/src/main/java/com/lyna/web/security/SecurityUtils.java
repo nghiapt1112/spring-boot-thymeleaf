@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SecurityUtils {
-    private static final String ROLE_PREFIX = "ROLE_";
+    public static final String ROLE_PREFIX = "ROLE_";
 
     public static Set<GrantedAuthority> populateGrantedAuthorities(Collection<UserStoreAuthority> authorities) {
         Set<GrantedAuthority> grantedAuthorities = authorities.stream()

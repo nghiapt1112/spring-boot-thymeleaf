@@ -3,8 +3,8 @@ package com.lyna.web.domain.user.service.impl;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
+import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserList;
-import com.lyna.web.domain.user.UserRegisterAggregate;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.UserRepository;
@@ -27,9 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
+@Transactional
 public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
@@ -57,7 +59,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     @Transactional
-    public User registerUser(User currentUser, UserRegisterAggregate aggregate) {
+    public User registerUser(User currentUser, UserAggregate aggregate) {
         User user = aggregate.toUser();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -131,4 +133,35 @@ public class UserServiceImpl extends BaseService implements UserService {
         return userPage;
 
     }
+
+    @Override
+    public User findById(int tenantId, String userId) {
+        User user = this.userRepository.findById(tenantId, userId);
+        if (Objects.isNull(user)) {
+            throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
+        }
+        return user;
+    }
+
+    @Override
+    public void update(User currentUser, UserAggregate aggregate) {
+        User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
+        User userToUpdate = aggregate.toUser();
+        oldUser.updateInfo(userToUpdate);
+        this.userRepository.save(oldUser);
+        this.updateAuthorityInfo(oldUser, aggregate.toUserStoreAuthorities());
+    }
+
+    private void updateAuthorityInfo(User oldUser, Stream<UserStoreAuthority> newAuthority) {
+        Map<String, Short> authorityById = newAuthority.collect(Collectors.toMap(UserStoreAuthority::getStoreId, o -> o.getAuthority(), (v1, v2) -> v1));
+
+        oldUser.getStoreAuthoritiesAsStream()
+                .filter(el -> authorityById.containsKey(el.getStoreId()))
+                .peek(el -> el.setAuthority(authorityById.get(el.getStoreId())))
+                .collect(Collectors.toList());
+
+        this.userStoreAuthorityService.assignUserToStore(oldUser.getUserStoreAuthorities());
+    }
+
+
 }

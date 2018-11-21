@@ -34,5 +34,10 @@ public class Store extends AbstractEntity {
 
     @Column(name = "area")
     private String area;
+
+
+    public Store self() {
+        return this;
+    }
 }
 
