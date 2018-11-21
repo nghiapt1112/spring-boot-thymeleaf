@@ -5,9 +5,8 @@ import com.lyna.web.domain.user.User;
 
 import java.util.List;
 
-
 public interface StoreService {
+    List<Store> findAll(int tenantId);
 
     List<Store> getStoreList(User principal);
-    List<Store> findAll(int tenantId);
 }

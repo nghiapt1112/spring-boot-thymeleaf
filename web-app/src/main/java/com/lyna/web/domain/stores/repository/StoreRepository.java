@@ -10,4 +10,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getAll(User principal);
 
     Store save(Store store);
+
+    List<Store> findAll(int tenantId);
 }

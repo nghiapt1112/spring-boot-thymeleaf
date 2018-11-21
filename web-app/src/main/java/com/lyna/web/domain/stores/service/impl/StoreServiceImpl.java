@@ -11,17 +11,18 @@ import java.util.List;
 
 @Service
 public class StoreServiceImpl implements StoreService {
-
     @Autowired
-    StoreRepository storeRepository;
+    private StoreRepository storeRepository;
+
+
+    public List<Store> findAll(int tenantId) {
+        //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
+        return this.storeRepository.findAll(tenantId);
+    }
 
     @Override
     public List<Store> getStoreList(User principal) {
         return storeRepository.getAll(principal);
     }
 
-    public List<Store> findAll(int tenantId) {
-        //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
-        return this.storeRepository.getAll(null);
-    }
 }

@@ -43,4 +43,12 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
             return em.merge(store);
         }
     }
+
+    @Override
+    public List<Store> findAll(int tenantId) {
+        return entityManager
+                .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId", Store.class)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
 }
