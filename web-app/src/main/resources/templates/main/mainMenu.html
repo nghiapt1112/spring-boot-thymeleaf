@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<head th:replace="/fragment/head/head :: head('メインメニュー')"></head>
+	<head th:replace="layout :: head('Main Menu')"></head>
 	<link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/mainMenu.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-	<header th:replace="/fragment/header/header :: header"></header>
-	<div th:replace="/fragment/menu/menu :: menu"></div>
+	<header th:replace="layout :: header"></header>
+	<div th:replace="layout :: content-left"></div>
     <div  class="content-wrapper">
     <section class="content-header">
       <h1>
@@ -229,7 +229,7 @@
 
 	
 </div>
-<footer th:replace="/fragment/footer/footer :: footer"></footer>
+<footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/mainMenu_t.js}"></script>
 </body>
 </html>

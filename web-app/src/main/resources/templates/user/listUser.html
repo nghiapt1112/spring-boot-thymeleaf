@@ -4,13 +4,13 @@
     <!-- <meta name="_csrf" content="${_csrf.token}"/>-->
     <!-- default header name is X-CSRF-TOKEN -->
     <!--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
-    <head th:replace="/fragment/head/head :: head('ユーザー 一覧')"></head>
+    <head th:replace="layout :: head('List User')"></head>
     <link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listUser.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <header th:replace="/fragment/header/header :: header"></header>
-    <div th:replace="/fragment/menu/menu :: menu"></div>
+    <header th:replace="layout :: header"></header>
+    <div th:replace="layout :: content-left"></div>
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -51,94 +51,36 @@
                                         <span th:text="${item.getName()}"></span>
                                     </th>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="item: ${userPage}">
-                                    <td style="text-align: center;">
-                                        <input type="checkbox" th:id="${item.userId}" class="chkCheckBoxId"
-                                               name="userid">
-                                    </td>
-                                    <td th:text="${item.email}"></td>
-                                    <td th:text="${item.name}"></td>
-                                    <td th:each="element : ${item.mapStore}">
-                                        <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item: ${userPage}">
+                                        <td style="text-align: center;">
+                                            <div th:switch="${item.role}">
+                                                <p th:case="0"><input type="checkbox" th:value="${item.userId}"
+                                                                      class="chkCheckBoxId"
+                                                                      name="userid"></p>
+                                            </div>
+                                        </td>
+                                        <td th:text="${item.email}"></td>
+                                        <td th:text="${item.name}"></td>
+                                        <td th:each="element : ${item.mapStore}">
+                                            <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
                         </div>
-                        <!-- /.box-body -->
                     </div>
-                </div>
-                <!--</form>-->
+                </form>
             </div>
         </section>
     </div>
 
 </div>
-<footer th:replace="/fragment/footer/footer :: footer"></footer>
-<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#checkBoxAll').click(function () {
-            if ($(this).is(":checked"))
-                $('.chkCheckBoxId').prop('checked', true);
-            else
-                $('.chkCheckBoxId').prop('checked', false);
-        });
-    });
-
-    function deleteUser() {
-        var pickedOne = false;
-        var inputs = document.getElementsByClassName('chkCheckBoxId');
-        for (var i = 0, l = inputs.length; i < l; ++i) {
-            if (inputs[i].checked) {
-                pickedOne = true;
-                break;
-            }
-        }
-
-        if (!pickedOne) {
-            alert('少なくともいずれか一つを選らんでください。');
-            return false;
-        } else if (confirm('削除してもよろしいですか？')) {
-            ajaxPost();
-        }
-    }
-
-
-    function ajaxPost() {
-        // PREPARE FORM DATA
-        var formData = new FormData();
-        // DO POST
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            url: "/user/delete",
-            data: JSON.stringify(formData),
-            dataType: 'json',
-            success: function (result) {
-                if (result.status == "Done") {
-                    alert("削除しました。");
-                    $("#postResultDiv").html("<p style='background-color:#7FA7B0; color:white; padding:20px 20px 20px 20px'>Post Successfully! <br>}</p>");
-                } else {
-                    alert("削除できませんでした。");
-                    /*$("#postResultDiv").html("<strong>Error</strong>");*/
-                }
-                console.log(result);
-            },
-            error: function (e) {
-                alert(" 削除できませんでした。")
-            }
-        });
-        resetData();
-    }
-
-    function resetData() {
-
-    };
-</script>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/listUser_t.js" th:src="@{/js/listUser_t.js}"></script>
 </body>
 </html>

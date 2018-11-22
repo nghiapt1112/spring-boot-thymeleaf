@@ -9,4 +9,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findAll();
 
     User findById(int tenantId, String userId);
+	Boolean deleteByUserId(List<String> names);
+    void commitTransaction();
 }
