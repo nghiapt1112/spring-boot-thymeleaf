@@ -1,5 +1,7 @@
 package com.lyna.web.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
@@ -15,13 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -114,15 +110,21 @@ public class UserController extends AbstractCustomController {
         return "user/listUser";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String delete(HttpServletRequest request, ModelMap modelMap) {
+    //Todo: Có cần quyền quản trị không
+    //@IsAdmin
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public @ResponseBody
+    String addNew(HttpServletRequest request, Model model, UsernamePasswordAuthenticationToken principal) {
+        String userIds = request.getParameter("name");
+        ObjectMapper mapper = new ObjectMapper();
+        String ajaxResponse = "";
         try {
-            for (String userid : request.getParameterValues("userid")) {
-
-            }
-        } catch (Exception ex) {
-
+            String response = userService.deleteUser(userIds);//
+            ajaxResponse = mapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
-        return "redirect:user/listUser";
+
+        return ajaxResponse;
     }
 }

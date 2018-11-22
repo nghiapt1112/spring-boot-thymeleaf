@@ -22,4 +22,6 @@ public interface UserService {
     User findById(int tenantId, String userId);
 
     void update(User currentUser, UserAggregate aggregate);
+	
+	String deleteUser(String arrayName);
 }

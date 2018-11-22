@@ -107,7 +107,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         for (User user : userListIn) {
             UserList userList = new UserList();
             userList.setEmail(user.getEmail());
-            userList.setName(user.getUsername());
+            userList.setName(user.getName());
+            userList.setUserId(user.getId());
+            userList.setRole(user.getRole());
 
             UserStoreAuthority userStoreAuthority = mapStoreAuthority.get(user.getId());
             Map<String, Integer> map = new HashMap<>();
@@ -172,6 +174,34 @@ public class UserServiceImpl extends BaseService implements UserService {
                         .collect(Collectors.toList())
         );
 
+    }
+	
+	 @Override
+    public String deleteUser(String sUserId) {
+        boolean isDeletedUser = false;
+        List<String> listUserId = new ArrayList();
+
+        String[] arrayUserId = sUserId.split(",");
+        for (String userId : arrayUserId) {
+            listUserId.add(userId);
+        }
+
+        try {
+            boolean isDeletedStoreAuthority = userStoreAuthority.deletebyUserId(listUserId);
+            if (isDeletedStoreAuthority) {
+                isDeletedUser = userRepository.deleteByUserId(listUserId);
+                if (!isDeletedUser) {
+                    //ToDo: After delete is not success, you need rollback to data!!! Impotant
+                    userRepository.commitTransaction();
+                }
+            }
+        } catch (Exception ex) {
+        }
+
+        if (isDeletedUser)
+            return "Success";
+        else
+            return null;
     }
 
 }
