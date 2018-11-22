@@ -116,7 +116,6 @@ public class User extends AbstractEntity implements UserDetails {
         this.createUser = null;
         this.updateDate = null;
         this.updateUser = null;
-        this.name = null;
     }
 
     //TODO: move to AbstractEntity

@@ -28,6 +28,7 @@
 
                     <div class="row" th:each="item,el : ${aggregate.getRolePerStore()}">
                         <label class="col-md-2" th:text="${item.name}"> </label>
+                        <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].id}"/>
                         <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].name}"/>
                         <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].storeId}" />
                         <div class="col-md-1 text-center">

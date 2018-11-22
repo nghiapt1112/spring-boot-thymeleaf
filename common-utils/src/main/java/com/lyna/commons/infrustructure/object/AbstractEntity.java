@@ -36,6 +36,11 @@ public class AbstractEntity extends AbstractObject {
         this.createDate = new Date();
     }
 
+    public void initDefaultFieldsUpdate() {
+        //TODO: create dateTimeUtils to get currentDate
+        this.updateDate = new Date();
+    }
+
     public void initDefaultFieldsModify() {
         this.updateDate = new Date();
     }

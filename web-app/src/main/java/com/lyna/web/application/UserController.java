@@ -67,7 +67,7 @@ public class UserController extends AbstractCustomController {
         return "user/user-create";
     }
 
-    @GetMapping(value = {"/{userId}"})
+    @GetMapping(value = {"/update/{userId}"})
     @IsAdmin
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
