@@ -5,9 +5,11 @@ import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
+import com.lyna.web.domain.user.UserRequestPage;
 import com.lyna.web.domain.user.service.UserService;
-import com.lyna.web.security.authorities.IsAdmin;
 import com.lyna.web.domain.view.UserList;
+import com.lyna.web.infrastructure.object.RequestPage;
+import com.lyna.web.security.authorities.IsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +85,21 @@ public class UserController extends AbstractCustomController {
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
         User currentUser = (User) principal.getPrincipal();
         userService.update(currentUser, aggregate);
+        return REDIRECT_TO_USER_LIST_PAGE;
+    }
+
+    @GetMapping
+    public String userPage(Model model, UsernamePasswordAuthenticationToken principal, @RequestParam Integer limit,
+                           @RequestParam Integer cp, @RequestParam String name, @RequestParam String mail,
+                           @RequestParam Date start, @RequestParam Date end, @RequestParam String umail) {
+
+        RequestPage userRequestPage = new UserRequestPage();
+        userRequestPage.setCurrentPage(cp);
+        userRequestPage.setNoOfRowInPage(limit);
+        // searchFields
+        // sortFields
+
+        userService.findUsersWithPaging(userRequestPage);
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 

@@ -4,6 +4,7 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
+import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.UserRepository;
@@ -11,6 +12,7 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
+import com.lyna.web.infrastructure.object.RequestPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 @Service
 @Transactional
@@ -174,4 +174,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     }
 
+    @Override
+    public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
+        return this.userRepository.findUserWithPaging(userRequestPage);
+    }
 }
