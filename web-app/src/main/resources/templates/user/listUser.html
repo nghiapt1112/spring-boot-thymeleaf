@@ -22,7 +22,8 @@
                 <!--<form action="#" th:action="@{/deleteUser/}" method="post">-->
                 <div class="col-md-12 button_top">
                     <div class="col-md-2 button-top-order">
-                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary" th:href="@{/user/register}">新規登録</a>
+                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
+                           th:href="@{/user/register}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
                         <!--/*@thymesVar id="user" type="java"*/-->
@@ -51,29 +52,29 @@
                                         <span th:text="${item.getName()}"></span>
                                     </th>
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="item: ${userPage}">
-                                        <td style="text-align: center;">
-                                            <div th:switch="${item.role}">
-                                                <p th:case="0"><input type="checkbox" th:value="${item.userId}"
-                                                                      class="chkCheckBoxId"
-                                                                      name="userid"></p>
-                                            </div>
-                                        </td>
-                                        <td th:text="${item.email}"></td>
-                                        <td th:text="${item.name}"></td>
-                                        <td th:each="element : ${item.mapStore}">
-                                            <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item: ${userPage}">
+                                    <td style="text-align: center;">
+                                        <div th:unless="${item.userId} eq ${userId}">
+                                            <input type="checkbox" th:value="${item.userId}"
+                                                   class="chkCheckBoxId"
+                                                   name="userid">
+                                        </div>
+                                    </td>
+                                    <td th:text="${item.email}"></td>
+                                    <td th:text="${item.name}"></td>
+                                    <td th:each="element : ${item.mapStore}">
+                                        <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <!-- /.box-body -->
                     </div>
+                </div>
                 </form>
             </div>
         </section>

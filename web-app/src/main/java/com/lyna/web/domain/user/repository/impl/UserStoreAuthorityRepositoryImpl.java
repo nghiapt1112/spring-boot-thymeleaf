@@ -17,8 +17,7 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
         super(UserStoreAuthority.class, em);
     }
 
- @Override
-    @Transactional
+    @Override
     public Boolean deletebyUserId(List<String> userIds) {
         try {
             String query = "DELETE FROM UserStoreAuthority u WHERE u.userId in (:userId)";

@@ -35,8 +35,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
         return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }
 
- 	@Override
-    @Transactional
+    @Override
     public Boolean deleteByUserId(List<String> sUserId) {
         try {
             String query = "DELETE FROM User u WHERE u.id in (:usertId)";

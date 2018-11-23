@@ -98,6 +98,8 @@ public class UserController extends AbstractCustomController {
 
         model.addAttribute("userPage", userPage);
         model.addAttribute("storeModel", storeListAll);
+        if (principal != null && principal.getPrincipal() != null)
+            model.addAttribute("userId", ((User) principal.getPrincipal()).getId());
 
         int totalPages = userPage.getTotalPages();
         if (totalPages > 0) {
@@ -110,11 +112,11 @@ public class UserController extends AbstractCustomController {
         return "user/listUser";
     }
 
-    //Todo: Có cần quyền quản trị không
+    //Todo: Have is admin?
     //@IsAdmin
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public @ResponseBody
-    String addNew(HttpServletRequest request, Model model, UsernamePasswordAuthenticationToken principal) {
+    String addNew(HttpServletRequest request) {
         String userIds = request.getParameter("name");
         ObjectMapper mapper = new ObjectMapper();
         String ajaxResponse = "";

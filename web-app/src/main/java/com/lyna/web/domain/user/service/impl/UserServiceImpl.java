@@ -175,8 +175,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         );
 
     }
-	
-	 @Override
+
+    @Override
+    @Transactional
     public String deleteUser(String sUserId) {
         boolean isDeletedUser = false;
         List<String> listUserId = new ArrayList();
