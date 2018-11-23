@@ -1,15 +1,15 @@
 package com.lyna.web.domain.user;
 
-import com.lyna.web.infrastructure.object.ResponsePage;
+import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.infrustructure.object.ResponsePage;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-public class UserResponsePage extends ResponsePage<User> {
+public class UserResponsePage extends ResponsePage {
 
-    public UserResponsePage(int noOfRowInPage, List<User> results, long totalRerords) {
-        super(noOfRowInPage, results, totalRerords);
+    public UserResponsePage(int noOfRowInPage, List results, long totalRerords) {
+//        super(noOfRowInPage, results, totalRerords);
     }
 }

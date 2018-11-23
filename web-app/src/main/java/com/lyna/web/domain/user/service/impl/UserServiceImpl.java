@@ -12,7 +12,7 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
-import com.lyna.web.infrastructure.object.RequestPage;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

@@ -8,7 +8,7 @@ import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserRequestPage;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.view.UserList;
-import com.lyna.web.infrastructure.object.RequestPage;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

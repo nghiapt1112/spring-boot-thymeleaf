@@ -5,7 +5,7 @@ import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.view.UserList;
-import com.lyna.web.infrastructure.object.RequestPage;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
