@@ -27,7 +27,6 @@ function deleteUser() {
 
 
 function addViaAjax() {
-    var name = "";
     var userIds = [];
     var checkboxes = $('input[name="userid"]');
     checkboxes.filter(":checked").map(function () {
@@ -39,7 +38,7 @@ function addViaAjax() {
         contentType: 'application/json; charset=utf-8',
         url: "/user/delete",
         data: {
-            name: userIds.toString()
+            userIds: userIds.toString()
         },
         dataType: 'json',
         timeout: 100000,

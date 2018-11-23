@@ -81,7 +81,8 @@ public class UserController extends AbstractCustomController {
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
+    @IsAdmin
     public String listUsers(
             Model model,
             UsernamePasswordAuthenticationToken principal,
@@ -90,10 +91,12 @@ public class UserController extends AbstractCustomController {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-        List<Store> storeListAll = storeService.getStoreList((User) principal.getPrincipal());
+        int tenantId = ((User) principal.getPrincipal()).getTenantId();
+
+        List<Store> storeListAll = storeService.getStoreList(tenantId);
 
         Page<UserList> userPage =
-                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll);
+                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll, tenantId);
 
 
         model.addAttribute("userPage", userPage);
@@ -112,12 +115,10 @@ public class UserController extends AbstractCustomController {
         return "user/listUser";
     }
 
-    //Todo: Have is admin?
-    //@IsAdmin
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @GetMapping(value = {"/delete"})
     public @ResponseBody
     String addNew(HttpServletRequest request) {
-        String userIds = request.getParameter("name");
+        String userIds = request.getParameter("userIds");
         ObjectMapper mapper = new ObjectMapper();
         String ajaxResponse = "";
         try {

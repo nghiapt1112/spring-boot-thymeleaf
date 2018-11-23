@@ -11,6 +11,8 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,19 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
 @Transactional
 public class UserServiceImpl extends BaseService implements UserService {
+
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -83,18 +81,17 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
-    public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll) {
+    public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll, int tenantId) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
-        List<UserList> listUserList = new ArrayList<>();
+        List<UserList> listResults = new ArrayList<>();
         List<UserList> listResponse = new ArrayList<>();
         Map<String, String> mapStore = new HashMap<>();
         Map<String, UserStoreAuthority> mapStoreAuthority = new HashMap<>();
 
-        //storeListAll = storeRepository.getAll();
         List<UserStoreAuthority> authorities = userStoreAuthority.findAll();
-        List<User> userListIn = userRepository.findAll();
+        List<User> listUser = userRepository.findAllByTenantId(tenantId);
 
         for (Store store : storeListAll) {
             mapStore.put(store.getStoreId(), store.getName());
@@ -104,7 +101,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             mapStoreAuthority.put(authority.getUserId(), authority);
         }
 
-        for (User user : userListIn) {
+        for (User user : listUser) {
             UserList userList = new UserList();
             userList.setEmail(user.getEmail());
             userList.setName(user.getName());
@@ -114,8 +111,6 @@ public class UserServiceImpl extends BaseService implements UserService {
             UserStoreAuthority userStoreAuthority = mapStoreAuthority.get(user.getId());
             Map<String, Integer> map = new HashMap<>();
 
-            //TODO Liệt kê toàn bộ store name theo id, sau đó đối với storeId thì thêm quyền của nó vào
-            //So sanh userId co quyen de lay ra duoc authority
             for (Map.Entry<String, String> entry : mapStore.entrySet()) {
                 if (userStoreAuthority != null && userStoreAuthority.getStoreId().equals(entry.getKey())) {
                     map.put(entry.getValue(), (int) userStoreAuthority.getAuthority());
@@ -125,19 +120,19 @@ public class UserServiceImpl extends BaseService implements UserService {
             }
 
             userList.setMapStore(map);
-            listUserList.add(userList);
+            listResults.add(userList);
         }
 
 
-        if (userListIn.size() < startItem) {
-            listUserList = Collections.emptyList();
+        if (listUser.size() < startItem) {
+            listResults = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + pageSize, userListIn.size());
-            listResponse = listUserList.subList(startItem, toIndex);
+            int toIndex = Math.min(startItem + pageSize, listUser.size());
+            listResponse = listResults.subList(startItem, toIndex);
         }
 
         Page<UserList> userPage =
-                new PageImpl<UserList>(listResponse, PageRequest.of(currentPage, pageSize), listUserList.size());
+                new PageImpl<>(listResponse, PageRequest.of(currentPage, pageSize), listResults.size());
 
         return userPage;
 
@@ -191,12 +186,9 @@ public class UserServiceImpl extends BaseService implements UserService {
             boolean isDeletedStoreAuthority = userStoreAuthority.deletebyUserId(listUserId);
             if (isDeletedStoreAuthority) {
                 isDeletedUser = userRepository.deleteByUserId(listUserId);
-                if (!isDeletedUser) {
-                    //ToDo: After delete is not success, you need rollback to data!!! Impotant
-                    userRepository.commitTransaction();
-                }
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
         }
 
         if (isDeletedUser)

@@ -1,130 +1,145 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(content)">
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title th:text="${content}">Layout</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-  <link rel="stylesheet" href="/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}">
-  <link rel="stylesheet" href="/css/ionicons.min.css" th:href="@{/css/ionicons.min.css}">
-  <link rel="stylesheet" href="/css/dataTables.bootstrap.min.css" th:href="@{/css/dataTables.bootstrap.min.css}">
-  <link rel="stylesheet" href="/css/AdminLTE.min.css" th:href="@{/css/AdminLTE.min.css}">
-  <link rel="stylesheet" href="/css/_all-skins.min.css" th:href="@{/css/_all-skins.min.css}">
-  <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css" th:href="@{/css/bootstrap-datepicker.min.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-  
-  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title th:text="${content}">Layout</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="/css/ionicons.min.css" th:href="@{/css/ionicons.min.css}">
+    <link rel="stylesheet" href="/css/dataTables.bootstrap.min.css" th:href="@{/css/dataTables.bootstrap.min.css}">
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" th:href="@{/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="/css/_all-skins.min.css" th:href="@{/css/_all-skins.min.css}">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css" th:href="@{/css/bootstrap-datepicker.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-  <header class="main-header" th:fragment="header">
-	
+    <header class="main-header" th:fragment="header">
     <span class="logo">
       <span class="logo-mini"><b>L</b>NA</span>
       <span class="logo-lg">LYNA</span>
     </span>
-     <nav class="navbar navbar-static-top">
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">Toggle navigation</span>
-      </a>
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-          <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-user"></i>
-              <span class="hidden-xs">Admin</span>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
             </a>
-          </li>
-          <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              
-              <i class="glyphicon glyphicon-log-out"></i>
-              <span class="hidden-xs">Logout</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
-  <aside class="main-sidebar" th:fragment="content-left">
-    <section  class="sidebar">
-      <ul class="sidebar-menu" data-widget="tree">
-      	
-        <li style="color: #b9b9c7; font-size: 124%;" class="header"><a href="/mainScreen" th:href="@{/mainScreen}">Main menu</a></li>
-        <li class=" treeview">
-          <a href="#">
-            <i class="fa fa-product-hunt"></i> <span>Product master</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="/listProduct" th:href="@{/listProduct}"><i class="fa fa-circle-o text-red"></i>List product</a></li>
-            <li><a href="/registerProduct" th:href="@{/registerProduct}"><i class="fa fa-circle-o text-red"></i>Register Product</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="glyphicon glyphicon-home"></i> <span> Store master</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="/listStore" th:href="@{/listStore}"><i class="fa fa-circle-o text-yellow"></i>List Store</a></li>
-            <li><a href="/registerStore" th:href="@{/registerStore}"><i class="fa fa-circle-o text-yellow"></i>Register store</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-cube"></i> <span> Package master</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="/listPackage" th:href="@{/listPackage}"><i class="fa fa-circle-o text-green"></i>List package</a></li>
-            <li><a href="/registerPackage" th:href="@{/registerPackage}"><i class="fa fa-circle-o text-green"></i>Register package</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-user"></i> <span>User master</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a th:href="@{/user/list}"><i class="fa fa-circle-o text-aqua"></i>List user</a></li>
-            <li><a href="/register" th:href="@{/user/register}"><i class="fa fa-circle-o text-aqua"></i>Register user</a></li>
-          </ul>
-        </li>
-       </ul>  
-    </section>
-  </aside>
-	<div  class="content-wrapper">
-    <section class="content-header">
-      <h1>
-        TITLE
-      </h1>
-    </section>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span class="hidden-xs">
+                <!--<p th:text="${userName}">Admin</p>-->
+              </span>
+                        </a>
+                    </li>
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-  </div>
-   
- </div>
- <footer th:fragment="footer">
- 	<script src="/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+                            <i class="glyphicon glyphicon-log-out"></i>
+                            <span class="hidden-xs">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar" th:fragment="content-left">
+        <section class="sidebar">
+            <ul class="sidebar-menu" data-widget="tree">
 
-<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+                <li style="color: #b9b9c7; font-size: 124%;" class="header"><a href="/mainScreen"
+                                                                               th:href="@{/mainScreen}">Main menu</a>
+                </li>
+                <li class=" treeview">
+                    <a href="#">
+                        <i class="fa fa-product-hunt"></i> <span>Product master</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="active"><a href="/listProduct" th:href="@{/listProduct}"><i
+                                class="fa fa-circle-o text-red"></i>List product</a></li>
+                        <li><a href="/registerProduct" th:href="@{/registerProduct}"><i
+                                class="fa fa-circle-o text-red"></i>Register Product</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="glyphicon glyphicon-home"></i> <span> Store master</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/listStore" th:href="@{/listStore}"><i class="fa fa-circle-o text-yellow"></i>List
+                            Store</a></li>
+                        <li><a href="/registerStore" th:href="@{/registerStore}"><i
+                                class="fa fa-circle-o text-yellow"></i>Register store</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-cube"></i> <span> Package master</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/listPackage" th:href="@{/listPackage}"><i class="fa fa-circle-o text-green"></i>List
+                            package</a></li>
+                        <li><a href="/registerPackage" th:href="@{/registerPackage}"><i
+                                class="fa fa-circle-o text-green"></i>Register package</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user"></i> <span>User master</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a th:href="@{/user/list}"><i class="fa fa-circle-o text-aqua"></i>List user</a></li>
+                        <li><a href="/register" th:href="@{/user/register}"><i class="fa fa-circle-o text-aqua"></i>Register
+                            user</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div th:if="${message} != null">
+                <h2>Error Page</h2>
+                <div>Status code: <b th:text="${message}"></b></div>
+                <div>Exception Message: <b th:text="${exception.getMessage()}"></b></div>
+            </div>
+            <h1 th:if="${message} == null">
+                TITLE
+            </h1>
+        </section>
 
-<script src="/js/adminlte.min.js" th:src="@{/js/adminlte.min.js}"></script>
-<script src="/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
-<script src="/js/dataTables.bootstrap.min.js" th:src="@{/js/dataTables.bootstrap.min.js}"></script>
-<script src="/js/bootstrap-datepicker.min.js" th:src="@{/js/bootstrap-datepicker.min.js}"></script>
- </footer>
+    </div>
+
+</div>
+<footer th:fragment="footer">
+    <script src="/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+
+    <script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <script src="/js/adminlte.min.js" th:src="@{/js/adminlte.min.js}"></script>
+    <script src="/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script src="/js/dataTables.bootstrap.min.js" th:src="@{/js/dataTables.bootstrap.min.js}"></script>
+    <script src="/js/bootstrap-datepicker.min.js" th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+</footer>
 <script>
-  $.widget.bridge('uibutton', $.ui.button);
+    $.widget.bridge('uibutton', $.ui.button);
 </script>
 </body>
 </html>
