@@ -37,6 +37,6 @@ public class UserRepositoryPagingTest extends LynaApplicationTests {
         req.setSortFields(sortFields);
 
         UserResponsePage pageResult = userRepository.findUserWithPaging(req);
-        System.out.println();
+        System.out.println(pageResult);
     }
 }

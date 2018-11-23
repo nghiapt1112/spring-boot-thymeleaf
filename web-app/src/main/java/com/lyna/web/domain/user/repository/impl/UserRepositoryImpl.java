@@ -45,12 +45,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     @Override
     public UserResponsePage findUserWithPaging(RequestPage userRequestPage) {
         ResponsePage res = findWithPaging(userRequestPage, new UserQueryBuilder());
-        UserResponsePage val = (UserResponsePage) res;
-        return val;
+        return new UserResponsePage(res);
     }
 
-    //    TODO: =>NghiaPT move to common functions.
-    private long countTotalRecord(String s, Map<String, Object> params) {
-        return 0;
-    }
 }

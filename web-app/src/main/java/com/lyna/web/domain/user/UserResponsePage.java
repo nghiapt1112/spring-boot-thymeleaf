@@ -9,7 +9,11 @@ import java.util.List;
 @Data
 public class UserResponsePage extends ResponsePage {
 
-    public UserResponsePage(int noOfRowInPage, List results, long totalRerords) {
-//        super(noOfRowInPage, results, totalRerords);
+    public UserResponsePage(ResponsePage responsePage) {
+        this.noOfRowInPage = responsePage.getNoOfRowInPage();
+        this.results = responsePage.getResults();
+        this.totalPage = responsePage.getTotalPage();
+        //this.pageNo = currentPage;
     }
+
 }

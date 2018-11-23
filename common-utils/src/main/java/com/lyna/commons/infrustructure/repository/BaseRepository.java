@@ -28,18 +28,18 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
     }
 
 
-    public <T>  T getEntityInstance(Class<T> type) {
+//    public <T>  T getEntityInstance(Class<T> type) {
 //        Class<T> type = this.getEntityClass();
-        T inst = null;
-        try {
-            inst = type.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace(); // TODO hande ex
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();// TODO hande ex
-        }
-        return inst;
-    }
+//        T inst = null;
+//        try {
+//            inst = type.newInstance();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace(); // TODO hande ex
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();// TODO hande ex
+//        }
+//        return inst;
+//    }
 
     public <T> Class<T> getEntityClass() {
         ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
@@ -47,29 +47,15 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
         return type;
     }
 
-    public <T extends ResponsePage> T findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder) {
-        String whereCondition = queryBuilder.buildWhere();
-
-
-        TypedQuery<E> tQuery = entityManager.createQuery(queryBuilder.buildSelect() + queryBuilder.buildWhere() , this.getEntityClass());
-
-        long totalRerords = this.countTotalRecord(queryBuilder);
-
-        List<E> results = tQuery.getResultList();
-
-
-        Class<T> clazz = getEntityClass();
-//        T val = (T) new ResponsePage(userRequestPage.getNoOfRowInPage(), results, totalRerords);
-
-        return null;
+    public ResponsePage findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder) {
+        TypedQuery<E> tQuery = entityManager.createQuery(queryBuilder.buildSelect().concat(queryBuilder.buildWhere()) , this.getEntityClass());
+        return new ResponsePage(userRequestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(queryBuilder));
     }
 
-    //    TODO: =>NghiaPT move to common functions.
     private long countTotalRecord(QueryBuilder queryBuilder) {
-        TypedQuery<Long> tQuery = entityManager
-                .createQuery(queryBuilder.buildCount() + queryBuilder.buildWhere(), Long.class);
-
-        return tQuery.getSingleResult();
+        return entityManager
+                .createQuery(queryBuilder.buildCount() + queryBuilder.buildWhere(), Long.class)
+                .getSingleResult();
     }
 
 }
