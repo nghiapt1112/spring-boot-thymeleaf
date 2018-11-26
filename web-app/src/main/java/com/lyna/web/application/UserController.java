@@ -1,5 +1,7 @@
 package com.lyna.web.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
@@ -16,14 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -88,7 +84,7 @@ public class UserController extends AbstractCustomController {
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
-    @GetMapping
+    @GetMapping(value = "/list2")
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal, @RequestParam Integer limit,
                            @RequestParam Integer cp, @RequestParam String name, @RequestParam String mail,
                            @RequestParam Date start, @RequestParam Date end, @RequestParam String umail) {
@@ -103,7 +99,8 @@ public class UserController extends AbstractCustomController {
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
+    @IsAdmin
     public String listUsers(
             Model model,
             UsernamePasswordAuthenticationToken principal,
@@ -112,14 +109,18 @@ public class UserController extends AbstractCustomController {
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
 
-        List<Store> storeListAll = storeService.getStoreList((User) principal.getPrincipal());
+        int tenantId = ((User) principal.getPrincipal()).getTenantId();
+
+        List<Store> storeListAll = storeService.getStoreList(tenantId);
 
         Page<UserList> userPage =
-                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll);
+                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll, tenantId);
 
 
         model.addAttribute("userPage", userPage);
         model.addAttribute("storeModel", storeListAll);
+        if (principal != null && principal.getPrincipal() != null)
+            model.addAttribute("userId", ((User) principal.getPrincipal()).getId());
 
         int totalPages = userPage.getTotalPages();
         if (totalPages > 0) {
@@ -132,15 +133,19 @@ public class UserController extends AbstractCustomController {
         return "user/listUser";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String delete(HttpServletRequest request, ModelMap modelMap) {
+    @GetMapping(value = {"/delete"})
+    public @ResponseBody
+    String addNew(HttpServletRequest request) {
+        String userIds = request.getParameter("userIds");
+        ObjectMapper mapper = new ObjectMapper();
+        String ajaxResponse = "";
         try {
-            for (String userid : request.getParameterValues("userid")) {
-
-            }
-        } catch (Exception ex) {
-
+            String response = userService.deleteUser(userIds);//
+            ajaxResponse = mapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
-        return "redirect:user/listUser";
+
+        return ajaxResponse;
     }
 }

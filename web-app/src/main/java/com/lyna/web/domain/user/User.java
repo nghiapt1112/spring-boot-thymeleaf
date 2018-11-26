@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 @Table(name = "m_user")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @NamedQueries({
-        @NamedQuery(name = "User.countAll", query = "SELECT COUNT(x) FROM User x")
+        @NamedQuery(name = "User.getAll", query = "SELECT x FROM User x WHERE x.tenantId = :tenantId")
 })
 @Data
 public class User extends AbstractEntity implements UserDetails {

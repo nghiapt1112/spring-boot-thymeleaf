@@ -24,10 +24,12 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public List<Store> getAll(User principal) {
+    public List<Store> getAll(int tenantId) {
+
+        //ToDo: LinhNM: test if tenantId is null => has get info ?
         TypedQuery<Store> query =
-                em.createNamedQuery("Store.getAll", Store.class);
-                        //.setParameter("tenantId", principal.getTenantId());
+                em.createNamedQuery("Store.getAll", Store.class)
+                        .setParameter("tenantId", tenantId);
         List<Store> results = query.getResultList();
 
         return results;

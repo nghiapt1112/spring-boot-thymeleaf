@@ -57,11 +57,11 @@ $(document).ready(function() {
     $('#search').click( function() {
         table.draw();
     } );
-    $("#min").datepicker(function(){
-        format: "dd/mm/yyyy";
+    $("#min").datepicker({
+        format: 'yyyy/mm/dd'
     });
-    $("#max").datepicker(function(){
-        format: "dd/mm/yyyy";
+    $("#max").datepicker({
+        format: 'yyyy/mm/dd'
     });
 } );
 
