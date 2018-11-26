@@ -5,9 +5,15 @@ $(document).ready(function () {
         else
             $('.chkCheckBoxId').prop('checked', false);
     });
+
+
 });
 
-function deleteUser() {
+function prev_page() {
+    alert("test pre page");
+}
+
+function deleteStore() {
     var pickedOne = false;
     var inputs = document.getElementsByClassName('chkCheckBoxId');
     for (var i = 0, l = inputs.length; i < l; ++i) {
@@ -27,18 +33,18 @@ function deleteUser() {
 
 
 function addViaAjax() {
-    var userIds = [];
-    var checkboxes = $('input[name="userid"]');
+    var storeIds = [];
+    var checkboxes = $('input[name="storeid"]');
     checkboxes.filter(":checked").map(function () {
-        userIds.push(this.value);
+        storeIds.push(this.value);
     }).get()
 
     $.ajax({
         type: "GET",
         contentType: 'application/json; charset=utf-8',
-        url: "/user/delete",
+        url: "/store/delete",
         data: {
-            userIds: userIds.toString()
+            storeId: storeIds.toString()
         },
         dataType: 'json',
         timeout: 100000,
@@ -52,7 +58,7 @@ function addViaAjax() {
                 + "<strong>Name:</strong> " + data.name;
             $("#ajax-response").html(result);
             //alert("削除しました。");
-            window.location.href = "/user/list";
+            window.location.href = "/store/list";
         },
         error: function (e) {
             alert("削除しました。");
@@ -60,9 +66,7 @@ function addViaAjax() {
         }
     });
 };
-
-
-
+/*
 $(function () {
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
@@ -113,7 +117,7 @@ $(function () {
         });
 
     $(document).ready(function () {
-        var table = $('#listUser').DataTable();
+        var table = $('#listStore').DataTable();
         $('#search').click(function () {
             table.draw();
         });
@@ -121,11 +125,11 @@ $(function () {
     });
 
 
-});
+});*/
 
-$(function () {
+/*$(function () {
     $('#listUser').DataTable({
-        'paging': true,
+        'paging': false,
         'lengthChange': true,
         'searching': true,
         'ordering': true,
@@ -134,7 +138,7 @@ $(function () {
         'order': [],
         "columnDefs": [{'orderable': false, 'targets': [0, 3]}]
     })
-})
- 
+})*/
+
 
 

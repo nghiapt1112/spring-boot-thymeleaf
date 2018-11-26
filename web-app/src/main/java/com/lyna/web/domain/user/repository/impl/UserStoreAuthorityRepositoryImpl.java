@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
+@Transactional
 public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAuthority, String> implements UserStoreAuthorityRepository {
 
     private final Logger log = LoggerFactory.getLogger(UserStoreAuthorityRepositoryImpl.class);
@@ -27,6 +27,19 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
             String query = "DELETE FROM UserStoreAuthority u WHERE u.userId in (:userId)";
             entityManager.createQuery(query)
                     .setParameter("userId", userIds).executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteStore(List<String> listStoreId) {
+        try {
+            String query = "DELETE FROM UserStoreAuthority u WHERE u.storeId in (:storeId)";
+            entityManager.createQuery(query)
+                    .setParameter("storeId", listStoreId).executeUpdate();
             return true;
         } catch (Exception ex) {
             log.error(ex.getMessage());

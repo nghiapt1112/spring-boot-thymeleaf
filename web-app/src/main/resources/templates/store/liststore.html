@@ -8,7 +8,7 @@
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
     <header th:replace="layout :: header"></header>
     <div th:replace="layout :: content-left"></div>
-    <div  class="content-wrapper">
+    <div class="content-wrapper">
         <section class="content-header">
             <h1>
                 List Store
@@ -18,13 +18,14 @@
             <div class="row">
                 <div class="col-md-12 button_top">
 
-                    <div class="col-md-2 burron-top-order">
-                        <button type="submit" class="btn btn-primary ">Register</button>
+                    <div class="col-md-2 button-top-order">
+                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
+                           th:href="@{/store/register}">新規登録</a>
                     </div>
                     <div class="col-md-1">
                     </div>
                     <div class="col-md-2 button-top-delivery">
-                        <button type="submit" class="btn btn-primary ">Delete</button>
+                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteStore()">削除</a>
                     </div>
                     <div class="col-md-7">
 
@@ -33,28 +34,70 @@
 
                 <div class="col-md-12">
                     <div style="border-top: 3px solid #337ab7;" class="box">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="dataTables_length" id="listStore_length"><label>
+                                    <select
+                                            name="listStore_length" aria-controls="listStore"
+                                            class="form-control input-sm">
+                                        <option value="5" selected>5</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>件を表示</label></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="listStore_filter" style="float: right;" class="dataTables_filter">
+                                    <label>
+                                        <input id="inputSearch" name="inputSearch"
+                                               type="search"
+                                               th:value="${searchText}"
+                                               class="form-control input-sm"
+                                               placeholder="Enter code, name, arear for look "
+                                               aria-controls="listStore"></label>
+
+                                    <a class="btn btn-search" type="button"
+                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage},
+                                       searchText= ('#inputSearch')
+                                       )} ">
+                                        <i class="fa fa-search fa-fw" onclick=""></i> Search</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="box-body">
-                            <th:block th:if="${#lists.isEmpty(contacts)}">
-                                <h3>No contacts</h3>
+                            <th:block th:if="${#lists.isEmpty(storePage)}">
+                                <h3>No store</h3>
                             </th:block>
                             <table id="listStore" class="table table-bordered table-hover">
                                 <thead style="background: #337ab7">
                                 <tr>
-                                    <th>
-                                        <input type="checkbox">
+                                    <th style="text-align: center;">
+                                        <input type="checkbox" id="checkBoxAll">
                                     </th>
-                                    <th>Store code</th>
+                                    <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
+                                        aria-label="Store code: activate to sort column ascending">
+                                        <a href="#"
+                                           th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
+                                           aria-controls="listStore"
+                                           data-dt-idx="2"
+                                           tabindex="0">
+                                            Store code </a>
+
+                                    </th>
                                     <th>Store Name</th>
                                     <th>Major lager</th>
                                     <th>Area</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="store,iterStat : ${stores}">
+                                <tr th:each="store,iterStat : ${storePage}">
                                     <td style="text-align: center;">
-                                        <input type="checkbox">
+                                        <input type="checkbox" th:value="${store.storeId}"
+                                               class="chkCheckBoxId"
+                                               name="storeid">
                                     </td>
-                                    <td th:text="${store.code}"> </td>
+                                    <td th:text="${store.code}"></td>
                                     <td th:text="${store.name}">Store A</td>
                                     <td th:text="${store.majorArea}">Hiroshima</td>
                                     <td th:text="${store.area}">Hiroshima</td>
@@ -63,11 +106,50 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- /.box-body -->
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="dataTables_info" style="padding-top: 20px;" id="listStore_info"
+                                     role="status"
+                                     aria-live="polite"
+                                     th:text="${spage}">
+                                </div>
+                            </div>
+                            <div class="col-sm-7 no-padding" th:if="${storePage.totalPages > 0}">
+                                <div class="dataTables_paginate paging_simple_numbers"
+                                     style="float: right; padding-right: 10px;">
+                                    <ul class="pagination ">
+                                        <li class="paginate_button previous" id="listStore_previous">
+                                            <a href="#"
+                                               th:href="@{/store/list(size=${storePage.size}, page=${prevPage})} "
+                                               aria-controls="listStore" data-dt-idx="0" tabindex="0">
+                                                前へ </a></li>
+                                        <li class="paginate_button active" th:if="${storePage.totalPages > 0}"
+                                            style="border: #00a65a; border-width: 1px;"
+                                            th:each="pageNumber : ${pageNumbers}">
+                                            <a href="#"
+                                               th:href="@{/store/list(size=${storePage.size}, page=${pageNumber})}"
+                                               th:text="${pageNumber}" aria-controls="listStore"
+                                               data-dt-idx="1" tabindex="0">
+                                                1
+                                            </a>
+
+                                        </li>
+                                        <li class="paginate_button next" id="listStore_next">
+                                            <a href="#"
+                                               th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
+                                               aria-controls="listStore"
+                                               data-dt-idx="2"
+                                               tabindex="0">
+                                                次へ </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </section>
     </div>
 
