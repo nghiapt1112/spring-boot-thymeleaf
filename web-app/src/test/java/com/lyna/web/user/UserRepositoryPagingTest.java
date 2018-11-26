@@ -1,6 +1,5 @@
 package com.lyna.web.user;
 
-import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.object.SortType;
 import com.lyna.web.LynaApplicationTests;
 import com.lyna.web.domain.user.UserRequestPage;

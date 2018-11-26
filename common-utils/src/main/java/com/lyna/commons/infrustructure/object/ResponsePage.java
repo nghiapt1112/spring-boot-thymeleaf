@@ -2,8 +2,7 @@ package com.lyna.commons.infrustructure.object;
 
 import java.util.List;
 
-public class ResponsePage extends AbstractObject {
-//    protected int totalRow;
+public abstract class ResponsePage extends AbstractObject {
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
@@ -11,22 +10,12 @@ public class ResponsePage extends AbstractObject {
 
     public ResponsePage() {}
 
-    public ResponsePage(int noOfRowInPage, List results, long totalRerords) {
+    public void withData(int noOfRowInPage, List rawResults, long totalRerords) {
         this.noOfRowInPage = noOfRowInPage;
-        this.results = results;
+        this.results = parseResult(rawResults);
         this.totalPage = (int) Math.ceil((float) totalRerords / noOfRowInPage);
     }
 
+    protected abstract List parseResult(List rawResults);
 
-    public int getTotalPage() {
-        return totalPage;
-    }
-
-    public int getNoOfRowInPage() {
-        return noOfRowInPage;
-    }
-
-    public List getResults() {
-        return results;
-    }
 }

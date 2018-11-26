@@ -1,22 +1,17 @@
 package com.lyna.web.domain.user.repository.impl;
 
-import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.object.ResponsePage;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserQueryBuilder;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.repository.UserRepository;
-import com.lyna.commons.infrustructure.object.RequestPage;
-import com.lyna.commons.infrustructure.repository.QueryBuilder;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class UserRepositoryImpl extends BaseRepository<User, String> implements UserRepository {
@@ -44,8 +39,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public UserResponsePage findUserWithPaging(RequestPage userRequestPage) {
-        ResponsePage res = findWithPaging(userRequestPage, new UserQueryBuilder());
-        return new UserResponsePage(res);
+        return findWithPaging(userRequestPage, new UserQueryBuilder(), UserResponsePage.class);
     }
 
 }

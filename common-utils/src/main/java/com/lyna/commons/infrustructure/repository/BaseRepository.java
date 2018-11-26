@@ -8,13 +8,8 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.xml.ws.Response;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class BaseRepository<E extends AbstractEntity, ID extends Serializable> extends SimpleJpaRepository<E, ID> {
 
@@ -27,34 +22,27 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
 
     }
 
-
-//    public <T>  T getEntityInstance(Class<T> type) {
-//        Class<T> type = this.getEntityClass();
-//        T inst = null;
-//        try {
-//            inst = type.newInstance();
-//        } catch (InstantiationException e) {
-//            e.printStackTrace(); // TODO hande ex
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();// TODO hande ex
-//        }
-//        return inst;
-//    }
-
     public <T> Class<T> getEntityClass() {
         ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
         Class<T> type = (Class<T>) superClass.getActualTypeArguments()[0];
         return type;
     }
 
-    public ResponsePage findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder) {
-        TypedQuery<E> tQuery = entityManager.createQuery(queryBuilder.buildSelect().concat(queryBuilder.buildWhere()) , this.getEntityClass());
-        return new ResponsePage(userRequestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(queryBuilder));
+    public <T extends ResponsePage> T findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder, Class<T> typed) {
+        TypedQuery<E> tQuery = entityManager.createQuery(queryBuilder.buildSelect().concat(queryBuilder.buildWhere()), this.getEntityClass());
+        try {
+            T responsePageInstance = typed.newInstance();
+            responsePageInstance.withData(userRequestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(queryBuilder));
+            return responsePageInstance;
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private long countTotalRecord(QueryBuilder queryBuilder) {
         return entityManager
-                .createQuery(queryBuilder.buildCount() + queryBuilder.buildWhere(), Long.class)
+                .createQuery(queryBuilder.buildCount().concat(queryBuilder.buildWhere()), Long.class)
                 .getSingleResult();
     }
 

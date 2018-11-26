@@ -4,16 +4,18 @@ import com.lyna.commons.infrustructure.repository.QueryBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Data
 @NoArgsConstructor
 public class UserQueryBuilder extends QueryBuilder {
 
     @Override
-    public String getAlias() {
-        return " u1 ";
+    public String buildSelect() {
+        return "SELECT u1 FROM User u1 inner join fetch u1.userStoreAuthorities inner join fetch u1.stores";
+    }
+
+    @Override
+    public String buildWhere() {
+        return " WHERE u1.name LIKE '%nghia%' AND u1.createDate>'2017-11-21 13:54:37' ";
     }
 
     @Override
@@ -25,23 +27,6 @@ public class UserQueryBuilder extends QueryBuilder {
     public String buildOrderBy() {
         return " ORDER BY u1.name DESC";
     }
-
-    @Override
-    public String buildSelect() {
-        return "SELECT u1 FROM User u1 ";
-    }
-
-    @Override
-    public String buildWhere() {
-        StringBuilder sql = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
-
-
-        String alias = this.getAlias();
-
-        return " WHERE u1.name LIKE '%nghia%' AND u1.createDate>'2017-11-21 13:54:37' ";
-    }
-
 
     @Override
     public String buildCount() {
