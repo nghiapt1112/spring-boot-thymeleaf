@@ -18,4 +18,19 @@ public abstract class ResponsePage extends AbstractObject {
 
     protected abstract List parseResult(List rawResults);
 
+    public int getTotalPage() {
+        return totalPage;
+    }
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public int getNoOfRowInPage() {
+        return noOfRowInPage;
+    }
+
+    public List getResults() {
+        return results;
+    }
 }

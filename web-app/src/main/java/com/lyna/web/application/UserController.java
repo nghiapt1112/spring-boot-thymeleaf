@@ -8,6 +8,7 @@ import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserRequestPage;
+import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.view.UserList;
 import com.lyna.commons.infrustructure.object.RequestPage;
@@ -24,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -88,15 +91,35 @@ public class UserController extends AbstractCustomController {
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal, @RequestParam Integer limit,
                            @RequestParam Integer cp, @RequestParam String name, @RequestParam String mail,
                            @RequestParam Date start, @RequestParam Date end, @RequestParam String umail) {
+        int tenantId = ((User) principal.getPrincipal()).getTenantId();
 
         RequestPage userRequestPage = new UserRequestPage();
         userRequestPage.setCurrentPage(cp);
         userRequestPage.setNoOfRowInPage(limit);
-        // searchFields
-        // sortFields
+        Map<String, Object> searchFiels = new HashMap<>();
+        searchFiels.put("email", mail);
+        searchFiels.put("uname", name);
+        searchFiels.put("start", start);
+        searchFiels.put("end", end);
 
-        userService.findUsersWithPaging(userRequestPage);
-        return REDIRECT_TO_USER_LIST_PAGE;
+        Map<String, Object> sortFiels = new HashMap<>();
+        sortFiels.put("mail", "ASC");
+        sortFiels.put("name", "DESC");
+
+
+        userRequestPage.setSearchFields(searchFiels);
+        userRequestPage.setSortFields(sortFiels);
+
+        UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
+        List<Store> storeListAll = storeService.getStoreList(tenantId);
+
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("storeModel", storeListAll); // list cac store cua page.
+//        model.addAttribute("pageNumbers", pageNumbers); // chua thay dung field nay o dau.
+
+        return "user/listUser";
+//
+//        return REDIRECT_TO_USER_LIST_PAGE;
     }
 
     @GetMapping(value = "/list")

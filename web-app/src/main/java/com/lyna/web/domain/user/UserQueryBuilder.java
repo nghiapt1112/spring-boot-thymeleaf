@@ -4,18 +4,37 @@ import com.lyna.commons.infrustructure.repository.QueryBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+import java.util.Objects;
+
 @Data
 @NoArgsConstructor
 public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildSelect() {
-        return "SELECT u1 FROM User u1 inner join fetch u1.userStoreAuthorities inner join fetch u1.stores";
+        return "SELECT u1 FROM User u1 join fetch u1.userStoreAuthorities inner join fetch u1.stores";
     }
 
     @Override
     public String buildWhere() {
-        return " WHERE u1.name LIKE '%nghia%' AND u1.createDate>'2017-11-21 13:54:37' ";
+        String userName = this.requestPage.getSearchFields().get("name").toString();
+        Date startDate = (Date) this.requestPage.getSearchFields().get("start");
+        Date endDate = (Date) this.requestPage.getSearchFields().get("end");
+
+
+        StringBuilder whereCondition = new StringBuilder(" WHERE ");
+        if (Objects.nonNull(userName)) {
+            whereCondition.append("u1.name LIKE :name ");
+            this.params.put("name", "%" + userName + "%");
+        }
+        if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
+            whereCondition.append(" AND u1.createDate BETWEEN :start AND :end ");
+            this.params.put("start", startDate);
+            this.params.put("end", endDate);
+        }
+
+        return whereCondition.toString();
     }
 
     @Override
@@ -31,5 +50,10 @@ public class UserQueryBuilder extends QueryBuilder {
     @Override
     public String buildCount() {
         return "SELECT count(DISTINCT u1.id ) FROM User u1 ";
+    }
+
+    @Override
+    public String buildLimit() {
+        return "LIMIT 0,2";
     }
 }
