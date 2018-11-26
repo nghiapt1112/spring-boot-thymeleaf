@@ -2,21 +2,21 @@ package com.lyna.commons.infrustructure.object;
 
 import java.util.List;
 
-public abstract class ResponsePage extends AbstractObject {
+public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractObject> extends AbstractObject {
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
-    protected List results;
+    protected List<O> results;
 
     public ResponsePage() {}
 
-    public void withData(int noOfRowInPage, List rawResults, long totalRerords) {
+    public void withData(int noOfRowInPage, List<E> rawResults, long totalRerords) {
         this.noOfRowInPage = noOfRowInPage;
         this.results = parseResult(rawResults);
         this.totalPage = (int) Math.ceil((float) totalRerords / noOfRowInPage);
     }
 
-    protected abstract List parseResult(List rawResults);
+    protected abstract List<O> parseResult(List<E> rawResults);
 
     public int getTotalPage() {
         return totalPage;
@@ -30,7 +30,7 @@ public abstract class ResponsePage extends AbstractObject {
         return noOfRowInPage;
     }
 
-    public List getResults() {
+    public List<O> getResults() {
         return results;
     }
 }

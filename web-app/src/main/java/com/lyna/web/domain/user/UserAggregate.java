@@ -30,6 +30,8 @@ public class UserAggregate extends AbstractObject {
     @NotEmpty
     private String userName;
 
+    private String name;
+
     private String password;
 
     private List<UserStoreRole> rolePerStore;
@@ -53,6 +55,7 @@ public class UserAggregate extends AbstractObject {
     public UserAggregate fromUserEntity(User user) {
         this.email = user.getEmail();
         this.userName = user.getName();
+        this.name = user.getName();
         this.userId = user.getId();
 
         Map<String, String> storeNameById = user.getStoresAsStream()
@@ -133,5 +136,14 @@ class UserStoreRole {
         } else if (authority == 0) {
             this.canView = true;
         }
+    }
+
+    public String getStoreRole() {
+        if (this.canEdit) {
+            return "Edit";
+        } else if (this.canView) {
+            return "View";
+        }
+        return "NO Permission";
     }
 }

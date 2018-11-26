@@ -5,7 +5,7 @@ import com.lyna.commons.infrustructure.object.RequestPage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QueryBuilder {
+public abstract class QueryBuilder {
 
     protected RequestPage requestPage;
     protected Map<String, Object> params = new HashMap<>();
@@ -15,15 +15,15 @@ public class QueryBuilder {
         return this;
     }
 
-    public  String buildGroupBy(){
+    public String buildGroupBy() {
         return "";
     }
 
-    public  String buildOrderBy(){
+    public String buildOrderBy() {
         return "";
     }
 
-    public String buildWhere(){
+    public String buildWhere() {
         return "";
     }
 
@@ -34,6 +34,7 @@ public class QueryBuilder {
     public String buildCount() {
         return "";
     }
+
     public String buildLimit() {
         return "";
     }

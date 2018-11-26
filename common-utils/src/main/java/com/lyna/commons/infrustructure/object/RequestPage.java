@@ -1,7 +1,5 @@
 package com.lyna.commons.infrustructure.object;
 
-import com.lyna.commons.infrustructure.repository.QueryBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,10 +12,6 @@ public abstract class RequestPage extends AbstractObject {
     {
         sortFields = new HashMap<>();
         searchFields = new HashMap<>();
-    }
-
-    public QueryBuilder getDefaultQueryBuilder() {
-        return null;
     }
 
     public int getNoOfRowInPage() {

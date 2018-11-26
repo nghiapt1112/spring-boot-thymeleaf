@@ -87,10 +87,12 @@ public class UserController extends AbstractCustomController {
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
-    @GetMapping(value = "/list2")
-    public String userPage(Model model, UsernamePasswordAuthenticationToken principal, @RequestParam Integer limit,
-                           @RequestParam Integer cp, @RequestParam String name, @RequestParam String mail,
-                           @RequestParam Date start, @RequestParam Date end, @RequestParam String umail) {
+    @GetMapping(value = "/list")
+    public String userPage(Model model, UsernamePasswordAuthenticationToken principal,
+                           @RequestParam(required = false, defaultValue = Integer.MAX_VALUE + "") Integer limit,
+                           @RequestParam(required = false, defaultValue = "1") Integer cp, @RequestParam(required = false) String name,
+                           @RequestParam(required = false) String mail, @RequestParam(required = false) Date start,
+                           @RequestParam(required = false) Date end, @RequestParam(required = false) String umail) {
         int tenantId = ((User) principal.getPrincipal()).getTenantId();
 
         RequestPage userRequestPage = new UserRequestPage();
@@ -98,7 +100,7 @@ public class UserController extends AbstractCustomController {
         userRequestPage.setNoOfRowInPage(limit);
         Map<String, Object> searchFiels = new HashMap<>();
         searchFiels.put("email", mail);
-        searchFiels.put("uname", name);
+        searchFiels.put("name", name);
         searchFiels.put("start", start);
         searchFiels.put("end", end);
 
@@ -113,7 +115,7 @@ public class UserController extends AbstractCustomController {
         UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
         List<Store> storeListAll = storeService.getStoreList(tenantId);
 
-        model.addAttribute("userPage", userPage);
+        model.addAttribute("userPage", userPage.getResults());
         model.addAttribute("storeModel", storeListAll); // list cac store cua page.
 //        model.addAttribute("pageNumbers", pageNumbers); // chua thay dung field nay o dau.
 
@@ -122,39 +124,39 @@ public class UserController extends AbstractCustomController {
 //        return REDIRECT_TO_USER_LIST_PAGE;
     }
 
-    @GetMapping(value = "/list")
-    @IsAdmin
-    public String listUsers(
-            Model model,
-            UsernamePasswordAuthenticationToken principal,
-            @RequestParam("page") Optional<Integer> page,
-            @RequestParam("size") Optional<Integer> size) {
-        page.ifPresent(p -> currentPage = p);
-        size.ifPresent(s -> pageSize = s);
-
-        int tenantId = ((User) principal.getPrincipal()).getTenantId();
-
-        List<Store> storeListAll = storeService.getStoreList(tenantId);
-
-        Page<UserList> userPage =
-                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll, tenantId);
-
-
-        model.addAttribute("userPage", userPage);
-        model.addAttribute("storeModel", storeListAll);
-        if (principal != null && principal.getPrincipal() != null)
-            model.addAttribute("userId", ((User) principal.getPrincipal()).getId());
-
-        int totalPages = userPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "user/listUser";
-    }
+//    @GetMapping(value = "/list-org")
+//    @IsAdmin
+//    public String listUsers(
+//            Model model,
+//            UsernamePasswordAuthenticationToken principal,
+//            @RequestParam("page") Optional<Integer> page,
+//            @RequestParam("size") Optional<Integer> size) {
+//        page.ifPresent(p -> currentPage = p);
+//        size.ifPresent(s -> pageSize = s);
+//
+//        int tenantId = ((User) principal.getPrincipal()).getTenantId();
+//
+//        List<Store> storeListAll = storeService.getStoreList(tenantId);
+//
+//        Page<UserList> userPage =
+//                userService.findPaginated(PageRequest.of(currentPage - 1, pageSize), storeListAll, tenantId);
+//
+//
+//        model.addAttribute("userPage", userPage);
+//        model.addAttribute("storeModel", storeListAll);
+//        if (principal != null && principal.getPrincipal() != null)
+//            model.addAttribute("userId", ((User) principal.getPrincipal()).getId());
+//
+//        int totalPages = userPage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//
+//        return "user/listUser";
+//    }
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody

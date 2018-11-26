@@ -43,7 +43,7 @@
                                     </th>
                                     <th>メールアドレス</th>
                                     <th>ユーザー名</th>
-                                    <th th:each="item: ${storeModel}">
+                                    <th th:each="item: ${userPage.get(0).rolePerStore}">
                                         <span th:text="${item.getName()}"></span>
                                     </th>
 
@@ -60,8 +60,9 @@
                                     </td>
                                     <td th:text="${item.email}"></td>
                                     <td th:text="${item.name}"></td>
-                                    <td th:each="element : ${item.mapStore}">
-                                        <span th:text="${element.value} == 0? 'View': (${element.value} == 1? 'Edit':'')"></span>
+                                    <!--<td th:text="ng-View"></td>-->
+                                    <td th:each="element : ${item.rolePerStore}">
+                                        <span th:text="${element.getStoreRole()}"></span>
                                     </td>
                                 </tr>
                                 </tbody>

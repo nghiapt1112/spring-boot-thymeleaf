@@ -18,15 +18,19 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildWhere() {
-        String userName = this.requestPage.getSearchFields().get("name").toString();
+        Object userName = this.requestPage.getSearchFields().get("name");
         Date startDate = (Date) this.requestPage.getSearchFields().get("start");
         Date endDate = (Date) this.requestPage.getSearchFields().get("end");
 
+        // Non params request
+        if (Objects.isNull(userName) && Objects.isNull(startDate) && Objects.isNull(endDate)) {
+            return "";
+        }
 
         StringBuilder whereCondition = new StringBuilder(" WHERE ");
         if (Objects.nonNull(userName)) {
             whereCondition.append("u1.name LIKE :name ");
-            this.params.put("name", "%" + userName + "%");
+            this.params.put("name", "%" + userName.toString().trim() + "%");
         }
         if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
             whereCondition.append(" AND u1.createDate BETWEEN :start AND :end ");
