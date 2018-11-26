@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('List Store')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/listStore.css" th:href="@{/css/listStore.css}"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <header th:replace="layout :: header"></header>
+    <div th:replace="layout :: content-left"></div>
+    <div  class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                List Store
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <div class="col-md-12 button_top">
+
+                    <div class="col-md-2 burron-top-order">
+                        <button type="submit" class="btn btn-primary ">Register</button>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2 button-top-delivery">
+                        <button type="submit" class="btn btn-primary ">Delete</button>
+                    </div>
+                    <div class="col-md-7">
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div style="border-top: 3px solid #337ab7;" class="box">
+                        <div class="box-body">
+                            <th:block th:if="${#lists.isEmpty(contacts)}">
+                                <h3>No contacts</h3>
+                            </th:block>
+                            <table id="listStore" class="table table-bordered table-hover">
+                                <thead style="background: #337ab7">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox">
+                                    </th>
+                                    <th>Store code</th>
+                                    <th>Store Name</th>
+                                    <th>Major lager</th>
+                                    <th>Area</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="store,iterStat : ${stores}">
+                                    <td style="text-align: center;">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td th:text="${store.code}"> </td>
+                                    <td th:text="${store.name}">Store A</td>
+                                    <td th:text="${store.majorArea}">Hiroshima</td>
+                                    <td th:text="${store.area}">Hiroshima</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/listStore_t.js" th:src="@{/js/listStore_t.js}"></script>
+</body>
+</html>

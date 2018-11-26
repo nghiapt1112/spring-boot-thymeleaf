@@ -49,6 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().invalidSessionUrl("/login")
                 .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
                 .sessionFixation().none()
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login");
         ;
     }
 
