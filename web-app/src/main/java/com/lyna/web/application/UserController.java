@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +40,8 @@ public class UserController extends AbstractCustomController {
 
     //ToDo: cho vào file config nhé
     private static int currentPage = 1;
-    private static int pageSize = 5;
+    private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final int[] PAGE_SIZES = { 5, 10};
 
     @Autowired
     private UserService userService;
@@ -89,7 +91,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal,
-                           @RequestParam(required = false, defaultValue = Integer.MAX_VALUE + "") Integer limit,
+                           @RequestParam(required = false, defaultValue = "10") Integer limit,
                            @RequestParam(required = false, defaultValue = "1") Integer cp, @RequestParam(required = false) String name,
                            @RequestParam(required = false) String mail, @RequestParam(required = false) Date start,
                            @RequestParam(required = false) Date end, @RequestParam(required = false) String umail) {
@@ -115,8 +117,10 @@ public class UserController extends AbstractCustomController {
         UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
         List<Store> storeListAll = storeService.getStoreList(tenantId);
 
-        model.addAttribute("userPage", userPage.getResults());
-        model.addAttribute("storeModel", storeListAll); // list cac store cua page.
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("storeModel", storeListAll);
+        model.addAttribute("selectedPageSize", Objects.isNull(limit) ? DEFAULT_PAGE_SIZE : limit);
+        model.addAttribute("pageSizes", PAGE_SIZES);
 //        model.addAttribute("pageNumbers", pageNumbers); // chua thay dung field nay o dau.
 
         return "user/listUser";

@@ -37,38 +37,65 @@
                 <div class="col-md-12">
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="box-body">
-                            <table id="listUser" class="table table-bordered table-hover">
-                                <thead style="background: #337ab7">
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="checkBoxAll">
-                                    </th>
-                                    <th>メールアドレス</th>
-                                    <th>ユーザー名</th>
-                                    <th th:each="item: ${storeModel}">
-                                        <span th:text="${item.getName()}"></span>
-                                    </th>
+                            <div class="form-group row">
+                                <div class="col-md-1">
+                                    <select class="form-control" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 pull-right">
+                                    <input type="text" placeholder="Search" class="form-control search-input">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 table-area">
+                                    <table id="listUser" class="table table-bordered table-hover">
+                                        <thead style="background: #337ab7">
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="checkBoxAll">
+                                            </th>
+                                            <th>メールアドレス</th>
+                                            <th>ユーザー名</th>
+                                            <th th:each="item: ${storeModel}">
+                                                <span th:text="${item.getName()}"></span>
+                                            </th>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="item: ${userPage}">
-                                    <td th:unless="${item.userId} eq ${userId}">
-                                        <!--<div >-->
-                                        <input type="checkbox" th:value="${item.userId}" class="chkCheckBoxId" name="userid">
-                                        <!--</div>-->
-                                    </td>
-                                    <td th:text="${item.email}"></td>
-                                    <td th:text="${item.name}"></td>
-                                    <!--<td th:text="ng-View"></td>-->
-                                    <td th:each="element : ${item.rolePerStore}">
-                                        <span th:text="${element.getStoreRole()}"></span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="item: ${userPage.getResults()}">
+                                            <td th:unless="${item.getUserId()} eq ${userId}" class="text-center">
+                                                <input type="checkbox" th:value="${item.getUserId()}" class="chkCheckBoxId" name="userid">
+                                            </td>
+                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${item.getUserId()}}" th:text="${item.getEmail()}"></a></td>
+                                            <td th:text="${item.getName()}"></td>
+                                            <!--<td th:text="ng-View"></td>-->
+                                            <td th:each="element : ${item.getRolePerStore()}">
+                                                <span th:text="${element.getStoreRole()}"></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--Nghia Paging-->
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+                                    <p> Dang show -1/100 items</p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <ul class="pagination margin-0">
+                                        <li th:each="page : ${#numbers.sequence(1, userPage.getTotalPage())}">
+                                            <a class="pageLink" th:href="@{/user/list(cp=${page}, limit=${selectedPageSize})}" th:text="${page}"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--Nghia Paging - close -->
                         </div>
-                        <!-- /.box-body -->
                     </div>
                 </div>
                 </form>
@@ -78,6 +105,19 @@
 
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/listUser_t.js" th:src="@{/js/listUser_t.js}"></script>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        changePageAndSize();
+    });
+
+    function changePageAndSize() {
+        $('#pageSizeSelect').change(function(evt) {
+            window.location.replace("/user/list?limit=" + this.value + "&cp=1");
+        });
+
+    }
+</script>
+
 </body>
 </html>

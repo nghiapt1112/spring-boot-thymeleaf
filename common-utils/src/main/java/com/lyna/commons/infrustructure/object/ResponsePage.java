@@ -6,14 +6,16 @@ public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractO
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
+    protected long totalRecords;
     protected List<O> results;
 
     public ResponsePage() {}
 
-    public void withData(int noOfRowInPage, List<E> rawResults, long totalRerords) {
+    public void withData(int noOfRowInPage, List<E> rawResults, long totalRecords) {
         this.noOfRowInPage = noOfRowInPage;
         this.results = parseResult(rawResults);
-        this.totalPage = (int) Math.ceil((float) totalRerords / noOfRowInPage);
+        this.totalRecords = totalRecords;
+        this.totalPage = (int) Math.ceil((float) totalRecords / noOfRowInPage);
     }
 
     protected abstract List<O> parseResult(List<E> rawResults);
@@ -30,7 +32,9 @@ public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractO
         return noOfRowInPage;
     }
 
-    public List<O> getResults() {
-        return results;
+    public long getTotalRecords() {
+        return totalRecords;
     }
+
+    public abstract List<O> getResults();
 }

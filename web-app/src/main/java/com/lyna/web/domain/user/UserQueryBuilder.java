@@ -13,7 +13,9 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildSelect() {
-        return "SELECT u1 FROM User u1 join fetch u1.userStoreAuthorities inner join fetch u1.stores";
+        return "SELECT u1.*, usa1.* FROM m_user u1 "
+                + " INNER JOIN m_user_store_authority usa1 ON u1.user_id = usa1.user_id "
+                + " INNER JOIN m_store s3 ON usa1.store_id = s3.store_id";
     }
 
     @Override
@@ -43,21 +45,26 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildGroupBy() {
-        return "GROUP BY";
+        return "";
     }
 
     @Override
     public String buildOrderBy() {
-        return " ORDER BY u1.name DESC";
+        return "";
     }
 
     @Override
     public String buildCount() {
-        return "SELECT count(DISTINCT u1.id ) FROM User u1 ";
+        return "SELECT count(*) FROM m_user u1 "
+                + " INNER JOIN m_user_store_authority usa1 ON u1.user_id = usa1.user_id "
+                + " INNER JOIN m_store s3 ON usa1.store_id = s3.store_id";
     }
 
     @Override
     public String buildLimit() {
-        return "LIMIT 0,2";
+        int itemsPerPage = this.requestPage.getNoOfRowInPage();
+        int currentPage = this.requestPage.getCurrentPage();
+        int offset = (currentPage -1)* itemsPerPage;
+        return " LIMIT " + offset + "," + itemsPerPage + " ";
     }
 }

@@ -26,7 +26,7 @@ public class UserRepositoryPagingTest extends LynaApplicationTests {
         Map<String, Object> searchFields = new HashMap<>();
 //        searchFields.put("start", new Date());
 //        searchFields.put("end", new Date());
-        searchFields.put("name", "user");
+//        searchFields.put("name", "user");
         req.setSearchFields(searchFields);
 
 

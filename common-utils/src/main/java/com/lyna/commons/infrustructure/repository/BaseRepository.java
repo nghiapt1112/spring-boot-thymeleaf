@@ -9,10 +9,13 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigInteger;
 import java.util.Map;
+import java.util.Objects;
 
 public class BaseRepository<E extends AbstractEntity, ID extends Serializable> extends SimpleJpaRepository<E, ID> {
 
@@ -32,7 +35,14 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
     }
 
     public <T extends ResponsePage> T findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder, Class<T> typed) {
-        TypedQuery<E> tQuery = entityManager.createQuery(queryBuilder.buildSelect().concat(queryBuilder.buildWhere()), this.getEntityClass());
+        Query tQuery = entityManager.createNativeQuery(
+                queryBuilder.buildSelect()
+                .concat(queryBuilder.buildWhere())
+                .concat(queryBuilder.buildGroupBy())
+                .concat(queryBuilder.buildOrderBy())
+                .concat(queryBuilder.buildLimit()),
+
+                this.getEntityClass());
 
         fillParams(tQuery, queryBuilder.getParams());
 
@@ -47,16 +57,19 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
     }
 
     private long countTotalRecord(QueryBuilder queryBuilder) {
-        TypedQuery<Long> tQuery = entityManager
-                .createQuery(queryBuilder.buildCount().concat(queryBuilder.buildWhere()), Long.class);
+        Query nativeQuery = entityManager
+                .createNativeQuery(queryBuilder.buildCount().concat(queryBuilder.buildWhere()));
 
+        fillParams(nativeQuery, queryBuilder.getParams());
 
-        fillParams(tQuery, queryBuilder.getParams());
-
-        return tQuery.getSingleResult();
+        Object singResult = nativeQuery.getSingleResult();
+        if (Objects.isNull(singResult)) {
+            return -1;
+        }
+        return ((BigInteger) singResult).intValue();
     }
 
-    protected void fillParams(TypedQuery tQuery, Map<String, Object> params) {
+    protected void fillParams(Query tQuery, Map<String, Object> params) {
         if (MapUtils.isEmpty(params)) {
             return;
         }

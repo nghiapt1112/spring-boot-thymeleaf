@@ -44,5 +44,16 @@ th{
 	color: white ! important;
 	text-align: center;
 }
-
+.table-area {
+	min-height: 400px;
+}
+.pagination-area {
+	text-align: right;
+}
+.margin-0 {
+	margin: 0;
+}
+.search-input {
+	border-color: #d2d6de!important;
+}
 
