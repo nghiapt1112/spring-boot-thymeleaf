@@ -12,7 +12,11 @@ button{
 .btn-primary{
     width: 100% ! important;
 }
-
+.burron-top-order{
+	padding: 0;
+	display: flex;
+	justify-content: center;
+}
 .button-top-delivery{
     padding: 0;
     display: flex;
@@ -43,9 +47,7 @@ th{
     text-align: center;
 }
 
-html {
-    margin: 40px auto;
-}
+
 .btn-search {
     background: #424242;
     border-radius: 0;
