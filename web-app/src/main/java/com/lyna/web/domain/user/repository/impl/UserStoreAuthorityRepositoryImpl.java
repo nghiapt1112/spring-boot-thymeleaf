@@ -22,7 +22,7 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
     }
 
     @Override
-    public Boolean deletebyUserId(List<String> userIds) {
+    public Boolean deleteUserStoreAuthorityByUserId(List<String> userIds) {
         try {
             String query = "DELETE FROM UserStoreAuthority u WHERE u.userId in (:userId)";
             entityManager.createQuery(query)
@@ -35,11 +35,11 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
     }
 
     @Override
-    public boolean deleteStore(List<String> listStoreId) {
+    public boolean deleteStoreAuthorityByStoreId(List<String> listStoreId) {
         try {
-            String query = "DELETE FROM UserStoreAuthority u WHERE u.storeId in (:storeId)";
+            String query = "DELETE FROM UserStoreAuthority u WHERE u.storeId in (:storeIds)";
             entityManager.createQuery(query)
-                    .setParameter("storeId", listStoreId).executeUpdate();
+                    .setParameter("storeIds", listStoreId).executeUpdate();
             return true;
         } catch (Exception ex) {
             log.error(ex.getMessage());

@@ -6,7 +6,6 @@ import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,9 +30,6 @@ public class StoreController extends AbstractCustomController {
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/store/list";
     private static int currentPage = 1;
     private static Integer pageSize = 5;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private StoreService storeService;

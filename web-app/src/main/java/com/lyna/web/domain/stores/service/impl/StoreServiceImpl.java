@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@org.springframework.transaction.annotation.Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class StoreServiceImpl implements StoreService {
     private final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
     @Autowired
@@ -72,7 +72,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     @Transactional
     public String deleteStore(String storeIds) {
-        boolean isDeletedUser = false;
+        boolean isDeletedStore = false;
         List<String> listStoreId = new ArrayList();
 
         String[] arrayStoreId = storeIds.split(",");
@@ -81,13 +81,14 @@ public class StoreServiceImpl implements StoreService {
         }
 
         try {
-            userStoreAuthorityRepository.deleteStore(listStoreId);
-            isDeletedUser = storeRepository.deletebyStoreId(listStoreId);
+            if (userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(listStoreId)) {
+                isDeletedStore = storeRepository.deletebyStoreId(listStoreId);
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
 
-        if (isDeletedUser)
+        if (isDeletedStore)
             return "200";
         else
             return null;

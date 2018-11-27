@@ -183,7 +183,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
 
         try {
-            boolean isDeletedStoreAuthority = userStoreAuthority.deletebyUserId(listUserId);
+            boolean isDeletedStoreAuthority = userStoreAuthority.deleteUserStoreAuthorityByUserId(listUserId);
             if (isDeletedStoreAuthority) {
                 isDeletedUser = userRepository.deleteByUserId(listUserId);
             }
