@@ -1,0 +1,51 @@
+.button-submit button{
+	border-radius: 0px  ! important;
+	width: 30% ! important;
+	
+}
+.button-submit{
+	text-align: center ! important;
+}
+input{
+	border-color: #00a65a ! important;
+    box-shadow: none ! important;
+}
+.form-control-feedback{
+	margin-right: 6% ! important;
+}
+.box-titles{
+	color: #666;
+	font-size: 15px;
+	font-family: -webkit-pictograph;
+}
+.title-view, .title-edit{
+	text-align: center;
+}
+.view-checkbox, .edit-checkbox{
+	text-align: center;
+}
+/* #order_course{
+	display: none;
+}  */
+.div-input-post, .div-input-course{
+	 display: flex;justify-content: space-between;
+}
+.title-input-post{
+	padding: 0;
+}
+.buttonSave, .buttonClose{
+	   width: 20%;
+    background: #3c8dbc;
+}
+.buttonClose{
+	   color: white;
+}
+.modal-header{
+	    border-bottom-color: #716565;
+}
+.error{
+	display: none;
+}
+.error_show{
+	color: red;
+}

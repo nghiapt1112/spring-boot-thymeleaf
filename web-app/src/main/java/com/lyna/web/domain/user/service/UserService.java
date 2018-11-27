@@ -17,9 +17,11 @@ public interface UserService {
 
     User createUser(User user);
 
-    Page<UserList> findPaginated(Pageable pageable, List<Store> storeList);
+    Page<UserList> findPaginated(Pageable pageable, List<Store> storeList, int tenantId);
 
     User findById(int tenantId, String userId);
 
     void update(User currentUser, UserAggregate aggregate);
+	
+	String deleteUser(String arrayName);
 }
