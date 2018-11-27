@@ -43,7 +43,7 @@
                                     </th>
                                     <th>メールアドレス</th>
                                     <th>ユーザー名</th>
-                                    <th th:each="item: ${userPage.get(0).rolePerStore}">
+                                    <th th:each="item: ${storeModel}">
                                         <span th:text="${item.getName()}"></span>
                                     </th>
 
@@ -51,12 +51,10 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="item: ${userPage}">
-                                    <td style="text-align: center;">
-                                        <div th:unless="${item.userId} eq ${userId}">
-                                            <input type="checkbox" th:value="${item.userId}"
-                                                   class="chkCheckBoxId"
-                                                   name="userid">
-                                        </div>
+                                    <td th:unless="${item.userId} eq ${userId}">
+                                        <!--<div >-->
+                                        <input type="checkbox" th:value="${item.userId}" class="chkCheckBoxId" name="userid">
+                                        <!--</div>-->
                                     </td>
                                     <td th:text="${item.email}"></td>
                                     <td th:text="${item.name}"></td>
