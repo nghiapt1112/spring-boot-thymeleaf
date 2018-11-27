@@ -1,4 +1,4 @@
-let addRowDefault = function () {
+/*let addRowDefault = function () {
         let listName = 'postCourses'; //list name in Catalog.class
         let fieldsNames = ['post', 'course','delete']; //field names from Movie.class
         let rowIndex = document.querySelectorAll('.item').length; //we can add mock class to each movie-row
@@ -37,7 +37,7 @@ let addRowDefault = function () {
             	let inputCourse = document.createElement('input');
             	inputCourse.classList.add('form-control');
             	inputCourse.type='text';
-            	/*inputCourse.id = listName + rowIndex + '.' + fieldName;*/
+            	/!*inputCourse.id = listName + rowIndex + '.' + fieldName;*!/
             	inputCourse.id = fieldName + rowIndex;
             	inputCourse.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
             	rowSpanCourse.appendChild(spanCourse);
@@ -64,7 +64,7 @@ let addRowDefault = function () {
         document.getElementById('postCourseList').appendChild(row);
         
         
-};
+};*/
 
 let addRow = function () {
     let listName = 'postCourses'; //list name in Catalog.class

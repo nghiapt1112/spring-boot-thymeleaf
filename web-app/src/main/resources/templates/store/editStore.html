@@ -29,6 +29,10 @@
 			 	     <div class="box-body">
 			 	     	<form  th:action="@{/store/editStore}" method="post" th:object="${store}">
 							<input type="hidden" th:field="*{storeId}">
+							<input type="hidden" th:field="*{updateDate}" >
+							<input type="hidden" th:field="*{createDate}" >
+							<input type="hidden" th:field="*{createUser}" >
+							<input type="hidden" th:field="*{updateUser}" >
 	      				 <div class="col-md-12">
 	       					<span class="col-md-5">åº—èˆ—ã‚³ãƒ¼ãƒ‰ / Store code</span>
 	      					<div class=" form-group col-md-6 has-feedback">
@@ -69,6 +73,10 @@
 
 	      				  <div id="postCourseList" class="container_order_course" >
 		      				<div class="col-md-12 order_course item" id = "deleteRow"th:each="PostCourse, postCourse : ${store.postCourses}">
+								<input type="hidden" th:field="*{updateDate}" >
+								<input type="hidden" th:field="*{createDate}" >
+								<input type="hidden" th:field="*{createUser}" >
+								<input type="hidden" th:field="*{updateUser}" >
 								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].postCourseId}">
 		      					 <div class=" form-group  col-md-5 div-input-post">
 		      						<div class=" col-md-5 title-input-post"><span>ä¾¿ / Post</span></div>

@@ -22,8 +22,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "m_store")
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Data
 public class Store extends AbstractEntity {
     @Id
@@ -31,20 +29,19 @@ public class Store extends AbstractEntity {
     private String storeId;
 
     @NotBlank(message = "code not empty server")
-    @Column(name = "code")
+    @Column
     private String code;
 
     @NotBlank(message = "name not empty server")
-    @Column(name = "name")
+    @Column
     private String name;
 
     @Column(name = "major_area")
     private String majorArea;
 
-    @Column(name = "area")
+    @Column
     private String area;
 
-    @JsonIgnore
     @Valid
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")

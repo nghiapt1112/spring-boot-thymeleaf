@@ -1,7 +1,6 @@
 package com.lyna.web.domain.stores.service;
 
 import com.lyna.web.domain.stores.Store;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public interface StoreService {
 
     void save(Store store);
 
-    public Store findOneByStoreId(String storeId);
+    Store findOneByStoreId(String storeId);
 
-    public List<Store> findAll();
+    List<Store> findAll();
 }

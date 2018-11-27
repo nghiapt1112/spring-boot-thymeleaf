@@ -1,7 +1,7 @@
 let addRowDefault = function () {
-        let listName = 'postCourses'; //list name in Catalog.class
-        let fieldsNames = ['post', 'course','delete']; //field names from Movie.class
-        let rowIndex = document.querySelectorAll('.item').length; //we can add mock class to each movie-row
+        let listName = 'postCourses';
+        let fieldsNames = ['post', 'course','delete'];
+        let rowIndex = document.querySelectorAll('.item').length;
         let row = document.createElement('div');
         row.classList.add('item', 'order_course','col-md-12' );
 
@@ -67,12 +67,37 @@ let addRowDefault = function () {
 };
 
 let addRow = function () {
-    let listName = 'postCourses'; //list name in Catalog.class
-    let fieldsNames = ['post', 'course','delete']; //field names from Movie.class
-    let rowIndex = document.querySelectorAll('.item').length; //we can add mock class to each movie-row
+    let listName = 'postCourses';
+    let fieldsNames = ['updateDate','createDate','createUser','updateUser','postCourseId','post', 'course','delete'];
+    let rowIndex = document.querySelectorAll('.item').length;
     let row = document.createElement('div');
     row.classList.add('item', 'order_course','col-md-12' );
     fieldsNames.forEach((fieldName) => {
+    	let rowId = document.createElement('input');
+    	if(fieldName === "postCourseId"){
+            rowId.type='hidden';
+			rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}
+
+    let rowId = document.createElement('input');
+    if(fieldName === "updateDate"){
+        rowId.type='hidden';
+        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+    }
+    let rowId = document.createElement('input');
+    if(fieldName === "createDate"){
+        rowId.type='hidden';
+        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+    }let rowId = document.createElement('input');
+    if(fieldName === "createUser"){
+        rowId.type='hidden';
+        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+    }let rowId = document.createElement('input');
+    if(fieldName === "updateUser"){
+        rowId.type='hidden';
+        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+    }
+
     	let rowPost = document.createElement('div');
     	if(fieldName === 'post'){
         	rowPost.classList.add('form-group', 'col-md-5','div-input-post');

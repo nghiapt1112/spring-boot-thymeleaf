@@ -8,6 +8,6 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getAll(int tenantId);
     List<Store> findAll(int tenantId);
-    public List<Store> findAll();
-
+    List<Store> findAll();
+    Store findOneByStoreId(String storeId);
 }

@@ -6,5 +6,5 @@ import com.lyna.web.domain.stores.Store;
 import java.util.List;
 
 public interface PostCourseService {
-    public void save(PostCourse postCourse);
+    void save(PostCourse postCourse);
 }

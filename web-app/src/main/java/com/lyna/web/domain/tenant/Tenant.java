@@ -56,5 +56,4 @@ public class Tenant extends AbstractObject {
         this.name = name;
     }
 
-
 }
