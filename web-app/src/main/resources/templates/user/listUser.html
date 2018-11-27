@@ -39,14 +39,14 @@
                         <div class="box-body">
                             <div class="form-group row">
                                 <div class="col-md-1">
-                                    <select class="form-control" id="pageSizeSelect">
+                                    <select class="form-control" id="pageSizeSelect" onchange="search()">
                                         <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
                                                 th:value="${pageSize}"
-                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                                th:selected="${pageSize} == ${limit}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-2 pull-right">
-                                    <input type="text" placeholder="Search" class="form-control search-input">
+                                    <input type="text" placeholder="検索/ Search" class="form-control search-input" id="search-box" onblur="search()">
                                 </div>
                             </div>
                             <div class="row">
@@ -66,7 +66,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="item: ${userPage.getResults()}">
+                                        <tr th:each="item: ${pageData.getResults()}">
                                             <td th:unless="${item.getUserId()} eq ${userId}" class="text-center">
                                                 <input type="checkbox" th:value="${item.getUserId()}" class="chkCheckBoxId" name="userid">
                                             </td>
@@ -84,12 +84,12 @@
                             <!--Nghia Paging-->
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    <p> Dang show -1/100 items</p>
+                                    <p> This function need to implement.</p>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <ul class="pagination margin-0">
-                                        <li th:each="page : ${#numbers.sequence(1, userPage.getTotalPage())}">
-                                            <a class="pageLink" th:href="@{/user/list(cp=${page}, limit=${selectedPageSize})}" th:text="${page}"></a>
+                                        <li th:each="page : ${#numbers.sequence(1, pageData.getTotalPage())}">
+                                            <a class="pageLink" th:href="@{/user/list(cp=${page}, limit=${limit})}" th:text="${page}"></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -105,19 +105,7 @@
 
 </div>
 <footer th:replace="layout :: footer"></footer>
-
-<script th:inline="javascript">
-    $(document).ready(function() {
-        changePageAndSize();
-    });
-
-    function changePageAndSize() {
-        $('#pageSizeSelect').change(function(evt) {
-            window.location.replace("/user/list?limit=" + this.value + "&cp=1");
-        });
-
-    }
-</script>
+<script type="text/javascript" th:src="@{/js/listUser.js}"></script>
 
 </body>
 </html>

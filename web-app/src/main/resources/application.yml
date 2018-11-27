@@ -25,6 +25,9 @@ spring:
     hibernate:
       ddl-auto: validate
 
+lyna.web:
+  pageSize: 5, 10, 20, 50, 100, 200
+  limitItems: 5
 ---
 #######################
 # Dev environment config
