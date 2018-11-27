@@ -11,7 +11,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                List Store
+                店舗一覧
             </h1>
         </section>
         <section class="content content-right">
@@ -36,18 +36,20 @@
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="dataTables_length" id="listStore_length"><label>
-                                    <select
-                                            name="listStore_length" aria-controls="listStore"
-                                            class="form-control input-sm">
-                                        <option value="5" selected>5</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>件を表示</label></div>
+                                <div style="padding: 10px;" id="listStore_length">
+                                    <label>
+                                        <select
+                                                name="listStore_length" aria-controls="listStore"
+                                                class="form-control input-sm" style="padding: 1px;">
+                                            <option value="5" selected>5</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select></label></div>
                             </div>
                             <div class="col-sm-6">
-                                <div id="listStore_filter" style="float: right;" class="dataTables_filter">
+                                <div id="listStore_filter" style="float: right; padding: 10px;"
+                                     class="dataTables_filter">
                                     <label>
                                         <input id="inputSearch" name="inputSearch"
                                                type="search"
@@ -79,11 +81,11 @@
                                         aria-label="Store code: activate to sort column ascending">
                                         <a href="#"
                                            th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
-                                           aria-controls="listStore" data-dt-idx="2" tabindex="0"> Store code </a>
+                                           aria-controls="listStore" data-dt-idx="2" tabindex="0"> 店舗コード </a>
                                     </th>
-                                    <th>Store Name</th>
-                                    <th>Major lager</th>
-                                    <th>Area</th>
+                                    <th>店舗名</th>
+                                    <th>大エリア</th>
+                                    <th>エリア</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,7 +95,11 @@
                                                class="chkCheckBoxId"
                                                name="storeid">
                                     </td>
-                                    <td th:text="${store.code}"></td>
+                                    <td>
+                                        <a href="store-edit"
+                                           th:href="@{/store/edit(storeId=${store.storeId})}"
+                                           class="" th:text="${store.code}"></a>
+                                    </td>
                                     <td th:text="${store.name}">Store A</td>
                                     <td th:text="${store.majorArea}">Hiroshima</td>
                                     <td th:text="${store.area}">Hiroshima</td>
