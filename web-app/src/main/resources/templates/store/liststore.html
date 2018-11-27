@@ -50,17 +50,17 @@
                                 <div id="listStore_filter" style="float: right;" class="dataTables_filter">
                                     <label>
                                         <input id="inputSearch" name="inputSearch"
-                                               type="search"
+                                               type="search" th:with="search123=${searchText}"
                                                th:value="${searchText}"
                                                class="form-control input-sm"
                                                placeholder="Enter code, name, arear for look "
                                                aria-controls="listStore"></label>
 
                                     <a class="btn btn-search" type="button"
-                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage},
-                                       searchText= ('#inputSearch')
-                                       )} ">
+                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage}, searchText= ${__#{inputSearch.value()}__}} )}">
                                         <i class="fa fa-search fa-fw" onclick=""></i> Search</a>
+
+                                    <span th:text="${search123}">Total will go here</span>
                                 </div>
                             </div>
                         </div>
@@ -79,11 +79,7 @@
                                         aria-label="Store code: activate to sort column ascending">
                                         <a href="#"
                                            th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
-                                           aria-controls="listStore"
-                                           data-dt-idx="2"
-                                           tabindex="0">
-                                            Store code </a>
-
+                                           aria-controls="listStore" data-dt-idx="2" tabindex="0"> Store code </a>
                                     </th>
                                     <th>Store Name</th>
                                     <th>Major lager</th>
@@ -136,6 +132,7 @@
 
                                         </li>
                                         <li class="paginate_button next" id="listStore_next">
+                                            <!--/*@thymesVar id="textSearch" type=""*/-->
                                             <a href="#"
                                                th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
                                                aria-controls="listStore"

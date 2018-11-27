@@ -50,6 +50,7 @@ public class StoreController extends AbstractCustomController {
             @RequestParam("searchText") Optional<String> searchText,
             @RequestParam("sort") Optional<String> sort
     ) {
+
         if (pCurrentPage.isPresent())
             currentPage = pCurrentPage.get();
         if (pPageSize.isPresent())
@@ -57,7 +58,9 @@ public class StoreController extends AbstractCustomController {
 
         page.ifPresent(p -> currentPage = p);
         size.ifPresent(s -> pageSize = s);
+
         String search = "";
+
         int tenantId = ((User) principal.getPrincipal()).getTenantId();
 
         if (searchText.isPresent() && !searchText.get().isEmpty()) {

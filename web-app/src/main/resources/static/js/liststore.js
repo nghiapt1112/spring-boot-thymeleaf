@@ -6,8 +6,21 @@ $(document).ready(function () {
             $('.chkCheckBoxId').prop('checked', false);
     });
 
-
+    $("#inputSearch").on('change keydown paste input', function () {
+        textSearch();
+    });
 });
+
+var stextsearch = "";
+
+function textSearch() {
+
+    //console.log(document.getElementById("inputSearch").value);
+    //console.log(111);
+    search123 = document.getElementById("inputSearch").value;
+
+    console.log(search123);
+}
 
 function prev_page() {
     alert("test pre page");
