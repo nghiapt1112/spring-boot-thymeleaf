@@ -14,12 +14,18 @@ $(document).ready(function () {
 var stextsearch = "";
 
 function textSearch() {
-
-    //console.log(document.getElementById("inputSearch").value);
-    //console.log(111);
     search123 = document.getElementById("inputSearch").value;
 
-    console.log(search123);
+    var links = document.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {
+        var thisLink = links[i];
+        var source = thisLink.getAttribute('href');
+        if (source != null && source.includes("searchText") !== -1) {
+            var n = source.indexOf("searchText");
+            var res = source.substring(0, n) + "searchText=" + search123;
+            thisLink.setAttribute('href', res);
+        }
+    }
 }
 
 function prev_page() {

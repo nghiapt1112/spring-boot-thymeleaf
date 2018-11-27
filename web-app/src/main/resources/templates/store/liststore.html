@@ -50,17 +50,17 @@
                                 <div id="listStore_filter" style="float: right;" class="dataTables_filter">
                                     <label>
                                         <input id="inputSearch" name="inputSearch"
-                                               type="search" th:with="search123=${searchText}"
+                                               type="search"
                                                th:value="${searchText}"
                                                class="form-control input-sm"
                                                placeholder="Enter code, name, arear for look "
                                                aria-controls="listStore"></label>
 
-                                    <a class="btn btn-search" type="button"
-                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage}, searchText= ${__#{inputSearch.value()}__}} )}">
+                                    <a class="btn btn-search" type="button" id="btnSearch"
+                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage},
+                                       searchText= ${searchText}
+                                       )} ">
                                         <i class="fa fa-search fa-fw" onclick=""></i> Search</a>
-
-                                    <span th:text="${search123}">Total will go here</span>
                                 </div>
                             </div>
                         </div>
@@ -117,14 +117,14 @@
                                     <ul class="pagination ">
                                         <li class="paginate_button previous" id="listStore_previous">
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size}, page=${prevPage})} "
+                                               th:href="@{/store/list(size=${storePage.size}, page=${prevPage},searchText= ${searchText})} "
                                                aria-controls="listStore" data-dt-idx="0" tabindex="0">
                                                 前へ </a></li>
                                         <li class="paginate_button active" th:if="${storePage.totalPages > 0}"
                                             style="border: #00a65a; border-width: 1px;"
                                             th:each="pageNumber : ${pageNumbers}">
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size}, page=${pageNumber})}"
+                                               th:href="@{/store/list(size=${storePage.size}, page=${pageNumber},searchText= ${searchText})}"
                                                th:text="${pageNumber}" aria-controls="listStore"
                                                data-dt-idx="1" tabindex="0">
                                                 1
@@ -134,7 +134,7 @@
                                         <li class="paginate_button next" id="listStore_next">
                                             <!--/*@thymesVar id="textSearch" type=""*/-->
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
+                                               th:href="@{/store/list(size=${storePage.size}, page=${nextPage},searchText= ${searchText})}"
                                                aria-controls="listStore"
                                                data-dt-idx="2"
                                                tabindex="0">
