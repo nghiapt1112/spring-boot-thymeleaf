@@ -3,7 +3,9 @@ package com.lyna.web.domain.user.service;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserAggregate;
+import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.view.UserList;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +24,8 @@ public interface UserService {
     User findById(int tenantId, String userId);
 
     void update(User currentUser, UserAggregate aggregate);
-	
+
+    UserResponsePage findUsersWithPaging(RequestPage userRequestPage);
+
 	String deleteUser(String arrayName);
 }
