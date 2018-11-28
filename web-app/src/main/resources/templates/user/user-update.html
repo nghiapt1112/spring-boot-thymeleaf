@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head th:replace="layout :: head('User Update Page')"></head>
+    <head th:replace="layout :: head('ユーザー編集')"></head>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -12,20 +12,20 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                User Modification
+                ユーザー編集
             </h1>
         </section>
         <section class="content content-right">
             <div>
                 <form action="#" th:action="@{/user/update}" th:object="${aggregate}" method="POST">
                     <input hidden th:field="*{userId}"/>
-                    <p class="row"><label class="col-md-2">Email: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
-                    <p class="row"><label class="col-md-2">Name: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
+                    <p class="row"><label class="col-md-2">メールアドレス: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
+                    <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
                     <hr>
 
                     <div class="row">
-                        <label class="col-md-1 col-md-offset-2 text-center">View</label>
-                        <label class="col-md-1 text-center">Edit</label>
+                        <label class="col-md-1 col-md-offset-2 text-center">参照</label>
+                        <label class="col-md-1 text-center">編集</label>
                     </div>
 
                     <div class="row" th:each="item,el : ${aggregate.getRolePerStore()}">
