@@ -60,18 +60,3 @@ function addViaAjax() {
         }
     });
 };
-
-function search(){
-    var query = '/user/list?cp=1';
-    var limitItems = document.getElementById('pageSizeSelect').value;
-    if (!limitItems) {
-        limitItems = 5;
-    }
-    query += '&limit=' + limitItems;
-
-    var searchValue = document.getElementById('search-box').value ;
-    if (searchValue) {
-        query += '&search=' + searchValue;
-    }
-    window.location.replace(query);
-}
