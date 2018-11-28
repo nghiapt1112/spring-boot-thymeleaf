@@ -68,35 +68,44 @@ let addRowDefault = function () {
 
 let addRow = function () {
     let listName = 'postCourses';
-    let fieldsNames = ['updateDate','createDate','createUser','updateUser','postCourseId','post', 'course','delete'];
+    let fieldsNames = ['tenantId','postCourseId','storeId','updateDate','createDate','createUser','updateUser','post', 'course','delete'];
     let rowIndex = document.querySelectorAll('.item').length;
     let row = document.createElement('div');
     row.classList.add('item', 'order_course','col-md-12' );
     fieldsNames.forEach((fieldName) => {
-    	let rowId = document.createElement('input');
+        let rowTenantId = document.createElement('input');
+    	if(fieldName === "tenantId"){
+            rowTenantId.type='hidden';
+            rowTenantId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+    }
+    	let rowPostCourseId = document.createElement('input');
     	if(fieldName === "postCourseId"){
-            rowId.type='hidden';
-			rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+            rowPostCourseId.type='hidden';
+            rowPostCourseId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
 		}
-
-    let rowId = document.createElement('input');
-    if(fieldName === "updateDate"){
-        rowId.type='hidden';
-        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
-    }
-    let rowId = document.createElement('input');
-    if(fieldName === "createDate"){
-        rowId.type='hidden';
-        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
-    }let rowId = document.createElement('input');
-    if(fieldName === "createUser"){
-        rowId.type='hidden';
-        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
-    }let rowId = document.createElement('input');
-    if(fieldName === "updateUser"){
-        rowId.type='hidden';
-        rowId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
-    }
+		let rowStoreId = document.createElement('input');
+		if(fieldName === "storeId"){
+            rowStoreId.type='hidden';
+            rowStoreId.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}
+		let rowUpdateDate = document.createElement('input');
+		if(fieldName === "updateDate"){
+			rowUpdateDate.type='hidden';
+			rowUpdateDate.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}
+		let rowCreateDate = document.createElement('input');
+		if(fieldName === "createDate"){
+            rowCreateDate.type='hidden';
+            rowCreateDate.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}let rowCreateUser = document.createElement('input');
+		if(fieldName === "createUser"){
+            rowCreateUser.type='hidden';
+            rowCreateUser.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}let rowUpdateUser = document.createElement('input');
+		if(fieldName === "updateUser"){
+            rowUpdateUser.type='hidden';
+            rowUpdateUser.setAttribute('name',listName + '[' + rowIndex + '].' + fieldName);
+		}
 
     	let rowPost = document.createElement('div');
     	if(fieldName === 'post'){
@@ -264,7 +273,7 @@ $(document).ready(function(){
 		$(this).closest(".item").remove();
 
 		$("#postCourseList").find(".item").each(function(index1){
-			$(this).find("input").each(function(index){
+			$(this).find("input[type=text]").each(function(index){
 
 				if(0 === index){
 					$(this).attr('name','postCourses[' + parseInt(index1) + '].post');

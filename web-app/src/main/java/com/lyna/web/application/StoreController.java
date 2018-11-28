@@ -5,6 +5,7 @@ import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,13 +101,13 @@ public class StoreController extends AbstractCustomController {
         store.setTenantId(tenantId);
         List<PostCourse> postCourses = store.getPostCourses();
         if (Objects.isNull(postCourses)) {
-            log.error("postCourse null");
+            log.error("postCourses null");
         } else if (postCourses.isEmpty()) {
-            log.error("postCourse no have element");
+            log.error("postCourses no have element");
         } else {
             PostCourse pc = null;
             for (PostCourse postCourse : postCourses) {
-                if(null == postCourse.getPostCourseId()){
+                if(null == postCourse.getPostCourseId() || "" == postCourse.getPostCourseId()){
                     pc = new PostCourse();
                     postCourse.setPostCourseId(pc.getPostCourseId());
                     postCourse.setCreateUser(username);
@@ -120,8 +121,8 @@ public class StoreController extends AbstractCustomController {
 
             }
         }
+
         store.setPostCourses(postCourses);
-        storeService.save(store);
 
         return "redirect:/store/listStore";
 

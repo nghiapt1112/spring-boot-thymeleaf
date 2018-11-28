@@ -22,6 +22,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "m_store")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Data
 public class Store extends AbstractEntity {
     @Id

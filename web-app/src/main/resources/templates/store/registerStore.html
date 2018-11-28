@@ -7,8 +7,8 @@
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-	<header th:replace="layout :: header"></header>
-	<div th:replace="layout :: content-left"></div>
+	<div th:include="fragments/header/header.html :: header" class="main-header"></div>
+	<div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
     <div  class="content-wrapper">
     <section class="content-header">
       <h1>
@@ -28,9 +28,8 @@
 			         </div>
 			 	     <div class="box-body">
 			 	     	<form  th:action="@{/store/registerStore}" th:method="post" th:object="${store}">
-
 	      				 <div class="col-md-12">
-	       					<span class="col-md-5">åº—èˆ—ã‚³ãƒ¼ãƒ‰ / Store code</span>
+	       					<span class="col-md-5">店舗コード / Store code</span>
 	      					<div class=" form-group col-md-6 has-feedback">
 	      						<input id="code" class="form-control" type="text" th:field="*{code}" th:errorclass="field-error" >
 	      						<span class="glyphicon glyphicon-barcode form-control-feedback"></span>
@@ -41,7 +40,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">åº—èˆ—å�� / Store name</span>
+	      					<span class="col-md-5">店舗名 / Store name</span>
 	      					<div class="form-group col-md-6" style="">
 								<input id="course" class="form-control" type="text" th:field="*{name}" th:errorclass="field-error">
 								<span class="glyphicon glyphicon-home form-control-feedback"></span>
@@ -51,7 +50,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">å¤§ã‚¨ãƒªã‚¢ / Major are</span>
+	      					<span class="col-md-5">大エリア / Major are</span>
 	      					<div class=" form-group col-md-6" style="">
 								<input class="form-control" type="text" th:field="*{majorArea}">
 								<span class="fa fa-area-chart form-control-feedback"></span>
@@ -59,7 +58,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">ã‚¨ãƒªã‚¢ / area</span>
+	      					<span class="col-md-5">エリア / area</span>
 	      					<div class=" form-group col-md-6" style="">
 								<input class="form-control" type="text"  th:field="*{area}">
 								<span class="fa fa-area-chart form-control-feedback"></span>
@@ -69,8 +68,8 @@
 
 	      				  <div id="postCourseList" class="container_order_course" >
 		      				<div class="col-md-12 order_course item" id = "deleteRow"th:each="PostCourse, postCourse : ${store.postCourses}">
-		      					 <div class=" form-group  col-md-5 div-input-post">
-		      						<div class=" col-md-5 title-input-post"><span>ä¾¿ / Post</span></div>
+								<div class=" form-group  col-md-5 div-input-post">
+		      						<div class=" col-md-5 title-input-post"><span>便 / Post</span></div>
 		      				  	<div class=" col-md-7 edit-checkbox title-input-post">
 		      				  		<input id="post0" th:field="*{postCourses[__${postCourse.index}__].post}" class="form-control" type="text" th:errorclass="field-error">
 		      				  		<em class = "error">post is required</em>
@@ -79,7 +78,7 @@
 
 		 	    					</div>
 		      					<div class=" form-group col-md-6 div-input-post">
-		      						<div class="col-md-6 title-input-post"><span>ã‚³ãƒ¼ã‚¹  / Course</span></div>
+		      						<div class="col-md-6 title-input-post"><span>コース / Course</span></div>
 		      						<div class="col-md-6 edit-checkbox title-input-post">
 		      							<input id="course0" th:field="*{postCourses[__${postCourse.index}__].course}" class="form-control" type="text" th:errorclass="field-error">
 		      							<em class = "error">course is required</em>

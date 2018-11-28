@@ -35,7 +35,7 @@ public class PostCourse extends AbstractEntity {
     @Column(name = "store_id")
     private String storeId;
 
-    /*@OneToOne
+    /*@ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;*/
 

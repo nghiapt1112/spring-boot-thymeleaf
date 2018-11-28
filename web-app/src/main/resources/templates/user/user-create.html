@@ -5,8 +5,10 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <header th:replace="layout :: header"></header>
-    <div th:replace="layout :: content-left"></div>
+    <!--<header th:replace="layout :: header"></header>-->
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <!--<div th:replace="layout :: content-left"></div>-->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -51,7 +53,7 @@
 </div>
 
 <footer th:replace="layout :: footer"></footer>
-<!--<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>-->
+<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser_t.js}"></script>
 
 
 </body>

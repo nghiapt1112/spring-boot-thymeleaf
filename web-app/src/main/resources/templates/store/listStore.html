@@ -6,8 +6,8 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-	<header th:replace="layout :: header"></header>
-	<div th:replace="layout :: content-left"></div>
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
     <div  class="content-wrapper">
     <section class="content-header">
       <h1>

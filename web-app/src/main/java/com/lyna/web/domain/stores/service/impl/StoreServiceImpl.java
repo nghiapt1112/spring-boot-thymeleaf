@@ -6,7 +6,6 @@ import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
-import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +42,8 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
 
 
+
+    @Override
     @Transactional
     public void save(Store store) {
          if(Objects.isNull(store)){
