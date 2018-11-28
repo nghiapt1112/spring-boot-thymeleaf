@@ -2,6 +2,7 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 
 @Controller
@@ -32,6 +34,9 @@ public class StoreController extends AbstractCustomController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private PostCourseService postCourseService;
 
     @GetMapping(value = "/store/registerStore")
     public String registerStore(Model model, @ModelAttribute("store") Store store) {
@@ -86,7 +91,7 @@ public class StoreController extends AbstractCustomController {
             Store store, BindingResult result, RedirectAttributes redirect) {
         User currentUser = (User) principal.getPrincipal();
         int tenantId = currentUser.getTenantId();
-        String username = currentUser.getId();
+        String id = currentUser.getId();
         Date date = new Date();
         if (result.hasErrors()) {
             model.addAttribute("store", store);
@@ -97,33 +102,46 @@ public class StoreController extends AbstractCustomController {
             return "store/editStore";
         }
         store.setUpdateDate(date);
-        store.setUpdateUser(username);
+        store.setUpdateUser(id);
         store.setTenantId(tenantId);
         List<PostCourse> postCourses = store.getPostCourses();
+        System.out.println("postCourses");
+        for(PostCourse postCourse : postCourses){
+            System.out.println("1 -t = "  + postCourse.getTenantId());
+            System.out.println("2 -t = "  + postCourse.getStoreId());
+            System.out.println("3 -t = "  + postCourse.getPost());
+            System.out.println("4 -t = "  + postCourse.getCourse());
+            System.out.println("5 -t = "  + postCourse.getPostCourseId());
+        }
+        List<PostCourse> postCourseUp = new ArrayList();
+        List<PostCourse> postCourseCr = new ArrayList();
         if (Objects.isNull(postCourses)) {
-            log.error("postCourses null");
+            log.error("postCourses is null");
         } else if (postCourses.isEmpty()) {
             log.error("postCourses no have element");
         } else {
-            PostCourse pc = null;
-            for (PostCourse postCourse : postCourses) {
-                if(null == postCourse.getPostCourseId() || "" == postCourse.getPostCourseId()){
+           for (PostCourse postCourse : postCourses) {
+               PostCourse pc = null;
+                if(Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()){
+                    System.out.println("PostCourseId NULL");
                     pc = new PostCourse();
                     postCourse.setPostCourseId(pc.getPostCourseId());
-                    postCourse.setCreateUser(username);
+                    postCourse.setCreateUser(id);
                     postCourse.setCreateDate(date);
                     postCourse.setTenantId(tenantId);
-                }else{
+                    postCourse.setStoreId(store.getStoreId());
+                 }else{
+                    System.out.println("PostCourseId NOT NULL");
                     postCourse.setUpdateDate(date);
-                    postCourse.setUpdateUser(username);
-                    postCourse.setTenantId(tenantId);
+                    postCourse.setUpdateUser(id);
+
                 }
 
             }
+
         }
-
         store.setPostCourses(postCourses);
-
+        storeService.save(store);
         return "redirect:/store/listStore";
 
     }

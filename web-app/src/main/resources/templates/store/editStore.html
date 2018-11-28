@@ -75,8 +75,8 @@
 
 	      				  <div id="postCourseList" class="container_order_course" >
 		      				<div class="col-md-12 order_course item" id = "deleteRow"th:each="PostCourse, postCourse : ${store.postCourses}">
-								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].postCourseId}">
 								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].tenantId}">
+								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].postCourseId}">
 								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].storeId}">
 								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].updateDate}">
 								<input type="hidden" th:field="*{postCourses[__${postCourse.index}__].createDate}">

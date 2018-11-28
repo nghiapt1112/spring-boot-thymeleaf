@@ -294,7 +294,7 @@ $(document).ready(function(){
 		addRow();
 
 		$(this).closest("body").find(".item").each(function(index1){
-			$(this).find("input").each(function(index){
+			$(this).find("input[type=text]").each(function(index){
 
 				if(0 === index){
 					$(this).attr('name','postCourses[' + parseInt(index1) + '].post');

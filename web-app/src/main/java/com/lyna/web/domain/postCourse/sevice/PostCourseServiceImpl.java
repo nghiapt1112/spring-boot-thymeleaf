@@ -7,6 +7,7 @@ import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class PostCourseServiceImpl implements PostCourseService {
     private PostCourseRepository postCourseRepository;
 
     @Override
+    @Transactional
     public void save(PostCourse postCourse) {
         postCourseRepository.save(postCourse);
     }
