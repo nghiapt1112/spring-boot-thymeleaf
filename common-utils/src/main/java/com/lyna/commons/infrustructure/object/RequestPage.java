@@ -42,4 +42,13 @@ public abstract class RequestPage extends AbstractObject {
     public Map<String, Object> getSearchFields() {
         return searchFields;
     }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public RequestPage addSearchField(String key, Object value) {
+        this.searchFields.put(key, value);
+        return this;
+    }
 }

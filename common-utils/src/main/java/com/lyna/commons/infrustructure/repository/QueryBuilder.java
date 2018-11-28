@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class QueryBuilder {
-
+    protected static final String EMPTY_STR = "";
     protected RequestPage requestPage;
     protected Map<String, Object> params = new HashMap<>();
 
@@ -15,31 +15,17 @@ public abstract class QueryBuilder {
         return this;
     }
 
-    public String buildGroupBy() {
-        return "";
-    }
+    public abstract String buildGroupBy();
 
-    public String buildOrderBy() {
-        return "";
-    }
+    public abstract String buildOrderBy();
 
-    public String buildWhere() {
-        return "";
-    }
+    public abstract String buildWhere();
 
-    public String buildSelect() {
-        return "";
-    }
+    public abstract String buildSelect();
 
-    public String buildCount() {
-        return "";
-    }
+    public abstract String buildCount();
 
-    public String buildLimit() {
-        return "";
-    }
+    public abstract String buildLimit();
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
+    public abstract Map<String, Object> getParams();
 }

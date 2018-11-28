@@ -88,37 +88,38 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
-    public Page<UserList> findPaginated(Pageable pageable, List<Store> storeInTenant, int tenantId) {
+    @SuppressWarnings("unused")
+    public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll, int tenantId) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         List<UserList> listResults = new ArrayList<>();
         List<UserList> listResponse = new ArrayList<>();
-        Map<String, String> storeById = new HashMap<>();
-        Map<String, UserStoreAuthority> authorityByUserId = new HashMap<>();
+        Map<String, String> mapStore = new HashMap<>();
+        Map<String, UserStoreAuthority> mapStoreAuthority = new HashMap<>();
 
         List<UserStoreAuthority> authorities = userStoreAuthority.findAll();
-        List<User> usersInTenant = userRepository.findAllByTenantId(tenantId);
+        List<User> listUser = userRepository.findAllByTenantId(tenantId);
 
-        for (Store store : storeInTenant) {
-            storeById.put(store.getStoreId(), store.getName());
+        for (Store store : storeListAll) {
+            mapStore.put(store.getStoreId(), store.getName());
         }
 
         for (UserStoreAuthority authority : authorities) {
-            authorityByUserId.put(authority.getUserId(), authority);
+            mapStoreAuthority.put(authority.getUserId(), authority);
         }
 
-        for (User user : usersInTenant) {
+        for (User user : listUser) {
             UserList userList = new UserList();
             userList.setEmail(user.getEmail());
             userList.setName(user.getName());
             userList.setUserId(user.getId());
             userList.setRole(user.getRole());
 
-            UserStoreAuthority userStoreAuthority = authorityByUserId.get(user.getId());
+            UserStoreAuthority userStoreAuthority = mapStoreAuthority.get(user.getId());
             Map<String, Integer> map = new HashMap<>();
 
-            for (Map.Entry<String, String> entry : storeById.entrySet()) {
+            for (Map.Entry<String, String> entry : mapStore.entrySet()) {
                 if (userStoreAuthority != null && userStoreAuthority.getStoreId().equals(entry.getKey())) {
                     map.put(entry.getValue(), (int) userStoreAuthority.getAuthority());
                 } else {
@@ -131,10 +132,10 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
 
 
-        if (usersInTenant.size() < startItem) {
+        if (listUser.size() < startItem) {
             listResults = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + pageSize, usersInTenant.size());
+            int toIndex = Math.min(startItem + pageSize, listUser.size());
             listResponse = listResults.subList(startItem, toIndex);
         }
 
@@ -180,7 +181,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
-        return this.userRepository.findUserWithPaging(userRequestPage);
+        return this.userRepository.findUsersWithPaging(userRequestPage);
     }
 
     @Override

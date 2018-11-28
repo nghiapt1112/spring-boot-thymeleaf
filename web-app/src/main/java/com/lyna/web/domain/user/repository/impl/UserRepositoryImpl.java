@@ -64,7 +64,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     }
 
     @Override
-    public UserResponsePage findUserWithPaging(RequestPage userRequestPage) {
+    public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
         return findWithPaging(userRequestPage, new UserQueryBuilder().withRequestPage(userRequestPage), UserResponsePage.class);
     }
 
