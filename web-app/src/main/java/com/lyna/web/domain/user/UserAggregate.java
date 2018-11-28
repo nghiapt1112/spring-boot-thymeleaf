@@ -86,7 +86,7 @@ public class UserAggregate extends AbstractObject {
 
 @Data
 @NoArgsConstructor
-class UserStoreRole {
+class UserStoreRole extends AbstractObject{
     private String id;
     private String name;
     private String storeId;

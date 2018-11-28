@@ -77,6 +77,6 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public Map<String, Object> getParams() {
-        return null;
+        return this.params;
     }
 }

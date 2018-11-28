@@ -181,7 +181,12 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
-        return this.userRepository.findUsersWithPaging(userRequestPage);
+        UserResponsePage userResponPage = this.userRepository.findUsersWithPaging(userRequestPage);
+        if (Objects.isNull(userRequestPage)) {
+            throw new UserException(toInteger("err.user.pageError.code"), toStr("err.user.pageError.msg"));
+        }
+        return userResponPage;
+
     }
 
     @Override
