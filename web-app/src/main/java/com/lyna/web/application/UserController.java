@@ -91,7 +91,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal,
-                           @RequestParam(required = false, defaultValue = "5") Integer limit,
+                           @RequestParam(required = false, defaultValue = "10") Integer limit,
                            @RequestParam(required = false, defaultValue = "1") Integer cp,
                            @RequestParam(required = false) Date start, @RequestParam(required = false) Date end,
                            @RequestParam(required = false) String search) {
@@ -108,6 +108,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("pageData", userPage);
         model.addAttribute("storeModel", storesInTenant);
         model.addAttribute("limit", Objects.isNull(limit) ? LIMIT_ITEMS() : limit);
+        model.addAttribute("currentPage", cp);
         model.addAttribute("pageSizes", PAGE_SIZE());
 
         return "user/listUser";
