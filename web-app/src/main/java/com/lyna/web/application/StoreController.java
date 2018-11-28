@@ -38,10 +38,8 @@ public class StoreController extends AbstractCustomController {
     public String listUsers(
             Model model,
             UsernamePasswordAuthenticationToken principal,
-            @RequestParam("page") Optional<Integer> page,
-            @RequestParam("size") Optional<Integer> size,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
             @RequestParam("searchText") Optional<String> searchText,
             @RequestParam("columnsort") Optional<String> columnSort,
             @RequestParam(defaultValue = "asc") Optional<String> typeSort
@@ -50,7 +48,7 @@ public class StoreController extends AbstractCustomController {
         String sTextPage = "";
         List<Integer> pageNumbers = null;
         int tenantId = ((User) principal.getPrincipal()).getTenantId();
-        int prevPage, nextPage = currentPage;
+        int prevPage, nextPage = page;
 
         if (searchText.isPresent() && !searchText.get().isEmpty()) {
             model.addAttribute("searchText", searchText.get());
@@ -58,7 +56,7 @@ public class StoreController extends AbstractCustomController {
         }
 
         Page<Store> storePage =
-                storeService.findPaginated(PageRequest.of(currentPage - 1, pageSize), tenantId, search);
+                storeService.findPaginated(PageRequest.of(page - 1, size), tenantId, search);
 
         int totalPages = storePage.getTotalPages();
         if (totalPages > 0) {
@@ -66,15 +64,15 @@ public class StoreController extends AbstractCustomController {
                     .boxed()
                     .collect(Collectors.toList());
 
-            sTextPage = pageNumbers.size() + "件中 " + currentPage + " ~ " + pageNumbers.size() + " 件を表示";
-            nextPage = currentPage < pageNumbers.size() ? currentPage + 1 : currentPage;
+            sTextPage = pageNumbers.size() + "件中 " + page + " ~ " + pageNumbers.size() + " 件を表示";
+            nextPage = page < pageNumbers.size() ? page + 1 : page;
         }
 
-        prevPage = currentPage > 1 ? currentPage - 1 : currentPage;
+        prevPage = page > 1 ? page - 1 : page;
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("storePage", storePage);
-        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("currentPage", page);
         model.addAttribute("spage", sTextPage);
         model.addAttribute("pageNumbers", pageNumbers);
 

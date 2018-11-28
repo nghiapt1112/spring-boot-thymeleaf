@@ -5,28 +5,9 @@ $(document).ready(function () {
         else
             $('.chkCheckBoxId').prop('checked', false);
     });
-
-    $("#inputSearch").on('change keydown paste input', function () {
-        textSearch();
-    });
 });
 
-function textSearch() {
-    textInput = document.getElementById("inputSearch").value;
-    var links = document.getElementsByTagName('a');
-    for (var i = 0; i < links.length; i++) {
-        var thisLink = links[i];
-        var source = thisLink.getAttribute('href');
-        if (source != null && source.includes("searchText") !== -1) {
-            var indexSearch = source.indexOf("searchText");
-            var size = document.getElementById("listStore_length").value;
-            var response = source.substring(0, indexSearch) + "searchText=" + textInput + " &size=" + size;
-            thisLink.setAttribute('href', response);
-        }
-    }
-}
-
-function deleteStore() {
+function deleteUser() {
     var pickedOne = false;
     var inputs = document.getElementsByClassName('chkCheckBoxId');
     for (var i = 0, l = inputs.length; i < l; ++i) {
@@ -44,20 +25,20 @@ function deleteStore() {
     }
 }
 
-
+//
 function addViaAjax() {
-    var storeIds = [];
-    var checkboxes = $('input[name="storeid"]');
+    var userIds = [];
+    var checkboxes = $('input[name="userid"]');
     checkboxes.filter(":checked").map(function () {
-        storeIds.push(this.value);
+        userIds.push(this.value);
     }).get()
 
     $.ajax({
         type: "GET",
         contentType: 'application/json; charset=utf-8',
-        url: "/store/delete",
+        url: "/user/delete",
         data: {
-            storeId: storeIds.toString()
+            userIds: userIds.toString()
         },
         dataType: 'json',
         timeout: 100000,
@@ -66,7 +47,12 @@ function addViaAjax() {
         statusCode: function () {
         },
         success: function (data) {
-            window.location.href = "/store/list";
+            console.log("SUCCESS: ", data);
+            var result = "<h3> You delete user:  </h3>"
+                + "<strong>Name:</strong> " + data.name;
+            $("#ajax-response").html(result);
+            //alert("削除しました。");
+            window.location.href = "/user/list";
         },
         error: function (e) {
             alert("削除しました。");
@@ -75,4 +61,17 @@ function addViaAjax() {
     });
 };
 
+function search(){
+    var query = '/user/list?cp=1';
+    var limitItems = document.getElementById('pageSizeSelect').value;
+    if (!limitItems) {
+        limitItems = 5;
+    }
+    query += '&limit=' + limitItems;
 
+    var searchValue = document.getElementById('search-box').value ;
+    if (searchValue) {
+        query += '&search=' + searchValue;
+    }
+    window.location.replace(query);
+}

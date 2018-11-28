@@ -50,13 +50,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         List<Store> list;
-        List<Store> stores;
-
-        if (!searchText.isEmpty()) {
-            stores = getStoreList(tenantId, searchText);
-        } else
-            stores = findAll(tenantId);
-
+        List<Store> stores = getStoreList(tenantId, searchText);
 
         if (stores.size() < startItem) {
             list = Collections.emptyList();

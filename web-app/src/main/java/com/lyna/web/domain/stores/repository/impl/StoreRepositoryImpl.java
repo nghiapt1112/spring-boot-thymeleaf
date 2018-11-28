@@ -61,17 +61,19 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public List<Store> getAll(int tenantId, String search) {
-
         String hql = "SELECT s FROM Store s WHERE s.tenantId=:tenantId";
         if (!search.isEmpty())
-            hql = hql + " AND (s.code like :search or s.name like :search or s.majorArea like :search or s.area like :search)";
+            hql = hql + " and (trim(lower(s.code)) like :search " +
+                    "or trim(lower(s.name)) like :search " +
+                    "or trim(lower(s.majorArea)) like :search " +
+                    "or trim(lower(s.area)) like :search)";
 
         TypedQuery<Store> query = entityManager
                 .createQuery(hql, Store.class);
 
         if (!search.isEmpty())
             return query.setParameter("tenantId", tenantId)
-                    .setParameter("search", "%" + search + "%")
+                    .setParameter("search", "%" + search.trim().toLowerCase() + "%")
                     .getResultList();
         else
             return query.setParameter("tenantId", tenantId)
