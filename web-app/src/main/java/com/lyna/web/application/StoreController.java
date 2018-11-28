@@ -38,7 +38,7 @@ public class StoreController extends AbstractCustomController {
     @Autowired
     private PostCourseService postCourseService;
 
-    @GetMapping(value = "/store/registerStore")
+    @GetMapping(value = "/store/create")
     public String registerStore(Model model, @ModelAttribute("store") Store store) {
         List<PostCourse> postCourses = new ArrayList<PostCourse>();
         postCourses.add(new PostCourse());
@@ -47,13 +47,8 @@ public class StoreController extends AbstractCustomController {
         return "store/registerStore";
     }
 
-    @PostMapping(value = "/store/registerStore")
-    public String saveStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store") Store store, BindingResult result, RedirectAttributes redirect) {
-        System.out.println("registerStore()");
-        User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String username = currentUser.getId();
-        Date date = new Date();
+    @PostMapping(value = "/store/create")
+    public String CreateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store") Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
             return "store/registerStore";
@@ -62,37 +57,15 @@ public class StoreController extends AbstractCustomController {
             log.error("store null");
             return "store/registerStore";
         }
-        store.setCreateDate(date);
-        store.setTenantId(tenantId);
-        store.setCreateUser(username);
-        List<PostCourse> postCourses = store.getPostCourses();
-        if (null == postCourses) {
-            log.error("postCourse null");
-        } else if (postCourses.isEmpty()) {
-            log.error("postCourse no have element");
-        } else {
-            for (PostCourse postCourse : postCourses) {
-                postCourse.setTenantId(tenantId);
-                postCourse.setStoreId(store.getStoreId());
-                postCourse.setCreateDate(date);
-                postCourse.setCreateUser(username);
-            }
-        }
-
-        store.setPostCourses(postCourses);
-        storeService.save(store);
+        storeService.createStore(store, principal);
 
         return "redirect:/store/listStore";
 
     }
 
-    @PostMapping(value = "/store/editStore")
-    public String editStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
+    @PostMapping(value = "/store/update")
+    public String updateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result, RedirectAttributes redirect) {
-        User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String id = currentUser.getId();
-        Date date = new Date();
         if (result.hasErrors()) {
             model.addAttribute("store", store);
             return "store/editStore";
@@ -101,52 +74,12 @@ public class StoreController extends AbstractCustomController {
             log.error("store null");
             return "store/editStore";
         }
-        store.setUpdateDate(date);
-        store.setUpdateUser(id);
-        store.setTenantId(tenantId);
-        List<PostCourse> postCourses = store.getPostCourses();
-        System.out.println("postCourses");
-        for(PostCourse postCourse : postCourses){
-            System.out.println("1 -t = "  + postCourse.getTenantId());
-            System.out.println("2 -t = "  + postCourse.getStoreId());
-            System.out.println("3 -t = "  + postCourse.getPost());
-            System.out.println("4 -t = "  + postCourse.getCourse());
-            System.out.println("5 -t = "  + postCourse.getPostCourseId());
-        }
-        List<PostCourse> postCourseUp = new ArrayList();
-        List<PostCourse> postCourseCr = new ArrayList();
-        if (Objects.isNull(postCourses)) {
-            log.error("postCourses is null");
-        } else if (postCourses.isEmpty()) {
-            log.error("postCourses no have element");
-        } else {
-           for (PostCourse postCourse : postCourses) {
-               PostCourse pc = null;
-                if(Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()){
-                    System.out.println("PostCourseId NULL");
-                    pc = new PostCourse();
-                    postCourse.setPostCourseId(pc.getPostCourseId());
-                    postCourse.setCreateUser(id);
-                    postCourse.setCreateDate(date);
-                    postCourse.setTenantId(tenantId);
-                    postCourse.setStoreId(store.getStoreId());
-                 }else{
-                    System.out.println("PostCourseId NOT NULL");
-                    postCourse.setUpdateDate(date);
-                    postCourse.setUpdateUser(id);
-
-                }
-
-            }
-
-        }
-        store.setPostCourses(postCourses);
-        storeService.save(store);
+        storeService.updateStore(store, principal);
         return "redirect:/store/listStore";
 
     }
 
-    @GetMapping(value = "/store/edit/{storeId}")
+    @GetMapping(value = "/store/update/{storeId}")
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
         System.out.println(storeId);
         model.addAttribute("store", storeService.findOneByStoreId(storeId));

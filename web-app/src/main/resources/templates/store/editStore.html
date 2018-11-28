@@ -27,7 +27,7 @@
 			             <p class="box-titles">Register a new store</p>
 			         </div>
 			 	     <div class="box-body">
-			 	     	<form  th:action="@{/store/editStore}" method="post" th:object="${store}">
+			 	     	<form  th:action="@{/store/update}" method="post" th:object="${store}">
 
 							<input type="hidden" th:field="*{tenantId}">
 							<input type="hidden" th:field="*{storeId}">
