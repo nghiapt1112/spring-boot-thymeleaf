@@ -27,9 +27,8 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
-    private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/store/list";
-    private static int currentPage = 1;
-    private static Integer pageSize = 5;
+    private static final String REDIRECT_TO_STORE_LIST_PAGE = "redirect:/store/list";
+    private static final String STORE_LIST_PAGE = "store/liststore";
 
     @Autowired
     private StoreService storeService;
@@ -41,23 +40,17 @@ public class StoreController extends AbstractCustomController {
             UsernamePasswordAuthenticationToken principal,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size,
-            @RequestParam("currentPage") Optional<Integer> pCurrentPage,
-            @RequestParam("pageSize") Optional<Integer> pPageSize,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam("searchText") Optional<String> searchText,
-            @RequestParam("sort") Optional<String> sort
+            @RequestParam("columnsort") Optional<String> columnSort,
+            @RequestParam(defaultValue = "asc") Optional<String> typeSort
     ) {
-
-        if (pCurrentPage.isPresent())
-            currentPage = pCurrentPage.get();
-        if (pPageSize.isPresent())
-            pageSize = pPageSize.get();
-
-        page.ifPresent(p -> currentPage = p);
-        size.ifPresent(s -> pageSize = s);
-
         String search = "";
-
+        String sTextPage = "";
+        List<Integer> pageNumbers = null;
         int tenantId = ((User) principal.getPrincipal()).getTenantId();
+        int prevPage, nextPage = currentPage;
 
         if (searchText.isPresent() && !searchText.get().isEmpty()) {
             model.addAttribute("searchText", searchText.get());
@@ -67,36 +60,25 @@ public class StoreController extends AbstractCustomController {
         Page<Store> storePage =
                 storeService.findPaginated(PageRequest.of(currentPage - 1, pageSize), tenantId, search);
 
-        model.addAttribute("storePage", storePage);
-        model.addAttribute("currentPage", currentPage);
-
-
-        //TODO: LinhNM để vào 1 hàm để cho gọn code
-        if (currentPage > 1)
-            model.addAttribute("prevPage", currentPage - 1);
-        else
-            model.addAttribute("prevPage", currentPage);
-
-
-        if (principal != null && principal.getPrincipal() != null)
-            model.addAttribute("userId", ((User) principal.getPrincipal()).getId());
-
         int totalPages = storePage.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+            pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-            String spage = pageNumbers.size() + "件中 " + currentPage + " ~ " + pageNumbers.size() + " 件を表示";
-            model.addAttribute("spage", spage);
 
-            if (currentPage < pageNumbers.size())
-                model.addAttribute("nextPage", currentPage + 1);
-            else
-                model.addAttribute("nextPage", currentPage);
+            sTextPage = pageNumbers.size() + "件中 " + currentPage + " ~ " + pageNumbers.size() + " 件を表示";
+            nextPage = currentPage < pageNumbers.size() ? currentPage + 1 : currentPage;
         }
 
-        return "store/liststore";
+        prevPage = currentPage > 1 ? currentPage - 1 : currentPage;
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("storePage", storePage);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("spage", sTextPage);
+        model.addAttribute("pageNumbers", pageNumbers);
+
+        return STORE_LIST_PAGE;
     }
 
     @GetMapping(value = {"/delete"})

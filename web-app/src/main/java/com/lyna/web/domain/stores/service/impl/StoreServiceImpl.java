@@ -1,5 +1,6 @@
 package com.lyna.web.domain.stores.service.impl;
 
+import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class StoreServiceImpl implements StoreService {
+public class StoreServiceImpl extends BaseService implements StoreService {
     private final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
     @Autowired
     private StoreRepository storeRepository;
@@ -80,18 +81,14 @@ public class StoreServiceImpl implements StoreService {
             listStoreId.add(storeId);
         }
 
-        try {
-            if (userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(listStoreId)) {
-                isDeletedStore = storeRepository.deletebyStoreId(listStoreId);
-            }
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
+        if (userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(listStoreId)) {
+            isDeletedStore = storeRepository.deletebyStoreId(listStoreId);
         }
 
         if (isDeletedStore)
-            return "200";
+            return toStr("delete.msg.success.code");
         else
-            return null;
+            return toStr("err.store.delete.msg");
     }
 
 }

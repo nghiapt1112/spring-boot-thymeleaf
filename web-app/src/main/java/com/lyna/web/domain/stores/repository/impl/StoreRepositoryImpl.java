@@ -1,5 +1,6 @@
 package com.lyna.web.domain.stores.repository.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
@@ -60,24 +61,32 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public List<Store> getAll(int tenantId, String search) {
-        return entityManager
-                .createQuery("SELECT s FROM Store s " +
-                                "WHERE s.tenantId=:tenantId and (s.code like :search or s.name like :search or s.majorArea like :search or s.area like :search)",
-                        Store.class)
-                .setParameter("tenantId", tenantId)
-                .setParameter("search", "%" + search + "%")
-                .getResultList();
+
+        String hql = "SELECT s FROM Store s WHERE s.tenantId=:tenantId";
+        if (!search.isEmpty())
+            hql = hql + " AND (s.code like :search or s.name like :search or s.majorArea like :search or s.area like :search)";
+
+        TypedQuery<Store> query = entityManager
+                .createQuery(hql, Store.class);
+
+        if (!search.isEmpty())
+            return query.setParameter("tenantId", tenantId)
+                    .setParameter("search", "%" + search + "%")
+                    .getResultList();
+        else
+            return query.setParameter("tenantId", tenantId)
+                    .getResultList();
     }
 
     @Override
-    public boolean deletebyStoreId(List<String> listStoreId) {
+    public boolean deletebyStoreId(List<String> listStoreId) throws DomainException {
         try {
             String query = "DELETE FROM Store u WHERE u.storeId in (:storelist)";
             entityManager.createQuery(query).setParameter("storelist", listStoreId).executeUpdate();
             return true;
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
         }
-        return false;
     }
 }
