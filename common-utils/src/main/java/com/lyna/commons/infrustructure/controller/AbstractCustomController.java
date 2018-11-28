@@ -24,7 +24,7 @@ public class AbstractCustomController {
     protected static final Logger CONTROLLER_LOGGER = LoggerFactory.getLogger(AbstractCustomController.class);
 
     @Autowired
-    Environment env;
+    protected Environment env;
 
     @Autowired
     private BaseValidator baseValidator;

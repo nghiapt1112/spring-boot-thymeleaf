@@ -9,6 +9,7 @@ import org.apache.commons.collections.CollectionUtils;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class UserAggregate extends AbstractObject {
 
     private String userId;
     @NotEmpty(message = "Lyna-Email can not be empty")
-    @Email(regexp = EMAIL_REGEX)
+    @Email
     private String email;
 
     @NotEmpty
@@ -61,6 +62,7 @@ public class UserAggregate extends AbstractObject {
         this.rolePerStore = user.getStoreAuthoritiesAsStream()
                 .map(el -> fromStoreAuthorityEntity(el, storeNameById))
                 .collect(Collectors.toList());
+        this.rolePerStore.sort(Comparator.comparing(UserStoreRole::getName));
 
         return this;
     }
@@ -133,5 +135,14 @@ class UserStoreRole {
         } else if (authority == 0) {
             this.canView = true;
         }
+    }
+
+    public String getStoreRole() {
+        if (this.canEdit) {
+            return "Edit";
+        } else if (this.canView) {
+            return "View";
+        }
+        return "NO Permission";
     }
 }
