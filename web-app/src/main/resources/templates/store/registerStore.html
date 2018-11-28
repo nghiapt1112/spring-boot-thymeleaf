@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<head th:replace="layout :: head(' 店舗 登録 / Register Store')"></head>
+	<head th:replace="layout :: head('店舗登録')"></head>
 	<link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerStore.css}"/>
 
 </head>
@@ -12,7 +12,7 @@
     <div  class="content-wrapper">
     <section class="content-header">
       <h1>
-		  店舗 登録 / Register Store
+		  店舗登録
       </h1>
     </section>
     <section class="content content-right">
@@ -29,7 +29,7 @@
 			 	     <div class="box-body">
 			 	     	<form  th:action="@{/store/create}" th:method="post" th:object="${store}">
 	      				 <div class="col-md-12">
-	       					<span class="col-md-5">店舗コード / Store code</span>
+	       					<span class="col-md-5">店舗コード </span>
 	      					<div class=" form-group col-md-6 has-feedback">
 	      						<input id="code" class="form-control" type="text" th:field="*{code}" th:errorclass="field-error" >
 	      						<span class="glyphicon glyphicon-barcode form-control-feedback"></span>
@@ -40,7 +40,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">店舗名 / Store name</span>
+	      					<span class="col-md-5">店舗名</span>
 	      					<div class="form-group col-md-6" style="">
 								<input id="course" class="form-control" type="text" th:field="*{name}" th:errorclass="field-error">
 								<span class="glyphicon glyphicon-home form-control-feedback"></span>
@@ -50,7 +50,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">大エリア / Major are</span>
+	      					<span class="col-md-5">大エリア</span>
 	      					<div class=" form-group col-md-6" style="">
 								<input class="form-control" type="text" th:field="*{majorArea}">
 								<span class="fa fa-area-chart form-control-feedback"></span>
@@ -58,7 +58,7 @@
 							<div class="col-md-1"></div>
 	      				</div>
 	      				<div class="col-md-12">
-	      					<span class="col-md-5">エリア / area</span>
+	      					<span class="col-md-5">エリア</span>
 	      					<div class=" form-group col-md-6" style="">
 								<input class="form-control" type="text"  th:field="*{area}">
 								<span class="fa fa-area-chart form-control-feedback"></span>
@@ -69,7 +69,7 @@
 	      				  <div id="postCourseList" class="container_order_course" >
 		      				<div class="col-md-12 order_course item" id = "deleteRow"th:each="PostCourse, postCourse : ${store.postCourses}">
 								<div class=" form-group  col-md-5 div-input-post">
-		      						<div class=" col-md-5 title-input-post"><span>便 / Post</span></div>
+		      						<div class=" col-md-5 title-input-post"><span>便</span></div>
 		      				  	<div class=" col-md-7 edit-checkbox title-input-post">
 		      				  		<input id="post0" th:field="*{postCourses[__${postCourse.index}__].post}" class="form-control" type="text" th:errorclass="field-error">
 		      				  		<em class = "error">post is required</em>
@@ -78,7 +78,7 @@
 
 		 	    					</div>
 		      					<div class=" form-group col-md-6 div-input-post">
-		      						<div class="col-md-6 title-input-post"><span>コース / Course</span></div>
+		      						<div class="col-md-6 title-input-post"><span>コース /</span></div>
 		      						<div class="col-md-6 edit-checkbox title-input-post">
 		      							<input id="course0" th:field="*{postCourses[__${postCourse.index}__].course}" class="form-control" type="text" th:errorclass="field-error">
 		      							<em class = "error">course is required</em>
@@ -123,7 +123,7 @@
 
 				  		</form>
 				  			<div class="col-md-12  button-submit">
-				  				<button class="btn btn-primary" id="save" data-toggle="modal" data-target="#exampleModal">ç™»éŒ² / Register</button>
+				  				<button class="btn btn-primary" id="save" data-toggle="modal" data-target="#exampleModal">登録</button>
 				  		</div> 
 				  		
       				 </div>
