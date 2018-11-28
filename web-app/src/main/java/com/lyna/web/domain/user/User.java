@@ -45,7 +45,7 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Column
     @NotEmpty(message = "email cannot be empty")
-    @Email(regexp = EMAIL_REGEX)
+    @Email
     private String email;
 
     @Column
