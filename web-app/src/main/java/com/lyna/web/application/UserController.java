@@ -3,6 +3,7 @@ package com.lyna.web.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.infrustructure.exception.DomainValidateExeption;
 import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
@@ -52,6 +53,9 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
     public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal) {
+        if (!userRegisterAggregate.isDataValid()) {
+            throw new DomainValidateExeption("Requested object is invalid.");
+        }
         User currentUser = (User) principal.getPrincipal();
         this.userService.registerUser(currentUser, userRegisterAggregate);
         return REDIRECT_TO_USER_LIST_PAGE;
@@ -84,6 +88,9 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/update", "/update/"})
     @IsAdmin
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
+        if (!aggregate.isDataValid()) {
+            throw new DomainValidateExeption("Requested object is invalid.");
+        }
         User currentUser = (User) principal.getPrincipal();
         userService.update(currentUser, aggregate);
         return REDIRECT_TO_USER_LIST_PAGE;
