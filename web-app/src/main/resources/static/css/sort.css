@@ -1,0 +1,16 @@
+.fa-sort-desc{
+	color: black;
+	padding-left: 8%;
+	font-size: 155%;
+	/* padding-top: 20px; */
+	position: absolute;
+	margin: -1% 0% 0 -7%;
+}
+.fa-sort-asc{
+	color: black;
+	padding-left: 8%;
+	font-size: 155%;
+	/* padding-top: 20px; */
+	position: absolute;
+	margin: 0% 0% 0 -7%;
+}

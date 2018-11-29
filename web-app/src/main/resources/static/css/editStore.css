@@ -49,3 +49,6 @@ input{
 .error_show{
 	color: red;
 }
+.content-wrapper{
+	background-color: #ecf0f5;
+}

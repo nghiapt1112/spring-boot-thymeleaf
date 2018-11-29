@@ -1,78 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<head th:replace="layout :: head('List Store')"></head>
-	<link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listStore.css}"/>
+    <head th:replace="layout :: head('List Store')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listStore.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
-    <div  class="content-wrapper">
-    <section class="content-header">
-      <h1>
-        List Store
-      </h1>
-    </section>
-    <section class="content content-right">
-      <div class="row">
-      	<div class="col-md-12 button_top">
-      		
-   			<div class="col-md-2 burron-top-order">
-      			<button type="submit" class="btn btn-primary ">Register</button>
-      		</div>
-      		<div class="col-md-1">
-      		</div>
-      		<div class="col-md-2 button-top-delivery">
-      			<button type="submit" class="btn btn-primary ">Delete</button>
-      		</div>
-      		<div class="col-md-7">
-      			
-      		</div>
-      	</div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                List Store
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <div class="col-md-12 button_top">
 
-        <div class="col-md-12">
-        	<div style="border-top: 3px solid #337ab7;" class="box">
-            <div class="box-body">
-              <th:block th:if="${#lists.isEmpty(contacts)}">
-                <h3>No contacts</h3>
-        	  </th:block>
-              <table id="listStore" class="table table-bordered table-hover">
-                <thead style="background: #337ab7">
-	                <tr>
-	                  <th>
-						<input type="checkbox">
-					  </th>
-	                  <th>Store code</th>
-	                  <th>Store Name</th>
-	                  <th>Major lager</th>
-	                  <th>Area</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <tr th:each="store,iterStat : ${stores}">
-                      <td style="text-align: center;">
-                        <input type="checkbox">
-                    </td>
-                    <td th:text="${store.code}"> </td>
-                    <td th:text="${store.name}">Store A</td>
-                    <td th:text="${store.majorArea}">Hiroshima</td>
-                    <td><a th:href="@{/store/update/{storeId}(storeId=${store.storeId})}">edit</a></td>
-                </tr>
+                    <div class="col-md-2 burron-top-order">
+                        <button type="submit" class="btn btn-primary ">Register</button>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2 button-top-delivery">
+                        <button type="submit" class="btn btn-primary ">Delete</button>
+                    </div>
+                    <div class="col-md-7">
 
-              </tbody>
-              </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div style="border-top: 3px solid #337ab7;" class="box">
+                        <div class="box-body">
+                            <th:block th:if="${#lists.isEmpty(contacts)}">
+                                <h3>No contacts</h3>
+                            </th:block>
+                            <table id="listStore" class="table table-bordered table-hover">
+                                <thead style="background: #337ab7">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox">
+                                    </th>
+                                    <th>Store code<i class="fa fa-sort-desc fa-sort-desc-code" aria-hidden="true"></i><i
+                                            class="fa fa-sort-asc fa-sort-asc-code" aria-hidden="true"></i></th>
+                                    <th>Store Name<i class="fa fa-sort-desc fa-sort-desc-name" aria-hidden="true"></i><i
+                                            class="fa fa-sort-asc fa-sort-asc-name" aria-hidden="true"></i></th>
+                                    <th>Major lager<i class="fa fa-sort-desc fa-sort-desc-majorArrea"
+                                                      aria-hidden="true"></i><i
+                                            class="fa fa-sort-asc fa-sort-asc-majorArrea" aria-hidden="true"></i></th>
+                                    <th>Area<i class="fa fa-sort-desc fa-sort-desc-area" aria-hidden="true"></i><i
+                                            class="fa fa-sort-asc fa-sort-asc-area" aria-hidden="true"></i></th>
+                                    <th>Address<i class="fa fa-sort-desc fa-sort-desc-address"
+                                                      aria-hidden="true"></i><i class="fa fa-sort-asc fa-sort-asc-address"
+                                                                                aria-hidden="true"></i></th>
+                                    <th>Telephone<i class="fa fa-sort-desc fa-sort-desc-telephone"
+                                                      aria-hidden="true"></i><i class="fa fa-sort-asc fa-sort-asc-telephone"
+                                                                                aria-hidden="true"></i></th>
+                                    <th>Owner<i class="fa fa-sort-desc fa-sort-desc-owner"
+                                                      aria-hidden="true"></i><i class="fa fa-sort-asc fa-sort-asc-owner"
+                                                                                aria-hidden="true"></i></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="store,iterStat : ${stores}">
+                                    <td style="text-align: center;">
+                                        <input type="checkbox">
+                                    </td>
+                                    <td th:text="${store.code}"></td>
+                                    <td th:text="${store.name}">Store A</td>
+                                    <td th:text="${store.majorArea}">Hiroshima</td>
+                                    <td th:text="${store.area}"></td>
+                                    <td th:text="${store.address}"></td>
+                                    <td th:text="${store.telephone}"></td>
+                                    <td th:text="${store.owner}"></td>
+                                    <td><a th:href="@{/store/update/{storeId}(storeId=${store.storeId})}">edit</a></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
             </div>
-            <!-- /.box-body -->
-          </div>
-        </div>
-        </div>
 
-    </section>
-  </div>
+        </section>
+    </div>
 
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/listStore_t.js" th:src="@{/js/listStore_t.js}"></script>
+<script type="text/javascript" src="/js/listStore.js" th:src="@{/js/listStore.js}"></script>
 </body>
 </html>

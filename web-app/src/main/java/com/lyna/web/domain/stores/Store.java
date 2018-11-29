@@ -43,6 +43,15 @@ public class Store extends AbstractEntity {
     @Column
     private String area;
 
+    @Column
+    private String address;
+
+    @Column
+    private String telephone;
+
+    @Column
+    private String owner;
+
     @Valid
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")

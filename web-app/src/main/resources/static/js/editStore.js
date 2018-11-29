@@ -113,7 +113,7 @@ let addRow = function () {
         	let rowSpanPost = document.createElement('div');
         	rowSpanPost.classList.add('col-md-5','title-input-post');
         	let spanPost = document.createElement('span');
-        	spanPost.textContent = "便/Post";
+        	spanPost.textContent = "便";
         	let rowInputPost = document.createElement('div');
         	rowInputPost.classList.add('col-md-7','edit-checkbox', 'title-input-post');
         	let inputPost = document.createElement('input');
@@ -139,7 +139,7 @@ let addRow = function () {
         	let rowSpanCourse = document.createElement('div');
         	rowSpanCourse.classList.add('col-md-6','title-input-post');
         	let spanCourse = document.createElement('span');
-        	spanCourse.textContent = "コース/Course";
+        	spanCourse.textContent = "コース";
         	let rowInputCourse = document.createElement('div');
         	rowInputCourse.classList.add('col-md-6','edit-checkbox', 'title-input-post');
         	let inputCourse = document.createElement('input');
@@ -216,14 +216,14 @@ $(document).ready(function(){
 			$("#errorPost").removeClass("error_show").addClass("error");
 		}
 
-		var course = $("#course").val();
-		if(course === "" || course.trim() === ""){
-			$(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
-			$("#errorCourse").removeClass("error").addClass("error_show");
-			checkForm = false;
-		}else{
-			$("#errorCourse").removeClass("error_show").addClass("error");
-		}
+        var name = $("#name").val();
+        if (name === "" || name.trim() === "") {
+            $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
+            $("#errorName").removeClass("error").addClass("error_show");
+            checkForm = false;
+        } else {
+            $("#errorName").removeClass("error_show").addClass("error");
+        }
 
 		$("#postCourseList").closest("body").find(".item").each(function(index1){
 
