@@ -15,4 +15,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getAll(int tenantId, String search);
 
     boolean deletebyStoreId(List<String> listStoreId);
+
+    Store findOneByStoreId(String storeId);
 }

@@ -25,8 +25,8 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     private EntityManager em;
 
     public StoreRepositoryImpl(EntityManager em) {
-        super(User.class, em);
-    }
+        super(Store.class, em);
+     }
 
     @Override
     public List<Store> getAll(int tenantId) {
@@ -90,5 +90,13 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
             log.error(e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public Store findOneByStoreId(String storeId) {
+        return entityManager
+                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId", Store.class)
+                .setParameter("storeId", storeId)
+                .getSingleResult();
     }
 }

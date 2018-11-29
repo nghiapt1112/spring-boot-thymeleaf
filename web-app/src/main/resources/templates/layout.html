@@ -13,41 +13,9 @@
     <link rel="stylesheet" href="/css/_all-skins.min.css" th:href="@{/css/_all-skins.min.css}">
     <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css" th:href="@{/css/bootstrap-datepicker.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <!--<header class="main-header" th:fragment="header">
-    <span class="logo">
-      <span class="logo-mini"><b>L</b>NA</span>
-      <span class="logo-lg">LYNA</span>
-    </span>
-        <nav class="navbar navbar-static-top">
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i>
-                            <span class="hidden-xs">
-                &lt;!&ndash;<p th:text="${userName}">Admin</p>&ndash;&gt;
-              </span>
-                        </a>
-                    </li>
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-                            <i class="glyphicon glyphicon-log-out"></i>
-                            <span class="hidden-xs">Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>-->
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
     <div class="content-wrapper">
@@ -66,9 +34,7 @@
 </div>
 <footer th:fragment="footer">
     <script src="/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-
     <script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-
     <script src="/js/adminlte.min.js" th:src="@{/js/adminlte.min.js}"></script>
     <script src="/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
     <script src="/js/dataTables.bootstrap.min.js" th:src="@{/js/dataTables.bootstrap.min.js}"></script>
