@@ -46,14 +46,14 @@ public class Store extends AbstractEntity {
     @Column
     private String address;
 
-    @Column
-    private String telephone;
+    @Column(name="phone_number")
+    private String phoneNumber;
 
-    @Column
-    private String owner;
+    @Column(name = "person_charge")
+    private String personCharge;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

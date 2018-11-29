@@ -46,26 +46,10 @@
                                         <div class="form-group col-md-6" style="">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                           <!-- <span class="glyphicon glyphicon-home form-control-feedback"></span>-->
+                                            <!-- <span class="glyphicon glyphicon-home form-control-feedback"></span>-->
                                             <em id="errorName" class="error">name is required</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">大エリア</span>
-                                        <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{majorArea}">
-                                           <!-- <span class="fa fa-area-chart form-control-feedback"></span>-->
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">エリア</span>
-                                        <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{area}">
-                                            <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -78,21 +62,38 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">電話</span>
+                                        <span class="col-md-5">電話番号</span>
                                         <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{telephone}">
+                                            <input class="form-control" type="text" th:field="*{phoneNumber}">
                                             <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">オーナー</span>
+                                        <span class="col-md-5">担当者</span>
                                         <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{owner}">
+                                            <input class="form-control" type="text" th:field="*{personCharge}">
                                             <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">大エリア</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{majorArea}">
+                                            <!-- <span class="fa fa-area-chart form-control-feedback"></span>-->
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">エリア</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{area}">
+                                            <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+
                                     <div id="postCourseList" class="container_order_course">
                                         <div class="col-md-12 order_course item" id="deleteRow"
                                              th:each="PostCourse, postCourse : ${store.postCourses}">

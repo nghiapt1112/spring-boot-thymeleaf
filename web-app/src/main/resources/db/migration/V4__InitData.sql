@@ -1,6 +1,6 @@
 ALTER TABLE m_store
 ADD address varchar(255);
 ALTER TABLE m_store
-ADD telephone varchar(50);
+ADD phone_number varchar(50);
 ALTER TABLE m_store
-ADD owner varchar(255);
+ADD person_charge varchar(255);
