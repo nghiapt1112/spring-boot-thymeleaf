@@ -7,11 +7,11 @@ $(document).ready(function () {
     });
 
     $("#inputSearch").on('change keydown paste input', function () {
-        textSearch();
+        updateLink();
     });
 });
 
-function textSearch() {
+function updateLink() {
     textInput = document.getElementById("inputSearch").value;
     var links = document.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
@@ -74,5 +74,9 @@ function addViaAjax() {
         }
     });
 };
+
+function changeSizeStore() {
+    updateLink();
+}
 
 
