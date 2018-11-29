@@ -26,8 +26,8 @@ spring:
       ddl-auto: validate
 
 lyna.web:
-  pageSize: 5, 10, 20, 50, 100, 200
-  limitItems: 5
+  pageSize: 10, 20, 50, 100
+  limitItems: 10
 ---
 #######################
 # Dev environment config

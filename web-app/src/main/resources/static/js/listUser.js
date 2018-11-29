@@ -21,11 +21,12 @@ function deleteUser() {
         alert('少なくともいずれか一つを選らんでください。');
         return false;
     } else if (confirm('削除してもよろしいですか？')) {
-        deleteViaAjax();
+        addViaAjax();
     }
 }
 
-function deleteViaAjax() {
+//
+function addViaAjax() {
     var userIds = [];
     var checkboxes = $('input[name="userid"]');
     checkboxes.filter(":checked").map(function () {
@@ -59,18 +60,3 @@ function deleteViaAjax() {
         }
     });
 };
-
-function search() {
-    var query = '/user/list?cp=1';
-    var limitItems = document.getElementById('pageSizeSelect').value;
-    if (!limitItems) {
-        limitItems = 5;
-    }
-    query += '&limit=' + limitItems;
-
-    var searchValue = document.getElementById('search-box').value;
-    if (searchValue) {
-        query += '&search=' + searchValue;
-    }
-    window.location.replace(query);
-}

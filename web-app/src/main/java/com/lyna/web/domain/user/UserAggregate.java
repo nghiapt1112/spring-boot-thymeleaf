@@ -77,6 +77,10 @@ public class UserAggregate extends AbstractObject {
         }
         this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
     }
+
+    public String getName() {
+        return this.userName;
+    }
 }
 
 
@@ -145,4 +149,5 @@ class UserStoreRole {
         }
         return "NO Permission";
     }
+
 }

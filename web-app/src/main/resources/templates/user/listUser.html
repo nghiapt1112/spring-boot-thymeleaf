@@ -81,20 +81,22 @@
                                     </table>
                                 </div>
                             </div>
-                            <!--Nghia Paging-->
+                            <!--Common Paging-->
                             <div class="row">
-                                <div class="col-md-6 text-left">
-                                    <p> This function need to implement.</p>
-                                </div>
-                                <div class="col-md-6 text-right">
+                                <div class="col-md-12 text-right">
                                     <ul class="pagination margin-0">
-                                        <li th:each="page : ${#numbers.sequence(1, pageData.getTotalPage())}">
-                                            <a class="pageLink" th:href="@{/user/list(cp=${page}, limit=${limit})}" th:text="${page}"></a>
+                                        <li >
+                                            <a class="pageLink" th:onclick="'changePage(\'pre\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'" >前へ</a>
+                                        </li>
+                                        <li th:each="page, element : ${#numbers.sequence(1, pageData.getTotalPage())}" >
+                                            <a class="pageLink" th:onclick="'changePage(\'page\','+ ${page} + ',' + ${limit} + ')'" th:text="${page}"></a>
+                                        </li>
+                                        <li >
+                                            <a class="pageLink" th:onclick="'changePage(\'next\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'" >次へ</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            <!--Nghia Paging - close -->
                         </div>
                     </div>
                 </div>
@@ -106,6 +108,7 @@
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" th:src="@{/js/listUser.js}"></script>
+<script type="text/javascript" th:src="@{/js/paging-common.js}"></script>
 
 </body>
 </html>
