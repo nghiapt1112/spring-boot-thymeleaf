@@ -67,8 +67,10 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="user: ${pageData.getResults()}">
-                                            <td th:unless="${user.getUserId()} eq ${userId}" class="text-center">
-                                                <input type="checkbox" th:value="${user.getUserId()}" class="chkCheckBoxId" name="userid">
+                                            <td style="text-align: center;">
+                                                <div th:if="${user.getUserId()} !eq ${currentUser.getId()}" class="text-center">
+                                                    <input type="checkbox" th:value="${user.getUserId()}" class="chkCheckBoxId" name="userid">
+                                                </div>
                                             </td>
                                             <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.getUserId()}}" th:text="${user.getEmail()}"></a></td>
                                             <td th:text="${user.getUserName()}"></td>

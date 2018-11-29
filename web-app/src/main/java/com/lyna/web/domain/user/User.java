@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
@@ -116,6 +117,10 @@ public class User extends AbstractEntity implements UserDetails {
         this.createUser = null;
         this.updateDate = null;
         this.updateUser = null;
+        this.stores = null;
+        this.userStoreAuthorities.stream()
+                .peek(el -> el.hideSensitiveFields())
+                .collect(Collectors.toList());
     }
 
     //TODO: move to AbstractEntity

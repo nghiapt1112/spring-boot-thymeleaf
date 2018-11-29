@@ -46,4 +46,9 @@ public class UserStoreAuthority extends AbstractEntity {
         this.updateUser = currentUser.getId();
     }
 
+    public void hideSensitiveFields() {
+        this.id = null;
+        this.storeId = null;
+        this.userId = null;
+    }
 }
