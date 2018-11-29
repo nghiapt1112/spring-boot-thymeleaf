@@ -78,6 +78,9 @@
                                         aria-label="Store code: activate to sort column ascending"> 店舗コード
                                     </th>
                                     <th>店舗名</th>
+                                    <th>住所</th>
+                                    <th>電話番号</th>
+                                    <th>担当者</th>
                                     <th>大エリア</th>
                                     <th>エリア</th>
                                 </tr>
@@ -94,6 +97,9 @@
                                            th:href="@{/store/edit(storeId=${store.storeId})}"
                                            class="" th:text="${store.code}"></a>
                                     </td>
+                                    <td th:text="${store.address}">Address</td>
+                                    <td th:text="${store.phoneNumber}">Telephone Number</td>
+                                    <td th:text="${store.personCharge}">person_in_charge</td>
                                     <td th:text="${store.name}">Store A</td>
                                     <td th:text="${store.majorArea}">Hiroshima</td>
                                     <td th:text="${store.area}">Hiroshima</td>

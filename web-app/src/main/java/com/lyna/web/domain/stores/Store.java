@@ -35,6 +35,14 @@ public class Store extends AbstractEntity {
     @Column(name = "area")
     private String area;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "person_in_charge")
+    private String personCharge;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     public Store self() {
         return this;
