@@ -17,18 +17,14 @@
         <section class="content content-right">
             <div class="row">
                 <div class="col-md-12 button_top">
-
-                    <div class="col-md-2 button-top-order">
+                    <div class="col-md-2 button-top-delivery-order">
                         <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
                            th:href="@{/store/register}">新規登録</a>
                     </div>
-                    <div class="col-md-1">
-                    </div>
-                    <div class="col-md-2 button-top-delivery">
+                    <div class="col-md-2 button-top-delivery-order">
                         <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteStore()">削除</a>
                     </div>
-                    <div class="col-md-7">
-
+                    <div class="col-md-8">
                     </div>
                 </div>
 
@@ -60,7 +56,7 @@
                                                aria-controls="listStore"></label>
 
                                     <a class="btn btn-search active" type="button" id="btnSearch"
-                                       th:href="@{/store/list(size=${storePage.size}, page=${prevPage},
+                                       th:href="@{/store/list(page=${prevPage},
                                        searchText= ${searchText}
                                        )} ">
                                         <i class="fa fa-search fa-fw" onclick=""></i> Search</a>
@@ -79,10 +75,7 @@
                                         <input type="checkbox" id="checkBoxAll">
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
-                                        aria-label="Store code: activate to sort column ascending">
-                                        <a href="#"
-                                           th:href="@{/store/list(size=${storePage.size}, page=${nextPage})}"
-                                           aria-controls="listStore" data-dt-idx="2" tabindex="0"> 店舗コード </a>
+                                        aria-label="Store code: activate to sort column ascending"> 店舗コード
                                     </th>
                                     <th>店舗名</th>
                                     <th>大エリア</th>
@@ -124,7 +117,7 @@
                                     <ul class="pagination ">
                                         <li class="paginate_button previous" id="listStore_previous">
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size}, page=${prevPage},searchText= ${searchText})} "
+                                               th:href="@{/store/list(page=${prevPage},searchText= ${searchText})} "
                                                aria-controls="listStore" data-dt-idx="0" tabindex="0">
                                                 前へ </a></li>
                                         <li th:each="pageNumber : ${pageNumbers}"
@@ -132,7 +125,7 @@
                                             style="border: #00a65a; border-width: 1px;"
                                             th:class="${currentPage == pageNumber}? active : userclass">
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size},currentPage=pageNumber, page=${pageNumber},searchText= ${searchText})}"
+                                               th:href="@{/store/list(currentPage=pageNumber, page=${pageNumber},searchText= ${searchText})}"
                                                th:text="${pageNumber}" aria-controls="listStore" data-dt-idx="1"
                                                tabindex="0">
                                             </a>
@@ -140,7 +133,7 @@
                                         </li>
                                         <li class="paginate_button next" id="listStore_next">
                                             <a href="#"
-                                               th:href="@{/store/list(size=${storePage.size}, page=${nextPage},searchText= ${searchText})}"
+                                               th:href="@{/store/list(page=${nextPage},searchText= ${searchText})}"
                                                aria-controls="listStore" data-dt-idx="2" tabindex="0"> 次へ </a>
                                         </li>
                                     </ul>

@@ -12,12 +12,8 @@ button{
 .btn-primary{
     width: 100% ! important;
 }
-.burron-top-order{
-	padding: 0;
-	display: flex;
-	justify-content: center;
-}
-.button-top-delivery{
+
+.button-top-delivery-order{
     padding: 0;
     display: flex;
     justify-content: center;
@@ -32,11 +28,11 @@ button{
     border-bottom: 1px solid #337ab7;
 }
 .input-group-addon{
-    border-color: #00a65a ! important;
+    border-color: #337ab7 ! important;
     box-shadow: none ! important;
 }
 input{
-    border-color: #00a65a ! important;
+    border-color: #337ab7 ! important;
     box-shadow: none ! important;
 }
 .button-search{
@@ -54,7 +50,7 @@ th{
     color: #fff;
     border-width: 1px;
     border-style: solid;
-    border-color: #1c1c1c;
+    border-color: #337ab7;
 }
 .btn-search:link, .btn-search:visited {
     color: #fff;
