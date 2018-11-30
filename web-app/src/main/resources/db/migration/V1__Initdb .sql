@@ -101,7 +101,7 @@ DROP TABLE IF EXISTS `m_store`;
 CREATE TABLE `m_store`  (
   `store_id` varchar(36) COMMENT 'ID',
   `tenant_id` int(11) NOT NULL COMMENT 'テナントID',
-  `code` varchar(50)  NULL COMMENT 'コード',
+  `code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'コード',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
   `major_area` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '大アレア',
   `area` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
