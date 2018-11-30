@@ -1,8 +1,7 @@
 package com.lyna.web.domain.stores.repository;
 
-import com.lyna.web.domain.stores.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.lyna.web.domain.stores.Store;
 import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {

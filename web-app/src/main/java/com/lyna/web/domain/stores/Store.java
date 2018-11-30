@@ -22,7 +22,6 @@ import java.util.UUID;
 @Data
 public class Store extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id", nullable = false)
     private String storeId;
 
@@ -50,7 +49,7 @@ public class Store extends AbstractEntity {
     private String phoneNumber;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

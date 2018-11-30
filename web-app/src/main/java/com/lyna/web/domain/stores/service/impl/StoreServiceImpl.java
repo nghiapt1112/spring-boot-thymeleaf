@@ -3,12 +3,12 @@ package com.lyna.web.domain.stores.service.impl;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.Exception.PostCourseException;
 import com.lyna.web.domain.postCourse.PostCourse;
-import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
+import com.lyna.web.domain.stores.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,21 +100,20 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setTenantId(tenantId);
         store.setCreateUser(username);
         List<PostCourse> postCourses = store.getPostCourses();
-
-        try {
-            if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
-                for (PostCourse postCourse : postCourses) {
-                    postCourse.setTenantId(tenantId);
-                    postCourse.setStoreId(store.getStoreId());
-                    postCourse.setCreateDate(date);
-                    postCourse.setCreateUser(username);
-                }
+        if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
+            for (PostCourse postCourse : postCourses) {
+                postCourse.setTenantId(tenantId);
+                postCourse.setStoreId(store.getStoreId());
+                postCourse.setCreateDate(date);
+                postCourse.setCreateUser(username);
             }
-
             store.setPostCourses(postCourses);
+        }
+        try {
+
             storeRepository.save(store);
         } catch (Exception ex) {
-            throw new StoreException(toInteger("err.store.saveFailed.code"), toStr("err.store.saveFailed.msg"));
+
         }
     }
 
@@ -131,30 +130,30 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setTenantId(tenantId);
         List<PostCourse> postCourses = store.getPostCourses();
         System.out.println("postCourses");
+        if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
+            for (PostCourse postCourse : postCourses) {
+                PostCourse pc;
+                if (Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()) {
+                    System.out.println("PostCourseId NULL");
+                    pc = new PostCourse();
+                    postCourse.setPostCourseId(pc.getPostCourseId());
+                    postCourse.setCreateUser(id);
+                    postCourse.setCreateDate(date);
+                    postCourse.setTenantId(tenantId);
+                    postCourse.setStoreId(store.getStoreId());
+                } else {
+                    postCourse.setUpdateDate(date);
+                    postCourse.setUpdateUser(id);
 
-        store.setPostCourses(postCourses);
-        try {
-            if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
-                for (PostCourse postCourse : postCourses) {
-                    PostCourse pc;
-                    if (Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()) {
-                        System.out.println("PostCourseId NULL");
-                        pc = new PostCourse();
-                        postCourse.setPostCourseId(pc.getPostCourseId());
-                        postCourse.setCreateUser(id);
-                        postCourse.setCreateDate(date);
-                        postCourse.setTenantId(tenantId);
-                        postCourse.setStoreId(store.getStoreId());
-                    } else {
-                        postCourse.setUpdateDate(date);
-                        postCourse.setUpdateUser(id);
-
-                    }
                 }
             }
+        }
+        store.setPostCourses(postCourses);
+        try {
+
             storeRepository.save(store);
         } catch (Exception ex) {
-            throw new StoreException(toInteger("err.store.saveFailed.code"), toStr("err.store.saveFailed.msg"));
+
         }
     }
 

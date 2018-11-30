@@ -58,7 +58,7 @@ public class StoreController extends AbstractCustomController {
         }
         storeService.createStore(store, principal);
 
-        return "redirect:store/liststore";
+        return "redirect:/store/list";
 
     }
 
@@ -67,13 +67,13 @@ public class StoreController extends AbstractCustomController {
             Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
-            return "store/registerStore";
+            return "/store/editStore";
         }
         if (Objects.isNull(store)) {
-            return "store/registerStore";
+            return "/store/editStore";
         }
         storeService.updateStore(store, principal);
-        return "redirect:store/liststore";
+        return "redirect:/store/list";
 
     }
 
@@ -81,7 +81,7 @@ public class StoreController extends AbstractCustomController {
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
         System.out.println(storeId);
         model.addAttribute("store", storeService.findOneByStoreId(storeId));
-        return "store/liststore";
+        return "store/editStore";
     }
 
     @GetMapping(value = "/list")
