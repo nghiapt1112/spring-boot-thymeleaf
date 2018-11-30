@@ -4,7 +4,6 @@ import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
-import com.lyna.web.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     public StoreRepositoryImpl(EntityManager em) {
         super(Store.class, em);
-     }
+    }
 
     @Override
     public List<Store> getAll(int tenantId) {
@@ -60,7 +59,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public List<Store> getAll(int tenantId, String search) {
+    public List<Store> getAll(int tenantId, String search) throws DomainException {
         String hql = "SELECT s FROM Store s WHERE s.tenantId=:tenantId";
         if (!search.isEmpty())
             hql = hql + " and (trim(lower(s.code)) like :search " +
@@ -70,14 +69,18 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
         TypedQuery<Store> query = entityManager
                 .createQuery(hql, Store.class);
-
-        if (!search.isEmpty())
-            return query.setParameter("tenantId", tenantId)
-                    .setParameter("search", "%" + search.trim().toLowerCase() + "%")
-                    .getResultList();
-        else
-            return query.setParameter("tenantId", tenantId)
-                    .getResultList();
+        try {
+            if (!search.isEmpty())
+                return query.setParameter("tenantId", tenantId)
+                        .setParameter("search", "%" + search.trim().toLowerCase() + "%")
+                        .getResultList();
+            else
+                return query.setParameter("tenantId", tenantId)
+                        .getResultList();
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     @Override

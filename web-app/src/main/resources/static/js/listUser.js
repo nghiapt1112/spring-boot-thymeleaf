@@ -60,3 +60,16 @@ function addViaAjax() {
         }
     });
 };
+
+$(function () {
+    $('#listUser').DataTable({
+        'paging': false,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': true,
+        'info': false,
+        'autoWidth': false,
+        'order': [],
+        "columnDefs": [{'orderable': false, 'targets': [0]}]
+    });
+});

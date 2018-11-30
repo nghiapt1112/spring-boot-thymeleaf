@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +36,6 @@ public class StoreController extends AbstractCustomController {
     private static final String REDIRECT_TO_STORE_LIST_PAGE = "store/liststore";
     private static final String REDIRECT_TO_STORE_EDIT_PAGE = "redirect:store/editStore";
     private static final String REDIRECT_TO_STORE_REGISTER_PAGE = "redirect:store/registerStore";
-
 
     @Autowired
     private StoreService storeService;

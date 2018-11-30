@@ -1,5 +1,6 @@
 package com.lyna.web.domain.stores.service.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.Exception.PostCourseException;
 import com.lyna.web.domain.postCourse.PostCourse;
@@ -48,7 +49,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     }
 
     @Override
-    public Page<Store> findPaginated(Pageable pageable, int tenantId, String searchText) {
+    public Page<Store> findPaginated(Pageable pageable, int tenantId, String searchText) throws DomainException {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;

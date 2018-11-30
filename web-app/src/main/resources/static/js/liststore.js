@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function updateLink() {
-    textInput = document.getElementById("inputSearch").value;
+    textInput = document.getElementById("inputSearch").value.replace(/\s+/g, '').toLowerCase();
     var links = document.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
         var thisLink = links[i];
@@ -78,5 +78,18 @@ function addViaAjax() {
 function changeSizeStore() {
     updateLink();
 }
+
+$(function () {
+    $('#listStore').DataTable({
+        'paging': false,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': true,
+        'info': false,
+        'autoWidth': false,
+        'order': [],
+        "columnDefs": [{'orderable': false, 'targets': [0]}]
+    });
+});
 
 
