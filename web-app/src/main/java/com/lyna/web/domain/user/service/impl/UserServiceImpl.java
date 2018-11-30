@@ -1,5 +1,6 @@
 package com.lyna.web.domain.user.service.impl;
 
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.user.User;
@@ -12,7 +13,6 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
-import com.lyna.commons.infrustructure.object.RequestPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -88,7 +83,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public Page<UserList> findPaginated(Pageable pageable, List<Store> storeListAll, int tenantId) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -208,6 +203,15 @@ public class UserServiceImpl extends BaseService implements UserService {
             return "Success";
         else
             return null;
+    }
+
+    @Override
+    public int getCountUser(int tenantId) {
+        List<User> userList = this.userRepository.findAllByTenantId(tenantId);
+        if (Objects.isNull(userList)) {
+            throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
+        }
+        return userList.size();
     }
 
 }

@@ -5,12 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.stores.Store;
-import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -88,7 +85,33 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     @IsAdmin
-    public String listUsers(
+    public String listStore(
+            Model model,
+            UsernamePasswordAuthenticationToken principal
+    ) {
+        List<Integer> pageNumbers = null;
+        int tenantId = ((User) principal.getPrincipal()).getTenantId();
+
+        Page<Store> storePage =
+                storeService.findPaginated(tenantId);
+
+        int totalPages = storePage.getTotalPages();
+        if (totalPages > 0) {
+            pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("storePage", storePage);
+        model.addAttribute("pageNumbers", pageNumbers);
+
+        return REDIRECT_TO_STORE_LIST_PAGE;
+    }
+
+    @SuppressWarnings("unused")
+    @GetMapping(value = "/listtemp")
+    @IsAdmin
+    public String listStoretemp(
             Model model,
             UsernamePasswordAuthenticationToken principal,
             @RequestParam(defaultValue = "1") Integer page,

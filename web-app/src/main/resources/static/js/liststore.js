@@ -9,6 +9,7 @@ $(document).ready(function () {
     $("#inputSearch").on('change keydown paste input', function () {
         updateLink();
     });
+
 });
 
 function updateLink() {
@@ -79,17 +80,29 @@ function changeSizeStore() {
     updateLink();
 }
 
-$(function () {
-    $('#listStore').DataTable({
-        'paging': false,
-        'lengthChange': false,
-        'searching': false,
-        'ordering': true,
-        'info': false,
-        'autoWidth': false,
-        'order': [],
-        "columnDefs": [{'orderable': false, 'targets': [0]}]
-    });
+$('#listStore').DataTable({
+    'paging': true,
+    'lengthChange': true,
+    'searching': true,
+    'ordering': true,
+    'info': true,
+    'autoWidth': true,
+    'order': [],
+    "columnDefs": [{'orderable': false, 'targets': [0]}],
+    "language": {
+        "lengthMenu": "  _MENU_ 件を表示",
+        "zeroRecords": "không tìm thấy found - sorry",
+        "info": "_TOTAL_ 件中 _START_ ~ _END_  件を表示",
+        "infoEmpty": "Không có records available",
+        "infoFiltered": "(Tìm Thấy from _MAX_ total records)",
+        "search": "検索:",
+        "paginate": {
+            "previous": " 前へ ",
+            "next": "  次へ "
+        }
+    }
 });
+
+
 
 

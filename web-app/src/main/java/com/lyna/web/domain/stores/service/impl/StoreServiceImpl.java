@@ -2,16 +2,12 @@ package com.lyna.web.domain.stores.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.postCourse.Exception.PostCourseException;
 import com.lyna.web.domain.postCourse.PostCourse;
-import com.lyna.web.domain.stores.exception.StoreException;
+import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
-import com.lyna.web.domain.stores.Store;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,6 +44,15 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         return storeRepository.findAll(tenantId);
     }
 
+    @Override
+    public Page<Store> findPaginated(int tenantId) throws DomainException {
+        List<Store> stores = getStoreList(tenantId);
+        Page<Store> storePage =
+                new PageImpl(stores, PageRequest.of(1, 5), stores.size());
+        return storePage;
+    }
+
+    @SuppressWarnings("unused")
     @Override
     public Page<Store> findPaginated(Pageable pageable, int tenantId, String searchText) throws DomainException {
         int pageSize = pageable.getPageSize();

@@ -14,7 +14,10 @@ public interface StoreService {
 
     List<Store> getStoreList(int principal);
 
+    @SuppressWarnings("unused")
     Page<Store> findPaginated(Pageable of, int tenantId, String searchText);
+
+    Page<Store> findPaginated(int tenantId);
 
     String deleteStore(String storeIds);
 

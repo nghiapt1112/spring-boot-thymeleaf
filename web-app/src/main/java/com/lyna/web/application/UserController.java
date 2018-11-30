@@ -82,6 +82,25 @@ public class UserController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/list")
+    public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
+        int tenantId = user.getTenantId();
+        RequestPage userRequestPage = new UserRequestPage();
+        int limit = userService.getCountUser(tenantId);
+        userRequestPage.setCurrentPage(1);
+        userRequestPage.setNoOfRowInPage(limit);
+        UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
+        List<Store> storesInTenant = storeService.getStoreList(tenantId);
+
+        model.addAttribute("pageData", userPage);
+        model.addAttribute("storeModel", storesInTenant);
+        model.addAttribute("userId", user.getId());
+
+        return "user/listUser";
+    }
+
+    @SuppressWarnings("unused")
+    @GetMapping(value = "/listtemp")
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal,
                            @RequestParam(required = false, defaultValue = "10") Integer limit,
                            @RequestParam(required = false, defaultValue = "1") Integer cp,

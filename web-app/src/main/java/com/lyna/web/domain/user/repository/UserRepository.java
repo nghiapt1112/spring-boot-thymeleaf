@@ -1,8 +1,8 @@
 package com.lyna.web.domain.user.repository;
 
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.UserResponsePage;
-import com.lyna.commons.infrustructure.object.RequestPage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
