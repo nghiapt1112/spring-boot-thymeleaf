@@ -101,8 +101,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setCreateUser(username);
         List<PostCourse> postCourses = store.getPostCourses();
 
-        store.setPostCourses(postCourses);
-        store.setPostCourses(postCourses);
         try {
             if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
                 for (PostCourse postCourse : postCourses) {
@@ -112,6 +110,8 @@ public class StoreServiceImpl extends BaseService implements StoreService {
                     postCourse.setCreateUser(username);
                 }
             }
+
+            store.setPostCourses(postCourses);
             storeRepository.save(store);
         } catch (Exception ex) {
             throw new StoreException(toInteger("err.store.saveFailed.code"), toStr("err.store.saveFailed.msg"));
