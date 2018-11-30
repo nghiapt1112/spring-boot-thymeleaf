@@ -64,7 +64,7 @@ function addViaAjax() {
 $(function () {
     $('#listUser').DataTable({
         'paging': false,
-        'lengthChange': false,
+        'lengthChange': true,
         'searching': false,
         'ordering': true,
         'info': false,
