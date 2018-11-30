@@ -46,7 +46,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 pull-right">
-                                    <input type="text" placeholder="検索/ Search" class="form-control search-input" id="search-box" onblur="search()">
+                                    <input type="text" placeholder="検索/ Search" class="form-control search-input"
+                                           id="search-box" onblur="search()">
                                 </div>
                             </div>
                             <div class="row">
@@ -67,10 +68,14 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="user: ${pageData.getResults()}">
-                                            <td th:unless="${user.getUserId()} eq ${userId}" class="text-center">
-                                                <input type="checkbox" th:value="${user.getUserId()}" class="chkCheckBoxId" name="userid">
+                                            <td class="text-center">
+                                                <div th:unless="${user.getUserId()} eq ${userId}">
+                                                    <input type="checkbox" th:value="${user.getUserId()}"
+                                                           class="chkCheckBoxId" name="userid">
+                                                </div>
                                             </td>
-                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.getUserId()}}" th:text="${user.getEmail()}"></a></td>
+                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.getUserId()}}"
+                                                   th:text="${user.getEmail()}"></a></td>
                                             <td th:text="${user.getUserName()}"></td>
                                             <!--<td th:text="ng-View"></td>-->
                                             <td th:each="element : ${user.getRolePerStore()}">
@@ -85,14 +90,18 @@
                             <div class="row">
                                 <div class="col-md-12 text-right">
                                     <ul class="pagination margin-0">
-                                        <li >
-                                            <a class="pageLink" th:onclick="'changePage(\'pre\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'" >前へ</a>
+                                        <li>
+                                            <a class="pageLink"
+                                               th:onclick="'changePage(\'pre\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'">前へ</a>
                                         </li>
-                                        <li th:each="page, element : ${#numbers.sequence(1, pageData.getTotalPage())}" >
-                                            <a class="pageLink" th:onclick="'changePage(\'page\','+ ${page} + ',' + ${limit} + ')'" th:text="${page}"></a>
+                                        <li th:each="page, element : ${#numbers.sequence(1, pageData.getTotalPage())}">
+                                            <a class="pageLink"
+                                               th:onclick="'changePage(\'page\','+ ${page} + ',' + ${limit} + ')'"
+                                               th:text="${page}"></a>
                                         </li>
-                                        <li >
-                                            <a class="pageLink" th:onclick="'changePage(\'next\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'" >次へ</a>
+                                        <li>
+                                            <a class="pageLink"
+                                               th:onclick="'changePage(\'next\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'">次へ</a>
                                         </li>
                                     </ul>
                                 </div>
