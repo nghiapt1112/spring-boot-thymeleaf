@@ -56,7 +56,7 @@
                                                placeholder="コード、名前、エリアを入力 "
                                                aria-controls="listStore"></label>
 
-                                    <a class="btn btn-search active" type="button" id="btnSearch"
+                                    <a class="btn btn-search active" type="button" id="btnSearch" href="/search"
                                        th:href="@{/store/list(page=${prevPage},
                                        searchText= ${searchText}
                                        )} ">
@@ -123,7 +123,7 @@
                                      style="float: right; padding-right: 10px;">
                                     <ul class="pagination ">
                                         <li class="paginate_button previous" id="listStore_previous">
-                                            <a href="#"
+                                            <a href="/prevPage"
                                                th:href="@{/store/list(page=${prevPage},searchText= ${searchText})} "
                                                aria-controls="listStore" data-dt-idx="0" tabindex="0">
                                                 前へ </a></li>
