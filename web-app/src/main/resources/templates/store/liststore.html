@@ -95,7 +95,7 @@
                                     </td>
                                     <td>
                                         <a href="store-edit"
-                                           th:href="@{/store/edit(storeId=${store.storeId})}"
+                                           th:href="@{/store/update/{storeId}(storeId=${store.storeId})}"
                                            class="" th:text="${store.code}"></a>
                                     </td>
                                     <td th:text="${store.address}">Address</td>

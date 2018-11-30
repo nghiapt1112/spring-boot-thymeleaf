@@ -22,7 +22,6 @@ import java.util.UUID;
 @Data
 public class Store extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id", nullable = false)
     private String storeId;
 
