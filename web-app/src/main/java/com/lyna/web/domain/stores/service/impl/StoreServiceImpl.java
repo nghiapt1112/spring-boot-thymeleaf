@@ -134,7 +134,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             for (PostCourse postCourse : postCourses) {
                 PostCourse pc;
                 if (Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()) {
-                    System.out.println("PostCourseId NULL");
                     pc = new PostCourse();
                     postCourse.setPostCourseId(pc.getPostCourseId());
                     postCourse.setCreateUser(id);
@@ -144,7 +143,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
                 } else {
                     postCourse.setUpdateDate(date);
                     postCourse.setUpdateUser(id);
-
                 }
             }
         }
