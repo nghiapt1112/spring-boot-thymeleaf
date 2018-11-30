@@ -30,59 +30,58 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
-    private static final String REDIRECT_TO_STORE_LIST_PAGE = "redirect:store/liststore";
+    private static final String REDIRECT_TO_STORE_LIST_PAGE = "store/liststore";
     private static final String REDIRECT_TO_STORE_EDIT_PAGE = "redirect:store/editStore";
     private static final String REDIRECT_TO_STORE_REGISTER_PAGE = "redirect:store/registerStore";
-
 
 
     @Autowired
     private StoreService storeService;
 
-    @GetMapping(value = "/store/create")
+    @GetMapping(value = "/create")
     public String registerStore(Model model, @ModelAttribute("store") Store store) {
         List<PostCourse> postCourses = new ArrayList<PostCourse>();
         postCourses.add(new PostCourse());
         store.setPostCourses(postCourses);
         model.addAttribute("store", store);
-        return REDIRECT_TO_STORE_REGISTER_PAGE;
+        return "store/registerStore";
     }
 
-    @PostMapping(value = "/store/create")
+    @PostMapping(value = "/create")
     public String CreateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store") Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
-            return REDIRECT_TO_STORE_REGISTER_PAGE;
+            return "store/registerStore";
         }
         if (null == store) {
             return "store/registerStore";
         }
         storeService.createStore(store, principal);
 
-        return REDIRECT_TO_STORE_LIST_PAGE;
+        return "redirect:store/liststore";
 
     }
 
-    @PostMapping(value = "/store/update")
+    @PostMapping(value = "/update")
     public String updateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
-            return REDIRECT_TO_STORE_EDIT_PAGE;
+            return "store/registerStore";
         }
         if (Objects.isNull(store)) {
-            return REDIRECT_TO_STORE_EDIT_PAGE;
+            return "store/registerStore";
         }
         storeService.updateStore(store, principal);
-        return REDIRECT_TO_STORE_LIST_PAGE;
+        return "redirect:store/liststore";
 
     }
 
-    @GetMapping(value = "/store/update/{storeId}")
+    @GetMapping(value = "/update/{storeId}")
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
         System.out.println(storeId);
         model.addAttribute("store", storeService.findOneByStoreId(storeId));
-        return REDIRECT_TO_STORE_EDIT_PAGE;
+        return "store/liststore";
     }
 
     @GetMapping(value = "/list")
