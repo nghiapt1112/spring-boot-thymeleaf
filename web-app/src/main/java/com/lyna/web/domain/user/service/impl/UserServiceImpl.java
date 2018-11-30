@@ -70,15 +70,19 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         this.throwIfExisted(user.getEmail());
 
-        User createdUser = this.createUser(user.withDefaultFields(currentUser));
-        userStoreAuthorityService.assignUserToStore(
-                aggregate.toUserStoreAuthorities()
-                        .peek(el -> {
-                            el.setUserId(createdUser.getId());
-                            el.initDefaultCreateFields(currentUser);
-                        })
-                        .collect(Collectors.toList()));
-        return createdUser;
+        try {
+            User createdUser = this.createUser(user.withDefaultFields(currentUser));
+            userStoreAuthorityService.assignUserToStore(
+                    aggregate.toUserStoreAuthorities()
+                            .peek(el -> {
+                                el.setUserId(createdUser.getId());
+                                el.initDefaultCreateFields(currentUser);
+                            })
+                            .collect(Collectors.toList()));
+            return createdUser;
+        } catch (RuntimeException e) {
+            throw new UserException(toInteger("err.user.createFailed.code"), toStr("err.user.createFailed.msg"));
+        }
     }
 
     private void throwIfExisted(String email) {
@@ -161,21 +165,24 @@ public class UserServiceImpl extends BaseService implements UserService {
         User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
         oldUser.updateInfo(userToUpdate);
-        this.userRepository.save(oldUser);
-
 
         Map<String, Short> authorityById = aggregate.toUserStoreAuthorities()
-                .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
+                .collect(Collectors.toMap(UserStoreAuthority::getId, UserStoreAuthority::getAuthority, (v1, v2) -> v1));
 
-        this.userStoreAuthorityService.assignUserToStore(
-                oldUser.getStoreAuthoritiesAsStream()
-                        .filter(el -> authorityById.containsKey(el.getId()))
-                        .peek(el -> {
-                            el.setAuthority(authorityById.get(el.getId()));
-                            el.initDefaultUpdateFields(currentUser);
-                        })
-                        .collect(Collectors.toList())
-        );
+        try {
+            this.userRepository.save(oldUser);
+            this.userStoreAuthorityService.assignUserToStore(
+                    oldUser.getStoreAuthoritiesAsStream()
+                            .filter(el -> authorityById.containsKey(el.getId()))
+                            .peek(el -> {
+                                el.setAuthority(authorityById.get(el.getId()));
+                                el.initDefaultUpdateFields(currentUser);
+                            })
+                            .collect(Collectors.toList())
+            );
+        } catch (RuntimeException e) {
+            throw new UserException(toInteger("err.user.updateFailed.code"), toStr("err.user.updateFailed.msg"));
+        }
 
     }
 

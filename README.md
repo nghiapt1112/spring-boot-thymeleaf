@@ -24,4 +24,13 @@ windows: ```gradlew :web-app:bootRun```
  >> for Linux: ```./gradle web-app:classes```<br>
  >> for windows: ```./gradle web-app:classes```
 
-=> For each time you update your *.java, *.html, **, and want to rebuild project, you don't need to restart whole application, you just need 
+=> For each time you update your *.java, *.html, **, and want to rebuild project, you don't need to restart whole application, you just need
+
+ # Config MySql to using full_group function.
+- Modify /etc/mysql/conf.d/mysql.cnf with:
+```
+ [mysqld]
+ lower_case_table_names=1
+ sql_mode= STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+ max_allowed_packet=16M
+ ```

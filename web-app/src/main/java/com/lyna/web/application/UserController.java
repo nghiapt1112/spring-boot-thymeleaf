@@ -13,10 +13,13 @@ import com.lyna.web.domain.user.UserRequestPage;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +37,9 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/user")
 public class UserController extends AbstractCustomController {
+    private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
+    private static final String REDIRECT_TO_USER_REGISTRATION_PAGE = "/register/";
 
     private Integer[] PAGE_SIZE() {
         return env.getProperty("lyna.web.pageSize", Integer[].class);
@@ -52,7 +57,11 @@ public class UserController extends AbstractCustomController {
 
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
-    public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal) {
+    public String registerUser(UsernamePasswordAuthenticationToken principal, @ModelAttribute @Valid UserAggregate userRegisterAggregate,  BindingResult binding) {
+        if (binding.hasErrors()) {
+            LOGGER.error("Request object is invalid, redirecting to User registration page ...");
+            return "user/user-create";
+        }
         if (!userRegisterAggregate.isDataValid()) {
             throw new DomainValidateExeption("Requested object is invalid.");
         }
@@ -80,6 +89,7 @@ public class UserController extends AbstractCustomController {
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
+        aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
 
         model.addAttribute("aggregate", aggregate);
         return "user/user-update";

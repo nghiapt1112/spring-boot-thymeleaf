@@ -29,9 +29,9 @@ public class BaseValidator implements org.springframework.validation.Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(target);
-        if (constraintViolations.size() > 0) {
-            throw new DomainValidateExeption("Requested object is invalid.");
-        }
+//        if (constraintViolations.size() > 0) {
+//            throw new DomainValidateExeption("Requested object is invalid.");
+//        }
         for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
             String propertyPath = constraintViolation.getPropertyPath().toString();
             String message = constraintViolation.getMessage();

@@ -17,11 +17,12 @@
         </section>
         <section class="content content-right">
             <div>
-                <form action="#" th:action="@{/user/register/}" th:object="${userRegisterAggregate}" method="POST">
+                <form action="#" th:action="@{/user/register/}" th:object="${userRegisterAggregate}" method="post">
                     <p class="row"><label class="col-md-2">メールアドレス: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
                     <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード: </label> <input class="col-md-3" type="password" th:field="*{password}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード(確認用):</label> <input class="col-md-3" type="password" th:field="*{confirmPasswd}"/></p>
+                    <p class="row"><label class="col-md-2">パスワード: </label> <input id="password" class="col-md-3" type="password" th:field="*{password}"/></p>
+                    <p class="row"><label class="col-md-2">パスワード(確認用):</label> <input id="confirmPasswd" class="col-md-3" type="password" th:field="*{confirmPasswd}"/></p>
+                    <!--<p th:if="${#fields.hasErrors('confirmPasswd')}">Re-confirmed password is incorrect.</p>-->
                     <hr>
 
                     <div class="row">
