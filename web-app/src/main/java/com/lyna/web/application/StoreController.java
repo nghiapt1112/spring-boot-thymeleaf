@@ -45,6 +45,7 @@ public class StoreController extends AbstractCustomController {
     private PostCourseService postCourseService;
 
     @GetMapping(value = "/create")
+    @IsAdmin
     public String registerStore(Model model, @ModelAttribute("store") Store store) {
         List<PostCourse> postCourses = new ArrayList<PostCourse>();
         postCourses.add(new PostCourse());
@@ -69,6 +70,7 @@ public class StoreController extends AbstractCustomController {
     }
 
     @PostMapping(value = "/update")
+    @IsAdmin
     public String updateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {

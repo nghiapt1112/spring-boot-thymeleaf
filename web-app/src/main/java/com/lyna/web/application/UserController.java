@@ -82,6 +82,7 @@ public class UserController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/list")
+    @IsAdmin
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
