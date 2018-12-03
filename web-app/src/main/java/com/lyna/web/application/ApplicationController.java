@@ -24,6 +24,11 @@ public class ApplicationController {
 
     @RequestMapping({"/layout", "/"})
     public String layout() {
+        return "layout";
+    }
+
+    @RequestMapping({"/mainMenu", "/"})
+    public String mainMenu() {
         return "main/mainMenu";
     }
 }
