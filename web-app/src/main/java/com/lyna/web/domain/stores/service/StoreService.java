@@ -23,4 +23,6 @@ public interface StoreService {
     void updateStore(Store store, UsernamePasswordAuthenticationToken principal);
 
     Store findOneByStoreId(String storeId);
+
+
 }

@@ -10,9 +10,7 @@ input{
 	border-color: #00a65a ! important;
     box-shadow: none ! important;
 }
-.form-control-feedback{
-	margin-right: 6% ! important;
-}
+
 .box-titles{
 	color: #666;
 	font-size: 15px;

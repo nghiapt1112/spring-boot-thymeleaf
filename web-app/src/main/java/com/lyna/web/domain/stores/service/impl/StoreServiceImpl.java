@@ -109,12 +109,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             }
             store.setPostCourses(postCourses);
         }
-        try {
-
             storeRepository.save(store);
-        } catch (Exception ex) {
-
-        }
     }
 
     @Transactional
@@ -122,37 +117,19 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     public void updateStore(Store store, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         int tenantId = currentUser.getTenantId();
-        String id = currentUser.getId();
+        String userId = currentUser.getId();
         Date date = new Date();
-
+        store.setCode(store.getCode());
+        store.setName(store.getName());
+        store.setMajorArea(store.getMajorArea());
+        store.setArea(store.getArea());
+        store.setAddress(store.getAddress());
+        store.setPhoneNumber(store.getPhoneNumber());
+        store.setPersonCharge(store.getPersonCharge());
         store.setUpdateDate(date);
-        store.setUpdateUser(id);
+        store.setUpdateUser(userId);
         store.setTenantId(tenantId);
-        List<PostCourse> postCourses = store.getPostCourses();
-        System.out.println("postCourses");
-        if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
-            for (PostCourse postCourse : postCourses) {
-                PostCourse pc;
-                if (Objects.isNull(postCourse.getStoreId()) || postCourse.getStoreId().isEmpty()) {
-                    pc = new PostCourse();
-                    postCourse.setPostCourseId(pc.getPostCourseId());
-                    postCourse.setCreateUser(id);
-                    postCourse.setCreateDate(date);
-                    postCourse.setTenantId(tenantId);
-                    postCourse.setStoreId(store.getStoreId());
-                } else {
-                    postCourse.setUpdateDate(date);
-                    postCourse.setUpdateUser(id);
-                }
-            }
-        }
-        store.setPostCourses(postCourses);
-        try {
-
-            storeRepository.save(store);
-        } catch (Exception ex) {
-
-        }
+        storeRepository.updateStore(store);
     }
 
     @Override

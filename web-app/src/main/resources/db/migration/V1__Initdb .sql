@@ -61,7 +61,7 @@ CREATE TABLE `m_post_course`  (
   `create_user` varchar(36) COMMENT '作成ユーザーID',
   `update_date` timestamp(0) NULL COMMENT '更新日時',
   `update_user` varchar(36)  NULL COMMENT '更新ユーザーID',
-  PRIMARY KEY (`post_course_id`, `create_user`) USING BTREE,
+  PRIMARY KEY (`post_course_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   INDEX `store_id`(`store_id`) USING BTREE,
   CONSTRAINT `m_post_course_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,

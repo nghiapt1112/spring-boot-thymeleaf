@@ -7,11 +7,24 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
+
+import static org.hibernate.annotations.CascadeType.SAVE_UPDATE;
 
 @Entity
 @Table(name = "m_store")
@@ -25,11 +38,11 @@ public class Store extends AbstractEntity {
     @Column(name = "store_id", nullable = false)
     private String storeId;
 
-    @NotBlank(message = "code not empty server")
+    @NotBlank(message = "'店舗コード'は必須です。")
     @Column
     private String code;
 
-    @NotBlank(message = "name not empty server")
+    @NotBlank(message = "'店舗名'は必須です。")
     @Column
     private String name;
 
@@ -49,7 +62,7 @@ public class Store extends AbstractEntity {
     private String phoneNumber;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

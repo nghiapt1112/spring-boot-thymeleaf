@@ -10,9 +10,6 @@ input{
 	border-color: #00a65a ! important;
     box-shadow: none ! important;
 }
-.form-control-feedback{
-	margin-right: 6% ! important;
-}
 .box-titles{
 	color: #666;
 	font-size: 15px;
@@ -24,9 +21,6 @@ input{
 .view-checkbox, .edit-checkbox{
 	text-align: center;
 }
-/* #order_course{
-	display: none;
-}  */
 .div-input-post, .div-input-course{
 	 display: flex;justify-content: space-between;
 }

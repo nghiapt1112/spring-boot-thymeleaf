@@ -20,7 +20,7 @@
                 <div class="col-md-12 button_top">
                     <div class="col-md-2 button-top-order">
                         <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
-                           th:href="@{/store/register}">新規登録</a>
+                           th:href="@{/store/create}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
                         <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteStore()">削除</a>
@@ -98,12 +98,12 @@
                                            th:href="@{/store/update/{storeId}(storeId=${store.storeId})}"
                                            class="" th:text="${store.code}"></a>
                                     </td>
-                                    <td th:text="${store.address}">Address</td>
-                                    <td th:text="${store.phoneNumber}">Telephone Number</td>
-                                    <td th:text="${store.personCharge}">person_in_charge</td>
-                                    <td th:text="${store.name}">Store A</td>
-                                    <td th:text="${store.majorArea}">Hiroshima</td>
-                                    <td th:text="${store.area}">Hiroshima</td>
+                                    <td th:text="${store.name}"></td>
+                                    <td th:text="${store.address}"></td>
+                                    <td th:text="${store.phoneNumber}"></td>
+                                    <td th:text="${store.personCharge}"></td>
+                                    <td th:text="${store.majorArea}"></td>
+                                    <td th:text="${store.area}"></td>
                                 </tr>
 
                                 </tbody>
