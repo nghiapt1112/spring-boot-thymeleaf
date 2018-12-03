@@ -16,13 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,6 +28,10 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserController extends AbstractCustomController {
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private StoreService storeService;
 
     private Integer[] PAGE_SIZE() {
         return env.getProperty("lyna.web.pageSize", Integer[].class);
@@ -42,12 +40,6 @@ public class UserController extends AbstractCustomController {
     private Integer LIMIT_ITEMS() {
         return env.getProperty("lyna.web.limitItems", Integer.class);
     }
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private StoreService storeService;
 
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
@@ -90,13 +82,33 @@ public class UserController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/list")
+    public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
+        int tenantId = user.getTenantId();
+        RequestPage userRequestPage = new UserRequestPage();
+        int limit = userService.getCountUser(tenantId);
+        userRequestPage.setCurrentPage(1);
+        userRequestPage.setNoOfRowInPage(limit);
+        UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
+        List<Store> storesInTenant = storeService.getStoreList(tenantId);
+
+        model.addAttribute("pageData", userPage);
+        model.addAttribute("storeModel", storesInTenant);
+        model.addAttribute("userId", user.getId());
+
+        return "user/listUser";
+    }
+
+    @SuppressWarnings("unused")
+    @GetMapping(value = "/listtemp")
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal,
                            @RequestParam(required = false, defaultValue = "10") Integer limit,
                            @RequestParam(required = false, defaultValue = "1") Integer cp,
                            @RequestParam(required = false) Date start, @RequestParam(required = false) Date end,
                            @RequestParam(required = false) String search) {
-        int tenantId = ((User) principal.getPrincipal()).getTenantId();
 
+        User user = (User) principal.getPrincipal();
+        int tenantId = user.getTenantId();
         RequestPage userRequestPage = new UserRequestPage();
         userRequestPage.setCurrentPage(cp);
         userRequestPage.setNoOfRowInPage(limit);
@@ -110,6 +122,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("limit", Objects.isNull(limit) ? LIMIT_ITEMS() : limit);
         model.addAttribute("currentPage", cp);
         model.addAttribute("pageSizes", PAGE_SIZE());
+        model.addAttribute("userId", user.getId());
 
         return "user/listUser";
     }

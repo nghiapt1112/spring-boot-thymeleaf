@@ -31,7 +31,7 @@
 
                 <div class="col-md-12">
                     <div style="border-top: 3px solid #337ab7;" class="box">
-                        <div>
+                        <!--<div>
                             <div class="col-sm-6">
                                 <div style="padding-top: 10px;">
                                     <label>
@@ -63,7 +63,7 @@
                                         <i class="fa fa-search fa-fw" onclick=""></i> Search</a>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="box-body">
                             <th:block th:if="${#lists.isEmpty(storePage)}">
@@ -110,7 +110,7 @@
                             </table>
                         </div>
 
-                        <div class="row" style="padding-left: 10px;">
+                        <!--<div class="row" style="padding-left: 10px;">
                             <div class="col-sm-5">
                                 <div class="dataTables_info" style="padding-top: 20px;" id="listStore_info"
                                      role="status"
@@ -146,7 +146,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -156,5 +156,8 @@
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" src="/js/listStore.js" th:src="@{/js/liststore.js}"></script>
+<!-- DataTables -->
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.min.js"></script>
 </body>
 </html>

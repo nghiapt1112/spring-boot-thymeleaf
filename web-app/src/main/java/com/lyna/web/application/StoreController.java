@@ -41,7 +41,6 @@ public class StoreController extends AbstractCustomController {
     private static final String REDIRECT_TO_STORE_EDIT_PAGE = "redirect:store/editStore";
     private static final String REDIRECT_TO_STORE_REGISTER_PAGE = "redirect:store/registerStore";
 
-
     @Autowired
     private StoreService storeService;
 
@@ -103,7 +102,33 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     @IsAdmin
-    public String listUsers(
+    public String listStore(
+            Model model,
+            UsernamePasswordAuthenticationToken principal
+    ) {
+        List<Integer> pageNumbers = null;
+        int tenantId = ((User) principal.getPrincipal()).getTenantId();
+
+        Page<Store> storePage =
+                storeService.findPaginated(tenantId);
+
+        int totalPages = storePage.getTotalPages();
+        if (totalPages > 0) {
+            pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("storePage", storePage);
+        model.addAttribute("pageNumbers", pageNumbers);
+
+        return REDIRECT_TO_STORE_LIST_PAGE;
+    }
+
+    @SuppressWarnings("unused")
+    @GetMapping(value = "/listtemp")
+    @IsAdmin
+    public String listStoretemp(
             Model model,
             UsernamePasswordAuthenticationToken principal,
             @RequestParam(defaultValue = "1") Integer page,
