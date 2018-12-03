@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -15,7 +16,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +43,10 @@ public class StoreController extends AbstractCustomController {
 
     @Autowired
     private StoreService storeService;
+
+
+    @Autowired
+    private PostCourseService postCourseService;
 
     @GetMapping(value = "/create")
     public String registerStore(Model model, @ModelAttribute("store") Store store) {
@@ -71,14 +82,20 @@ public class StoreController extends AbstractCustomController {
         if (Objects.isNull(store)) {
             return "/store/editStore";
         }
+
         storeService.updateStore(store, principal);
+
+        List<PostCourse> postCourses = store.getPostCourses();
+        if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
+            postCourseService.updatePostCourse(postCourses, principal, store.getStoreId());
+        }
+
         return "redirect:/store/list";
 
     }
 
     @GetMapping(value = "/update/{storeId}")
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
-        System.out.println(storeId);
         model.addAttribute("store", storeService.findOneByStoreId(storeId));
         return "store/editStore";
     }

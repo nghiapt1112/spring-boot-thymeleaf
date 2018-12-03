@@ -8,7 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -24,20 +28,15 @@ public class PostCourse extends AbstractEntity {
     @Column(name="post_course_id", nullable = false)
     private String postCourseId;
 
-    @NotBlank(message = "post not empty server")
+    @NotBlank(message = "'便'は必須です。")
     @Column(name="post")
     public String post;
 
-    @NotBlank(message = "course not empty server")
     @Column(name="course")
     private String course;
 
     @Column(name = "store_id")
     private String storeId;
-
-    /*@ManyToOne
-    @JoinColumn(name = "store_id")
-    private Store store;*/
 
 
     public PostCourse(){
