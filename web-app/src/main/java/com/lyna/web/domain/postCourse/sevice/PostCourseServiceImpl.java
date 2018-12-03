@@ -1,5 +1,6 @@
 package com.lyna.web.domain.postCourse.sevice;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.user.User;
@@ -20,26 +21,29 @@ public class PostCourseServiceImpl implements PostCourseService {
 
     @Override
     @Transactional
-    public void updatePostCourse(List<PostCourse> postCourses, UsernamePasswordAuthenticationToken principal, String storeId) {
-        User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String userId = currentUser.getId();
-        Date date = new Date();
-        for (PostCourse postCourse : postCourses) {
-            if (!Objects.isNull(postCourse.getStoreId()) && !postCourse.getStoreId().isEmpty()) {
-                postCourse.setTenantId(tenantId);
-                postCourse.setUpdateDate(date);
-                postCourse.setUpdateUser(userId);
-                postCourseRepository.updatePostCourse(postCourse);
+    public void updatePostCourse(List<PostCourse> postCourses, UsernamePasswordAuthenticationToken principal, String storeId) throws DomainException {
+        try {
+            User currentUser = (User) principal.getPrincipal();
+            int tenantId = currentUser.getTenantId();
+            String userId = currentUser.getId();
+            Date date = new Date();
+            for (PostCourse postCourse : postCourses) {
+                if (!Objects.isNull(postCourse.getStoreId()) && !postCourse.getStoreId().isEmpty()) {
+                    postCourse.setTenantId(tenantId);
+                    postCourse.setUpdateDate(date);
+                    postCourse.setUpdateUser(userId);
+                    postCourseRepository.updatePostCourse(postCourse);
 
-            } else {
-                postCourse.setTenantId(tenantId);
-                postCourse.setStoreId(storeId);
-                postCourse.setCreateDate(date);
-                postCourse.setCreateUser(userId);
-                postCourseRepository.save(postCourse);
-             }
-
+                } else {
+                    postCourse.setTenantId(tenantId);
+                    postCourse.setStoreId(storeId);
+                    postCourse.setCreateDate(date);
+                    postCourse.setCreateUser(userId);
+                    postCourseRepository.save(postCourse);
+                }
+            }
+        } catch (Exception ex) {
+            throw ex;
         }
     }
 

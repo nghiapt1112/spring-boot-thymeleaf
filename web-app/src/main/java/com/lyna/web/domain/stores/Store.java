@@ -3,28 +3,16 @@ package com.lyna.web.domain.stores;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import com.lyna.web.domain.postCourse.PostCourse;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
-
-import static org.hibernate.annotations.CascadeType.SAVE_UPDATE;
 
 @Entity
 @Table(name = "m_store")
@@ -62,7 +50,7 @@ public class Store extends AbstractEntity {
     private String phoneNumber;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

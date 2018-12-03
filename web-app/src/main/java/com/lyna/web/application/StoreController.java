@@ -16,13 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +31,11 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
-    private static final String REDIRECT_TO_STORE_LIST_PAGE = "store/liststore";
-    private static final String REDIRECT_TO_STORE_EDIT_PAGE = "redirect:store/editStore";
-    private static final String REDIRECT_TO_STORE_REGISTER_PAGE = "redirect:store/registerStore";
+    private static final String STORE_LIST_PAGE = "store/liststore";
+    private static final String STORE_EDIT_PAGE = "store/editStore";
+    private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
+    private static final String STORE_REGISTER_PAGE = "store/registerStore";
+
 
     @Autowired
     private StoreService storeService;
@@ -54,21 +50,21 @@ public class StoreController extends AbstractCustomController {
         postCourses.add(new PostCourse());
         store.setPostCourses(postCourses);
         model.addAttribute("store", store);
-        return "store/registerStore";
+        return STORE_REGISTER_PAGE;
     }
 
     @PostMapping(value = "/create")
     public String CreateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store") Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
-            return "store/registerStore";
+            return STORE_REGISTER_PAGE;
         }
         if (null == store) {
-            return "store/registerStore";
+            return STORE_REGISTER_PAGE;
         }
         storeService.createStore(store, principal);
 
-        return "redirect:/store/list";
+        return REDIRECT_STORE_LIST_PAGE;
 
     }
 
@@ -77,10 +73,10 @@ public class StoreController extends AbstractCustomController {
             Store store, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("store", store);
-            return "/store/editStore";
+            return STORE_EDIT_PAGE;
         }
         if (Objects.isNull(store)) {
-            return "/store/editStore";
+            return STORE_EDIT_PAGE;
         }
 
         storeService.updateStore(store, principal);
@@ -90,14 +86,14 @@ public class StoreController extends AbstractCustomController {
             postCourseService.updatePostCourse(postCourses, principal, store.getStoreId());
         }
 
-        return "redirect:/store/list";
+        return REDIRECT_STORE_LIST_PAGE;
 
     }
 
     @GetMapping(value = "/update/{storeId}")
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
         model.addAttribute("store", storeService.findOneByStoreId(storeId));
-        return "store/editStore";
+        return STORE_EDIT_PAGE;
     }
 
     @GetMapping(value = "/list")
@@ -106,23 +102,14 @@ public class StoreController extends AbstractCustomController {
             Model model,
             UsernamePasswordAuthenticationToken principal
     ) {
-        List<Integer> pageNumbers = null;
         int tenantId = ((User) principal.getPrincipal()).getTenantId();
 
         Page<Store> storePage =
                 storeService.findPaginated(tenantId);
 
-        int totalPages = storePage.getTotalPages();
-        if (totalPages > 0) {
-            pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-        }
-
         model.addAttribute("storePage", storePage);
-        model.addAttribute("pageNumbers", pageNumbers);
 
-        return REDIRECT_TO_STORE_LIST_PAGE;
+        return STORE_LIST_PAGE;
     }
 
     @SuppressWarnings("unused")
@@ -169,7 +156,7 @@ public class StoreController extends AbstractCustomController {
         model.addAttribute("spage", sTextPage);
         model.addAttribute("pageNumbers", pageNumbers);
 
-        return REDIRECT_TO_STORE_LIST_PAGE;
+        return STORE_LIST_PAGE;
     }
 
     @GetMapping(value = {"/delete"})

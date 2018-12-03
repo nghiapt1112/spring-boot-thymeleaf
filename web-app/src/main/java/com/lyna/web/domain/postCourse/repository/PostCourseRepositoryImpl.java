@@ -1,9 +1,8 @@
 package com.lyna.web.domain.postCourse.repository;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
-import com.lyna.web.domain.stores.Store;
-import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> implements PostCourseRepository{
+public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> implements PostCourseRepository {
 
     private final Logger log = LoggerFactory.getLogger(PostCourseRepositoryImpl.class);
 
@@ -35,10 +34,10 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> i
     }
 
     @Override
-    public void updatePostCourse(PostCourse postCourse) {
+    public void updatePostCourse(PostCourse postCourse) throws DomainException {
         try {
             String hql = "UPDATE PostCourse p set p.tenantId = :tenantId, p.updateUser = :updateUser, p.updateDate = :updateDate,"
-                    +"p.post = :post, p.course = :course WHERE p.postCourseId=:postCourseId";
+                    + "p.post = :post, p.course = :course WHERE p.postCourseId=:postCourseId";
             entityManager.createQuery(hql)
                     .setParameter("tenantId", postCourse.getTenantId())
                     .setParameter("updateUser", postCourse.getUpdateUser())
