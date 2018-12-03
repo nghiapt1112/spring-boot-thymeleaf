@@ -67,19 +67,18 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="user: ${pageData.getResults()}">
+                                        <tr th:each="user: ${pageData}">
                                             <td class="text-center">
-                                                <div th:unless="${user.getUserId()} eq ${userId}">
-                                                    <input type="checkbox" th:value="${user.getUserId()}"
+                                                <div th:unless="${user.userId} eq ${userId}">
+                                                    <input type="checkbox" th:value="${user.userId}"
                                                            class="chkCheckBoxId" name="userid">
                                                 </div>
                                             </td>
-                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.getUserId()}}"
-                                                   th:text="${user.getEmail()}"></a></td>
-                                            <td th:text="${user.getUserName()}"></td>
-                                            <!--<td th:text="ng-View"></td>-->
-                                            <td th:each="element : ${user.getRolePerStore()}">
-                                                <span th:text="${element.getStoreRole()}"></span>
+                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.userId}}"
+                                                   th:text="${user.email}"></a></td>
+                                            <td th:text="${user.name}"></td>
+                                            <td th:each="store: ${storeModel}">
+                                                <span th:text="${user.mapStore.get(store.getStoreId())} == 1? '編集': (${user.mapStore.get(store.getStoreId())} == 0? '参照':'')"></span>
                                             </td>
                                         </tr>
                                         </tbody>

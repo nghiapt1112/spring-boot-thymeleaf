@@ -11,8 +11,10 @@ import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserRequestPage;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.service.UserService;
+import com.lyna.web.domain.view.UserList;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,12 +88,10 @@ public class UserController extends AbstractCustomController {
     public String userPage(Model model, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        RequestPage userRequestPage = new UserRequestPage();
-        int limit = userService.getCountUser(tenantId);
-        userRequestPage.setCurrentPage(1);
-        userRequestPage.setNoOfRowInPage(limit);
-        UserResponsePage userPage = userService.findUsersWithPaging(userRequestPage);
+
         List<Store> storesInTenant = storeService.getStoreList(tenantId);
+        Page<UserList> userPage =
+                userService.findPaginated(storesInTenant, tenantId);
 
         model.addAttribute("pageData", userPage);
         model.addAttribute("storeModel", storesInTenant);
