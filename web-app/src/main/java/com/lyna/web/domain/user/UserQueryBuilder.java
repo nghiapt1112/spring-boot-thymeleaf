@@ -75,8 +75,4 @@ public class UserQueryBuilder extends QueryBuilder {
         return " LIMIT " + offset + "," + itemsPerPage + " ";
     }
 
-    @Override
-    public Map<String, Object> getParams() {
-        return null;
-    }
 }

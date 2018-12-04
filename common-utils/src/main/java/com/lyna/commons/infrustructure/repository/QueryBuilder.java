@@ -27,5 +27,7 @@ public abstract class QueryBuilder {
 
     public abstract String buildLimit();
 
-    public abstract Map<String, Object> getParams();
+    public Map<String, Object> getParams() {
+        return params;
+    }
 }

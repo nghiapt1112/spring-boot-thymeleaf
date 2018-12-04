@@ -31,7 +31,11 @@ public class UserAggregate extends AbstractObject {
     @NotEmpty
     private String userName;
 
+    @NotEmpty
     private String password;
+
+    @NotEmpty
+    private String confirmPasswd;
 
     private List<UserStoreRole> rolePerStore;
 
@@ -81,12 +85,20 @@ public class UserAggregate extends AbstractObject {
     public String getName() {
         return this.userName;
     }
+
+    public boolean isDataValid() {
+        if (!this.password.equals(this.confirmPasswd)) {
+            return false;
+        }
+        // TODO: Validate other special fields.
+        return true;
+    }
 }
 
 
 @Data
 @NoArgsConstructor
-class UserStoreRole {
+class UserStoreRole extends AbstractObject{
     private String id;
     private String name;
     private String storeId;
