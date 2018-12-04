@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('店舗登録')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerStore.css}"/>
+</head>
+<body id="body" class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                店舗登録
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div style="text-align: center;" class="box-header">
+                                <p class="box-titles"></p>
+                            </div>
+                            <div class="box-body">
+                                <form th:action="@{/store/create}" th:method="post" th:object="${store}">
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">店舗コード </span>
+                                        <div class=" form-group col-md-6 has-feedback">
+                                            <input id="code" class="form-control" type="text" th:field="*{code}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorPost" class="error">“店舗コード”は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('code')}"
+                                                th:errors="*{code}"></em>
+
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">店舗名</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="name" class="form-control" type="text" th:field="*{name}"
+                                                   th:errorclass="field-error">
+                                           <em id="errorName" class="error">“店舗名”は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('name')}"
+                                                th:errors="*{name}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">住所</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{address}">
+                                            <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">電話番号</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{phoneNumber}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">担当者</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{personCharge}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">大エリア</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{majorArea}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">エリア</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{area}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+
+                                    <div id="postCourseList" class="container_order_course">
+                                        <div class="col-md-12 order_course item" id="deleteRow"
+                                             th:each="PostCourse, postCourse : ${store.postCourses}">
+                                            <div class=" form-group  col-md-5 div-input-post">
+                                                <div class=" col-md-5 title-input-post"><span>便</span></div>
+                                                <div class=" col-md-7 edit-checkbox title-input-post">
+                                                    <input id="post0"
+                                                           th:field="*{postCourses[__${postCourse.index}__].post}"
+                                                           class="form-control" type="text" th:errorclass="field-error">
+                                                    <em class="error">“便”は必須です。</em>
+                                                    <em class="error_show"
+                                                        th:if="${#fields.hasErrors('postCourses[__${postCourse.index}__].post')}"
+                                                        th:errors="*{postCourses[__${postCourse.index}__].post}"></em>
+                                                </div>
+                                                <br>
+
+                                            </div>
+                                            <div class=" form-group col-md-6 div-input-post">
+                                                <div class="col-md-6 title-input-post"><span>コース</span></div>
+                                                <div class="col-md-6 edit-checkbox title-input-post">
+                                                    <input id="course0"
+                                                           th:field="*{postCourses[__${postCourse.index}__].course}"
+                                                           class="form-control" type="text" th:errorclass="field-error">
+                                                    <em class="error_show"
+                                                        th:if="${#fields.hasErrors('postCourses[__${postCourse.index}__].course')}"
+                                                        th:errors="*{postCourses[__${postCourse.index}__].course}"></em>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" id="delete">x</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-5"></div>
+                                        <div class=" col-md-6"></div>
+                                        <div class="col-md-1">
+                                            <button type="button" id="add">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12  button-submit">
+                                        <button TYPE="submit" class="btn btn-primary" id="save" >登録 </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/registerStore.js" th:src="@{/js/registerStore.js}"></script>
+</body>
+</html>

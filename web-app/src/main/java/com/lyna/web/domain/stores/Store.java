@@ -1,43 +1,61 @@
 package com.lyna.web.domain.stores;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.postCourse.PostCourse;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "m_store")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @NamedQueries({
         @NamedQuery(name = "Store.getAll", query = "SELECT c FROM Store c WHERE c.tenantId = :tenantId ORDER BY c.name")
-        /*@NamedQuery(name = "Store.getAll", query = "SELECT c FROM Store c")*/
 })
 @Data
-@NoArgsConstructor
 public class Store extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id", nullable = false)
     private String storeId;
 
-    @Column(name = "code")
+    @NotBlank(message = "'店舗コード'は必須です。")
+    @Column
     private String code;
 
-    @Column(name = "name")
+    @NotBlank(message = "'店舗名'は必須です。")
+    @Column
     private String name;
 
     @Column(name = "major_area")
     private String majorArea;
 
-    @Column(name = "area")
+    @Column
     private String area;
 
+    @Column
+    private String address;
 
-    public Store self() {
-        return this;
+    @Column(name = "person_in_charge")
+    private String personCharge;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Valid
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "store_id")
+    private List<PostCourse> postCourses;
+
+    public Store() {
+        this.storeId = UUID.randomUUID().toString();
     }
 }
 

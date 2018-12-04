@@ -1,9 +1,12 @@
 package com.lyna.web.domain.stores.repository.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
-import com.lyna.web.domain.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +19,13 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements StoreRepository {
 
+    private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
     public StoreRepositoryImpl(EntityManager em) {
-        super(User.class, em);
+        super(Store.class, em);
     }
 
     @Override
@@ -49,8 +54,79 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     @Override
     public List<Store> findAll(int tenantId) {
         return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId", Store.class)
+                .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
                 .setParameter("tenantId", tenantId)
                 .getResultList();
+    }
+
+    @Override
+    public List<Store> getAll(int tenantId, String search) throws DomainException {
+        String hql = "SELECT s FROM Store s WHERE s.tenantId=:tenantId";
+        if (!search.isEmpty())
+            hql = hql + " and (trim(lower(s.code)) like :search " +
+                    "or trim(lower(s.name)) like :search " +
+                    "or trim(lower(s.majorArea)) like :search " +
+                    "or trim(lower(s.area)) like :search)";
+
+        TypedQuery<Store> query = entityManager
+                .createQuery(hql, Store.class);
+        try {
+            if (!search.isEmpty())
+                return query.setParameter("tenantId", tenantId)
+                        .setParameter("search", "%" + search.trim().toLowerCase() + "%")
+                        .getResultList();
+            else
+                return query.setParameter("tenantId", tenantId)
+                        .getResultList();
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean deletebyStoreId(List<String> listStoreId) throws DomainException {
+        try {
+            String query = "DELETE FROM Store u WHERE u.storeId in (:storelist)";
+            entityManager.createQuery(query).setParameter("storelist", listStoreId).executeUpdate();
+            return true;
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public Store findOneByStoreId(String storeId) {
+        return entityManager
+                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId", Store.class)
+                .setParameter("storeId", storeId)
+                .getSingleResult();
+    }
+
+    @Override
+    public void updateStore(Store store) {
+
+        try {
+            String hql = "UPDATE Store s set s.tenantId = :tenantId, s.updateUser = :updateUser, s.updateDate = :updateDate,"
+                    +"s.code = :code, s.name = :name, s.majorArea = :majorArea, s.area = :area, s.address = :address,"
+                    +"s.personCharge = :personCharge, s.phoneNumber = :phoneNumber WHERE s.storeId=:storeId";
+            entityManager.createQuery(hql)
+            .setParameter("tenantId", store.getTenantId())
+            .setParameter("updateUser", store.getUpdateUser())
+            .setParameter("updateDate", store.getUpdateDate())
+            .setParameter("code", store.getCode())
+            .setParameter("name", store.getName())
+            .setParameter("majorArea", store.getMajorArea())
+            .setParameter("area", store.getArea())
+            .setParameter("address", store.getAddress())
+            .setParameter("personCharge", store.getPersonCharge())
+            .setParameter("phoneNumber", store.getPhoneNumber())
+            .setParameter("storeId", store.getStoreId())
+            .executeUpdate();
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 }

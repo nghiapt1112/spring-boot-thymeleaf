@@ -20,8 +20,8 @@
                 <form action="#" th:action="@{/user/register/}" th:object="${userRegisterAggregate}" method="POST">
                     <p class="row"><label class="col-md-2">メールアドレス: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
                     <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード: </label> <input class="col-md-3" type="text" th:field="*{password}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード(確認用):</label> <input class="col-md-3" type="text" th:field="*{password}"/></p>
+                    <p class="row"><label for="password" class="col-md-2">パスワード: </label> <input class="col-md-3" type="password" th:field="*{password}"/></p>
+                    <p class="row"><label for="password" class="col-md-2">パスワード(確認用):</label> <input class="col-md-3" type="password" th:field="*{password}"/></p>
                     <hr>
 
                     <div class="row">

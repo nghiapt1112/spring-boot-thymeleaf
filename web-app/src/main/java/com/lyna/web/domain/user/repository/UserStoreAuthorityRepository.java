@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserStoreAuthorityRepository extends JpaRepository<UserStoreAuthority, String> {
-    public Boolean deletebyUserId(List<String> userIds);
+    Boolean deleteUserStoreAuthorityByUserId(List<String> userIds);
+
+    boolean deleteStoreAuthorityByStoreId(List<String> listStoreId);
 }
