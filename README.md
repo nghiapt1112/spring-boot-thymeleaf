@@ -10,12 +10,12 @@ windows: ```gradlew :web-app:bootRun```
 
 # Run project with java:
 ###1. Linux
- - Step1 build jar file: ```./gradlew clean web-app:build -x test```
- - Run with java: java -jar ./build/web-app.jar
+ - Step1 build war file: ```./gradlew clean web-app:build -x test```
+ - Run with java: java -jar ./build/web-app.war
  - Access with http://localhost:20124
  ###2. Windows
-  - Step1 build jar file: ```gradlew clean web-app:build -x test```
-  - Run with java: java -jar build/web-app.jar
+  - Step1 build war file: ```gradlew clean web-app:build -x test```
+  - Run with java: java -jar build/web-app.war
   - Access with http://localhost:20124
 
 # Hot build when implement a feature:
