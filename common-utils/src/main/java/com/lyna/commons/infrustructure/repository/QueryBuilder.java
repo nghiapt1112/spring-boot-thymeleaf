@@ -27,7 +27,14 @@ public abstract class QueryBuilder {
 
     public abstract String buildLimit();
 
+    public abstract String buildFrom();
+
     public Map<String, Object> getParams() {
         return params;
     }
+
+    public void setRequestPage(RequestPage requestPage) {
+        this.requestPage = requestPage;
+    }
+
 }

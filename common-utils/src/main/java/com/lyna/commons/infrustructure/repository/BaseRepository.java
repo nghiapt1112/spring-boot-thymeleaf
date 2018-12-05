@@ -1,6 +1,7 @@
 package com.lyna.commons.infrustructure.repository;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.infrustructure.object.AbstractObject;
 import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.object.ResponsePage;
 import org.apache.commons.collections4.MapUtils;
@@ -36,25 +37,35 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
         return type;
     }
 
-    public <T extends ResponsePage> T findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder, Class<T> typed) {
+
+    public <T extends ResponsePage, O extends AbstractObject> T findWithPaging(RequestPage requestPage, QueryBuilder queryBuilder, Class<T> typed, Class<O> typedQuery) {
+        Class<O> queryTyped = this.getEntityClass();
+        if (Objects.nonNull(typedQuery)) {
+            queryTyped = typedQuery;
+        }
         Query tQuery = entityManager.createNativeQuery(
                 queryBuilder.buildSelect()
                         .concat(queryBuilder.buildWhere())
                         .concat(queryBuilder.buildGroupBy())
                         .concat(queryBuilder.buildOrderBy())
                         .concat(queryBuilder.buildLimit()),
-                this.getEntityClass());
+                queryTyped);
 
         fillParams(tQuery, queryBuilder.getParams());
 
         try {
             T responsePageInstance = typed.newInstance();
-            responsePageInstance.withData(userRequestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(queryBuilder));
+            responsePageInstance.withData(requestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(queryBuilder));
             return responsePageInstance;
         } catch (InstantiationException | IllegalAccessException | RuntimeException e) {
-            LOGGER.error("Find paging for {}, failed with message: {}, cause: {}", typed, e.getMessage(), e.getCause());
+//            LOGGER.error("Find paging for {}, failed with message: {}, cause: {}", typed, e.getMessage(), e.getCause());
+            e.printStackTrace();
             return null;
         }
+    }
+
+    public <T extends ResponsePage> T findWithPaging(RequestPage requestPage, QueryBuilder queryBuilder, Class<T> typed) {
+        return this.findWithPaging(requestPage, queryBuilder, typed, null);
     }
 
     private long countTotalRecord(QueryBuilder queryBuilder) {

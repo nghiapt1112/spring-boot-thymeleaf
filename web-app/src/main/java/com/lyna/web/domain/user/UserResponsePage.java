@@ -17,9 +17,9 @@ public class UserResponsePage extends ResponsePage<User, UserAggregate> {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<UserAggregate> getResults() {
-        return this.results;
-    }
+//    @Override
+//    public List<UserAggregate> getResults() {
+//        return this.results;
+//    }
 
 }

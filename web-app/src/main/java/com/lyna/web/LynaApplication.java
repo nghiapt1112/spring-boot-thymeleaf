@@ -10,10 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"com.lyna.commons", "com.lyna.web"})
 public class LynaApplication {
 
-    @Bean
-    public UserServiceImpl userService() {
-        return new UserServiceImpl();
-    }
+//    @Bean
+//    public UserServiceImpl userService() {
+//        return new UserServiceImpl();
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(LynaApplication.class, args);

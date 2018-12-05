@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 public class UserQueryBuilder extends QueryBuilder {
 
-    private String fromQuery() {
+    public String buildFrom() {
         return "FROM m_user u1 " +
                 " INNER JOIN m_user_store_authority usa1 ON u1.user_id = usa1.user_id " +
                 " INNER JOIN m_store s3 ON usa1.store_id = s3.store_id ";
@@ -20,7 +19,7 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildSelect() {
-        return "SELECT u1.*, usa1.* " + fromQuery();
+        return "SELECT u1.*, usa1.* " + buildFrom();
 
     }
 
@@ -61,7 +60,7 @@ public class UserQueryBuilder extends QueryBuilder {
 
     @Override
     public String buildCount() {
-        return "SELECT COUNT(DISTINCT(u1.user_id)) " + fromQuery();
+        return "SELECT COUNT(DISTINCT(u1.user_id)) " + buildFrom();
     }
 
     /**
@@ -74,5 +73,6 @@ public class UserQueryBuilder extends QueryBuilder {
         int offset = (currentPage -1)* itemsPerPage;
         return " LIMIT " + offset + "," + itemsPerPage + " ";
     }
+
 
 }

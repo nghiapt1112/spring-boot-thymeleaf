@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RequestPage extends AbstractObject {
+    protected int tenantId;
     protected int noOfRowInPage;
     protected int currentPage;
     protected Map<String, Object> sortFields;
@@ -50,5 +51,13 @@ public abstract class RequestPage extends AbstractObject {
     public RequestPage addSearchField(String key, Object value) {
         this.searchFields.put(key, value);
         return this;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
     }
 }

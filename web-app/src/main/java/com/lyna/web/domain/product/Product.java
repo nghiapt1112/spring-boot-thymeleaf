@@ -32,7 +32,7 @@ public class Product extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productId", nullable = false)
+    @Column(name = "product_id", nullable = false)
     private String productId;
 
     @Column

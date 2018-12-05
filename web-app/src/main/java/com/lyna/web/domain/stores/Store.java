@@ -50,7 +50,7 @@ public class Store extends AbstractEntity {
     private String phoneNumber;
 
     @Valid
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

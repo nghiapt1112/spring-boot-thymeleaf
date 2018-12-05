@@ -22,7 +22,7 @@ public class DomainException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    protected DomainException(String message) {
+    public DomainException(String message) {
         super(message);
         this.domainCode = Domain.General.code();
         this.errorCode = UNKNOWN_ERROR;

@@ -36,5 +36,7 @@ public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractO
         return totalRecords;
     }
 
-    public abstract List<O> getResults();
+    public List<O> getResults() {
+        return this.results;
+    }
 }
