@@ -90,7 +90,10 @@ input{
 .button-search{
 	padding-top: 3% ! important;
 }
-th{
+.with-nav-tabs th{
 	color: white ! important;
 	text-align: center;
+}
+.glyphicon-home{
+	padding-right: 12%;
 }

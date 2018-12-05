@@ -9,6 +9,8 @@ import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,9 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
+
+    private final Logger log = LoggerFactory.getLogger(StoreController.class);
+
     private static final String STORE_LIST_PAGE = "store/liststore";
     private static final String STORE_EDIT_PAGE = "store/editStore";
     private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
@@ -43,6 +48,8 @@ public class StoreController extends AbstractCustomController {
 
     @Autowired
     private PostCourseService postCourseService;
+
+    private String codeBeforUpdate;
 
     @GetMapping(value = "/create")
     @IsAdmin
@@ -61,8 +68,19 @@ public class StoreController extends AbstractCustomController {
             return STORE_REGISTER_PAGE;
         }
         if (null == store) {
+            model.addAttribute("store", store);
             return STORE_REGISTER_PAGE;
         }
+        try{
+            Store storeIsCode = storeService.findOneByCode(store.getCode());
+            if(!Objects.isNull(storeIsCode)){
+                model.addAttribute("store", store);
+                return STORE_REGISTER_PAGE;
+            }
+        }catch (Exception  e){
+            log.error(e.getMessage());
+        }
+
         storeService.createStore(store, principal);
 
         return REDIRECT_STORE_LIST_PAGE;
@@ -81,6 +99,16 @@ public class StoreController extends AbstractCustomController {
             return STORE_EDIT_PAGE;
         }
 
+        try{
+            Store storeIsCode = storeService.findOneByCode(store.getCode());
+            if(!store.getCode().equals(codeBeforUpdate) && !Objects.isNull(storeIsCode)){
+                model.addAttribute("store", store);
+                return STORE_REGISTER_PAGE;
+            }
+        }catch (Exception  e){
+            log.error(e.getMessage());
+        }
+
         storeService.updateStore(store, principal);
 
         List<PostCourse> postCourses = store.getPostCourses();
@@ -94,7 +122,9 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = "/update/{storeId}")
     public String editStore(@PathVariable("storeId") String storeId, Model model) {
-        model.addAttribute("store", storeService.findOneByStoreId(storeId));
+        Store store = storeService.findOneByStoreId(storeId);
+        codeBeforUpdate = store.getCode();
+        model.addAttribute("store", store);
         return STORE_EDIT_PAGE;
     }
 

@@ -32,7 +32,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
-                                            <em id="errorPost" class="error">“店舗コード”は必須です。</em>
+                                            <em id="errorPost" class="error">店舗コードは必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 
@@ -44,7 +44,7 @@
                                         <div class="form-group col-md-6" style="">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                           <em id="errorName" class="error">“店舗名”は必須です。</em>
+                                           <em id="errorName" class="error">店舗名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
                                         </div>
@@ -96,7 +96,7 @@
                                                     <input id="post0"
                                                            th:field="*{postCourses[__${postCourse.index}__].post}"
                                                            class="form-control" type="text" th:errorclass="field-error">
-                                                    <em class="error">“便”は必須です。</em>
+                                                    <em class="error">便は必須です。</em>
                                                     <em class="error_show"
                                                         th:if="${#fields.hasErrors('postCourses[__${postCourse.index}__].post')}"
                                                         th:errors="*{postCourses[__${postCourse.index}__].post}"></em>

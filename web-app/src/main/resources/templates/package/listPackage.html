@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('荷姿一覧')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/listPackage.css" th:href="@{/css/listPackage.css}"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                荷姿一覧
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+
+                <div class="col-md-12 button_top">
+                    <div class="col-md-2 button-top-order">
+                        <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
+                           th:href="@{/store/create}">新規登録</a>
+                    </div>
+                    <div class="col-md-2 button-top-delivery">
+                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deletePackage()">削除</a>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div style="border-top: 3px solid #337ab7;" class="box">
+                        <div class="box-body">
+                            <th:block th:if="${#lists.isEmpty(packages)}">
+                                <table id="table-package" class="table table-bordered table-hover">
+                                    <thead style="background: #337ab7">
+                                    <tr>
+                                        <th style="text-align: center;">
+                                            <input type="checkbox" id="checkBoxAll">
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
+                                            aria-label="Store code: activate to sort column ascending"> 店舗コード
+                                        </th>
+                                        <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
+                                        <th>空の重量</th>       <!--&lt;!&ndash;Empty Weight&ndash;&gt;-->
+                                        <th>満載の重量</th>   <!-- &lt;!&ndash;Full Load Weight&ndash;&gt;-->
+                                        <th>空の才数</th>      <!--&lt;!&ndash;Empty Capacity&ndash;&gt;-->
+                                        <th>満載の才数</th>     <!-- &lt;!&ndash;Full Load Capacity&ndash;&gt;-->
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </th:block>
+                            <th:block th:unless="${#lists.isEmpty(packages)}">
+                                <table id="table-package" class="table table-bordered table-hover">
+                                    <thead style="background: #337ab7">
+                                    <tr>
+                                        <th style="text-align: center;">
+                                            <input type="checkbox" id="checkBoxAll">
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
+                                            aria-label="Store code: activate to sort column ascending"> 店舗コード
+                                        </th>
+                                        <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
+                                        <th>空の重量</th>       <!--&lt;!&ndash;Empty Weight&ndash;&gt;-->
+                                        <th>満載の重量</th>   <!-- &lt;!&ndash;Full Load Weight&ndash;&gt;-->
+                                        <th>空の才数</th>      <!--&lt;!&ndash;Empty Capacity&ndash;&gt;-->
+                                        <th>満載の才数</th>     <!-- &lt;!&ndash;Full Load Capacity&ndash;&gt;-->
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="package,iterStat : ${packages}">
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" th:value="${package.packageId}"
+                                                   class="chkCheckBoxId"
+                                                   name="packageId">
+                                        </td>
+                                        <td>
+                                            <a href="/package/update/{packageId}(packageId=${package.packageId})"
+                                               th:href="@{/package/update/{packageId}(packageId=${package.packageId})}"
+                                               class="" th:text="${package.name}"></a>
+                                        </td>
+                                        <td th:text="${package.unit}"></td>
+                                        <td th:text="${package.emptyWeight}"> </td>
+                                        <td th:text="${package.fullLoadWeight}"></td>
+                                        <td th:text="${package.emptyCapacity}"></td>
+                                        <td th:text="${package.fullLoadCapacity}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </th:block>
+
+                        </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </div>
+ </div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/listPackage.js" th:src="@{/js/listPackage.js}"></script>
+<!-- DataTables -->
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.min.js"></script>
+</body>
+</html>

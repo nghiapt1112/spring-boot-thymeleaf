@@ -32,5 +32,4 @@ public class DeliveryDetail extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String packageId;
 
-
 }

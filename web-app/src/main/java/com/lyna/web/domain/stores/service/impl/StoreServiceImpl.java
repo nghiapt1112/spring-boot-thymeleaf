@@ -8,6 +8,8 @@ import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +24,8 @@ import java.util.*;
 @Service
 @Transactional(readOnly = true)
 public class StoreServiceImpl extends BaseService implements StoreService {
+
+    private final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
 
     @Autowired
     private StoreRepository storeRepository;
@@ -115,7 +119,14 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             }
             store.setPostCourses(postCourses);
         }
+        try {
             storeRepository.save(store);
+        }catch (NullPointerException ne){
+            log.error(ne.getMessage());
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+
     }
 
     @Transactional
@@ -141,6 +152,11 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     @Override
     public Store findOneByStoreId(String storeId) {
         return storeRepository.findOneByStoreId(storeId);
+    }
+
+    @Override
+    public Store findOneByCode(String code) {
+        return storeRepository.findOneByCode(code);
     }
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 @Entity
@@ -19,7 +20,6 @@ import java.math.BigDecimal;
         @NamedQuery(name = "OrderDetail.countAll", query = "SELECT COUNT(x) FROM OrderDetail x")
 })
 @Data
-@NoArgsConstructor
 public class OrderDetail extends AbstractEntity {
     @Id
     @Column(name = "order_detail_id", nullable = false)
@@ -27,5 +27,12 @@ public class OrderDetail extends AbstractEntity {
 
     @Column
     public BigDecimal amount;
+
+    @Column(name = "product_id", nullable = false)
+    public String productId;
+
+    public OrderDetail(){
+        this.orderDetailId = UUID.randomUUID().toString();
+    }
 
 }

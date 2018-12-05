@@ -27,5 +27,7 @@ public interface StoreService {
 
     Store findOneByStoreId(String storeId);
 
+    Store findOneByCode(String code);
+
 
 }

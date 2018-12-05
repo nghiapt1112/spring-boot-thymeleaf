@@ -4,7 +4,7 @@
         <section class="sidebar">
             <ul class="sidebar-menu" data-widget="tree">
                 <li style="font-size: 104%;padding: 0; " class="header">
-                    <a href="/mainScreen" th:href="@{/mainScreen}"><i class="fa fa-bars" aria-hidden="true"></i>メインメニュー
+                    <a href="/mainScreen" th:href="@{/mainScreen}"><i class="glyphicon glyphicon-home"></i>メインメニュー
                     </a>
                 </li>
                 <li class=" treeview">
@@ -17,11 +17,11 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="active">
-                            <a href="/listProduct" th:href="@{/listProduct}"><i class="fa fa-circle-o text-red"></i>商品一覧
+                            <a href="/product/list" th:href="@{/product/list}"><i class="fa fa-circle-o text-red"></i>商品一覧
                             </a>
                         </li>
                         <li>
-                            <a href="/registerProduct" th:href="@{/registerProduct}"><i
+                            <a href="/product/create" th:href="@{/product/create}"><i
                                     class="fa fa-circle-o text-red"></i>商品登録
                             </a>
                         </li>
@@ -37,12 +37,12 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>
-                            <a href="/listPackage" th:href="@{/listPackage}">
+                            <a href="/package/list" th:href="@{/package/list}">
                                 <i class="fa fa-circle-o text-green"></i>荷姿一覧
                             </a>
                         </li>
                         <li>
-                            <a href="/registerPackage" th:href="@{/registerPackage}"><i
+                            <a href="/package/create" th:href="@{/package/create}"><i
                                     class="fa fa-circle-o text-green"></i>荷姿登録
                             </a>
                         </li>
@@ -50,7 +50,7 @@
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="glyphicon glyphicon-home"></i>
+                        <i class="glyphicon glyphicon-credit-card"></i>
                         <span>店舗マスター</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -58,11 +58,11 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>
-                            <a href="store-list" th:href="@{/store/list}"><i class="fa fa-circle-o text-yellow"></i>店舗一覧
+                            <a href="/store/list" th:href="@{/store/list}"><i class="fa fa-circle-o text-yellow"></i>店舗一覧
                             </a>
                         </li>
                         <li>
-                            <a href="store-list" th:href="@{/store/create}"><i class="fa fa-circle-o text-yellow"></i>店舗登録
+                            <a href="/store/create" th:href="@{/store/create}"><i class="fa fa-circle-o text-yellow"></i>店舗登録
                             </a>
                         </li>
                     </ul>
