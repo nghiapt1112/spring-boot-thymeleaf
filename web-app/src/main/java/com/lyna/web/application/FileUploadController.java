@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -52,11 +53,12 @@ public class FileUploadController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file, UsernamePasswordAuthenticationToken principal, RedirectAttributes redirectAttrs) {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        storageService.store(tenantId, file);
+        Map<String, String> mapError = storageService.store(tenantId, file);
         redirectAttrs.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
+        redirectAttrs.addFlashAttribute("error", mapError);
 
-        return "redirect:/";
+        return "redirect:/mainScreen";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

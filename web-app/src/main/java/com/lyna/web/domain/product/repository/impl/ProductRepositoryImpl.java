@@ -70,7 +70,16 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public List<String> getListProductByProductCode(int tenantId, List<String> products) {
+    public List<String> getListProductCodeByProductCode(int tenantId, List<String> products) {
+        return entityManager
+                .createQuery("SELECT p.code FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")
+                .setParameter("tenantId", tenantId)
+                .setParameter("products", products)
+                .getResultList();
+    }
+
+    @Override
+    public List<Product> getProductsByProductCode(int tenantId, List<String> products) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")
                 .setParameter("tenantId", tenantId)

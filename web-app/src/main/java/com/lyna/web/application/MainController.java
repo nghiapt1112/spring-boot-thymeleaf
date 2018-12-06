@@ -27,7 +27,6 @@ public class MainController extends AbstractCustomController {
 
     @PostMapping(value = {"/upload/"})
     public String uploadOrder() {
-        //this.orderService.upload();
         return REDIRECT_TO_MAIN_PAGE;
     }
 }

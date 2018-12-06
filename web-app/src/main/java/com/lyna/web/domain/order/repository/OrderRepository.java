@@ -13,4 +13,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     Iterator<CsvOrder> getMapOrder(Reader targetReader);
 
     Order save(Order order);
+
+    boolean checkExists(String postCourseId, String productId, String quantity);
 }

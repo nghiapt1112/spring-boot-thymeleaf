@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -61,19 +62,23 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public List<String> getAllByCode(int tenantId, List<String> storeCodes) {
-        Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name");
-        query.setParameter("tenantId", tenantId)
-                .setParameter("code", storeCodes);
-        return query.getResultList();
+        if (storeCodes.size() > 0) {
+            Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", String.class);
+            query.setParameter("tenantId", tenantId)
+                    .setParameter("code", storeCodes);
+            return query.getResultList();
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
         try {
-            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", Store.class);
+            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
             query.setParameter("tenantId", tenantId)
-                    .setParameter("code", storeCodes);
-            return query.getResultList();
+                    .setParameter("storeCodes", storeCodes);
+            List list = query.getResultList();
+            return list;
         } catch (Exception ex) {
             throw ex;
         }

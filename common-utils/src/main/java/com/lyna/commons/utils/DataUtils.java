@@ -8,6 +8,20 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 public class DataUtils {
+
+    public static boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * This method validates the given time stamp in String format
      *
