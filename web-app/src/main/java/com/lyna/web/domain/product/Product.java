@@ -38,7 +38,7 @@ import java.util.UUID;
 public class Product extends AbstractEntity {
 
     @Id
-    @Column(name = "productId", nullable = false)
+    @Column(name = "product_id", nullable = false)
     private String productId;
 
 

@@ -130,7 +130,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String addNew(HttpServletRequest request) {
+    String deleteUser(HttpServletRequest request) {
         String userIds = request.getParameter("userIds");
         ObjectMapper mapper = new ObjectMapper();
         String ajaxResponse = "";
