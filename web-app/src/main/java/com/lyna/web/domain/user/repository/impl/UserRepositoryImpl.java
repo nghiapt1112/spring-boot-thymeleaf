@@ -28,7 +28,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public User findByEmail(String email) {
-        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.email = :email";
+        String query = "SELECT u FROM User u left join fetch u.userStoreAuthorities left join fetch u.stores WHERE u.email = :email";
         List<User> users = entityManager.createQuery(query, User.class).setParameter("email", email).getResultList();
         return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }
