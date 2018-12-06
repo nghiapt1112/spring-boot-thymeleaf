@@ -11,7 +11,7 @@ alter table t_order drop  column store_id;
 alter table t_order drop column  post;
 
 alter table t_order add post_course_id varchar(36) not null after order_id;
-
+ALTER TABLE t_order ADD CONSTRAINT t_order_ibfk_2 FOREIGN KEY (post_course_id) REFERENCES `m_post_course` (`post_course_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 INSERT INTO `t_order`(`tenant_id`, `order_id`, `order_date`, `post_course_id`, `create_date`, `create_user`) VALUES (1,'667f191e810c22110de87aaa','2018-11-27','999f191e810c19119de222aa','2018-11-27 14:35:50','507f191e810c19729de860ea');
 INSERT INTO `t_order`(`tenant_id`, `order_id`, `order_date`, `post_course_id`, `create_date`, `create_user`) VALUES (1,'667f191e810c22110de88aaa','2018-11-27','999f191e810c19119de222aa','2018-11-27 14:35:50','507f191e810c19729de860ea');
