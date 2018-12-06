@@ -96,10 +96,10 @@ $(document).ready(function () {
         let checkForm = true;
         var code = $("#code").val();
         if (code === "" || code.trim() === "") {
-            $("#errorPost").removeClass("error").addClass("error_show");
+            $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
-            $("#errorPost").removeClass("error_show").addClass("error");
+            $("#errorCode").removeClass("error_show").addClass("error");
         }
 
         var name = $("#name").val();

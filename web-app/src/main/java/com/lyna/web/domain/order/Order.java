@@ -31,7 +31,6 @@ public class Order extends AbstractEntity {
     @Column(name = "order_date")
     public Timestamp orderDate;
 
-    @Column
-    public String post;
-
+    @Column(name = "post_course_id")
+    public String postCourseId;
 }

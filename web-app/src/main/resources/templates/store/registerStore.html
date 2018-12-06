@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('店舗登録')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerStore.css}"/>
+    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -32,7 +32,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
-                                            <em id="errorPost" class="error">店舗コードは必須です。</em>
+                                            <em id="errorCode" class="error">店舗コードは必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 

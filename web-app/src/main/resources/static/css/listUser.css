@@ -29,23 +29,12 @@ button{
 	border-right: 1px solid #337ab7;
 	border-bottom: 1px solid #337ab7;
 }
-.input-group-addon{
-	border-color: #00a65a ! important;
-    box-shadow: none ! important;
-}
-input{
-	border-color: #00a65a ! important;
-    box-shadow: none ! important; 
-}
 .button-search{
 	padding-top: 3% ! important;
 }
 th{
 	color: white ! important;
 	text-align: center;
-}
-.table-area {
-	min-height: 400px;
 }
 .pagination-area {
 	text-align: right;

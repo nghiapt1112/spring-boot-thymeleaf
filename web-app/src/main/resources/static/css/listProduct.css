@@ -27,14 +27,7 @@ button{
     border-right: 1px solid #337ab7;
     border-bottom: 1px solid #337ab7;
 }
-.input-group-addon{
-    border-color: #337ab7 ! important;
-    box-shadow: none ! important;
-}
-input{
-    border-color: #337ab7 ! important;
-    box-shadow: none ! important;
-}
+
 .button-search{
     padding-top: 3% ! important;
 }

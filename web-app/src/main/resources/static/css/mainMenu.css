@@ -70,22 +70,10 @@ button{
 	display: flex;
     justify-content: center;
 }
-.box-header{
-	border-left: 1px solid #337ab7;
-	border-right: 1px solid #337ab7;
-}
-.box-body{
-	border-left: 1px solid #337ab7;
-	border-right: 1px solid #337ab7;
-	border-bottom: 1px solid #337ab7;
-}
+
 .input-group-addon{
 	border-color: #00a65a ! important;
     box-shadow: none ! important;
-}
-input{
-	border-color: #00a65a ! important;
-    box-shadow: none ! important; 
 }
 .button-search{
 	padding-top: 3% ! important;
@@ -96,4 +84,11 @@ input{
 }
 .glyphicon-home{
 	padding-right: 12%;
+}
+.buttonSave, .buttonClose{
+	width: 20% ! important;
+	background: #3c8dbc ! important;
+}
+.buttonClose{
+	color: white ! important;
 }

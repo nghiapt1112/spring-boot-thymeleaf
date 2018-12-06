@@ -37,21 +37,21 @@
                 <div class="col-md-12">
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="box-body">
-                           <!-- <div class="form-group row">
-                                <div class="col-md-1">
-                                    <select class="form-control" id="pageSizeSelect" onchange="search()">
-                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
-                                                th:value="${pageSize}"
-                                                th:selected="${pageSize} == ${limit}"></option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 pull-right">
-                                    <input type="text" placeholder="検索" class="form-control search-input"
-                                           id="search-box" onblur="search()">
-                                </div>
-                            </div>-->
+                            <!-- <div class="form-group row">
+                                 <div class="col-md-1">
+                                     <select class="form-control" id="pageSizeSelect" onchange="search()">
+                                         <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                 th:value="${pageSize}"
+                                                 th:selected="${pageSize} == ${limit}"></option>
+                                     </select>
+                                 </div>
+                                 <div class="col-md-2 pull-right">
+                                     <input type="text" placeholder="検索" class="form-control search-input"
+                                            id="search-box" onblur="search()">
+                                 </div>
+                             </div>-->
                             <div class="row">
-                                <div class="col-md-12 table-area">
+                                <div class="col-md-12">
                                     <table id="listUser" class="table table-bordered table-hover">
                                         <thead style="background: #337ab7">
                                         <tr>
@@ -67,19 +67,18 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="user: ${pageData.getResults()}">
+                                        <tr th:each="user: ${pageData}">
                                             <td class="text-center">
-                                                <div th:unless="${user.getUserId()} eq ${userId}">
-                                                    <input type="checkbox" th:value="${user.getUserId()}"
+                                                <div th:unless="${user.userId} eq ${userId}">
+                                                    <input type="checkbox" th:value="${user.userId}"
                                                            class="chkCheckBoxId" name="userid">
                                                 </div>
                                             </td>
-                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.getUserId()}}"
-                                                   th:text="${user.getEmail()}"></a></td>
-                                            <td th:text="${user.getUserName()}"></td>
-                                            <!--<td th:text="ng-View"></td>-->
-                                            <td th:each="element : ${user.getRolePerStore()}">
-                                                <span th:text="${element.getStoreRole()}"></span>
+                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.userId}}"
+                                                   th:text="${user.email}"></a></td>
+                                            <td th:text="${user.name}"></td>
+                                            <td th:each="store: ${storeModel}">
+                                                <span th:text="${user.mapStore.get(store.getStoreId())} == 1? '編集': (${user.mapStore.get(store.getStoreId())} == 0? '参照':'')"></span>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -117,7 +116,6 @@
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" th:src="@{/js/listUser.js}"></script>
-<script type="text/javascript" th:src="@{/js/paging-common.js}"></script>
-
+<!--<script type="text/javascript" th:src="@{/js/paging-common.js}"></script>-->
 </body>
 </html>
