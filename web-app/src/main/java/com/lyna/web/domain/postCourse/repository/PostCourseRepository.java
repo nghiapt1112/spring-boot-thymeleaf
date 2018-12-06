@@ -9,4 +9,7 @@ public interface PostCourseRepository extends JpaRepository<PostCourse, Long> {
     List<PostCourse> findAllByStoreId(String storeId);
 
     void updatePostCourse(PostCourse postCourse);
+
+    String checkByStoreIdAndPost(String s, String s2);
+
 }

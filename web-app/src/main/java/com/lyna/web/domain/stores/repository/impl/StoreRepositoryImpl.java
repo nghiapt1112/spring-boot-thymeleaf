@@ -6,12 +6,12 @@ import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -57,6 +57,26 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
                 .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
                 .setParameter("tenantId", tenantId)
                 .getResultList();
+    }
+
+    @Override
+    public List<String> getAllByCode(int tenantId, List<String> storeCodes) {
+        Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name");
+        query.setParameter("tenantId", tenantId)
+                .setParameter("code", storeCodes);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
+        try {
+            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", Store.class);
+            query.setParameter("tenantId", tenantId)
+                    .setParameter("code", storeCodes);
+            return query.getResultList();
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     @Override
@@ -109,21 +129,21 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
         try {
             String hql = "UPDATE Store s set s.tenantId = :tenantId, s.updateUser = :updateUser, s.updateDate = :updateDate,"
-                    +"s.code = :code, s.name = :name, s.majorArea = :majorArea, s.area = :area, s.address = :address,"
-                    +"s.personCharge = :personCharge, s.phoneNumber = :phoneNumber WHERE s.storeId=:storeId";
+                    + "s.code = :code, s.name = :name, s.majorArea = :majorArea, s.area = :area, s.address = :address,"
+                    + "s.personCharge = :personCharge, s.phoneNumber = :phoneNumber WHERE s.storeId=:storeId";
             entityManager.createQuery(hql)
-            .setParameter("tenantId", store.getTenantId())
-            .setParameter("updateUser", store.getUpdateUser())
-            .setParameter("updateDate", store.getUpdateDate())
-            .setParameter("code", store.getCode())
-            .setParameter("name", store.getName())
-            .setParameter("majorArea", store.getMajorArea())
-            .setParameter("area", store.getArea())
-            .setParameter("address", store.getAddress())
-            .setParameter("personCharge", store.getPersonCharge())
-            .setParameter("phoneNumber", store.getPhoneNumber())
-            .setParameter("storeId", store.getStoreId())
-            .executeUpdate();
+                    .setParameter("tenantId", store.getTenantId())
+                    .setParameter("updateUser", store.getUpdateUser())
+                    .setParameter("updateDate", store.getUpdateDate())
+                    .setParameter("code", store.getCode())
+                    .setParameter("name", store.getName())
+                    .setParameter("majorArea", store.getMajorArea())
+                    .setParameter("area", store.getArea())
+                    .setParameter("address", store.getAddress())
+                    .setParameter("personCharge", store.getPersonCharge())
+                    .setParameter("phoneNumber", store.getPhoneNumber())
+                    .setParameter("storeId", store.getStoreId())
+                    .executeUpdate();
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             throw e;

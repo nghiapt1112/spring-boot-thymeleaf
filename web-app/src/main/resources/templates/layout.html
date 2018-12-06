@@ -28,6 +28,20 @@
                 TITLE
             </h1>
         </section>
+        <div>
+            <form action="#" enctype="multipart/form-data" th:action="@{/upload/file}" method="POST">
+                <table>
+                    <tr>
+                        <td>File to upload:</td>
+                        <td><input type="file" name="file"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Upload"/></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
 </div>
 <footer th:fragment="footer">
