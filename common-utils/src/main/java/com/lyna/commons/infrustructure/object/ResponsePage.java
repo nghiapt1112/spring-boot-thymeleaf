@@ -2,18 +2,22 @@ package com.lyna.commons.infrustructure.object;
 
 import java.util.List;
 
-public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractObject> extends AbstractObject {
+public abstract class ResponsePage<E extends AbstractObject, O extends AbstractObject> extends AbstractObject {
+    // TODO: => nghiapT delete this field
+    public List<E> rawResults;
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
     protected long totalRecords;
     protected List<O> results;
 
-    public ResponsePage() {}
+    public ResponsePage() {
+    }
 
     public void withData(int noOfRowInPage, List<E> rawResults, long totalRecords) {
         this.noOfRowInPage = noOfRowInPage;
         this.results = parseResult(rawResults);
+        this.rawResults = rawResults;
         this.totalRecords = totalRecords;
         this.totalPage = (int) Math.ceil((float) totalRecords / noOfRowInPage);
     }
@@ -39,4 +43,5 @@ public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractO
     public List<O> getResults() {
         return this.results;
     }
+
 }

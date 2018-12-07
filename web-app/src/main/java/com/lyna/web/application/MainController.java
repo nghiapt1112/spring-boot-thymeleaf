@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController extends AbstractCustomController {
@@ -33,8 +34,13 @@ public class MainController extends AbstractCustomController {
     }
 
     @GetMapping(value = {"/order", "/order/"})
-    public String findOrders(UsernamePasswordAuthenticationToken principal, Model model) {
+    public String findOrdersWithPaging(Model model, UsernamePasswordAuthenticationToken principal,
+                                       @RequestParam(required = false, defaultValue = "1") Integer cp,
+                                       @RequestParam(required = false, defaultValue = "10") Integer limit,
+                                       @RequestParam(required = false) String search) {
+
         User currentUser = (User) principal.getPrincipal();
+
         StoreRequestPage requestPage = new StoreRequestPage();
         requestPage.setTenantId(currentUser.getTenantId());
 

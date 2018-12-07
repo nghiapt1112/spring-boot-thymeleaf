@@ -7,5 +7,4 @@ import com.lyna.web.domain.logicstics.Logistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LogisticRepository extends JpaRepository<Logistics, String> {
-    <T extends ResponsePage> T findWithPaging(RequestPage userRequestPage, QueryBuilder queryBuilder, Class<T> typed);
 }

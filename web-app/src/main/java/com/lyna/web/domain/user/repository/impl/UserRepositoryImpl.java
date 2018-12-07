@@ -1,11 +1,11 @@
 package com.lyna.web.domain.user.repository.impl;
 
 import com.lyna.commons.infrustructure.object.RequestPage;
-import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.UserQueryBuilder;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.repository.UserRepository;
+import com.lyna.web.infrastructure.repository.BaseRepository;
+import com.lyna.web.infrastructure.repository.PagingRepository;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class UserRepositoryImpl extends BaseRepository<User, String> implements UserRepository {
+public class UserRepositoryImpl extends BaseRepository<User, String> implements UserRepository, PagingRepository {
 
     private final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
@@ -65,7 +65,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
-        return findWithPaging(userRequestPage, new UserQueryBuilder().withRequestPage(userRequestPage), UserResponsePage.class);
+        return findWithPaging(userRequestPage, UserResponsePage.class);
     }
 
 }
