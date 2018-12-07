@@ -20,8 +20,4 @@ public class LogisticResponsePage extends ResponsePage<Logistics, LogisticAggreg
         return aggregates;
     }
 
-//    @Override
-//    public List<LogisticAggregate> getResults() {
-//        return null;
-//    }
 }

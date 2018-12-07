@@ -168,12 +168,4 @@ public class UserController extends AbstractCustomController {
         return ajaxResponse;
     }
 
-
-    @ModelAttribute(value = "currentUser")
-    public User currentUser(UsernamePasswordAuthenticationToken principal) {
-        if (principal == null || principal.getPrincipal() == null) {
-            return null;
-        }
-        return (User) principal.getPrincipal();
-    }
 }
