@@ -62,7 +62,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Map<CsvOrder, String> mapCsvPostCourseId;
     Map<String, String> mapPostCourseIdProductId;
     Map<String, CsvOrder> mapProductIdCsvOrder;
-    Map<String, String> mapError;
+    List<String> mapError;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -81,7 +81,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-    public Map<String, String> store(int tenantId, MultipartFile file) {
+    public List<String> store(int tenantId, MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         try {
@@ -99,7 +99,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 Reader reader = new InputStreamReader(inputStream);
                 Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
                 processUpload(orderIterator);
-                checkData(orderIterator);
                 setMapData(tenantId);
                 setDataMapProduct();
                 setDataOrder(tenantId);
@@ -110,17 +109,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to store file
         }
         return mapError;
-    }
-
-    private Iterator<CsvOrder> checkData(Iterator<CsvOrder> orderIterator) {
-        while (orderIterator.hasNext()) {
-            CsvOrder csvOrder = orderIterator.next();
-            if (!DataUtils.isNumeric(csvOrder.getQuantity())) {
-                mapError.put("数量は数字データではない", csvOrder.getProduct());
-            }
-
-        }
-        return orderIterator;
     }
 
     @Override
@@ -189,11 +177,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapCsvPostCourseId = new HashMap<>();
         mapPostCourseIdProductId = new HashMap<>();
         mapProductIdCsvOrder = new HashMap<>();
-        mapError = new HashMap<>();
+        mapError = new ArrayList<>();
     }
 
     public void setDataMapProduct() {
-        //Todo: Nếu Orderdate, Store, Post, Product,Số lượng tồn tại trong db thì báo là đã tồn tại bản ghi
+        //If Orderdate, Store, Post, Product,quantity exists in db => message
         Map<String, CsvOrder> mapProductIdOrder = new HashMap<>();
         mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
             CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
@@ -211,7 +199,28 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void processUpload(Iterator<CsvOrder> orderIterator) {
         HashSet<String> setOrder = new HashSet<>();
         while (orderIterator.hasNext()) {
+
             CsvOrder csvOrder = orderIterator.next();
+            int row = 1;
+
+            if (csvOrder.getPost().isEmpty()) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+            if (csvOrder.getQuantity().isEmpty()) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+            if (csvOrder.getStore().isEmpty()) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+            if (csvOrder.getProduct().isEmpty()) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+            if (!DataUtils.isNumeric(csvOrder.getQuantity())) {
+                mapError.add("数量は数字データではない");
+            }
+
+            row++;
+
             String keyOrder = csvOrder.getStore() + "_" + csvOrder.getPost();
             String skeyCheck = keyOrder + "_" + csvOrder.getProduct();
             if (!setOrder.contains(skeyCheck)) {
