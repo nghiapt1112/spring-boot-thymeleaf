@@ -6,6 +6,7 @@ import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -50,15 +51,16 @@ public class FileUploadController {
     }
 
     @PostMapping("/file")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, UsernamePasswordAuthenticationToken principal, RedirectAttributes redirectAttrs) {
+    //@RequestMapping(value = "/file", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<Object> handleFileUpload(@RequestParam("file") MultipartFile file, UsernamePasswordAuthenticationToken principal) throws IOException {//
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
         Map<String, String> mapError = storageService.store(tenantId, file);
-        redirectAttrs.addFlashAttribute("message",
+        /*redirectAttrs.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
-        redirectAttrs.addFlashAttribute("error", mapError);
-
-        return "redirect:/mainScreen";
+        redirectAttrs.addFlashAttribute("error", mapError);*/
+        return new ResponseEntity<>("File Uploaded Successfully.", HttpStatus.OK);
+        //return "redirect:/mainScreen";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

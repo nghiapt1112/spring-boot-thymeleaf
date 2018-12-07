@@ -6,10 +6,8 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <!--<header th:replace="layout :: header"></header>-->
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
-    <!--<div th:replace="layout :: content-left"></div>-->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -19,21 +17,46 @@
         <section class="content content-right">
             <div class="row">
                 <div class="col-md-12 button_top">
-                    <div class="col-md-1">
-                    </div>
-                    <div class="col-md-2 burron-top-order">
-                        <!--<button type="submit" class="btn btn-primary ">-->
-                            <a th:text="発注" th:href="@{/upload}"></a>
-                        <!--</button>-->
-                    </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2 button-top-order">
+                        <button class="btn btn-primary" id="myBtn" data-toggle="modal-content"
+                                data-target="#modelContent">発注
+                        </button>
                     </div>
                     <div class="col-md-2 button-top-delivery">
                         <button type="submit" class="btn btn-primary ">実績</button>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
+                    </div>
+                </div>
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content" id="modelContent">
+                        <span class="close">&times;</span>
+                        <!-- File Upload From -->
+                        <form action="#" enctype="multipart/form-data" th:action="@{/upload/file}" method="POST">
+                            <div class="form-group">
+                                <label>Select File</label>
+                                <input class="form-control" type="file" name="file">
+                            </div>
+                            <center>
+                                <button class="btn btn-primary" type="submit">Upload</button>
+                            </center>
+                        </form>
+
+                        <br/>
+                        <!-- Bootstrap Progress bar -->
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%
+                            </div>
+                        </div>
+
+                        <!-- Alert -->
+                        <div id="alertMsg" style="color: red;font-size: 18px;"></div>
 
                     </div>
+
                 </div>
                 <div class="col-md-12">
                     <div class="box box-primary">
@@ -47,8 +70,8 @@
                                     <label for="pwd">日付</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
+                                    <div class="">
+                                        <div class="">
                                             <i class="fa fa-calendar"></i>
                                         </div>
                                         <input type="text" class="form-control" id="min" placeholder="Input date">
@@ -58,8 +81,8 @@
                                     <label style="justify-content: center; display: flex;" for="pwd">-</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
+                                    <div class="">
+                                        <div class="">
                                             <i class="fa fa-calendar"></i>
                                         </div>
                                         <input type="text" class="form-control" id="max" placeholder="Input date">
@@ -71,8 +94,8 @@
                                     <label for="pwd">便</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
+                                    <div class="">
+                                        <div class="">
                                             <i class="fa fa-cube"></i>
                                         </div>
                                         <input type="text" class="form-control" id="post" placeholder="Input post">
@@ -228,11 +251,10 @@
                     </div>
                 </div>
             </div>
-
         </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/mainMenu.js}"></script>
+<script type="text/javascript" src="/js/mainMenu.js" th:src="@{/js/mainMenu.js}"></script>
 </body>
 </html>
