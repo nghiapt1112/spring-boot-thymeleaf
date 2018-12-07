@@ -1,8 +1,6 @@
 package com.lyna.commons.infrustructure.exception;
 
 
-import com.lyna.commons.infrustructure.object.AbstractObject;
-
 public class DomainException extends RuntimeException {
     public static final int GENERAL_ERROR = 500;
     private static final long serialVersionUID = 5262974602102886958L;
@@ -22,7 +20,7 @@ public class DomainException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public DomainException(String message) {
+    protected DomainException(String message) {
         super(message);
         this.domainCode = Domain.General.code();
         this.errorCode = UNKNOWN_ERROR;
@@ -78,7 +76,7 @@ public class DomainException extends RuntimeException {
 
     }
 
-    public static class Error extends AbstractObject {
+    public static class Error {
         private int error;
         private String error_description;
 
