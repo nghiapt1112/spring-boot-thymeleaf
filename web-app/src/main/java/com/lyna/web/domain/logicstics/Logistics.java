@@ -45,7 +45,7 @@ import java.util.Date;
 )
 @NoArgsConstructor
 public class Logistics extends AbstractEntity {
-    public static final String MAIN_MENU_LOGISTIC_DELIVERY_LIST = "store_order";
+    public static final String MAIN_MENU_LOGISTIC_DELIVERY_LIST = "logistic_delivery";
     @Id
     @Column(name = "logistics_id", nullable = false)
     public String id;

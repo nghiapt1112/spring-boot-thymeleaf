@@ -9,18 +9,18 @@ public class LogisticRequestPage extends RequestPage {
     public StringBuilder buildGroupBy() {
         return new StringBuilder(" GROUP BY ")
                 .append(" ordr.order_id, ")
-                .append(" lg.order_id, ")
+                .append(" lgst.order_id, ")
                 .append(" lgdt.logistics_id ");
     }
 
     @Override
     public StringBuilder buildOrderBy() {
-        return null;
+        return EMPTY_STR;
     }
 
     @Override
     public StringBuilder buildWhere() {
-        return null;
+        return EMPTY_STR;
     }
 
     @Override
@@ -36,19 +36,19 @@ public class LogisticRequestPage extends RequestPage {
                 .append(" SUM(prdc.price)      AS  total_price ,")
 //  Logistic 's fields
                 .append(" pckg.`name`          AS  logigsticPackageName ,")
-                .append(" lgdt.amount          AS  logisticAmount ,")
+                .append(" lgdt.amount          AS  logisticAmount ")
 //  Delivery 's fields
                 ;
     }
 
     @Override
     public StringBuilder buildCount() {
-        return null;
+        return EMPTY_STR;
     }
 
     @Override
     public StringBuilder buildLimit() {
-        return null;
+        return EMPTY_STR;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class LogisticRequestPage extends RequestPage {
                 .append(" INNER JOIN m_post_course       AS pstc  ON ordr.post_course_id  =  pstc.post_course_id ")
                 .append(" INNER JOIN m_store             AS stor  ON pstc.store_id        =  stor.store_id ")
 //   mapping for logisticView
-                .append(" INNER JOIN t_logistics         AS lgst  ON lg.order_id          =  ordr.order_id ")
-                .append(" INNER JOIN t_logistics_detail  AS lgdt  ON lgdt.logistics_id    =  lg.logistics_id ")
+                .append(" INNER JOIN t_logistics         AS lgst  ON lgst.order_id        =  ordr.order_id ")
+                .append(" INNER JOIN t_logistics_detail  AS lgdt  ON lgdt.logistics_id    =  lgst.logistics_id ")
                 .append(" INNER JOIN m_package           AS pckg  ON pckg.pakage_id       =  lgdt.package_id ")
 //  mapping for delivery
 //                .append(" -- INNER JOIN t_delivery AS dl2 ON dl2.order_id = ordr.order_id ")

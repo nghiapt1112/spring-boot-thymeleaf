@@ -66,7 +66,7 @@ public abstract class RequestPage extends AbstractObject {
     /**
      * Query builder
      */
-    protected static final StringBuilder EMPTY_STR = new StringBuilder("");
+    protected static final StringBuilder EMPTY_STR = new StringBuilder();
     protected Map<String, Object> params = new HashMap<>();
 
     public abstract StringBuilder buildGroupBy();
@@ -89,6 +89,7 @@ public abstract class RequestPage extends AbstractObject {
 
     public String getFullQuery() {
         return this.buildSelect()
+                .append(this.buildFrom())
                 .append(this.buildWhere())
                 .append(this.buildGroupBy())
                 .append(this.buildOrderBy())
