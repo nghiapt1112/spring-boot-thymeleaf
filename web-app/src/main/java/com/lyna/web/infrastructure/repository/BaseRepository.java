@@ -29,12 +29,13 @@ public class BaseRepository<E extends AbstractEntity, ID extends Serializable> e
         this.entityManager = em;
     }
 
-    public <T> Class<T> getEntityClass() {
+    public Class<E> getEntityClass() {
         ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
-        Class<T> type = (Class<T>) superClass.getActualTypeArguments()[0];
+        Class<E> type = (Class<E>) superClass.getActualTypeArguments()[0];
         return type;
     }
 
+    @Override
     public <T extends ResponsePage, O extends AbstractObject> T findWithPaging(RequestPage requestPage, Class<T> typedResponse, Class<O> typedQuery) {
         Query tQuery = entityManager.createNativeQuery(requestPage.getFullQuery(), typedQuery);
         return getResponsePage(requestPage, typedResponse, tQuery);

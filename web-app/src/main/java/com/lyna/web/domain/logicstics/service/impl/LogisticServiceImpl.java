@@ -11,15 +11,10 @@ import com.lyna.web.domain.logicstics.service.LogisticService;
 import com.lyna.web.domain.stores.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-/**
- * TODO: move queryBuilder.withRequestPage => requestPage.buildQurery().
- */
 @Service
-@Transactional
 public class LogisticServiceImpl extends BaseService implements LogisticService {
 
     @Autowired
@@ -29,12 +24,12 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
     private NghiaStoreRepository nghiaStoreRepository;
 
     public LogisticResponsePage findLogisticsAndPaging(RequestPage logisticRequestPage) {
-//        LogisticResponsePage responses = this.logisticRepository.findWithPaging(logisticRequestPage, new LogisticQueryBuilder().withRequestPage(logisticRequestPage), LogisticResponsePage.class);
-//        if (Objects.isNull(responses)) {
-//            throw new DomainException("[parse.response.error]");
-//        }
-//        return responses;
-        return null;
+        LogisticResponsePage responses = this.logisticRepository.findWithPaging(logisticRequestPage, LogisticResponsePage.class, "");
+
+        if (Objects.isNull(responses)) {
+            throw new DomainException("[parse.response.error]");
+        }
+        return responses;
     }
 
     @Override
