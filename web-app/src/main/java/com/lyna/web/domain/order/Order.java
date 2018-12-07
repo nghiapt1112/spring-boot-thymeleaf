@@ -24,11 +24,7 @@ public class Order extends AbstractEntity {
     @Column(name = "post_course_id")
     public String postCourseId;
 
-    //@Column(name = "store_id")
-    //public String storeId;
-
     public Order() {
         this.orderId = UUID.randomUUID().toString();
-        //this.storeId = UUID.randomUUID().toString();
     }
 }

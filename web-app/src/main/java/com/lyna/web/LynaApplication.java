@@ -1,7 +1,7 @@
 package com.lyna.web;
 
-import com.lyna.web.domain.order.StorageProperties;
-import com.lyna.web.domain.order.service.StorageService;
+import com.lyna.web.domain.storagefile.StorageProperties;
+import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.service.impl.UserServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

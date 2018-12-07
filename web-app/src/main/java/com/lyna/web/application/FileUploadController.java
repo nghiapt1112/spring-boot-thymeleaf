@@ -1,7 +1,7 @@
 package com.lyna.web.application;
 
 import com.lyna.web.domain.order.exception.StorageFileNotFoundException;
-import com.lyna.web.domain.order.service.StorageService;
+import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

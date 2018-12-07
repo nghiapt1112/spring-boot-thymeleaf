@@ -1,20 +1,20 @@
-package com.lyna.web.domain.order.service.ServiceImp;
+package com.lyna.web.domain.storagefile.service.serviceImp;
 
 
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
-import com.lyna.web.domain.order.StorageProperties;
 import com.lyna.web.domain.order.exception.StorageException;
 import com.lyna.web.domain.order.exception.StorageFileNotFoundException;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.order.repository.OrderRepository;
-import com.lyna.web.domain.order.service.StorageService;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
+import com.lyna.web.domain.storagefile.StorageProperties;
+import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.view.CsvOrder;
@@ -209,15 +209,20 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     private void processUpload(Iterator<CsvOrder> orderIterator) {
+        HashSet<String> setOrder = new HashSet<>();
         while (orderIterator.hasNext()) {
             CsvOrder csvOrder = orderIterator.next();
             String keyOrder = csvOrder.getStore() + "_" + csvOrder.getPost();
-            mapStorePostCode.put(keyOrder, csvOrder);
-            listStoreCode.add(csvOrder.getStore());
-            listProductCode.add(csvOrder.getProduct());
-            ListPost.add(csvOrder.getPost());
-            mapProduct.put(csvOrder.getProduct(), csvOrder);
-            mapStoreOrder.put(csvOrder.getStore(), csvOrder);
+            String skeyCheck = keyOrder + "_" + csvOrder.getProduct();
+            if (!setOrder.contains(skeyCheck)) {
+                setOrder.add(skeyCheck);
+                mapStorePostCode.put(keyOrder, csvOrder);
+                listStoreCode.add(csvOrder.getStore());
+                listProductCode.add(csvOrder.getProduct());
+                ListPost.add(csvOrder.getPost());
+                mapProduct.put(csvOrder.getProduct(), csvOrder);
+                mapStoreOrder.put(csvOrder.getStore(), csvOrder);
+            }
         }
     }
 

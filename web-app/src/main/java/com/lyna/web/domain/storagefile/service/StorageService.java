@@ -1,4 +1,4 @@
-package com.lyna.web.domain.order.service;
+package com.lyna.web.domain.storagefile.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
