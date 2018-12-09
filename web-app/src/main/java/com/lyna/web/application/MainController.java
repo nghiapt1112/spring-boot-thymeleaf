@@ -2,6 +2,7 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.logicstics.LogisticRequestPage;
+import com.lyna.web.domain.logicstics.LogisticResponsePage;
 import com.lyna.web.domain.logicstics.StoreRequestPage;
 import com.lyna.web.domain.logicstics.StoreResponsePage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
@@ -20,7 +21,22 @@ public class MainController extends AbstractCustomController {
     private LogisticService logisticService;
 
     @GetMapping("/mainScreen")
-    public String mainScreen() {
+    public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model) {
+        User currentUser = (User) principal.getPrincipal();
+
+        LogisticRequestPage requestPage = new LogisticRequestPage();
+        requestPage.setTenantId(currentUser.getTenantId());
+        LogisticResponsePage logisticResponsePage = this.logisticService.findLogisticsAndPaging(requestPage);
+
+
+        StoreRequestPage storeRequestPage = new StoreRequestPage();
+        storeRequestPage.setTenantId(currentUser.getTenantId());
+
+        StoreResponsePage orderResponsePage = this.logisticService.findOrdersAndPaging(storeRequestPage);
+
+
+        model.addAttribute("logisticData", logisticResponsePage.getResults());
+        model.addAttribute("orderData", orderResponsePage.getResults());
         return "main/mainMenu";
     }
 

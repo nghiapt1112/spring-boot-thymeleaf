@@ -5,6 +5,8 @@ import com.lyna.web.domain.stores.StoreDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.lyna.web.infrastructure.utils.DateTimeUtils.convertDateToString;
+
 @Data
 @NoArgsConstructor
 public class StoreAggregate extends AbstractObject {
@@ -20,7 +22,7 @@ public class StoreAggregate extends AbstractObject {
 
     public static StoreAggregate fromDTO(StoreDTO el) {
         StoreAggregate aggregate = new StoreAggregate();
-        aggregate.orderDate = el.getOrderDate().toString(); // TODO: convert using DateTimeUtils
+        aggregate.orderDate = convertDateToString(el.getOrderDate());
         aggregate.storeName = el.getStoreName();
         aggregate.postName = el.getPostName();
         aggregate.productName = el.getProductName();

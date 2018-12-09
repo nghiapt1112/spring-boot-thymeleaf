@@ -30,15 +30,17 @@ import java.util.Date;
                 @ConstructorResult(
                         targetClass = LogisticDTO.class,
                         columns = {
+                                @ColumnResult(name = "storeId", type = String.class),
                                 @ColumnResult(name = "orderDate", type = Date.class),
+                                @ColumnResult(name = "totalOrder", type = Integer.class),
                                 @ColumnResult(name = "storeName", type = String.class),
                                 @ColumnResult(name = "postName", type = String.class),
-                                @ColumnResult(name = "orderNumber", type = String.class),
+                                @ColumnResult(name = "courseName", type = String.class),
                                 @ColumnResult(name = "amount", type = BigDecimal.class),
-                                @ColumnResult(name = "packaggeName", type = String.class),
-                                @ColumnResult(name = "totalWeigh", type = String.class),
-                                @ColumnResult(name = "totalCapacity", type = String.class),
-                                @ColumnResult(name = "courseName", type = String.class)
+                                @ColumnResult(name = "logisticPackageName", type = String.class),
+                                @ColumnResult(name = "logisticAmount", type = String.class),
+                                @ColumnResult(name = "deliveryAmount", type = String.class),
+                                @ColumnResult(name = "deliveryPackageName", type = String.class)
                         }
                 )
         }

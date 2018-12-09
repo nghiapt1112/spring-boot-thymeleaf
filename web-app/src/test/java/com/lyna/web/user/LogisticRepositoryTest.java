@@ -28,7 +28,7 @@ public class LogisticRepositoryTest extends LynaApplicationTests {
         StoreResponsePage response = this.logisticService.findOrdersAndPaging(requestPage);
 
         try {
-            Files.write(Paths.get("/mnt/ng-data/PROJECT/lyna/lyna/nghia.log"), JsonUtils.toBytes(response.rawResults));
+            Files.write(Paths.get("/home/nghiapt/Desktop/order.log"), JsonUtils.toBytes(response.rawResults));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,8 @@ public class LogisticRepositoryTest extends LynaApplicationTests {
         LogisticResponsePage response = this.logisticService.findLogisticsAndPaging(requestPage);
 
         try {
-            Files.write(Paths.get("/mnt/ng-data/PROJECT/lyna/lyna/nghia.log"), JsonUtils.toBytes(response.rawResults));
+            Files.write(Paths.get("/home/nghiapt/Desktop/logistic-raw.log"), JsonUtils.toBytes(response.rawResults));
+            Files.write(Paths.get("/home/nghiapt/Desktop/logistic-result.log"), JsonUtils.toBytes(response.getResults()));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -3,8 +3,6 @@ package com.lyna.commons.infrustructure.object;
 import java.util.List;
 
 public abstract class ResponsePage<E extends AbstractObject, O extends AbstractObject> extends AbstractObject {
-    // TODO: => nghiapT delete this field
-    public List<E> rawResults;
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
@@ -17,7 +15,6 @@ public abstract class ResponsePage<E extends AbstractObject, O extends AbstractO
     public void withData(int noOfRowInPage, List<E> rawResults, long totalRecords) {
         this.noOfRowInPage = noOfRowInPage;
         this.results = parseResult(rawResults);
-        this.rawResults = rawResults;
         this.totalRecords = totalRecords;
         this.totalPage = (int) Math.ceil((float) totalRecords / noOfRowInPage);
     }

@@ -10,14 +10,35 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class LogisticDTO extends AbstractObject {
+
+    private String storeId;
     private Date orderDate;
+    private Integer totalOrder;
     private String storeName;
     private String postName;
-    private String orderNumber;
-    private BigDecimal amount;
-    private String packaggeName; // cai nay phai tra ve 1 list, loop => list de hien thi tren table_tile
-    private String totalWeigh;
-    private String totalCapacity;
     private String courseName;
+    private BigDecimal amount;
 
+    private String logisticPackageName;
+    private String logisticAmount;
+
+    private String deliveryAmount;
+    private String deliveryPackageName;
+
+
+    public LogisticDTO(String storeId, Date orderDate, Integer totalOrder, String storeName, String postName,
+                       String courseName, BigDecimal amount, String logisticPackageName, String logisticAmount,
+                       String deliveryAmount, String deliveryPackageName) {
+        this.storeId = storeId;
+        this.orderDate = orderDate;
+        this.totalOrder = totalOrder;
+        this.storeName = storeName;
+        this.postName = postName;
+        this.courseName = courseName;
+        this.amount = amount;
+        this.logisticPackageName = logisticPackageName;
+        this.logisticAmount = logisticAmount;
+        this.deliveryAmount = deliveryAmount;
+        this.deliveryPackageName = deliveryPackageName;
+    }
 }
