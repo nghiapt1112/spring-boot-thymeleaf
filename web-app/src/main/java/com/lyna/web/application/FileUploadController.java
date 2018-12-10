@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,16 +53,19 @@ public class FileUploadController {
     }
 
     @PostMapping("/file")
-    //@RequestMapping(value = "/file", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<Object> handleFileUpload(@RequestParam("file") MultipartFile file, UsernamePasswordAuthenticationToken principal) throws IOException {//
+    public ResponseEntity<Object> handleFileUpload(Model model, @RequestParam("file") MultipartFile file,
+                                                   UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        Map<String, String> mapError = storageService.store(tenantId, file);
-        /*redirectAttrs.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
-        redirectAttrs.addFlashAttribute("error", mapError);*/
-        return new ResponseEntity<>("File Uploaded Successfully.", HttpStatus.OK);
-        //return "redirect:/mainScreen";
+        List<String> mapError = storageService.store(tenantId, file);
+        List<String> results = new ArrayList<>();
+        results.add("ファイルは成功にアップロードされた");
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

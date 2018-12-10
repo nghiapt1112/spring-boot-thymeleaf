@@ -15,25 +15,27 @@ public class CsvOrder {
     @CsvBindByName
     private String name;
 
-    @CsvBindByName(column = "日付/ Ngày tháng", required = true)
+    @CsvBindByName(column = "日付")
     private String orderDate;
 
-    @CsvBindByName(column = "店舗/ Store")
+    @CsvBindByName(column = "店舗")
     private String store;
 
-    @CsvBindByName(column = "便/ Post")
+    @CsvBindByName(column = "便")
     private String post;
 
-    @CsvBindByName(column = "商品/ Product")
+    @CsvBindByName(column = "商品")
     private String product;
 
-    @CsvBindByName(column = "個数/ Số lượng")
+    @CsvBindByName(column = "個数")
     private String quantity;
 
-    @CsvBindByName(column = "大分類/ Phân loại lớn")
+    @CsvBindByName(column = "大分類")
     private String category1;
-    @CsvBindByName(column = "中分類/ Phân loại vừa")
+
+    @CsvBindByName(column = "中分類")
     private String category2;
-    @CsvBindByName(column = "小分類/ Phân loại nhỏ")
+
+    @CsvBindByName(column = "小分類")
     private String category3;
 }
