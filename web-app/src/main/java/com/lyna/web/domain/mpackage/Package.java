@@ -3,10 +3,7 @@ package com.lyna.web.domain.mpackage;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
-import com.lyna.web.domain.postCourse.PostCourse;
-import com.lyna.web.domain.user.UserStoreAuthority;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,10 +15,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

@@ -23,7 +23,7 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
 
     @Override
     @Transactional
-    public void updatePostCourse(PostCourse postCourse) throws DomainException {
+    public void update(PostCourse postCourse) throws DomainException {
         try {
             postCourseRepository.save(postCourse);
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
     }
 
     @Override
-    public List<PostCourse> findAllByStoreIdAndTenantId(String storeId, int tenantId) {
-        return postCourseRepository.findAllByStoreIdAndTenantId(storeId, tenantId);
+    public List<PostCourse> findAllByStoreId(String storeId) {
+        return postCourseRepository.findAllByStoreId(storeId);
     }
 }

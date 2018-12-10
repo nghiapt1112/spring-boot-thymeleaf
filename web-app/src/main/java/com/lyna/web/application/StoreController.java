@@ -51,7 +51,7 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = "/create")
     @IsAdmin
-    public String registerStore(Model model, @ModelAttribute("store") Store store) {
+    public String createStore(Model model, @ModelAttribute("store") Store store) {
         List<PostCourse> postCourses = new ArrayList<PostCourse>();
         postCourses.add(new PostCourse());
         store.setPostCourses(postCourses);
@@ -60,14 +60,9 @@ public class StoreController extends AbstractCustomController {
     }
 
     @PostMapping(value = "/create")
-    public String createStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
+    public String create(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result, RedirectAttributes redirect) {
-        if (Objects.isNull(store)) {
-            model.addAttribute("store", store);
-            return STORE_REGISTER_PAGE;
-        }
-
-        if (result.hasErrors()) {
+        if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
             return STORE_REGISTER_PAGE;
         }
@@ -79,24 +74,19 @@ public class StoreController extends AbstractCustomController {
             return STORE_REGISTER_PAGE;
         }
 
-        storeService.createStore(store, principal);
+        storeService.create(store, principal);
 
         return REDIRECT_STORE_LIST_PAGE;
 
     }
 
     @PostMapping(value = "/update")
-    public String updateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
+    public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result, RedirectAttributes redirect) {
 
-        if (Objects.isNull(store)) {
+        if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
-            return STORE_EDIT_PAGE;
-        }
-
-        if (result.hasErrors()) {
-            model.addAttribute("store", store);
-            return STORE_EDIT_PAGE;
+            return STORE_REGISTER_PAGE;
         }
 
         Store existedStore = storeService.findOneByCode(store.getCode());
@@ -107,14 +97,14 @@ public class StoreController extends AbstractCustomController {
         }
 
 
-        storeService.updateStore(store, principal);
+        storeService.update(store, principal);
 
         return REDIRECT_STORE_LIST_PAGE;
 
     }
 
     @GetMapping(value = "/update/{storeId}")
-    public String editStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId, Model model) {
+    public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId, Model model) {
         Store store = storeService.findOneByStoreId(storeId);
         codeBeforUpdate = store.getCode();
         model.addAttribute("store", store);

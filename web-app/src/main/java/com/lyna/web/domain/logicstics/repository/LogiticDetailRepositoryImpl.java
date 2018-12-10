@@ -24,12 +24,12 @@ public class LogiticDetailRepositoryImpl extends BaseRepository<LogiticsDetail, 
     @Override
     public boolean deleteByPackageIds(List<String> packageIds) throws DomainException {
         try {
-            String query = "DELETE FROM LogiticsDetail l WHERE l.packageId in (:listPackageId)";
-            entityManager.createQuery(query).setParameter("listPackageId", packageIds).executeUpdate();
+            String query = "DELETE FROM LogiticsDetail l WHERE l.packageId in (:packageIds)";
+            entityManager.createQuery(query).setParameter("packageIds", packageIds).executeUpdate();
             return true;
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            throw e;
+            return false;
         }
     }
 }

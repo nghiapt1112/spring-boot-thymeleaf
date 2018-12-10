@@ -25,8 +25,8 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
     @Override
     public boolean deleteByPackageIds(List<String> packageIds) throws DomainException {
         try {
-            String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:listPackageId)";
-            entityManager.createQuery(query).setParameter("listPackageId", packageIds).executeUpdate();
+            String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:packageIds)";
+            entityManager.createQuery(query).setParameter("packageIds", packageIds).executeUpdate();
             return true;
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());

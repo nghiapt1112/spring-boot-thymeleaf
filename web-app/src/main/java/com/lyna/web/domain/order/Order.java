@@ -4,7 +4,6 @@ import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -108,7 +108,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Transactional
     @Override
-    public void createStore(Store store, UsernamePasswordAuthenticationToken principal) throws DomainException {
+    public void create(Store store, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
         store.setCreateDate(date);
@@ -134,10 +134,10 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Transactional
     @Override
-    public void updateStore(Store store, UsernamePasswordAuthenticationToken principal) {
+    public void update(Store store, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
-        List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(store.getStoreId(), store.getTenantId());
+        List<PostCourse> postCourses = postCourseService.findAllByStoreId(store.getStoreId());
         List<PostCourse> postCoursesUpdate = store.getPostCourses();
         for (PostCourse postCourse : postCoursesUpdate) {
             if (!postCourses.contains(postCourse)) {

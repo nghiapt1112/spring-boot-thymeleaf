@@ -21,11 +21,10 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> i
     }
 
     @Override
-    public List<PostCourse> findAllByStoreIdAndTenantId(String storeId, int tenantId) {
+    public List<PostCourse> findAllByStoreId(String storeId) {
         return entityManager
-                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId AND p.tenantId = :tenantId", PostCourse.class)
+                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId", PostCourse.class)
                 .setParameter("storeId", storeId)
-                .setParameter("tenantId", tenantId)
                 .getResultList();
     }
 }

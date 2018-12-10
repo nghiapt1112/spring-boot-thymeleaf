@@ -41,47 +41,35 @@ public class PackageController extends AbstractCustomController {
 
 
     @GetMapping(value = "/create")
-    public String registerPackage(Model model) {
+    public String createPackage(Model model) {
         Package mpackage = new Package();
         model.addAttribute("package", mpackage);
         return "package/registerPackage";
     }
 
     @PostMapping(value = "/create")
-    public String savePackage(UsernamePasswordAuthenticationToken principal,
-                              Model model, @Valid @ModelAttribute("package") Package mpackage,
-                              BindingResult result, RedirectAttributes redirect) {
-        if (Objects.isNull(mpackage)) {
-
+    public String create(UsernamePasswordAuthenticationToken principal,
+                         Model model, @Valid @ModelAttribute("package") Package mpackage,
+                         BindingResult result, RedirectAttributes redirect) {
+        if (Objects.isNull(mpackage) || result.hasErrors()) {
             model.addAttribute("package", mpackage);
-            return "package/registerPackage";
+            return "package/editPackage";
         }
 
-        if (result.hasErrors()) {
-
-            model.addAttribute("package", mpackage);
-            return "package/registerPackage";
-        }
-
-        packageService.createPackage(mpackage, principal);
+        packageService.create(mpackage, principal);
         return "redirect:/package/list";
     }
 
     @PostMapping(value = "/update")
     @IsAdmin
-    public String updatePackage(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("package")
+    public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("package")
             Package mpackage, BindingResult result, RedirectAttributes redirect) {
-        if (Objects.isNull(mpackage)) {
-            model.addAttribute("package", mpackage);
-            return "package/editPackage";
-        }
-        if (result.hasErrors()) {
+        if (Objects.isNull(mpackage) || result.hasErrors()) {
             model.addAttribute("package", mpackage);
             return "package/editPackage";
         }
 
-
-        packageService.updatePackage(mpackage, principal);
+        packageService.update(mpackage, principal);
 
         return "redirect:/package/list";
 
@@ -107,7 +95,7 @@ public class PackageController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/update/{packageId}")
-    public String editPackage(@PathVariable("packageId") String packageId, Model model) {
+    public String updatePackage(@PathVariable("packageId") String packageId, Model model) {
         model.addAttribute("package", packageService.findOneByPakageId(packageId));
         return "package/editPackage";
     }

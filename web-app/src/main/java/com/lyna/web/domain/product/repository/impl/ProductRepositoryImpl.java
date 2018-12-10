@@ -63,7 +63,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public List<Product> findAll(int tenantId) throws DomainException {
+    public List<Product> findByTenantId(int tenantId) throws DomainException {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
                 .setParameter("tenantId", tenantId)

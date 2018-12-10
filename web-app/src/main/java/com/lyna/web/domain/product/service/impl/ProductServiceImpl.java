@@ -24,7 +24,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public void updateProduct(Product product, UsernamePasswordAuthenticationToken principal) {
+    public void update(Product product, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
         product.setUpdateDate(date);
@@ -40,12 +40,12 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     public List<Product> findByTenantId(int tenantId) {
-        return productRepository.findAll(tenantId);
+        return productRepository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public void createProduct(Product product, UsernamePasswordAuthenticationToken principal) throws DomainException {
+    public void create(Product product, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
 

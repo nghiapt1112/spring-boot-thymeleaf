@@ -41,26 +41,20 @@ public class ProductController extends AbstractCustomController {
     private String codeBeforeUpdate;
 
     @GetMapping(value = "/create")
-    public String registerProduct(Model model) {
+    public String createProduct(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
         return "product/registerProduct";
     }
 
     @PostMapping(value = "/create")
-    public String saveProduct(UsernamePasswordAuthenticationToken principal,
-                              Model model, @Valid @ModelAttribute("product") Product product,
-                              BindingResult result, RedirectAttributes redirect) {
+    public String create(UsernamePasswordAuthenticationToken principal,
+                         Model model, @Valid @ModelAttribute("product") Product product,
+                         BindingResult result, RedirectAttributes redirect) {
 
-        System.out.println(product.getPrice() + product.getCode());
-        if (Objects.isNull(product)) {
+        if (Objects.isNull(product) || result.hasErrors()) {
             model.addAttribute("product", product);
-            return "product/registerProduct";
-        }
-
-        if (result.hasErrors()) {
-            model.addAttribute("product", product);
-            return "product/registerProduct";
+            return "product/editProduct";
         }
 
         Product existedProduct = productService.findOneByCode(product.getCode());
@@ -70,24 +64,19 @@ public class ProductController extends AbstractCustomController {
             return "product/registerProduct";
         }
 
-        productService.createProduct(product, principal);
+        productService.create(product, principal);
         return "redirect:/product/list";
     }
 
     @PostMapping(value = "/update")
     @IsAdmin
-    public String updateProduct(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("product")
+    public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("product")
             Product product, BindingResult result, RedirectAttributes redirect) {
 
-        if (Objects.isNull(product)) {
+        if (Objects.isNull(product) || result.hasErrors()) {
             model.addAttribute("product", product);
             return "product/editProduct";
         }
-        if (result.hasErrors()) {
-            model.addAttribute("product", product);
-            return "product/editProduct";
-        }
-
 
         Product existedProduct = productService.findOneByCode(product.getCode());
         if (!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(existedProduct)) {
@@ -97,7 +86,7 @@ public class ProductController extends AbstractCustomController {
         }
 
 
-        productService.updateProduct(product, principal);
+        productService.update(product, principal);
 
         return "redirect:/product/list";
 
@@ -114,7 +103,7 @@ public class ProductController extends AbstractCustomController {
     public @ResponseBody
     String deleteByProductIds(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
         if (!Objects.isNull(listProductId) && !CollectionUtils.isEmpty(listProductId)) {
-            orderDetailService.deletebyProductId(listProductId);
+            orderDetailService.deleteByProductIds(listProductId);
             productService.deleteByProductIds(listProductId);
             return "true";
         }
@@ -122,7 +111,7 @@ public class ProductController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/update/{productId}")
-    public String editPackage(@PathVariable("productId") String productId, Model model) {
+    public String updateProduct(@PathVariable("productId") String productId, Model model) {
         Product product = productService.findOneByProductId(productId);
         codeBeforeUpdate = product.getCode();
         model.addAttribute("product", product);

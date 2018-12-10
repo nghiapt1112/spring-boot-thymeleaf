@@ -2,7 +2,6 @@ package com.lyna.web.domain.order;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +30,7 @@ public class OrderDetail extends AbstractEntity {
     @Column(name = "product_id", nullable = false)
     public String productId;
 
-    public OrderDetail(){
+    public OrderDetail() {
         this.orderDetailId = UUID.randomUUID().toString();
     }
 

@@ -31,19 +31,19 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
                     .getSingleResult();
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw e;
+            return null;
         }
     }
 
     @Override
     public boolean deleteByPackageIds(List<String> packageIds) throws DomainException {
         try {
-            String query = "DELETE FROM Package p WHERE p.packageId in (:listPackageId)";
-            entityManager.createQuery(query).setParameter("listPackageId", packageIds).executeUpdate();
+            String query = "DELETE FROM Package p WHERE p.packageId in (:packageIds)";
+            entityManager.createQuery(query).setParameter("packageIds", packageIds).executeUpdate();
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw e;
+            return false;
         }
     }
 

@@ -7,8 +7,8 @@ import java.util.List;
 public interface PostCourseService {
 
 
-    void updatePostCourse(PostCourse postCourse);
+    void update(PostCourse postCourse);
 
-    List<PostCourse> findAllByStoreIdAndTenantId(String storeId, int tenantId);
+    List<PostCourse> findAllByStoreId(String storeId);
 
 }

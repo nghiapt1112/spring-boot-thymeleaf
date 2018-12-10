@@ -25,18 +25,23 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     private PackageRepository packageRepository;
 
     @Override
-    public void updatePackage(Package mpackage, UsernamePasswordAuthenticationToken principal) {
+    public void update(Package mpackage, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
         mpackage.setUpdateDate(date);
         mpackage.setUpdateUser(currentUser.getId());
         mpackage.setTenantId(currentUser.getTenantId());
-        packageRepository.save(mpackage);
+        try {
+            packageRepository.save(mpackage);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 
     @Override
     @Transactional
-    public void createPackage(Package mpackage, UsernamePasswordAuthenticationToken principal) throws DomainException {
+    public void create(Package mpackage, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
         mpackage.setCreateDate(date);

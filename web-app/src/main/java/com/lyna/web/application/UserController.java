@@ -18,7 +18,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -77,7 +83,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/profile"})
     @IsAdmin
-    public String updateUserById(Model model , UsernamePasswordAuthenticationToken principal) {
+    public String updateUserById(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), currentUser.getId()));
 

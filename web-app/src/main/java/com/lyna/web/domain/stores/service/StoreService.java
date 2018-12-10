@@ -21,9 +21,9 @@ public interface StoreService {
 
     String deleteStore(String storeIds);
 
-    void createStore(Store store, UsernamePasswordAuthenticationToken principal);
+    void create(Store store, UsernamePasswordAuthenticationToken principal);
 
-    void updateStore(Store store, UsernamePasswordAuthenticationToken principal);
+    void update(Store store, UsernamePasswordAuthenticationToken principal);
 
     Store findOneByStoreId(String code);
 
