@@ -90,13 +90,13 @@ public class PackageController extends AbstractCustomController {
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        model.addAttribute("packages", packageService.findAll(currentUser.getTenantId()));
+        model.addAttribute("packages", packageService.findByTenantId(currentUser.getTenantId()));
         return "package/listPackage";
     }
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deletePackage(@RequestParam(value = "arrayPackageId[]") List<String> listPackageId) {
+    String deleteByPackageIds(@RequestParam(value = "arrayPackageId[]") List<String> listPackageId) {
         if (!Objects.isNull(listPackageId) && !CollectionUtils.isEmpty(listPackageId)) {
             deliveryDetailService.deleteByPackageIds(listPackageId);
             logiticDetailService.deleteByPackageIds(listPackageId);

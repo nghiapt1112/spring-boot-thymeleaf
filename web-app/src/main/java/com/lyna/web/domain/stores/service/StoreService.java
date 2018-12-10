@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import java.util.List;
 
 public interface StoreService {
-    List<Store> findAll(int tenantId);
+    List<Store> findByTenantId(int tenantId);
 
     List<Store> getStoreList(int principal, String search);
 

@@ -106,16 +106,16 @@ public class ProductController extends AbstractCustomController {
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        model.addAttribute("products", productService.findAll(currentUser.getTenantId()));
+        model.addAttribute("products", productService.findByTenantId(currentUser.getTenantId()));
         return "product/listProduct";
     }
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deletePackage(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
+    String deleteByProductIds(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
         if (!Objects.isNull(listProductId) && !CollectionUtils.isEmpty(listProductId)) {
             orderDetailService.deletebyProductId(listProductId);
-            productService.deletebyProductId(listProductId);
+            productService.deleteByProductIds(listProductId);
             return "true";
         }
         return "false";

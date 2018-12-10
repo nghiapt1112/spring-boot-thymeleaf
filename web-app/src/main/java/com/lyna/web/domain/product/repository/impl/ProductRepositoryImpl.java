@@ -38,10 +38,10 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public boolean deletebyProductId(List<String> listProductId) throws DomainException {
+    public boolean deleteByProductIds(List<String> productIds) throws DomainException {
         try {
             String query = "DELETE FROM Product p WHERE p.productId in (:listProductId)";
-            entityManager.createQuery(query).setParameter("listProductId", listProductId).executeUpdate();
+            entityManager.createQuery(query).setParameter("listProductId", productIds).executeUpdate();
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -39,7 +39,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public List<Product> findAll(int tenantId) {
+    public List<Product> findByTenantId(int tenantId) {
         return productRepository.findAll(tenantId);
     }
 
@@ -61,8 +61,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public boolean deletebyProductId(List<String> listProductId) {
-        return productRepository.deletebyProductId(listProductId);
+    public boolean deleteByProductIds(List<String> productIds) {
+        return productRepository.deleteByProductIds(productIds);
     }
 
     @Override

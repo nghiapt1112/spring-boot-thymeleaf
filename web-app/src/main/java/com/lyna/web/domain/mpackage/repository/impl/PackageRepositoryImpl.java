@@ -48,7 +48,7 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
     }
 
     @Override
-    public List<Package> findAll(int tenantId) {
+    public List<Package> findByTenantId(int tenantId) {
         return entityManager
                 .createQuery("SELECT p FROM Package p WHERE p.tenantId=:tenantId order by p.name", Package.class)
                 .setParameter("tenantId", tenantId)

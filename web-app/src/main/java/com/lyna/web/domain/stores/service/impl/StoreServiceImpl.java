@@ -41,9 +41,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     @Autowired
     private UserStoreAuthorityRepository userStoreAuthorityRepository;
 
-    public List<Store> findAll(int tenantId) {
+    public List<Store> findByTenantId(int tenantId) {
         //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
-        return this.storeRepository.findAll(tenantId);
+        return this.storeRepository.findByTenantId(tenantId);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Override
     public List<Store> getStoreList(int tenantId) {
-        return storeRepository.findAll(tenantId);
+        return storeRepository.findByTenantId(tenantId);
     }
 
     @Override

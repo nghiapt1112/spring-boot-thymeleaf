@@ -8,9 +8,10 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findOneByProductId(String productId);
 
-    boolean deletebyProductId(List<String> listProductId);
+    boolean deleteByProductIds(List<String> productIds);
 
     Product findOneByCode(String code);
 
-    List<Product> findAll(int tenantId);
+    List<Product> findByTenantId(int tenantId);
 }
+

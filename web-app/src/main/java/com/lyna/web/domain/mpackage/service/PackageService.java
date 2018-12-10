@@ -13,7 +13,7 @@ public interface PackageService {
 
        void updatePackage(Package mpackage, UsernamePasswordAuthenticationToken principal);
        Package findOneByPakageId(String pakageId);
-       List<Package> findAll(int tenantId);
+       List<Package> findByTenantId(int tenantId);
        void createPackage(Package mpackage, UsernamePasswordAuthenticationToken principal);
        boolean deleteByPackageIds(List<String> packageIds);
  }

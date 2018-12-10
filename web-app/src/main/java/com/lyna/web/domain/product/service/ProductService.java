@@ -9,8 +9,8 @@ public interface ProductService {
     void updateProduct(Product product, UsernamePasswordAuthenticationToken principal);
     Product findOneByProductId(String productId);
 
-    List<Product> findAll(int tenantId);
+    List<Product> findByTenantId(int tenantId);
     void createProduct(Product product, UsernamePasswordAuthenticationToken principal);
-    boolean deletebyProductId(List<String> listProductId);
+    boolean deleteByProductIds(List<String> productIds);
     Product findOneByCode(String code);
 }

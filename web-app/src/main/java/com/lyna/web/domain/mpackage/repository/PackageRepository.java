@@ -10,5 +10,5 @@ import java.util.List;
 public interface PackageRepository extends JpaRepository<Package, Long> {
     Package findOneByPackageId(String packageId);
     boolean deleteByPackageIds(List<String> packageIds);
-    List<Package> findAll(int tenantId);
+    List<Package> findByTenantId(int tenantId);
 }

@@ -57,8 +57,8 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     }
 
     @Override
-    public List<Package> findAll(int tenantId) {
-        return packageRepository.findAll(tenantId);
+    public List<Package> findByTenantId(int tenantId) {
+        return packageRepository.findByTenantId(tenantId);
     }
 
     @Override

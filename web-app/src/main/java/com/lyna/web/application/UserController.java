@@ -57,7 +57,7 @@ public class UserController extends AbstractCustomController {
     public String registerUserPage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate userRegisterAggregate = new UserAggregate();
-        userRegisterAggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
+        userRegisterAggregate.updateRolePerStore(storeService.findByTenantId(currentUser.getTenantId()));
 
         model.addAttribute("userPerRoles", userRegisterAggregate.getRolePerStore());
         model.addAttribute("userRegisterAggregate", userRegisterAggregate);
