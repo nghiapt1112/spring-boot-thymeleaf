@@ -13,6 +13,8 @@ public interface StorageService {
 
     List<String> store(int tenantId, MultipartFile file);
 
+    List<String> storeDelivery(int tenantId, MultipartFile file);
+
     Stream<Path> loadAll();
 
     Path load(String filename);

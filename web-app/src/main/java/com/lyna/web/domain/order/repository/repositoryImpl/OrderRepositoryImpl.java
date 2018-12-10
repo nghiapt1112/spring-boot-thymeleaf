@@ -5,6 +5,7 @@ import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.exception.StorageException;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -37,8 +38,18 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
                 .withType(CsvOrder.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
-        Iterator<CsvOrder> csvUserIterator = csvToBean.iterator();
-        return csvUserIterator;
+        Iterator<CsvOrder> csvOrderIterator = csvToBean.iterator();
+        return csvOrderIterator;
+    }
+
+    @Override
+    public Iterator<CsvDelivery> getMapDelivery(Reader targetReader) {
+        CsvToBean<CsvDelivery> csvToBean = new CsvToBeanBuilder(targetReader)
+                .withType(CsvOrder.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<CsvDelivery> csvDeliveryIterator = csvToBean.iterator();
+        return csvDeliveryIterator;
     }
 
     @Override
