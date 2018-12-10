@@ -81,7 +81,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-    public List<String> store(int tenantId, MultipartFile file) {
+    public List<String> store(int tenantId, MultipartFile file) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         try {
@@ -141,7 +141,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("保存されたファイルの読み込みは失敗した " + filename, e);
         }
     }
 

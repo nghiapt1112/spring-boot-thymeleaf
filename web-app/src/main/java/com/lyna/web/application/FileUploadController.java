@@ -61,7 +61,7 @@ public class FileUploadController {
             model.addAttribute("messageError", mapError);
             return new ResponseEntity<>(mapError, HttpStatus.OK);
         }
-        return new ResponseEntity<>("File Uploaded Successfully.", HttpStatus.OK);
+        return new ResponseEntity<>("ファイルは成功にアップロードされた", HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
