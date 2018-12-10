@@ -1,0 +1,4 @@
+.append(" GROUP BY
+.append(" o.order_id,
+.append(" lg.order_id,
+.append(" lgdt.logistics_id

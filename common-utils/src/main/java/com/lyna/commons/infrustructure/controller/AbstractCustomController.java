@@ -29,27 +29,27 @@ public class AbstractCustomController {
     @Autowired
     private BaseValidator baseValidator;
 
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder) {
-//        if (binder.getTarget() instanceof AbstractObject) {
-//            boolean included = false;
-//            for (Validator validator : binder.getValidators()) {
-//                if (validator instanceof BaseValidator) {
-//                    included = true;
-//                    break;
-//                }
-//            }
-//            if (!included) {
-//                binder.addValidators(baseValidator);
-//            }
-//        }
-//
-////        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(PATTERN);
-////        simpleDateFormat.setLenient(false);
-////        binder.registerCustomEditor( Date.class, new CustomDateEditor( simpleDateFormat,false));
-////        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(PATTERN), true));
-//
-//    }
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        if (binder.getTarget() instanceof AbstractObject) {
+            boolean included = false;
+            for (Validator validator : binder.getValidators()) {
+                if (validator instanceof BaseValidator) {
+                    included = true;
+                    break;
+                }
+            }
+            if (!included) {
+                binder.addValidators(baseValidator);
+            }
+        }
+
+//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(PATTERN);
+//        simpleDateFormat.setLenient(false);
+//        binder.registerCustomEditor( Date.class, new CustomDateEditor( simpleDateFormat,false));
+//        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(PATTERN), true));
+
+    }
 
 
     @ExceptionHandler

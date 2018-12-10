@@ -90,7 +90,7 @@ public class UserController extends AbstractCustomController {
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
-        aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
+//        aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
 
         model.addAttribute("aggregate", aggregate);
         return "user/user-update";
@@ -168,12 +168,4 @@ public class UserController extends AbstractCustomController {
         return ajaxResponse;
     }
 
-
-    @ModelAttribute(value = "currentUser")
-    public User currentUser(UsernamePasswordAuthenticationToken principal) {
-        if (principal == null || principal.getPrincipal() == null) {
-            return null;
-        }
-        return (User) principal.getPrincipal();
-    }
 }

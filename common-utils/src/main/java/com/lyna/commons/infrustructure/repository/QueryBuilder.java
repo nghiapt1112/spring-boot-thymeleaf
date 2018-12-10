@@ -33,6 +33,14 @@ public abstract class QueryBuilder {
         return params;
     }
 
+    public String getFullQuery() {
+        return this.buildSelect()
+                .concat(this.buildWhere())
+                .concat(this.buildGroupBy())
+                .concat(this.buildOrderBy())
+                .concat(this.buildLimit());
+    }
+
     public void setRequestPage(RequestPage requestPage) {
         this.requestPage = requestPage;
     }

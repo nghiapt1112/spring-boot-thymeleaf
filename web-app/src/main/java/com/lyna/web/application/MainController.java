@@ -2,6 +2,7 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.logicstics.LogisticRequestPage;
+import com.lyna.web.domain.logicstics.LogisticResponsePage;
 import com.lyna.web.domain.logicstics.StoreRequestPage;
 import com.lyna.web.domain.logicstics.StoreResponsePage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController extends AbstractCustomController {
@@ -19,7 +21,22 @@ public class MainController extends AbstractCustomController {
     private LogisticService logisticService;
 
     @GetMapping("/mainScreen")
-    public String mainScreen() {
+    public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model) {
+        User currentUser = (User) principal.getPrincipal();
+
+        LogisticRequestPage requestPage = new LogisticRequestPage();
+        requestPage.setTenantId(currentUser.getTenantId());
+        LogisticResponsePage logisticResponsePage = this.logisticService.findLogisticsAndPaging(requestPage);
+
+
+        StoreRequestPage storeRequestPage = new StoreRequestPage();
+        storeRequestPage.setTenantId(currentUser.getTenantId());
+
+        StoreResponsePage orderResponsePage = this.logisticService.findOrdersAndPaging(storeRequestPage);
+
+
+        model.addAttribute("logisticData", logisticResponsePage.getResults());
+        model.addAttribute("orderData", orderResponsePage.getResults());
         return "main/mainMenu";
     }
 
@@ -33,8 +50,13 @@ public class MainController extends AbstractCustomController {
     }
 
     @GetMapping(value = {"/order", "/order/"})
-    public String findOrders(UsernamePasswordAuthenticationToken principal, Model model) {
+    public String findOrdersWithPaging(Model model, UsernamePasswordAuthenticationToken principal,
+                                       @RequestParam(required = false, defaultValue = "1") Integer cp,
+                                       @RequestParam(required = false, defaultValue = "10") Integer limit,
+                                       @RequestParam(required = false) String search) {
+
         User currentUser = (User) principal.getPrincipal();
+
         StoreRequestPage requestPage = new StoreRequestPage();
         requestPage.setTenantId(currentUser.getTenantId());
 

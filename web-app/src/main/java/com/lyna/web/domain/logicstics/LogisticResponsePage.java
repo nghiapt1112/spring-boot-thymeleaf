@@ -3,25 +3,18 @@ package com.lyna.web.domain.logicstics;
 import com.lyna.commons.infrustructure.object.ResponsePage;
 import com.lyna.web.domain.view.LogisticAggregate;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class LogisticResponsePage extends ResponsePage<Logistics, LogisticAggregate> {
+public class LogisticResponsePage extends ResponsePage<LogisticDTO, LogisticAggregate> {
     @Override
-    protected List<LogisticAggregate> parseResult(List<Logistics> rawResults) {
-        List<LogisticAggregate> aggregates = new ArrayList<>();
-
-        IntStream.range(1, 100)
+    protected List<LogisticAggregate> parseResult(List<LogisticDTO> rawResults) {
+        return rawResults.stream()
                 .parallel()
-                .forEach(el -> {
-                    aggregates.add(new LogisticAggregate().initTestData());
-                });
-        return aggregates;
+                .map(LogisticAggregate::fromLogisticDTO)
+                .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<LogisticAggregate> getResults() {
-//        return null;
-//    }
 }
