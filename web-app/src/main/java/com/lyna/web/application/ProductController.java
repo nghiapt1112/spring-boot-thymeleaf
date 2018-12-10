@@ -103,7 +103,7 @@ public class ProductController extends AbstractCustomController {
     public @ResponseBody
     String deleteByProductIds(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
         if (!Objects.isNull(listProductId) && !CollectionUtils.isEmpty(listProductId)) {
-            orderDetailService.deleteByProductIds(listProductId);
+            orderDetailService.deleteByProductId(listProductId);
             productService.deleteByProductIds(listProductId);
             return "true";
         }

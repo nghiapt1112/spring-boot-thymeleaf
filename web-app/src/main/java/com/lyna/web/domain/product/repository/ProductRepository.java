@@ -13,5 +13,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findOneByCode(String code);
 
     List<Product> findByTenantId(int tenantId);
+
+    List<String> getListProductCodeByProductCode(int tenantId, List<String> products);
+
+    List<Product> getProductsByProductCode(int tenantId, List<String> products);
+
 }
+
 

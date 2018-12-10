@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,6 +43,30 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
                 .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
                 .setParameter("tenantId", tenantId)
                 .getResultList();
+    }
+
+    @Override
+    public List<String> getAllByCode(int tenantId, List<String> storeCodes) {
+        if (storeCodes.size() > 0) {
+            Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", String.class);
+            query.setParameter("tenantId", tenantId)
+                    .setParameter("code", storeCodes);
+            return query.getResultList();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
+        try {
+            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
+            query.setParameter("tenantId", tenantId)
+                    .setParameter("storeCodes", storeCodes);
+            List list = query.getResultList();
+            return list;
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     @Override
@@ -94,7 +120,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
                 .createQuery("SELECT s FROM Store s WHERE s.code=:code", Store.class)
                 .setParameter("code", code)
                 .getSingleResult();
-
     }
 
 }

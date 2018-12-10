@@ -2,6 +2,7 @@ package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
+import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import org.slf4j.Logger;
@@ -14,16 +15,16 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Long> implements OrderDetailRepository {
+public class OrderDetailRepositoryImp extends BaseRepository<OrderDetail, String> implements OrderDetailRepository {
 
-    private final Logger log = LoggerFactory.getLogger(OrderDetailRepositoryImpl.class);
+    private final Logger log = LoggerFactory.getLogger(OrderDetailRepositoryImp.class);
 
-    public OrderDetailRepositoryImpl(EntityManager em) {
-        super(OrderDetail.class, em);
+    public OrderDetailRepositoryImp(EntityManager em) {
+        super(Order.class, em);
     }
 
     @Override
-    public boolean deleteByProductIds(List<String> productIds) throws DomainException {
+    public boolean deleteByProductId(List<String> productIds) {
         try {
             String query = "DELETE FROM OrderDetail o WHERE o.productId in (:productIds)";
             entityManager.createQuery(query).setParameter("productIds", productIds).executeUpdate();

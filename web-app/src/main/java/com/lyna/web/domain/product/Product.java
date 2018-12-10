@@ -41,6 +41,7 @@ public class Product extends AbstractEntity {
     private String code;
 
     @NotBlank(message = "商品名は必須です。")
+
     @Column
     private String name;
 
@@ -65,6 +66,7 @@ public class Product extends AbstractEntity {
     private Set<OrderDetail> orderDetails;
 
     public Product() {
+
         this.productId = UUID.randomUUID().toString();
     }
 }

@@ -15,7 +15,7 @@ public class OrderDetailServiceImpl extends BaseService implements OrderDetailSe
     private OrderDetailRepository orderDetailRepository;
 
     @Override
-    public boolean deleteByProductIds(List<String> productIds) {
-        return orderDetailRepository.deleteByProductIds(productIds);
+    public boolean deleteByProductId(List<String> productIds) {
+        return orderDetailRepository.deleteByProductId(productIds);
     }
 }

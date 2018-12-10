@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
 import java.util.List;
 
 @Repository
@@ -18,6 +19,7 @@ import java.util.List;
 public class ProductRepositoryImpl extends BaseRepository<Product, Long> implements ProductRepository {
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
+
 
     public ProductRepositoryImpl(EntityManager em) {
         super(Product.class, em);
@@ -34,6 +36,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             throw e;
+
         }
     }
 
@@ -44,6 +47,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
             entityManager.createQuery(query).setParameter("listProductId", productIds).executeUpdate();
             return true;
         } catch (Exception e) {
+
             log.error(e.getMessage());
             throw e;
         }
@@ -66,7 +70,23 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     public List<Product> findByTenantId(int tenantId) throws DomainException {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
+                .setParameter("tenantId", tenantId).getResultList();
+    }
+
+    public List<String> getListProductCodeByProductCode(int tenantId, List<String> products) {
+        return entityManager
+                .createQuery("SELECT p.code FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")
                 .setParameter("tenantId", tenantId)
+                .setParameter("products", products)
+                .getResultList();
+    }
+
+    @Override
+    public List<Product> getProductsByProductCode(int tenantId, List<String> products) {
+        return entityManager
+                .createQuery("SELECT p FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")
+                .setParameter("tenantId", tenantId)
+                .setParameter("products", products)
                 .getResultList();
     }
 }

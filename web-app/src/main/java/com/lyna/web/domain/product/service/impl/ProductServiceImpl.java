@@ -1,6 +1,7 @@
 package com.lyna.web.domain.product.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
+
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -31,6 +32,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         product.setUpdateUser(currentUser.getId());
         product.setTenantId(currentUser.getTenantId());
         productRepository.save(product);
+
     }
 
     @Override
@@ -41,6 +43,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public List<Product> findByTenantId(int tenantId) {
         return productRepository.findByTenantId(tenantId);
+
     }
 
     @Override
@@ -52,6 +55,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         product.setCreateDate(date);
         product.setTenantId(currentUser.getTenantId());
         product.setCreateUser(currentUser.getId());
+
         try {
             productRepository.save(product);
         } catch (Exception e) {
@@ -68,5 +72,6 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public Product findOneByCode(String code) {
         return productRepository.findOneByCode(code);
+
     }
 }

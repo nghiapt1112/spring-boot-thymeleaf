@@ -6,17 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
-    List<Store> getAll(int tenantId);
+	List<Store> getAll(int tenantId);
 
-    List<Store> findByTenantId(int tenantId);
+	List<Store> findByTenantId(int tenantId);
 
-    List<Store> getAll(int tenantId, String search);
+	List<String> getAllByCode(int tenantId, List<String> storeCodes);
 
-    boolean deletebyStoreId(List<String> listStoreId);
+	List<Store> getAll(int tenantId, List<String> storeCodes);
 
-    Store findOneByStoreId(String storeId);
+	List<Store> getAll(int tenantId, String search);
 
-    Store findOneByCode(String code);
+	boolean deletebyStoreId(List<String> listStoreId);
+
+	Store findOneByStoreId(String storeId);
+
+	Store findOneByCode(String code);
 
 
 }
