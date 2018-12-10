@@ -51,4 +51,27 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> i
             throw e;
         }
     }
+
+    @Override
+    public String checkByStoreIdAndPost(String storeId, String post) {
+        List list = entityManager
+                .createQuery("SELECT p.postCourseId FROM PostCourse p WHERE p.storeId = :storeId and p.post = :post")
+                .setParameter("storeId", storeId)
+                .setParameter("post", post)
+                .getResultList();
+        if (list != null && list.size() > 0)
+            return (String) list.get(0);
+
+        return null;
+    }
+
+    @Override
+    public PostCourse save(PostCourse postCourse) {
+        if (postCourse.getPostCourseId() == null) {
+            em.persist(postCourse);
+            return postCourse;
+        } else {
+            return em.merge(postCourse);
+        }
+    }
 }

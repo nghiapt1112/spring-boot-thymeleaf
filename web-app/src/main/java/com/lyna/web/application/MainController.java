@@ -6,21 +6,30 @@ import com.lyna.web.domain.logicstics.LogisticResponsePage;
 import com.lyna.web.domain.logicstics.StoreRequestPage;
 import com.lyna.web.domain.logicstics.StoreResponsePage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
+import com.lyna.web.domain.order.service.OrderService;
 import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class MainController extends AbstractCustomController {
 
+    private static final String REDIRECT_TO_MAIN_PAGE = "";
     @Autowired
     private LogisticService logisticService;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/mainScreen")
+    public String mainScreen() {
+        return "main/mainMenu";
+    }
+
+    @GetMapping("/mainScreen-test")
     public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
@@ -40,30 +49,13 @@ public class MainController extends AbstractCustomController {
         return "main/mainMenu";
     }
 
-    @GetMapping(value = {"/logistics", "/logistics/"})
-    public void findLogistics(UsernamePasswordAuthenticationToken principal) {
-        User currentUser = (User) principal.getPrincipal();
-
-        LogisticRequestPage requestPage = new LogisticRequestPage();
-        requestPage.setTenantId(currentUser.getTenantId());
-        this.logisticService.findLogisticsAndPaging(null);
+    @GetMapping("/upload")
+    public String upload() {
+        return "layout";
     }
 
-    @GetMapping(value = {"/order", "/order/"})
-    public String findOrdersWithPaging(Model model, UsernamePasswordAuthenticationToken principal,
-                                       @RequestParam(required = false, defaultValue = "1") Integer cp,
-                                       @RequestParam(required = false, defaultValue = "10") Integer limit,
-                                       @RequestParam(required = false) String search) {
-
-        User currentUser = (User) principal.getPrincipal();
-
-        StoreRequestPage requestPage = new StoreRequestPage();
-        requestPage.setTenantId(currentUser.getTenantId());
-
-        StoreResponsePage orderResponsePage = this.logisticService.findOrdersAndPaging(requestPage);
-        model.addAttribute("pageData", orderResponsePage.getResults());
-
-        return "main/mainMenu";
+    @PostMapping(value = {"/upload/"})
+    public String uploadOrder() {
+        return REDIRECT_TO_MAIN_PAGE;
     }
-
 }
