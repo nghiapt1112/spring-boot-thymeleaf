@@ -37,7 +37,7 @@
                         <form action="#" enctype="multipart/form-data" th:action="@{/upload/file}" method="POST">
                             <div class="form-group">
                                 <label for="files">データ取り込み</label>
-                                <input class="form-control" type="file" name="file" id="files" th:value="ファイル選択">
+                                <input class="form-control" accept=".csv" type="file" name="file" id="files" th:value="ファイル選択">
                             </div>
                             <div class="col-md-12 button_top">
                                 <div class="col-md-5 button-top-order">

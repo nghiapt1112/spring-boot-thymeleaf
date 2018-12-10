@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,11 +58,14 @@ public class FileUploadController {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
         List<String> mapError = storageService.store(tenantId, file);
+        List<String> results = new ArrayList<>();
+        results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
-            return new ResponseEntity<>(mapError, HttpStatus.OK);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("ファイルは成功にアップロードされた", HttpStatus.OK);
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
