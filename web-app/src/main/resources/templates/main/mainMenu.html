@@ -19,11 +19,11 @@
                 <div class="col-md-12 button_top">
                     <div class="col-md-2 button-top-order">
                         <button class="btn btn-primary" id="myBtn" data-toggle="modal-content"
-                                data-target="#modelContent">発注
+                                data-target="#modelContent">発注データ取り込み
                         </button>
                     </div>
                     <div class="col-md-2 button-top-delivery">
-                        <button class="btn btn-primary " id="deliveryBtn">実績</button>
+                        <button class="btn btn-primary " id="deliveryBtn">実績・物量データ取り込み</button>
                     </div>
                     <div class="col-md-8">
                     </div>
@@ -113,9 +113,9 @@
                     <div class="panel with-nav-tabs panel-primary">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab1primary" th:href="@{/#tab1primary}" data-toggle="tab">物流</a>
+                                <li class="active"><a href="#tab1primary" th:href="@{/#tab1primary}" data-toggle="tab">物量</a>
                                 </li>
-                                <li><a href="#tab2primary" th:href="@{/#tab2primary}" data-toggle="tab">発注 </a></li>
+                                <li><a href="#tab2primary" th:href="@{/#tab2primary}" data-toggle="tab">発注データ明細</a></li>
                             </ul>
                         </div>
                         <div class="panel-body">
@@ -127,7 +127,7 @@
                                             <th>日付</th>
                                             <th>店舗</th>
                                             <th>便</th>
-                                            <th>発注総数</th>
+                                            <th>発注個数</th>
                                             <th>金額</th>
                                             <th>ばんじゅう</th>
                                             <th>箱</th>
