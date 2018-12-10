@@ -33,6 +33,7 @@
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
                                             <em id="errorCode" class="error">店舗コードは必須です。</em>
+                                            <em id="error_show" style="color: red" th:utext="${errorCodeShow}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 
@@ -54,7 +55,6 @@
                                         <span class="col-md-5">住所</span>
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{address}">
-                                            <!--<span class="fa fa-area-chart form-control-feedback"></span>-->
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

@@ -20,7 +20,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -42,11 +46,11 @@ public class Product extends AbstractEntity {
     private String productId;
 
 
-    @NotBlank(message = "店舗コードは必須です。")
+    @NotBlank(message = "商品コードは必須です。")
     @Column
     private String code;
 
-    @NotBlank(message = "荷姿名は必須です。")
+    @NotBlank(message = "商品名は必須です。")
     @Column
     private String name;
 
@@ -54,6 +58,7 @@ public class Product extends AbstractEntity {
     private String unit;
 
     @Column
+    @NotNull(message = "単価を正しく入力してください。")
     private BigDecimal price;
 
     @Column

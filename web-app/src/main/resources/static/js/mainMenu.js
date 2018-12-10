@@ -1,13 +1,5 @@
 
 $(document).ready(function() {
-    var table = $('#table-order').DataTable();
-    $('#search').click( function() {
-        table.draw();
-    } );
-    var table = $('#table-logicstic').DataTable();
-    $('#search').click( function() {
-        table.draw();
-    } );
     $("#min").datepicker({
         format: 'yyyy/mm/dd'
     });

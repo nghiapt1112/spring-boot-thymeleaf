@@ -1,9 +1,11 @@
 package com.lyna.web.application;
 
+import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.order.service.OrderDetailService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.service.ProductService;
+import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,7 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/product")
-public class ProductController {
+public class ProductController extends AbstractCustomController {
     private final Logger log = LoggerFactory.getLogger(StoreController.class);
 
     @Autowired
@@ -50,18 +52,21 @@ public class ProductController {
                               Model model, @Valid @ModelAttribute("product")Product product,
                               BindingResult result, RedirectAttributes redirect) {
 
-        if (result.hasErrors()) {
-           model.addAttribute("product", product);
-            return "product/registerProduct";
-        }
+        System.out.println(product.getPrice() + product.getCode());
         if (Objects.isNull(product)) {
             model.addAttribute("product", product);
             return "product/registerProduct";
         }
 
+        if (result.hasErrors()) {
+           model.addAttribute("product", product);
+            return "product/registerProduct";
+        }
        try {
-            Product productIsCode = productService.findOneByCode(product.getCode());
+           Product productIsCode = productService.findOneByCode(product.getCode());
+           System.out.println(productIsCode.getCode());
             if(!Objects.isNull(productIsCode)){
+                model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("product", product);
                 return "product/registerProduct";
             }
@@ -75,19 +80,21 @@ public class ProductController {
     @IsAdmin
     public String updateProduct(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("product")
             Product product, BindingResult result, RedirectAttributes redirect) {
-        System.out.println("codeBeforeUpdate = " + codeBeforeUpdate);
-        if (result.hasErrors()) {
-            model.addAttribute("product", product);
-            return "product/editProduct";
-        }
+
         if (Objects.isNull(product)) {
             model.addAttribute("product", product);
             return "product/editProduct";
         }
-        try {
-            Product productIsCode = productService.findOneByCode(product.getCode());
+        if (result.hasErrors()) {
+            model.addAttribute("product", product);
+            return "product/editProduct";
+        }
 
+        try {
+
+            Product productIsCode = productService.findOneByCode(product.getCode());
             if(!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(productIsCode)){
+                model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("product", product);
                 return "product/editProduct";
             }
@@ -103,8 +110,10 @@ public class ProductController {
     }
 
     @GetMapping(value = "/list")
-    public String  listPackage(Model model){
-        model.addAttribute("products",productService.findAll());
+    public String  listPackage(Model model,UsernamePasswordAuthenticationToken principal){
+            User currentUser = (User) principal.getPrincipal();
+            int tenantId = currentUser.getTenantId();
+        model.addAttribute("products",productService.findAll(tenantId));
         return "product/listProduct";
     }
 

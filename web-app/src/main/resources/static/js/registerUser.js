@@ -34,6 +34,9 @@ $(document).ready(function () {
         } else {
             $("#errorRepPassword").removeClass("error_show").addClass("error");
         }
+        var repPassword = $("#repPassword").val();
+
+
         if (checkForm === false) {
             event.preventDefault();
         }

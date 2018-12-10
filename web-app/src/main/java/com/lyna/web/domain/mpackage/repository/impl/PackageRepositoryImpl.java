@@ -4,6 +4,7 @@ import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
+import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
@@ -29,31 +30,6 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
     }
 
     @Override
-    public void updatePackage(Package mpackage) {
-        try {
-            String hql = "UPDATE Package p set p.tenantId = :tenantId, p.updateUser = :updateUser, p.updateDate = :updateDate,"
-                    +"p.name = :name, p.unit = :unit, p.emptyWeight = :emptyWeight, p.fullLoadWeight = :fullLoadWeight,"
-                    +"p.emptyCapacity = :emptyCapacity, p.fullLoadCapacity = :fullLoadCapacity WHERE p.packageId=:packageId";
-            entityManager.createQuery(hql)
-                    .setParameter("tenantId", mpackage.getTenantId())
-                    .setParameter("updateUser", mpackage.getUpdateUser())
-                    .setParameter("updateDate", mpackage.getUpdateDate())
-                    .setParameter("name", mpackage.getName())
-                    .setParameter("unit", mpackage.getUnit())
-                    .setParameter("emptyWeight", mpackage.getEmptyWeight())
-                    .setParameter("fullLoadWeight", mpackage.getFullLoadWeight())
-                    .setParameter("emptyCapacity", mpackage.getEmptyCapacity())
-                    .setParameter("fullLoadCapacity", mpackage.getFullLoadCapacity())
-                    .setParameter("packageId", mpackage.getPackageId())
-                    .executeUpdate();
-
-        }catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
-
-
-    @Override
     public Package findOneByPackageId(String packageId) {
         try {
             return entityManager
@@ -76,5 +52,12 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
             log.error(e.getMessage());
             throw e;
         }
+    }
+    @Override
+    public List<Package> findAll(int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.tenantId=:tenantId order by p.name", Package.class)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
     }
 }

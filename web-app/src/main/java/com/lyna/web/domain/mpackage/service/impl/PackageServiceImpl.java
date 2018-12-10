@@ -36,7 +36,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
         mpackage.setUpdateDate(date);
         mpackage.setUpdateUser(userId);
         mpackage.setTenantId(tenantId);
-        packageRepository.updatePackage(mpackage);
+        packageRepository.save(mpackage);
     }
 
     @Override
@@ -67,8 +67,8 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     }
 
     @Override
-    public List<Package> findAll() {
-        return packageRepository.findAll();
+    public List<Package> findAll(int tenantId) {
+        return packageRepository.findAll(tenantId);
     }
 
     @Override

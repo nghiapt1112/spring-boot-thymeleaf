@@ -31,7 +31,7 @@ function addViaAjax() {
          $("#table-package > tbody input:checked").each(function () {
              arrayPackageId.push($(this).val());
          })
-
+        console.log(arrayPackageId);
     $.ajax({
         type: "GET",
         contentType: 'application/json; charset=utf-8',

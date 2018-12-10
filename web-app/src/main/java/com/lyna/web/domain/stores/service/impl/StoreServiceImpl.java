@@ -3,6 +3,7 @@ package com.lyna.web.domain.stores.service.impl;
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
@@ -19,7 +20,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +34,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+
+    @Autowired
+    private PostCourseService postCourseService;
 
     @Autowired
     private UserStoreAuthorityRepository userStoreAuthorityRepository;
@@ -121,9 +129,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         }
         try {
             storeRepository.save(store);
-        }catch (NullPointerException ne){
+        } catch (NullPointerException ne) {
             log.error(ne.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
@@ -136,6 +144,40 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         int tenantId = currentUser.getTenantId();
         String userId = currentUser.getId();
         Date date = new Date();
+
+        List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(store.getStoreId(), store.getTenantId());
+        List<PostCourse> postCoursesUpdate = store.getPostCourses();
+        System.out.println("postCourses");
+        for (PostCourse p : postCourses) {
+            System.out.println(p.getPost() + " =========== " + p.getStoreId());
+        }
+        System.out.println("postCoursesUpdate");
+        for (PostCourse p : postCoursesUpdate) {
+            System.out.println(p.getPost() + " =========== " + p.getStoreId());
+        }
+        for (PostCourse postCourse : postCoursesUpdate) {
+            if (!postCourses.contains(postCourse)) {
+                postCourse.setCreateDate(date);
+                postCourse.setCreateUser(userId);
+                postCourse.setTenantId(tenantId);
+                postCourse.setStoreId(store.getStoreId());
+                postCourses.add(postCourse);
+            } else {
+                for (int i = 0; i < postCourses.size(); i++) {
+                    if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
+                        postCourse.setUpdateDate(date);
+                        postCourse.setUpdateUser(userId);
+                        postCourse.setTenantId(tenantId);
+                        postCourses.set(i, postCourse);
+                    }
+                }
+            }
+
+        }
+        System.out.println("postCourses");
+        for (PostCourse p : postCourses) {
+            System.out.println(p.getPost() + " =========== " + p.getStoreId());
+        }
         store.setCode(store.getCode());
         store.setName(store.getName());
         store.setMajorArea(store.getMajorArea());
@@ -146,7 +188,8 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setUpdateDate(date);
         store.setUpdateUser(userId);
         store.setTenantId(tenantId);
-        storeRepository.updateStore(store);
+        store.setPostCourses(postCourses);
+        storeRepository.save(store);
     }
 
     @Override

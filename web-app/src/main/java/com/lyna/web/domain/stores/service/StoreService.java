@@ -25,7 +25,7 @@ public interface StoreService {
 
     void updateStore(Store store, UsernamePasswordAuthenticationToken principal);
 
-    Store findOneByStoreId(String storeId);
+    Store findOneByStoreId(String code);
 
     Store findOneByCode(String code);
 

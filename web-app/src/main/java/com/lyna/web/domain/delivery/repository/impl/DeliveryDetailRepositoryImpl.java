@@ -8,15 +8,17 @@ import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
+@Transactional
 public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail, Long> implements DeliveryDetailRepository {
 
-    private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
+    private final Logger log = LoggerFactory.getLogger(DeliveryDetailRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -28,7 +30,7 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
     @Override
     public boolean deletebyPackageId(List<String> listPackageId) {
         try {
-            String query = "DELETE FROM DeliveryDetail l WHERE l.packageId in (:listPackageId)";
+            String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:listPackageId)";
             entityManager.createQuery(query).setParameter("listPackageId", listPackageId).executeUpdate();
             return true;
         } catch (IllegalArgumentException e) {

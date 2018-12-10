@@ -10,8 +10,6 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getAll(int tenantId);
 
-    Store save(Store store);
-
     List<Store> findAll(int tenantId);
 
     List<Store> getAll(int tenantId, String search);
@@ -20,7 +18,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Store findOneByStoreId(String storeId);
 
-    void updateStore(Store store);
-
     Store findOneByCode(String code);
+
+
 }

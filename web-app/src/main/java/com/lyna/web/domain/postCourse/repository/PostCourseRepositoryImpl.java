@@ -26,14 +26,15 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> i
     }
 
     @Override
-    public List<PostCourse> findAllByStoreId(String storeId) {
+    public List<PostCourse> findAllByStoreIdAndTenantId(String storeId, int tenantId) {
         return entityManager
-                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId", PostCourse.class)
+                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId AND p.tenantId = :tenantId", PostCourse.class)
                 .setParameter("storeId", storeId)
+                .setParameter("tenantId", tenantId)
                 .getResultList();
     }
 
-    @Override
+    /*@Override
     public void updatePostCourse(PostCourse postCourse) throws DomainException {
         try {
             String hql = "UPDATE PostCourse p set p.tenantId = :tenantId, p.updateUser = :updateUser, p.updateDate = :updateDate,"
@@ -50,5 +51,5 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> i
             log.error(e.getMessage());
             throw e;
         }
-    }
+    }*/
 }

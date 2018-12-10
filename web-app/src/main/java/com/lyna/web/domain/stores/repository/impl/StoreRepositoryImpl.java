@@ -42,17 +42,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    @Transactional
-    public Store save(Store store) {
-        if (store.getStoreId() == null) {
-            em.persist(store);
-            return store;
-        } else {
-            return em.merge(store);
-        }
-    }
-
-    @Override
     public List<Store> findAll(int tenantId) {
         return entityManager
                 .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
@@ -103,32 +92,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
                 .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId", Store.class)
                 .setParameter("storeId", storeId)
                 .getSingleResult();
-    }
-
-    @Override
-    public void updateStore(Store store) {
-
-        try {
-            String hql = "UPDATE Store s set s.tenantId = :tenantId, s.updateUser = :updateUser, s.updateDate = :updateDate,"
-                    + "s.code = :code, s.name = :name, s.majorArea = :majorArea, s.area = :area, s.address = :address,"
-                    + "s.personCharge = :personCharge, s.phoneNumber = :phoneNumber WHERE s.storeId=:storeId";
-            entityManager.createQuery(hql)
-                    .setParameter("tenantId", store.getTenantId())
-                    .setParameter("updateUser", store.getUpdateUser())
-                    .setParameter("updateDate", store.getUpdateDate())
-                    .setParameter("code", store.getCode())
-                    .setParameter("name", store.getName())
-                    .setParameter("majorArea", store.getMajorArea())
-                    .setParameter("area", store.getArea())
-                    .setParameter("address", store.getAddress())
-                    .setParameter("personCharge", store.getPersonCharge())
-                    .setParameter("phoneNumber", store.getPhoneNumber())
-                    .setParameter("storeId", store.getStoreId())
-                    .executeUpdate();
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            throw e;
-        }
     }
 
     @Override

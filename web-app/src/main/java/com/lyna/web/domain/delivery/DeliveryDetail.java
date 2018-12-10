@@ -18,18 +18,15 @@ public class DeliveryDetail extends AbstractEntity {
 
     @Id
     @Column(name = "delivery_detail_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String deliveryDetailId;
 
     @Column
     public BigDecimal amount;
 
     @Column(name = "delivery_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String deliveryId;
 
     @Column(name = "package_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String packageId;
 
 }

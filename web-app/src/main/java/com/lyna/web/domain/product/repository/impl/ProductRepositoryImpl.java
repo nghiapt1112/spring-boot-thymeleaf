@@ -3,6 +3,7 @@ package com.lyna.web.domain.product.repository.impl;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
+import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,29 +27,6 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
         super(Product.class, em);
     }
 
-    @Override
-    public void updateProduct(Product product) {
-        try {
-            String hql = "UPDATE Product p set p.tenantId = :tenantId, p.updateUser = :updateUser, p.updateDate = :updateDate,"
-                    + "p.code = :code,p.name = :name, p.unit = :unit, p.price = :price, p.category1 = :category1,"
-                    + "p.category2 = :category2, p.category3 = :category3 WHERE p.productId=:productId";
-            entityManager.createQuery(hql)
-                    .setParameter("tenantId", product.getTenantId())
-                    .setParameter("updateUser", product.getUpdateUser())
-                    .setParameter("updateDate", product.getUpdateDate())
-                    .setParameter("code", product.getCode())
-                    .setParameter("name", product.getName())
-                    .setParameter("unit", product.getUnit())
-                    .setParameter("price", product.getPrice())
-                    .setParameter("category1", product.getCategory1())
-                    .setParameter("category2", product.getCategory2())
-                    .setParameter("category3", product.getCategory3())
-                    .setParameter("productId", product.getProductId())
-                    .executeUpdate();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
 
     @Override
     public Product findOneByProductId(String productId) {
@@ -86,5 +64,12 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
             log.error(e.getMessage());
             throw e;
         }
+    }
+    @Override
+    public List<Product> findAll(int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
     }
 }

@@ -28,12 +28,16 @@
                             <div class="box-body">
                                 <form th:action="@{/product/update}" th:method="post" th:object="${product}">
                                     <input type="hidden" th:field="*{productId}">
+                                    <input type="hidden" th:field="*{tenantId}">
+                                    <input type="hidden" th:field="*{createDate}">
+                                    <input type="hidden" th:field="*{createUser}">
                                     <div class="col-md-12">
-                                        <span class="col-md-5">店舗コード </span>
+                                        <span class="col-md-5">商品コード </span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
-                                            <em id="errorCode" class="error">店舗コードは必須です。</em>
+                                            <em id="errorCode" class="error">商品コードは必須です。</em>
+                                            <em style="color: red" id="error_show" th:utext="${errorCodeShow}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 
@@ -41,11 +45,11 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">荷姿名</span>
+                                        <span class="col-md-5">商品名</span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                            <em id="errorName" class="error">荷姿名は必須です。</em>
+                                            <em id="errorName" class="error">商品名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
 
@@ -63,7 +67,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">単価</span>
                                         <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{price}">
+                                            <input class="form-control" type="text" th:field="*{price}" id="price">
+                                            <em id="errorPrice" class="error">単価を正しく入力してください。</em>
                                          </div>
                                         <div class="col-md-1"></div>
                                     </div>

@@ -36,7 +36,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         product.setUpdateDate(date);
         product.setUpdateUser(userId);
         product.setTenantId(tenantId);
-        productRepository.updateProduct(product);
+        productRepository.save(product);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<Product> findAll(int tenantId) {
+        return productRepository.findAll(tenantId);
     }
 
     @Override
