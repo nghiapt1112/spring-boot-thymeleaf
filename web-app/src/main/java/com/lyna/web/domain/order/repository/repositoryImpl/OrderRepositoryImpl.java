@@ -74,4 +74,11 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         }
         return false;
     }
+
+    @Override
+    public List<Order> findByTenantId(int tenantId) {
+        return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId")
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
 }

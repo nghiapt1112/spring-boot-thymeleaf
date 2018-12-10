@@ -1,6 +1,7 @@
 package com.lyna.web.domain.delivery;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.mpackage.Package;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,5 +33,7 @@ public class DeliveryDetail extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String packageId;
 
-
+    @OneToOne
+    @JoinColumn(name = "package_id", referencedColumnName = "pakage_id", insertable = false, updatable = false)
+    public Package pack;
 }
