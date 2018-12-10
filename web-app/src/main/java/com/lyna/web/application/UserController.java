@@ -75,6 +75,17 @@ public class UserController extends AbstractCustomController {
         return "user/user-update";
     }
 
+    @GetMapping(value = {"/profile})
+    @IsAdmin
+    public String updateUserById(Model model , UsernamePasswordAuthenticationToken principal) {
+        User currentUser = (User) principal.getPrincipal();
+        UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), currentUser.getId()));
+
+        model.addAttribute("aggregate", aggregate);
+        model.addAttribute("userId", currentUser.getId());
+        return "user/user-update";
+    }
+
     @PostMapping(value = {"/update", "/update/"})
     @IsAdmin
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
@@ -143,4 +154,5 @@ public class UserController extends AbstractCustomController {
 
         return ajaxResponse;
     }
+
 }
