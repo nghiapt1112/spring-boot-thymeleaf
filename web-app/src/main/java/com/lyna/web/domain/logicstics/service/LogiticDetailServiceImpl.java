@@ -14,7 +14,7 @@ public class LogiticDetailServiceImpl extends BaseService implements LogiticDeta
     private LogiticDetailRepository logiticDetailRepository;
 
     @Override
-    public boolean deletebyPackageId(List<String> listPackageId) {
-        return logiticDetailRepository.deletebyPackageId(listPackageId);
+    public boolean deleteByPackageIds(List<String> packageIds) {
+        return logiticDetailRepository.deleteByPackageIds(packageIds);
     }
 }

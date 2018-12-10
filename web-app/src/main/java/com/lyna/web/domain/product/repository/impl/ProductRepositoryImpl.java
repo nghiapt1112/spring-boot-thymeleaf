@@ -1,5 +1,6 @@
 package com.lyna.web.domain.product.repository.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
@@ -19,16 +19,13 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
 
-    @PersistenceContext
-    private EntityManager em;
-
     public ProductRepositoryImpl(EntityManager em) {
         super(Product.class, em);
     }
 
 
     @Override
-    public Product findOneByProductId(String productId) {
+    public Product findOneByProductId(String productId) throws DomainException {
         try {
             return entityManager
                     .createQuery("SELECT p FROM Product p WHERE p.productId=:productId", Product.class)
@@ -41,7 +38,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public boolean deletebyProductId(List<String> listProductId) {
+    public boolean deletebyProductId(List<String> listProductId) throws DomainException {
         try {
             String query = "DELETE FROM Product p WHERE p.productId in (:listProductId)";
             entityManager.createQuery(query).setParameter("listProductId", listProductId).executeUpdate();
@@ -53,7 +50,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public Product findOneByCode(String code) {
+    public Product findOneByCode(String code) throws DomainException {
         try {
             return entityManager
                     .createQuery("SELECT p FROM Product p WHERE p.code=:code", Product.class)
@@ -66,7 +63,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
-    public List<Product> findAll(int tenantId) {
+    public List<Product> findAll(int tenantId) throws DomainException {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
                 .setParameter("tenantId", tenantId)

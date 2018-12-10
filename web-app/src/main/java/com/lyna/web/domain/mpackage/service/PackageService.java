@@ -15,5 +15,5 @@ public interface PackageService {
        Package findOneByPakageId(String pakageId);
        List<Package> findAll(int tenantId);
        void createPackage(Package mpackage, UsernamePasswordAuthenticationToken principal);
-       boolean deletebyPackageId(List<String> listPackageId);
+       boolean deleteByPackageIds(List<String> packageIds);
  }

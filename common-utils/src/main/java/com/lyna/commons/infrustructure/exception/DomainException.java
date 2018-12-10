@@ -62,7 +62,7 @@ public class DomainException extends RuntimeException {
     }
 
     public enum Domain {
-        General(1), Validate(2), User(3), CSV(4), Store(5), Product(6);
+        General(1), Validate(2), User(3), CSV(4), Store(5), Product(6), Package(7);
 
         private int domainCode;
 

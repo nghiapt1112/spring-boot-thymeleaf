@@ -6,6 +6,7 @@ import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.service.ProductService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,17 +62,14 @@ public class ProductController extends AbstractCustomController {
             model.addAttribute("product", product);
             return "product/registerProduct";
         }
-        try {
-            Product productIsCode = productService.findOneByCode(product.getCode());
-            System.out.println(productIsCode.getCode());
-            if (!Objects.isNull(productIsCode)) {
-                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
-                model.addAttribute("product", product);
-                return "product/registerProduct";
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+
+        Product existedProduct = productService.findOneByCode(product.getCode());
+        if (!Objects.isNull(existedProduct)) {
+            model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+            model.addAttribute("product", product);
+            return "product/registerProduct";
         }
+
         productService.createProduct(product, principal);
         return "redirect:/product/list";
     }
@@ -90,16 +88,12 @@ public class ProductController extends AbstractCustomController {
             return "product/editProduct";
         }
 
-        try {
 
-            Product productIsCode = productService.findOneByCode(product.getCode());
-            if (!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(productIsCode)) {
-                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
-                model.addAttribute("product", product);
-                return "product/editProduct";
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        Product existedProduct = productService.findOneByCode(product.getCode());
+        if (!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(existedProduct)) {
+            model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+            model.addAttribute("product", product);
+            return "product/editProduct";
         }
 
 
@@ -112,15 +106,14 @@ public class ProductController extends AbstractCustomController {
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        model.addAttribute("products", productService.findAll(tenantId));
+        model.addAttribute("products", productService.findAll(currentUser.getTenantId()));
         return "product/listProduct";
     }
 
     @GetMapping("/delete")
     public @ResponseBody
     String deletePackage(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
-        if (!Objects.isNull(listProductId) && !listProductId.isEmpty()) {
+        if (!Objects.isNull(listProductId) && !CollectionUtils.isEmpty(listProductId)) {
             orderDetailService.deletebyProductId(listProductId);
             productService.deletebyProductId(listProductId);
             return "true";

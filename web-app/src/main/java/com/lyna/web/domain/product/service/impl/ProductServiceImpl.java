@@ -1,5 +1,6 @@
 package com.lyna.web.domain.product.service.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -25,12 +26,10 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public void updateProduct(Product product, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String userId = currentUser.getId();
         Date date = new Date();
         product.setUpdateDate(date);
-        product.setUpdateUser(userId);
-        product.setTenantId(tenantId);
+        product.setUpdateUser(currentUser.getId());
+        product.setTenantId(currentUser.getTenantId());
         productRepository.save(product);
     }
 
@@ -46,19 +45,15 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     @Transactional
-    public void createProduct(Product product, UsernamePasswordAuthenticationToken principal) {
+    public void createProduct(Product product, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String username = currentUser.getId();
         Date date = new Date();
 
         product.setCreateDate(date);
-        product.setTenantId(tenantId);
-        product.setCreateUser(username);
+        product.setTenantId(currentUser.getTenantId());
+        product.setCreateUser(currentUser.getId());
         try {
             productRepository.save(product);
-        } catch (NullPointerException ne) {
-            log.error(ne.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -7,6 +7,7 @@ import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -50,14 +51,14 @@ public class PackageController extends AbstractCustomController {
     public String savePackage(UsernamePasswordAuthenticationToken principal,
                               Model model, @Valid @ModelAttribute("package") Package mpackage,
                               BindingResult result, RedirectAttributes redirect) {
+        if (Objects.isNull(mpackage)) {
 
-        if (result.hasErrors()) {
-            System.out.println("requid error");
             model.addAttribute("package", mpackage);
             return "package/registerPackage";
         }
-        if (Objects.isNull(mpackage)) {
-            System.out.println("requid null");
+
+        if (result.hasErrors()) {
+
             model.addAttribute("package", mpackage);
             return "package/registerPackage";
         }
@@ -70,14 +71,15 @@ public class PackageController extends AbstractCustomController {
     @IsAdmin
     public String updatePackage(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("package")
             Package mpackage, BindingResult result, RedirectAttributes redirect) {
-        if (result.hasErrors()) {
-            model.addAttribute("package", mpackage);
-            return "package/editPackage";
-        }
         if (Objects.isNull(mpackage)) {
             model.addAttribute("package", mpackage);
             return "package/editPackage";
         }
+        if (result.hasErrors()) {
+            model.addAttribute("package", mpackage);
+            return "package/editPackage";
+        }
+
 
         packageService.updatePackage(mpackage, principal);
 
@@ -88,21 +90,17 @@ public class PackageController extends AbstractCustomController {
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        model.addAttribute("packages", packageService.findAll(tenantId));
+        model.addAttribute("packages", packageService.findAll(currentUser.getTenantId()));
         return "package/listPackage";
     }
 
     @GetMapping("/delete")
     public @ResponseBody
     String deletePackage(@RequestParam(value = "arrayPackageId[]") List<String> listPackageId) {
-        for (String string : listPackageId) {
-            System.out.println("ID = : " + string);
-        }
-        if (!Objects.isNull(listPackageId) && !listPackageId.isEmpty()) {
-            deliveryDetailService.deletebyPackageId(listPackageId);
-            logiticDetailService.deletebyPackageId(listPackageId);
-            packageService.deletebyPackageId(listPackageId);
+        if (!Objects.isNull(listPackageId) && !CollectionUtils.isEmpty(listPackageId)) {
+            deliveryDetailService.deleteByPackageIds(listPackageId);
+            logiticDetailService.deleteByPackageIds(listPackageId);
+            packageService.deleteByPackageIds(listPackageId);
             return "true";
         }
         return "false";

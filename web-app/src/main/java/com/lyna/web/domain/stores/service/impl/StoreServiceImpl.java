@@ -108,29 +108,24 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Transactional
     @Override
-    public void createStore(Store store, UsernamePasswordAuthenticationToken principal) {
+    public void createStore(Store store, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String username = currentUser.getId();
         Date date = new Date();
-
         store.setCreateDate(date);
-        store.setTenantId(tenantId);
-        store.setCreateUser(username);
+        store.setTenantId(currentUser.getTenantId());
+        store.setCreateUser(currentUser.getId());
         List<PostCourse> postCourses = store.getPostCourses();
         if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
             for (PostCourse postCourse : postCourses) {
-                postCourse.setTenantId(tenantId);
+                postCourse.setTenantId(currentUser.getTenantId());
                 postCourse.setStoreId(store.getStoreId());
                 postCourse.setCreateDate(date);
-                postCourse.setCreateUser(username);
+                postCourse.setCreateUser(currentUser.getId());
             }
             store.setPostCourses(postCourses);
         }
         try {
             storeRepository.save(store);
-        } catch (NullPointerException ne) {
-            log.error(ne.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -141,10 +136,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     @Override
     public void updateStore(Store store, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String userId = currentUser.getId();
         Date date = new Date();
-
         List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(store.getStoreId(), store.getTenantId());
         List<PostCourse> postCoursesUpdate = store.getPostCourses();
         System.out.println("postCourses");
@@ -158,16 +150,16 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         for (PostCourse postCourse : postCoursesUpdate) {
             if (!postCourses.contains(postCourse)) {
                 postCourse.setCreateDate(date);
-                postCourse.setCreateUser(userId);
-                postCourse.setTenantId(tenantId);
+                postCourse.setCreateUser(currentUser.getId());
+                postCourse.setTenantId(currentUser.getTenantId());
                 postCourse.setStoreId(store.getStoreId());
                 postCourses.add(postCourse);
             } else {
                 for (int i = 0; i < postCourses.size(); i++) {
                     if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
                         postCourse.setUpdateDate(date);
-                        postCourse.setUpdateUser(userId);
-                        postCourse.setTenantId(tenantId);
+                        postCourse.setUpdateUser(currentUser.getId());
+                        postCourse.setTenantId(currentUser.getTenantId());
                         postCourses.set(i, postCourse);
                     }
                 }
@@ -186,8 +178,8 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setPhoneNumber(store.getPhoneNumber());
         store.setPersonCharge(store.getPersonCharge());
         store.setUpdateDate(date);
-        store.setUpdateUser(userId);
-        store.setTenantId(tenantId);
+        store.setUpdateUser(currentUser.getId());
+        store.setTenantId(currentUser.getTenantId());
         store.setPostCourses(postCourses);
         storeRepository.save(store);
     }

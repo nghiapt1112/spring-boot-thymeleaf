@@ -14,7 +14,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
     private DeliveryDetailRepository deliveryDetailRepository;
 
     @Override
-    public boolean deletebyPackageId(List<String> listPackageId) {
-        return deliveryDetailRepository.deletebyPackageId(listPackageId);
+    public boolean deleteByPackageIds(List<String> packageIds) {
+        return deliveryDetailRepository.deleteByPackageIds(packageIds);
     }
 }

@@ -1,11 +1,11 @@
 package com.lyna.web.domain.mpackage.service.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.mpackage.service.PackageService;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,37 +24,27 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     @Autowired
     private PackageRepository packageRepository;
 
-    @Autowired
-    private UserStoreAuthorityRepository userStoreAuthorityRepository;
-
     @Override
     public void updatePackage(Package mpackage, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String userId = currentUser.getId();
         Date date = new Date();
         mpackage.setUpdateDate(date);
-        mpackage.setUpdateUser(userId);
-        mpackage.setTenantId(tenantId);
+        mpackage.setUpdateUser(currentUser.getId());
+        mpackage.setTenantId(currentUser.getTenantId());
         packageRepository.save(mpackage);
     }
 
     @Override
     @Transactional
-    public void createPackage(Package mpackage, UsernamePasswordAuthenticationToken principal) {
+    public void createPackage(Package mpackage, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
-        int tenantId = currentUser.getTenantId();
-        String username = currentUser.getId();
         Date date = new Date();
-
         mpackage.setCreateDate(date);
-        mpackage.setTenantId(tenantId);
-        mpackage.setCreateUser(username);
+        mpackage.setTenantId(currentUser.getTenantId());
+        mpackage.setCreateUser(currentUser.getId());
 
         try {
             packageRepository.save(mpackage);
-        } catch (NullPointerException ne) {
-            log.error(ne.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -72,7 +62,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     }
 
     @Override
-    public boolean deletebyPackageId(List<String> listPackageId) {
-        return packageRepository.deletebyPackageId(listPackageId);
+    public boolean deleteByPackageIds(List<String> packageIds) {
+        return packageRepository.deleteByPackageIds(packageIds);
     }
 }

@@ -20,9 +20,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
 
-    @PersistenceContext
-    private EntityManager em;
-
     public StoreRepositoryImpl(EntityManager em) {
         super(Store.class, em);
     }
@@ -32,7 +29,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
         //ToDo: LinhNM: test if tenantId is null => has get info ?
         TypedQuery<Store> query =
-                em.createNamedQuery("Store.getAll", Store.class)
+                entityManager.createNamedQuery("Store.getAll", Store.class)
                         .setParameter("tenantId", tenantId);
         List<Store> results = query.getResultList();
 
