@@ -80,7 +80,7 @@ public class StoreController extends AbstractCustomController {
         try {
             Store storeIsCode = storeService.findOneByCode(store.getCode());
             if (!Objects.isNull(storeIsCode)) {
-                model.addAttribute("errorCodeShow", "code has been existed");
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_REGISTER_PAGE;
             }
@@ -111,7 +111,7 @@ public class StoreController extends AbstractCustomController {
         try {
             Store storeIsCode = storeService.findOneByCode(store.getCode());
             if (!store.getCode().equals(codeBeforUpdate) && !Objects.isNull(storeIsCode)) {
-                model.addAttribute("errorCodeShow", "code has been existed");
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_REGISTER_PAGE;
             }

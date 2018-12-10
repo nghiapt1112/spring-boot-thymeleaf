@@ -65,7 +65,7 @@ public class ProductController extends AbstractCustomController {
             Product productIsCode = productService.findOneByCode(product.getCode());
             System.out.println(productIsCode.getCode());
             if (!Objects.isNull(productIsCode)) {
-                model.addAttribute("errorCodeShow", "code has been existed");
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return "product/registerProduct";
             }
@@ -94,7 +94,7 @@ public class ProductController extends AbstractCustomController {
 
             Product productIsCode = productService.findOneByCode(product.getCode());
             if (!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(productIsCode)) {
-                model.addAttribute("errorCodeShow", "code has been existed");
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return "product/editProduct";
             }
