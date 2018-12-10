@@ -139,14 +139,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         Date date = new Date();
         List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(store.getStoreId(), store.getTenantId());
         List<PostCourse> postCoursesUpdate = store.getPostCourses();
-        System.out.println("postCourses");
-        for (PostCourse p : postCourses) {
-            System.out.println(p.getPost() + " =========== " + p.getStoreId());
-        }
-        System.out.println("postCoursesUpdate");
-        for (PostCourse p : postCoursesUpdate) {
-            System.out.println(p.getPost() + " =========== " + p.getStoreId());
-        }
         for (PostCourse postCourse : postCoursesUpdate) {
             if (!postCourses.contains(postCourse)) {
                 postCourse.setCreateDate(date);
@@ -165,10 +157,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
                 }
             }
 
-        }
-        System.out.println("postCourses");
-        for (PostCourse p : postCourses) {
-            System.out.println(p.getPost() + " =========== " + p.getStoreId());
         }
         store.setCode(store.getCode());
         store.setName(store.getName());
