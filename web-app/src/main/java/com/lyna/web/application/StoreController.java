@@ -18,7 +18,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,14 +40,11 @@ import java.util.stream.IntStream;
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
 
-    private final Logger log = LoggerFactory.getLogger(StoreController.class);
-
     private static final String STORE_LIST_PAGE = "store/liststore";
     private static final String STORE_EDIT_PAGE = "store/editStore";
     private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
     private static final String STORE_REGISTER_PAGE = "store/registerStore";
-
-
+    private final Logger log = LoggerFactory.getLogger(StoreController.class);
     @Autowired
     private StoreService storeService;
 
@@ -74,14 +77,14 @@ public class StoreController extends AbstractCustomController {
             return STORE_REGISTER_PAGE;
         }
 
-        try{
+        try {
             Store storeIsCode = storeService.findOneByCode(store.getCode());
-            if(!Objects.isNull(storeIsCode)){
+            if (!Objects.isNull(storeIsCode)) {
                 model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("store", store);
                 return STORE_REGISTER_PAGE;
             }
-        }catch (Exception  e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
@@ -105,14 +108,14 @@ public class StoreController extends AbstractCustomController {
             return STORE_EDIT_PAGE;
         }
 
-        try{
+        try {
             Store storeIsCode = storeService.findOneByCode(store.getCode());
-            if(!store.getCode().equals(codeBeforUpdate) && !Objects.isNull(storeIsCode)){
+            if (!store.getCode().equals(codeBeforUpdate) && !Objects.isNull(storeIsCode)) {
                 model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("store", store);
                 return STORE_REGISTER_PAGE;
             }
-        }catch (Exception  e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 

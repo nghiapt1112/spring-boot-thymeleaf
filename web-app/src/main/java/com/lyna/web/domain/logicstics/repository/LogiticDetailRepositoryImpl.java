@@ -3,7 +3,6 @@ package com.lyna.web.domain.logicstics.repository;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
 import com.lyna.web.domain.mpackage.Package;
-import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

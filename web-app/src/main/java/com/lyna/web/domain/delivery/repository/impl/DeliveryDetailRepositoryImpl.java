@@ -3,8 +3,6 @@ package com.lyna.web.domain.delivery.repository.impl;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
-import com.lyna.web.domain.logicstics.LogiticsDetail;
-import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

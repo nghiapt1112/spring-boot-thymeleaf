@@ -1,7 +1,6 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
-import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.order.service.OrderDetailService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.service.ProductService;
@@ -49,7 +48,7 @@ public class ProductController extends AbstractCustomController {
 
     @PostMapping(value = "/create")
     public String saveProduct(UsernamePasswordAuthenticationToken principal,
-                              Model model, @Valid @ModelAttribute("product")Product product,
+                              Model model, @Valid @ModelAttribute("product") Product product,
                               BindingResult result, RedirectAttributes redirect) {
 
         System.out.println(product.getPrice() + product.getCode());
@@ -59,23 +58,24 @@ public class ProductController extends AbstractCustomController {
         }
 
         if (result.hasErrors()) {
-           model.addAttribute("product", product);
+            model.addAttribute("product", product);
             return "product/registerProduct";
         }
-       try {
-           Product productIsCode = productService.findOneByCode(product.getCode());
-           System.out.println(productIsCode.getCode());
-            if(!Objects.isNull(productIsCode)){
+        try {
+            Product productIsCode = productService.findOneByCode(product.getCode());
+            System.out.println(productIsCode.getCode());
+            if (!Objects.isNull(productIsCode)) {
                 model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("product", product);
                 return "product/registerProduct";
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
-        productService.createProduct(product,principal);
+        productService.createProduct(product, principal);
         return "redirect:/product/list";
     }
+
     @PostMapping(value = "/update")
     @IsAdmin
     public String updateProduct(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("product")
@@ -93,34 +93,34 @@ public class ProductController extends AbstractCustomController {
         try {
 
             Product productIsCode = productService.findOneByCode(product.getCode());
-            if(!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(productIsCode)){
+            if (!product.getCode().equals(codeBeforeUpdate) && !Objects.isNull(productIsCode)) {
                 model.addAttribute("errorCodeShow", "code has been existed");
                 model.addAttribute("product", product);
                 return "product/editProduct";
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
 
-        productService.updateProduct(product,principal);
+        productService.updateProduct(product, principal);
 
         return "redirect:/product/list";
 
     }
 
     @GetMapping(value = "/list")
-    public String  listPackage(Model model,UsernamePasswordAuthenticationToken principal){
-            User currentUser = (User) principal.getPrincipal();
-            int tenantId = currentUser.getTenantId();
-        model.addAttribute("products",productService.findAll(tenantId));
+    public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
+        User currentUser = (User) principal.getPrincipal();
+        int tenantId = currentUser.getTenantId();
+        model.addAttribute("products", productService.findAll(tenantId));
         return "product/listProduct";
     }
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deletePackage(@RequestParam(value = "arrayProductId[]") List<String> listProductId ){
-        if(!Objects.isNull(listProductId) && !listProductId.isEmpty()){
+    String deletePackage(@RequestParam(value = "arrayProductId[]") List<String> listProductId) {
+        if (!Objects.isNull(listProductId) && !listProductId.isEmpty()) {
             orderDetailService.deletebyProductId(listProductId);
             productService.deletebyProductId(listProductId);
             return "true";
@@ -132,7 +132,7 @@ public class ProductController extends AbstractCustomController {
     public String editPackage(@PathVariable("productId") String productId, Model model) {
         Product product = productService.findOneByProductId(productId);
         codeBeforeUpdate = product.getCode();
-        model.addAttribute("product",product);
+        model.addAttribute("product", product);
         return "product/editProduct";
     }
 

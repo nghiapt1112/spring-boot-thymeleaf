@@ -3,7 +3,6 @@ package com.lyna.web.domain.product.repository.impl;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
-import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +64,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
             throw e;
         }
     }
+
     @Override
     public List<Product> findAll(int tenantId) {
         return entityManager

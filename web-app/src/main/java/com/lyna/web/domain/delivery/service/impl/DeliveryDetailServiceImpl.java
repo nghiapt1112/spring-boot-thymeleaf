@@ -3,7 +3,6 @@ package com.lyna.web.domain.delivery.service.impl;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
-import com.lyna.web.domain.logicstics.repository.LogiticDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

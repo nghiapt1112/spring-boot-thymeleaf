@@ -1,14 +1,10 @@
 package com.lyna.web.domain.product.service.impl;
 
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.mpackage.Package;
-import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
 import com.lyna.web.domain.product.service.ProductService;
-import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +18,9 @@ import java.util.List;
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService {
 
+    private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     private ProductRepository productRepository;
-
-    private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
     public void updateProduct(Product product, UsernamePasswordAuthenticationToken principal) {
@@ -62,9 +57,9 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         product.setCreateUser(username);
         try {
             productRepository.save(product);
-        }catch (NullPointerException ne){
+        } catch (NullPointerException ne) {
             log.error(ne.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 

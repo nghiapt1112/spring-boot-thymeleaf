@@ -1,9 +1,7 @@
 package com.lyna.web.domain.stores.repository;
 
-import com.lyna.web.domain.product.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.lyna.web.domain.stores.Store;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

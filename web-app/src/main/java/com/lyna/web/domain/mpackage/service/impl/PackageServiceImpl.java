@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class PackageServiceImpl extends BaseService implements PackageService {
 
-        private final Logger log = LoggerFactory.getLogger(PackageServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(PackageServiceImpl.class);
 
     @Autowired
     private PackageRepository packageRepository;
@@ -53,9 +53,9 @@ public class PackageServiceImpl extends BaseService implements PackageService {
 
         try {
             packageRepository.save(mpackage);
-        }catch (NullPointerException ne){
+        } catch (NullPointerException ne) {
             log.error(ne.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
@@ -72,7 +72,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     }
 
     @Override
-    public boolean deletebyPackageId(List<String> listPackageId){
+    public boolean deletebyPackageId(List<String> listPackageId) {
         return packageRepository.deletebyPackageId(listPackageId);
     }
 }

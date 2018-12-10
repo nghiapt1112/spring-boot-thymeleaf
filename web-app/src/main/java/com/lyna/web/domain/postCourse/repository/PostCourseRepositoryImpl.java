@@ -1,6 +1,5 @@
 package com.lyna.web.domain.postCourse.repository;
 
-import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
 import org.slf4j.Logger;
