@@ -30,7 +30,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     private UserStoreAuthorityRepository userStoreAuthorityRepository;
 
     public List<Store> findAll(int tenantId) {
-        //TODO: =>nghia.pt replace with storeRepository.findByTenant(...)
         return this.storeRepository.findAll(tenantId);
     }
 

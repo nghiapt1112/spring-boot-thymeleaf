@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,8 +76,22 @@ public class UserAggregate extends AbstractObject {
     public void updateRolePerStore(List<Store> stores) {
         if (CollectionUtils.isEmpty(this.rolePerStore)) {
             this.rolePerStore = new ArrayList<>();
+            this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
+        } else {
+            Set<String> uniqueExistedStoreId = this.rolePerStore.stream().map(el -> el.getStoreId()).collect(Collectors.toSet());
+            stores.stream()
+                    .filter(store -> !uniqueExistedStoreId.contains(store.getStoreId()))
+                    .forEach(store -> {
+                        UserStoreRole aggregate = new UserStoreRole();
+                        aggregate.setId(UUID.randomUUID().toString());
+                        aggregate.setStoreId(store.getStoreId());
+                        aggregate.setName(store.getName());
+                        aggregate.parseRole(StoreRoleType.NO_PERMISSION.getShortVal());
+                        this.rolePerStore.add(aggregate);
+                    });
+
         }
-        this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
+
     }
 
     public String getName() {

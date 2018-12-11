@@ -19,12 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -140,8 +147,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         oldUser.updateInfo(userToUpdate);
         this.userRepository.save(oldUser);
 
+        List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
 
-        Map<String, Short> authorityById = aggregate.toUserStoreAuthorities()
+        Map<String, Short> authorityById = newUserStoreAuthority.stream()
                 .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
 
         this.userStoreAuthorityService.assignUserToStore(
@@ -153,7 +161,18 @@ public class UserServiceImpl extends BaseService implements UserService {
                         })
                         .collect(Collectors.toList())
         );
+        Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
 
+        this.userStoreAuthorityService.assignUserToStore(
+                newUserStoreAuthority.stream()
+                        .filter(el -> !oldAuthorities.contains(el.getId()))
+                        .peek(el -> {
+                            el.setUserId(currentUser.getId());
+                            el.setTenantId(currentUser.getTenantId());
+                            el.initDefaultCreateFields(currentUser);
+                        })
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
