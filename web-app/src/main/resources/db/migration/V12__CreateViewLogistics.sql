@@ -1,5 +1,6 @@
 CREATE VIEW `v_logicstic` AS
 SELECT
+    t0.order_id AS order_id,
     t0.order_date AS 日付,
     t0.store_name AS 店舗,
     t0.post AS 便,
