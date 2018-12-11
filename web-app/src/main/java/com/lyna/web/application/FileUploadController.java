@@ -14,12 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -57,7 +55,7 @@ public class FileUploadController {
                                                    UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        List<String> mapError = storageService.store(tenantId, file);
+        List<String> mapError = storageService.store(tenantId, file, 2);
         List<String> results = new ArrayList<>();
         results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {
@@ -73,7 +71,7 @@ public class FileUploadController {
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        List<String> mapError = storageService.store(tenantId, file);
+        List<String> mapError = storageService.store(tenantId, file, 1);
         List<String> results = new ArrayList<>();
         results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {

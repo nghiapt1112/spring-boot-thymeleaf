@@ -45,7 +45,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     @Override
     public Iterator<CsvDelivery> getMapDelivery(Reader targetReader) {
         CsvToBean<CsvDelivery> csvToBean = new CsvToBeanBuilder(targetReader)
-                .withType(CsvOrder.class)
+                .withType(CsvDelivery.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
         Iterator<CsvDelivery> csvDeliveryIterator = csvToBean.iterator();

@@ -1,6 +1,5 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
-
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.Order;
@@ -82,7 +81,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-    public List<String> store(int tenantId, MultipartFile file) throws StorageException {
+    public List<String> store(int tenantId, MultipartFile file, int type) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         try {
@@ -98,42 +97,22 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
             try (InputStream inputStream = file.getInputStream()) {
                 Reader reader = new InputStreamReader(inputStream);
-                Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
-                processUpload(orderIterator);
-                setMapData(tenantId, false);
-                setDataMapProduct();
-                setDataOrder(tenantId);
-                saveDataMaster();
-                saveDataOrder();
-            }
-        } catch (IOException e) {
-            throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to store file
-        }
-        return mapError;
-    }
-
-    @Override
-    public List<String> storeDelivery(int tenantId, MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        initData();
-        try {
-            if (file.isEmpty()) {
-                throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to store empty file
-            }
-            if (filename.contains("..")) {
-                // This is a security check
-                throw new StorageException(
-                        "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot store file with relative path outside current directory
-                                + filename);
-            }
-
-            try (InputStream inputStream = file.getInputStream()) {
-                Reader reader = new InputStreamReader(inputStream);
-                Iterator<CsvDelivery> deliveryIterator = orderRepository.getMapDelivery(reader);
-                processUploadDelivery(deliveryIterator);
-                setMapData(tenantId, true);
-                saveDataMaster();
-                saveDataOrder();
+                Iterator<CsvOrder> orderIterator;
+                Iterator<CsvDelivery> deliveryIterator;
+                if (type == 1) {
+                    orderIterator = orderRepository.getMapOrder(reader);
+                    processUpload(orderIterator);
+                    setMapData(tenantId);
+                    setDataMapProduct();
+                    setDataOrder(tenantId);
+                    saveDataMaster();
+                    saveDataOrder();
+                } else {
+                    deliveryIterator = orderRepository.getMapDelivery(reader);
+                    processUploadDelivery(deliveryIterator);
+                    setMapDataDelivery(tenantId);
+                    saveDataMaster();
+                }
             }
         } catch (IOException e) {
             throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to store file
@@ -302,17 +281,52 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void setMapData(int tenantId, boolean typeDelivery) throws StorageException {
+    private void setMapDataDelivery(int tenantId) throws StorageException {
+        List<String> stores = storeRepository.getAllByCode(tenantId, listStoreCode);
+        List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
+
+        listStoreCode.removeIf(x -> stores.contains(x));
+        storesInDb.forEach(store -> {
+            mapStore.put(store.getStoreId(), mapStoreOrder.get(store.getCode()));
+        });
+
+        listStoreCode.forEach(code -> {
+            CsvOrder csvOrder = (CsvOrder) mapStoreOrder.get(code);
+            Store store = new Store();
+            store.setCode(code);
+            store.setName(code);
+            store.setTenantId(tenantId);
+            ((HashSet<Store>) storeIterable).add(store);
+
+            mapStore.put(store.getStoreId(), csvOrder);
+        });
+
+        mapStore.forEach((storeId, csvOrder) -> {
+            String post = ((CsvOrder) csvOrder).getPost();
+            String store = ((CsvOrder) csvOrder).getStore();
+
+            String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
+            if (postCourseId == null) {
+                PostCourse postCourse = new PostCourse();
+                postCourse.setPost(post);
+                postCourse.setStoreId(storeId);
+                postCourse.setTenantId(tenantId);
+                postCourseId = postCourse.getPostCourseId();
+                ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
+            }
+            mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
+        });
+    }
+
+    private void setMapData(int tenantId) throws StorageException {
         try {
             List<String> stores = storeRepository.getAllByCode(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
             List<String> products = null;
             List<Product> productInDB = null;
-            if (!typeDelivery) {
-                productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
-                productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
-                listProductCode.removeIf(x -> products.contains(x));
-            }
+            productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
+            productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
+            listProductCode.removeIf(x -> products.contains(x));
 
             listStoreCode.removeIf(x -> stores.contains(x));
             storesInDb.forEach(store -> {
@@ -331,15 +345,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             });
 
             mapStore.forEach((storeId, csvOrder) -> {
-                String post = "";
-                String store = "";
-                if (typeDelivery) {
-                    post = ((CsvDelivery) csvOrder).getPost();
-                    store = ((CsvDelivery) csvOrder).getStore();
-                } else {
-                    post = ((CsvOrder) csvOrder).getPost();
-                    store = ((CsvOrder) csvOrder).getStore();
-                }
+                String post = ((CsvOrder) csvOrder).getPost();
+                String store = ((CsvOrder) csvOrder).getStore();
 
                 String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
                 if (postCourseId == null) {
@@ -353,29 +360,27 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
             });
 
-            if (!typeDelivery) {
-                listProductCode.forEach(code -> {
-                    CsvOrder csvOrder = mapProduct.get(code);
-                    Product product = new Product();
-                    product.setCode(code);
-                    product.setName(code);
-                    product.setCategory1(csvOrder.getCategory1());
-                    product.setCategory2(csvOrder.getCategory2());
-                    product.setCategory3(csvOrder.getCategory3());
-                    product.setTenantId(tenantId);
+            listProductCode.forEach(code -> {
+                CsvOrder csvOrder = mapProduct.get(code);
+                Product product = new Product();
+                product.setCode(code);
+                product.setName(code);
+                product.setCategory1(csvOrder.getCategory1());
+                product.setCategory2(csvOrder.getCategory2());
+                product.setCategory3(csvOrder.getCategory3());
+                product.setTenantId(tenantId);
 
-                    ((HashSet<Product>) productIterable).add(product);
-                    mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
-                    mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
-                });
+                ((HashSet<Product>) productIterable).add(product);
+                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
+                mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
+            });
 
-                productInDB.forEach(product -> {
-                    String productCode = product.getCode();
-                    CsvOrder csvOrder = mapProduct.get(productCode);
-                    mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
-                    mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
-                });
-            }
+            productInDB.forEach(product -> {
+                String productCode = product.getCode();
+                CsvOrder csvOrder = mapProduct.get(productCode);
+                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
+                mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
+            });
         } catch (Exception ex) {
             throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to store file
         }
