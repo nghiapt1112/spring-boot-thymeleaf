@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String> implements PostCourseRepository {
 
     private final Logger log = LoggerFactory.getLogger(PostCourseRepositoryImpl.class);
@@ -22,6 +21,7 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PostCourse> findAllByStoreId(String storeId) {
         return entityManager
                 .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId", PostCourse.class)
@@ -30,6 +30,7 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void updatePostCourse(PostCourse postCourse) throws DomainException {
         try {
             String hql = "UPDATE PostCourse p set p.tenantId = :tenantId, p.updateUser = :updateUser, p.updateDate = :updateDate,"
@@ -49,6 +50,7 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String checkByStoreIdAndPost(String storeId, String post) {
         List list = entityManager
                 .createQuery("SELECT p.postCourseId FROM PostCourse p WHERE p.storeId = :storeId and p.post = :post")
@@ -62,12 +64,25 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PostCourse save(PostCourse postCourse) {
         if (postCourse.getPostCourseId() == null) {
             entityManager.persist(postCourse);
             return postCourse;
         } else {
             return entityManager.merge(postCourse);
+        }
+    }
+
+    @Override
+    public boolean deleteByStoreIds(List<String> storeIds) throws DomainException {
+        try {
+            String query = "DELETE FROM PostCourse p WHERE p.storeId in (:storeIds)";
+            entityManager.createQuery(query).setParameter("storeIds", storeIds).executeUpdate();
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
         }
     }
 }

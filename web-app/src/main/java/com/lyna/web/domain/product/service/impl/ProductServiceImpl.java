@@ -63,11 +63,6 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public boolean deleteByProductIds(List<String> productIds) {
-        return productRepository.deleteByProductIds(productIds);
-    }
-
-    @Override
     public Product findOneByCode(String code) {
         return productRepository.findOneByCode(code);
 

@@ -12,4 +12,6 @@ public interface PostCourseRepository extends JpaRepository<PostCourse, String> 
 
     String checkByStoreIdAndPost(String s, String s2);
 
+    boolean deleteByStoreIds(List<String> storeIds);
+
 }

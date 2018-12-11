@@ -15,5 +15,4 @@ public interface PackageService {
 
     void create(Package mpackage, UsernamePasswordAuthenticationToken principal);
 
-    boolean deleteByPackageIds(List<String> packageIds);
 }

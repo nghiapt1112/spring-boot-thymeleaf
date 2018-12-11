@@ -73,6 +73,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
                 .setParameter("tenantId", tenantId).getResultList();
     }
+
     @Transactional
     public List<String> getListProductCodeByProductCode(int tenantId, List<String> products) {
         return entityManager

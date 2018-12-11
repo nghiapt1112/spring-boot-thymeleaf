@@ -11,4 +11,6 @@ public interface PostCourseService {
 
     List<PostCourse> findAllByStoreId(String storeId);
 
+    boolean deleteByStoreIds(List<String> storeIds);
+
 }

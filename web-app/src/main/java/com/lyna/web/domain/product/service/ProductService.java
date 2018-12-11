@@ -14,8 +14,6 @@ public interface ProductService {
 
     void create(Product product, UsernamePasswordAuthenticationToken principal);
 
-    boolean deleteByProductIds(List<String> productIds);
-
     Product findOneByCode(String code);
 
 }

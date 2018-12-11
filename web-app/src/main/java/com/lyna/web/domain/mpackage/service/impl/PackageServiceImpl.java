@@ -66,8 +66,4 @@ public class PackageServiceImpl extends BaseService implements PackageService {
         return packageRepository.findByTenantId(tenantId);
     }
 
-    @Override
-    public boolean deleteByPackageIds(List<String> packageIds) {
-        return packageRepository.deleteByPackageIds(packageIds);
-    }
 }

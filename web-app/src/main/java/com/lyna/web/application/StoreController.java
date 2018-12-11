@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,6 +38,9 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
+
+    @Autowired
+    private PostCourseService postCourseService;
 
     private static final String STORE_LIST_PAGE = "store/liststore";
     private static final String STORE_EDIT_PAGE = "store/editStore";
@@ -181,12 +184,11 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String deleteStore(HttpServletRequest request, @RequestParam(value = "arrayStoreId[]") List<String> listStoreId) {
+    String deleteStore(HttpServletRequest request, @RequestParam(value = "storeIds[]") List<String> storeIds) {
         ObjectMapper mapper = new ObjectMapper();
-        //String storeIds = request.getParameter("storeId");
         String ajaxResponse = "";
         try {
-            String response = storeService.deleteStore(listStoreId);
+            boolean response = postCourseService.deleteByStoreIds(storeIds);
             ajaxResponse = mapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

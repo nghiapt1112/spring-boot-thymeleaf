@@ -20,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +90,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         boolean isDeletedStore;
 
         userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(storeIds);
-        isDeletedStore = storeRepository.deletebyStoreId(storeIds);
+        isDeletedStore = storeRepository.deleteByStoreIds(storeIds);
 
         if (isDeletedStore)
             return toStr("delete.msg.success.code");

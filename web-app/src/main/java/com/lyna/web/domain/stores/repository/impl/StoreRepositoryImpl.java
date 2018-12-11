@@ -95,7 +95,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public boolean deletebyStoreId(List<String> storeIds) throws DomainException {
+    public boolean deleteByStoreIds(List<String> storeIds) throws DomainException {
         try {
             String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds)";
             entityManager.createQuery(query)
