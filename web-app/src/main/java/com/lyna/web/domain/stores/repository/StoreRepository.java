@@ -10,6 +10,11 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findByTenantId(int tenantId);
 
+    default List<Store> findAll(int tenantId) {
+        return this.findByTenantId(tenantId);
+
+    }
+
     List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes);
 
     List<Store> getAll(int tenantId, List<String> storeCodes);

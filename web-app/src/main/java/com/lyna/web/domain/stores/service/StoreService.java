@@ -10,6 +10,10 @@ import java.util.List;
 public interface StoreService {
     List<Store> findByTenantId(int tenantId);
 
+    default List<Store> findAll(int tenantId) {
+        return this.findByTenantId(tenantId);
+    }
+
     List<Store> getStoreList(int principal, String search);
 
     List<Store> getStoreList(int principal);
