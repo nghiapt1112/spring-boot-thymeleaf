@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('商品登録')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/editProduct.css" th:href="@{/css/editContant.css}"/>
+</head>
+<body id="body" class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                商品登録
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div style="text-align: center;" class="box-header">
+                                <p class="box-titles"></p>
+                            </div>
+                            <div class="box-body">
+                                <form th:action="@{/product/update}" th:method="post" th:object="${product}">
+                                    <input type="hidden" th:field="*{productId}">
+                                    <input type="hidden" th:field="*{tenantId}">
+                                    <input type="hidden" th:field="*{createDate}">
+                                    <input type="hidden" th:field="*{createUser}">
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">商品コード </span>
+                                        <div class=" form-group col-md-6 has-feedback">
+                                            <input id="code" class="form-control" type="text" th:field="*{code}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorCode" class="error">商品コードは必須です。</em>
+                                            <em style="color: red" id="error_show" th:utext="${errorCodeShow}"></em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('code')}"
+                                                th:errors="*{code}"></em>
+
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">商品名</span>
+                                        <div class=" form-group col-md-6 has-feedback">
+                                            <input id="name" class="form-control" type="text" th:field="*{name}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorName" class="error">商品名は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('name')}"
+                                                th:errors="*{name}"></em>
+
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">単位</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{unit}"
+                                            >
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">単価</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{price}" id="price">
+                                            <em id="errorPrice" class="error">単価を正しく入力してください。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">大分類</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{category1}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">中分類</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{category2}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">小分類</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{category3}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12  button-submit">
+                                        <button TYPE="submit" class="btn btn-primary" id="save">登録</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/editProduct.js" th:src="@{/js/editProduct.js}"></script>
+</body>
+</html>

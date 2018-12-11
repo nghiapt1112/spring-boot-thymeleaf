@@ -1,4 +1,4 @@
-package com.lyna.web.domain.order.repository.repositoryImpl;
+package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.order.Order;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -23,9 +22,6 @@ import java.util.List;
 public class OrderRepositoryImpl extends BaseRepository<Order, String> implements OrderRepository {
 
     private final Logger log = LoggerFactory.getLogger(OrderRepositoryImpl.class);
-
-    @PersistenceContext
-    private EntityManager em;
 
     public OrderRepositoryImpl(EntityManager em) {
         super(Store.class, em);
@@ -45,10 +41,10 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     public Order save(Order order) {
         try {
             if (order.getOrderId() == null) {
-                em.persist(order);
+                entityManager.persist(order);
                 return order;
             } else {
-                em.merge(order);
+                entityManager.merge(order);
             }
         } catch (Exception ex) {
             log.error(ex.getMessage());

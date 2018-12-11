@@ -5,10 +5,7 @@
 }
 .button-submit{
 	text-align: center ! important;
-}
-input{
-	border-color: #00a65a ! important;
-    box-shadow: none ! important;
+	padding-top: 6%;
 }
 .box-titles{
 	color: #666;
@@ -27,22 +24,11 @@ input{
 .title-input-post{
 	padding: 0;
 }
-.buttonSave, .buttonClose{
-	   width: 20%;
-    background: #3c8dbc;
-}
-.buttonClose{
-	   color: white;
-}
-.modal-header{
-	    border-bottom-color: #716565;
-}
 .error{
 	display: none;
 }
 .error_show{
 	color: red;
+
 }
-.content-wrapper{
-	background-color: #ecf0f5;
-}
+

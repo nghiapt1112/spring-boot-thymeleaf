@@ -43,12 +43,6 @@ public class AbstractCustomController {
                 binder.addValidators(baseValidator);
             }
         }
-
-//        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(PATTERN);
-//        simpleDateFormat.setLenient(false);
-//        binder.registerCustomEditor( Date.class, new CustomDateEditor( simpleDateFormat,false));
-//        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(PATTERN), true));
-
     }
 
 

@@ -1,15 +1,16 @@
 package com.lyna.web.domain.postCourse.sevice;
 
 import com.lyna.web.domain.postCourse.PostCourse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 
 public interface PostCourseService {
 
 
-    void updatePostCourse(List<PostCourse> postCourses, UsernamePasswordAuthenticationToken principal, String storeId);
+    void update(PostCourse postCourse);
 
-    List<PostCourse> findAllByStoreId(String storeId);
+    List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId);
+
+    boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
 }

@@ -3,7 +3,12 @@ package com.lyna.web.domain.order;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -21,6 +26,7 @@ public class OrderDetail extends AbstractEntity {
 
     @Column
     public BigDecimal amount;
+
 
     @Column(name = "order_id", nullable = false)
     public String orderId;

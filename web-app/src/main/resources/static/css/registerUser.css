@@ -1,0 +1,9 @@
+.tileRoleStore{
+	padding-bottom: 1%;
+}
+.tileRoleStore > .col-md-4{
+	text-align: center;
+}
+.iputCanview,.inputCanedit{
+	text-align: center;
+}

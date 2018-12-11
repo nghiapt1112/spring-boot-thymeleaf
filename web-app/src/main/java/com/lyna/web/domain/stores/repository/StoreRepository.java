@@ -8,19 +8,24 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getAll(int tenantId);
 
-    Store save(Store store);
+    List<Store> findByTenantId(int tenantId);
 
-    List<Store> findAll(int tenantId);
+    default List<Store> findAll(int tenantId) {
+        return this.findByTenantId(tenantId);
 
-    List<String> getAllByCode(int tenantId, List<String> storeCodes);
+    }
+
+    List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes);
 
     List<Store> getAll(int tenantId, List<String> storeCodes);
 
     List<Store> getAll(int tenantId, String search);
 
-    boolean deletebyStoreId(List<String> listStoreId);
+    Store findOneByStoreIdAndTenantId(String storeId, int tenantId);
 
-    Store findOneByStoreId(String storeId);
+    Store findOneByCodeAndTenantId(String code, int tenantId);
 
-    void updateStore(Store store);
+    boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
+
+
 }

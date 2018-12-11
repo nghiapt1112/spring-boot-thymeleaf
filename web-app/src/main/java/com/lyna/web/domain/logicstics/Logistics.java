@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class Logistics extends AbstractEntity {
     @Id
     @Column(name = "logistics_id", nullable = false)
-    public String logistics_id;
+    public String logisticsId;
 
     @Column(name = "order_id", nullable = false)
     public String orderId;
