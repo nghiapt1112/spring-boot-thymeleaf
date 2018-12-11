@@ -33,6 +33,7 @@ import java.util.Date;
                                 @ColumnResult(name = "storeId", type = String.class),
                                 @ColumnResult(name = "storeName", type = String.class),
                                 @ColumnResult(name = "orderDate", type = Date.class),
+                                @ColumnResult(name = "orderId", type = String.class),
                                 @ColumnResult(name = "totalOrder", type = Integer.class),
                                 @ColumnResult(name = "postName", type = String.class),
                                 @ColumnResult(name = "courseName", type = String.class),
