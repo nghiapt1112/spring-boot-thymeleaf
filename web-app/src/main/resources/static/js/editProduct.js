@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (name = null || name === "" || name.trim() === "") {
+        if (name == null || name === "" || name.trim() === "") {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
 
         var price = $("#price").val();
-        if (price = null || price === "" || price.trim() === "" || !numberFormat.test(price)) {
+        if (price == null || price === "" || price.trim() === "" || !numberFormat.test(price)) {
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {

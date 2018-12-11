@@ -3,7 +3,7 @@ $(document).ready(function () {
         var numberFormat = /^(\d{1,11})(?:\.\d\d?)?$/;
         var checkForm = true;
         var name = $("#name").val();
-        if (name = null || name === "" || name.trim() === "") {
+        if (name == null || name === "" || name.trim() === "") {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
 
         var emptyWeight = $("#emptyWeight").val();
-        if (emptyWeight = null || emptyWeight === "" || emptyWeight.trim() === "" || !numberFormat.test(emptyWeight)) {
+        if (emptyWeight == null || emptyWeight === "" || emptyWeight.trim() === "" || !numberFormat.test(emptyWeight)) {
             $("#errorEmptyWeight").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -19,7 +19,7 @@ $(document).ready(function () {
         }
 
         var fullLoadWeight = $("#fullLoadWeight").val();
-        if (fullLoadWeight = null || fullLoadWeight === "" || fullLoadWeight.trim() === "" || !numberFormat.test(fullLoadWeight)) {
+        if (fullLoadWeight == null || fullLoadWeight === "" || fullLoadWeight.trim() === "" || !numberFormat.test(fullLoadWeight)) {
             $("#errorFullLoadWeight").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
 
         var emptyCapacity = $("#emptyCapacity").val();
-        if (emptyCapacity = null || emptyCapacity === "" || emptyCapacity.trim() === "" || !numberFormat.test(emptyCapacity)) {
+        if (emptyCapacity == null || emptyCapacity === "" || emptyCapacity.trim() === "" || !numberFormat.test(emptyCapacity)) {
             $("#errorEmptyCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -35,7 +35,7 @@ $(document).ready(function () {
         }
 
         var fullLoadCapacity = $("#fullLoadCapacity").val();
-        if (fullLoadCapacity = null || fullLoadCapacity === "" || fullLoadCapacity.trim() === "" || !numberFormat.test(fullLoadCapacity)) {
+        if (fullLoadCapacity == null || fullLoadCapacity === "" || fullLoadCapacity.trim() === "" || !numberFormat.test(fullLoadCapacity)) {
             $("#errorFullLoadCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {

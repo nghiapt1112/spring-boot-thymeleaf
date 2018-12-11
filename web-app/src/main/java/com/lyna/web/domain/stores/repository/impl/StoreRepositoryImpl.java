@@ -103,8 +103,8 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
             return true;
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
+            return false;
         }
-        return true;
     }
 
     @Override

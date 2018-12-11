@@ -105,7 +105,7 @@ $(document).ready(function () {
 
         let checkForm = true;
         var code = $("#code").val();
-        if (code === "" || code.trim() === "") {
+        if (code == null || code === "" || code.trim() === "") {
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -113,7 +113,7 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (name === "" || name.trim() === "") {
+        if (name == null || name === "" || name.trim() === "") {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
