@@ -14,7 +14,7 @@ $(document).ready(function () {
         if (emptyWeight = null || emptyWeight === "" || emptyWeight.trim() === "" || !numberFormat.test(emptyWeight)) {
             $("#errorEmptyWeight").removeClass("error").addClass("error_show");
             checkForm = false;
-        }else{
+        } else {
             $("#errorEmptyWeight").removeClass("error_show").addClass("error");
         }
 
@@ -22,7 +22,7 @@ $(document).ready(function () {
         if (fullLoadWeight = null || fullLoadWeight === "" || fullLoadWeight.trim() === "" || !numberFormat.test(fullLoadWeight)) {
             $("#errorFullLoadWeight").removeClass("error").addClass("error_show");
             checkForm = false;
-        } else{
+        } else {
             $("#errorFullLoadWeight").removeClass("error_show").addClass("error");
         }
 
@@ -30,7 +30,7 @@ $(document).ready(function () {
         if (emptyCapacity = null || emptyCapacity === "" || emptyCapacity.trim() === "" || !numberFormat.test(emptyCapacity)) {
             $("#errorEmptyCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
-        }else{
+        } else {
             $("#errorEmptyCapacity").removeClass("error_show").addClass("error");
         }
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         if (fullLoadCapacity = null || fullLoadCapacity === "" || fullLoadCapacity.trim() === "" || !numberFormat.test(fullLoadCapacity)) {
             $("#errorFullLoadCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
-        }else{
+        } else {
             $("#errorFullLoadCapacity").removeClass("error_show").addClass("error");
         }
 

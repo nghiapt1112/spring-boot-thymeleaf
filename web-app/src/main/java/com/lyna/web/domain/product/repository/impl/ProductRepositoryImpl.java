@@ -11,12 +11,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 @Repository
-@Transactional
-public class ProductRepositoryImpl extends BaseRepository<Product, Long> implements ProductRepository {
+public class ProductRepositoryImpl extends BaseRepository<Product, String> implements ProductRepository {
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
 
@@ -27,6 +25,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
 
 
     @Override
+    @Transactional
     public Product findOneByProductId(String productId) throws DomainException {
         try {
             return entityManager
@@ -54,6 +53,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
+    @Transactional
     public Product findOneByCode(String code) throws DomainException {
         try {
             return entityManager
@@ -67,12 +67,13 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
+    @Transactional
     public List<Product> findByTenantId(int tenantId) throws DomainException {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
                 .setParameter("tenantId", tenantId).getResultList();
     }
-
+    @Transactional
     public List<String> getListProductCodeByProductCode(int tenantId, List<String> products) {
         return entityManager
                 .createQuery("SELECT p.code FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")
@@ -82,6 +83,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, Long> impleme
     }
 
     @Override
+    @Transactional
     public List<Product> getProductsByProductCode(int tenantId, List<String> products) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")

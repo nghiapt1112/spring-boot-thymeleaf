@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, Long> implements PostCourseRepository {
+public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String> implements PostCourseRepository {
 
     private final Logger log = LoggerFactory.getLogger(PostCourseRepositoryImpl.class);
 

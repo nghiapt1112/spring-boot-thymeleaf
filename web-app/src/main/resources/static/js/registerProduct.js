@@ -23,7 +23,7 @@ $(document).ready(function () {
         if (price = null || price === "" || price.trim() === "" || !numberFormat.test(price)) {
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;
-        }else{
+        } else {
             $("#errorPrice").removeClass("error_show").addClass("error");
         }
 

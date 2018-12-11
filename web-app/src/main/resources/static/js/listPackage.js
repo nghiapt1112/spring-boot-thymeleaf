@@ -27,17 +27,16 @@ function deletePackage() {
 
 //
 function addViaAjax() {
-    var arrayPackageId = [];
-         $("#table-package > tbody input:checked").each(function () {
-             arrayPackageId.push($(this).val());
-         })
-        console.log(arrayPackageId);
+    var packageIds = [];
+    $("#table-package > tbody input:checked").each(function () {
+        packageIds.push($(this).val());
+    })
     $.ajax({
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         url: "/package/delete",
         data: {
-            arrayPackageId: arrayPackageId
+            packageIds: packageIds
         },
         dataType: 'json',
         timeout: 100000,
@@ -46,9 +45,9 @@ function addViaAjax() {
         statusCode: function () {
         },
         success: function (data) {
-            if(data==true){
+            if (data == true) {
                 window.location.href = "/package/list";
-            }else{
+            } else {
                 alert("削除しました。");
             }
 

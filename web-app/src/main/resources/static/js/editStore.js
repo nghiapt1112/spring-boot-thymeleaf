@@ -1,10 +1,10 @@
 let addRow = function () {
     let listName = 'postCourses';
-    let fieldsNames = ['postCourseId', 'storeId','createDate','createUser', 'post', 'course', 'delete'];
+    let fieldsNames = ['postCourseId', 'storeId', 'createDate', 'createUser', 'post', 'course', 'delete'];
     let rowIndex = document.querySelectorAll('.item').length;
     let row = document.createElement('div');
     row.classList.add('item', 'order_course', 'col-md-12');
-    fieldsNames.forEach((fieldName) => {
+    fieldsNames.forEach((fieldName) = > {
         let rowPostCourseId = document.createElement('input');
     if (fieldName === 'postCourseId') {
         rowPostCourseId.type = 'hidden';
@@ -149,7 +149,7 @@ $(document).ready(function () {
         $(this).closest(".item").remove();
         $("#postCourseList").find(".item").each(function (index1) {
             let lengthInputPostCourse = $(this).find('input').length;
-            if(lengthInputPostCourse === 6){
+            if (lengthInputPostCourse === 6) {
                 $(this).find("input").each(function (index) {
                     if (0 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].postCourseId');
@@ -159,7 +159,7 @@ $(document).ready(function () {
                         $(this).attr('name', 'postCourses[' + index1 + '].createDate');
                     } else if (3 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].createUser');
-                    }else if (4 === index) {
+                    } else if (4 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].post');
                         $(this).attr('id', 'post' + index1);
                     } else if (5 === index) {
@@ -167,9 +167,9 @@ $(document).ready(function () {
                     }
 
                 })
-            }else {
+            } else {
                 $(this).find("input").each(function (index) {
-                     if (0 === index) {
+                    if (0 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].post');
                         $(this).attr('id', 'post' + index1);
                     } else if (1 === index) {
@@ -178,7 +178,6 @@ $(document).ready(function () {
 
                 })
             }
-
 
 
         })
@@ -191,7 +190,7 @@ $(document).ready(function () {
 
         $(this).closest("body").find(".item").each(function (index1) {
             let lengthInputPostCourse = $(this).find('input').length;
-            if(lengthInputPostCourse === 6){
+            if (lengthInputPostCourse === 6) {
                 $(this).find("input").each(function (index) {
                     if (0 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].postCourseId');
@@ -201,7 +200,7 @@ $(document).ready(function () {
                         $(this).attr('name', 'postCourses[' + index1 + '].createDate');
                     } else if (3 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].createUser');
-                    }else if (4 === index) {
+                    } else if (4 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].post');
                         $(this).attr('id', 'post' + index1);
                     } else if (5 === index) {
@@ -209,7 +208,7 @@ $(document).ready(function () {
                     }
 
                 })
-            }else {
+            } else {
                 $(this).find("input").each(function (index) {
                     if (0 === index) {
                         $(this).attr('name', 'postCourses[' + index1 + '].post');

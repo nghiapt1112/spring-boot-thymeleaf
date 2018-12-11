@@ -13,7 +13,6 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional
 public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail, Long> implements DeliveryDetailRepository {
 
     private final Logger log = LoggerFactory.getLogger(DeliveryDetailRepositoryImpl.class);

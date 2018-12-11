@@ -13,8 +13,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional
-public class PackageRepositoryImpl extends BaseRepository<Package, Long> implements PackageRepository {
+public class PackageRepositoryImpl extends BaseRepository<Package, String> implements PackageRepository {
 
     private final Logger log = LoggerFactory.getLogger(PackageRepositoryImpl.class);
 
@@ -23,6 +22,7 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
     }
 
     @Override
+    @Transactional
     public Package findOneByPackageId(String packageId) throws DomainException {
         try {
             return entityManager
@@ -48,6 +48,7 @@ public class PackageRepositoryImpl extends BaseRepository<Package, Long> impleme
     }
 
     @Override
+    @Transactional
     public List<Package> findByTenantId(int tenantId) {
         return entityManager
                 .createQuery("SELECT p FROM Package p WHERE p.tenantId=:tenantId order by p.name", Package.class)

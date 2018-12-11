@@ -45,7 +45,7 @@
                                         <div class="form-group col-md-6" style="">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                           <em id="errorName" class="error">店舗名は必須です。</em>
+                                            <em id="errorName" class="error">店舗名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
                                         </div>
@@ -131,7 +131,7 @@
                                     </div>
 
                                     <div class="col-md-12  button-submit">
-                                        <button TYPE="submit" class="btn btn-primary" id="save" >登録 </button>
+                                        <button TYPE="submit" class="btn btn-primary" id="save">登録</button>
                                     </div>
 
                                 </form>

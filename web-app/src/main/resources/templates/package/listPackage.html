@@ -38,7 +38,8 @@
                                         <th style="text-align: center;">
                                             <input type="checkbox" id="checkBoxAll">
                                         </th>
-                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
+                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1"
+                                            colspan="1"
                                             aria-label="Store code: activate to sort column ascending"> 店舗コード
                                         </th>
                                         <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
@@ -57,7 +58,8 @@
                                         <th style="text-align: center;">
                                             <input type="checkbox" id="checkBoxAll">
                                         </th>
-                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1" colspan="1"
+                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1"
+                                            colspan="1"
                                             aria-label="Store code: activate to sort column ascending"> 店舗コード
                                         </th>
                                         <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
@@ -80,7 +82,7 @@
                                                class="" th:text="${package.name}"></a>
                                         </td>
                                         <td th:text="${package.unit}"></td>
-                                        <td th:text="${package.emptyWeight}"> </td>
+                                        <td th:text="${package.emptyWeight}"></td>
                                         <td th:text="${package.fullLoadWeight}"></td>
                                         <td th:text="${package.emptyCapacity}"></td>
                                         <td th:text="${package.fullLoadCapacity}"></td>
@@ -90,12 +92,12 @@
                             </th:block>
 
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
         </section>
     </div>
- </div>
+</div>
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" src="/js/listPackage.js" th:src="@{/js/listPackage.js}"></script>
 <!-- DataTables -->

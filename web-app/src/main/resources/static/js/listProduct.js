@@ -27,17 +27,17 @@ function deleteProduct() {
 
 //
 function addViaAjax() {
-    var arrayProductId = [];
-         $("#table-product > tbody input:checked").each(function () {
-             arrayProductId.push($(this).val());
-         })
+    var productIds = [];
+    $("#table-product > tbody input:checked").each(function () {
+        productIds.push($(this).val());
+    })
 
     $.ajax({
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         url: "/product/delete",
         data: {
-            arrayProductId: arrayProductId
+            productIds: productIds
         },
         dataType: 'json',
         timeout: 100000,
@@ -46,9 +46,9 @@ function addViaAjax() {
         statusCode: function () {
         },
         success: function (data) {
-            if(data==true){
+            if (data == true) {
                 window.location.href = "/product/list";
-            }else{
+            } else {
                 alert("削除しました。");
             }
         },

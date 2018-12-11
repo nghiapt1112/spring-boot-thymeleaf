@@ -47,7 +47,7 @@ public class StoreController extends AbstractCustomController {
     @Autowired
     private StoreService storeService;
 
-    private String codeBeforUpdate;
+    private String codeExisted;
 
     @GetMapping(value = "/create")
     @IsAdmin
@@ -61,17 +61,20 @@ public class StoreController extends AbstractCustomController {
 
     @PostMapping(value = "/create")
     public String create(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
-            Store store, BindingResult result, RedirectAttributes redirect) {
+            Store store, BindingResult result) {
         if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
             return STORE_REGISTER_PAGE;
         }
 
-        Store existedStore = storeService.findOneByCode(store.getCode());
-        if (!Objects.isNull(existedStore)) {
-            model.addAttribute("errorCodeShow", "このコードは既に存在します。");
-            model.addAttribute("store", store);
-            return STORE_REGISTER_PAGE;
+        try {
+            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCode(store.getCode()))) {
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("store", store);
+                return STORE_REGISTER_PAGE;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
 
         storeService.create(store, principal);
@@ -82,20 +85,22 @@ public class StoreController extends AbstractCustomController {
 
     @PostMapping(value = "/update")
     public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
-            Store store, BindingResult result, RedirectAttributes redirect) {
+            Store store, BindingResult result) {
 
         if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
-            return STORE_REGISTER_PAGE;
+            return STORE_EDIT_PAGE;
         }
 
-        Store existedStore = storeService.findOneByCode(store.getCode());
-        if (!store.getCode().equals(codeBeforUpdate) && !Objects.isNull(existedStore)) {
-            model.addAttribute("errorCodeShow", "このコードは既に存在します。");
-            model.addAttribute("store", store);
-            return STORE_REGISTER_PAGE;
+        try {
+            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCode(store.getCode()))) {
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("store", store);
+                return STORE_EDIT_PAGE;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
-
 
         storeService.update(store, principal);
 
@@ -106,7 +111,7 @@ public class StoreController extends AbstractCustomController {
     @GetMapping(value = "/update/{storeId}")
     public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId, Model model) {
         Store store = storeService.findOneByStoreId(storeId);
-        codeBeforUpdate = store.getCode();
+        codeExisted = store.getCode();
         model.addAttribute("store", store);
         return STORE_EDIT_PAGE;
     }

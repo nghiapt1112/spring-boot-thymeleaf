@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostCourseRepository extends JpaRepository<PostCourse, Long> {
+public interface PostCourseRepository extends JpaRepository<PostCourse, String> {
     List<PostCourse> findAllByStoreId(String storeId);
 
     void updatePostCourse(PostCourse postCourse);

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PackageRepository extends JpaRepository<Package, Long> {
+public interface PackageRepository extends JpaRepository<Package, String> {
     Package findOneByPackageId(String packageId);
 
     boolean deleteByPackageIds(List<String> packageIds);

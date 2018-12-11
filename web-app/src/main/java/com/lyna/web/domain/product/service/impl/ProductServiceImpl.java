@@ -1,7 +1,6 @@
 package com.lyna.web.domain.product.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -51,7 +50,6 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     public void create(Product product, UsernamePasswordAuthenticationToken principal) throws DomainException {
         User currentUser = (User) principal.getPrincipal();
         Date date = new Date();
-
         product.setCreateDate(date);
         product.setTenantId(currentUser.getTenantId());
         product.setCreateUser(currentUser.getId());
