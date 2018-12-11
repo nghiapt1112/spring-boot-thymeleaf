@@ -1,6 +1,5 @@
 package com.lyna.web.domain.product.repository.impl;
 
-import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -26,49 +25,38 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
 
     @Override
     @Transactional
-    public Product findOneByProductId(String productId) throws DomainException {
-        try {
-            return entityManager
-                    .createQuery("SELECT p FROM Product p WHERE p.productId=:productId", Product.class)
-                    .setParameter("productId", productId)
-                    .getSingleResult();
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            throw e;
-
-        }
+    public Product findOneByProductIdAndTenantId(String productId, int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Product p WHERE p.productId=:productId AND P.tenantId=:tenantId", Product.class)
+                .setParameter("productId", productId)
+                .setParameter("tenantId", tenantId)
+                .getSingleResult();
     }
 
     @Override
-    public boolean deleteByProductIds(List<String> productIds) throws DomainException {
-        try {
-            String query = "DELETE FROM Product p WHERE p.productId in (:listProductId)";
-            entityManager.createQuery(query).setParameter("listProductId", productIds).executeUpdate();
-            return true;
-        } catch (Exception e) {
+    public boolean deleteByProductIdsAndTenantId(List<String> productIds, int tenantId) {
 
-            log.error(e.getMessage());
-            throw e;
-        }
+        String query = "DELETE FROM Product p WHERE p.productId in (:listProductId) AND p.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("listProductId", productIds)
+                .setParameter("tenantId", tenantId).executeUpdate();
+        return true;
     }
 
     @Override
     @Transactional
-    public Product findOneByCode(String code) throws DomainException {
-        try {
-            return entityManager
-                    .createQuery("SELECT p FROM Product p WHERE p.code=:code", Product.class)
-                    .setParameter("code", code)
-                    .getSingleResult();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw e;
-        }
+    public Product findOneByCodeAndTenantId(String code, int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Product p WHERE p.code=:code AND p.tenantId=:tenantId", Product.class)
+                .setParameter("code", code)
+                .setParameter("tenantId", tenantId)
+                .getSingleResult();
+
     }
 
     @Override
     @Transactional
-    public List<Product> findByTenantId(int tenantId) throws DomainException {
+    public List<Product> findByTenantId(int tenantId) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
                 .setParameter("tenantId", tenantId).getResultList();

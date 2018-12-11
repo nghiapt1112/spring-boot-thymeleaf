@@ -5,6 +5,7 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,11 +86,11 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Override
     @Transactional
-    public String deleteStore(List<String> storeIds) {
+    public String deleteStoreAndTenantId(List<String> storeIds, int tenantId) {
         boolean isDeletedStore;
 
         userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(storeIds);
-        isDeletedStore = storeRepository.deleteByStoreIds(storeIds);
+        isDeletedStore = storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
 
         if (isDeletedStore)
             return toStr("delete.msg.success.code");
@@ -100,19 +100,18 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Transactional
     @Override
-    public void create(Store store, UsernamePasswordAuthenticationToken principal) throws DomainException {
-        User currentUser = (User) principal.getPrincipal();
+    public void create(Store store, User user) throws DomainException {
         Date date = new Date();
         store.setCreateDate(date);
-        store.setTenantId(currentUser.getTenantId());
-        store.setCreateUser(currentUser.getId());
+        store.setTenantId(user.getTenantId());
+        store.setCreateUser(user.getId());
         List<PostCourse> postCourses = store.getPostCourses();
         if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
             for (PostCourse postCourse : postCourses) {
-                postCourse.setTenantId(currentUser.getTenantId());
+                postCourse.setTenantId(user.getTenantId());
                 postCourse.setStoreId(store.getStoreId());
                 postCourse.setCreateDate(date);
-                postCourse.setCreateUser(currentUser.getId());
+                postCourse.setCreateUser(user.getId());
             }
             store.setPostCourses(postCourses);
         }
@@ -120,30 +119,30 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new StoreException(toInteger("err.store.null.code"), toStr("err.store.null.msg"));
         }
 
     }
 
     @Transactional
     @Override
-    public void update(Store store, UsernamePasswordAuthenticationToken principal) {
-        User currentUser = (User) principal.getPrincipal();
+    public void update(Store store, User user) {
         Date date = new Date();
-        List<PostCourse> postCourses = postCourseService.findAllByStoreId(store.getStoreId());
+        List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(user.getTenantId(), store.getStoreId());
         List<PostCourse> postCoursesUpdate = store.getPostCourses();
         for (PostCourse postCourse : postCoursesUpdate) {
             if (!postCourses.contains(postCourse)) {
                 postCourse.setCreateDate(date);
-                postCourse.setCreateUser(currentUser.getId());
-                postCourse.setTenantId(currentUser.getTenantId());
+                postCourse.setCreateUser(user.getId());
+                postCourse.setTenantId(user.getTenantId());
                 postCourse.setStoreId(store.getStoreId());
                 postCourses.add(postCourse);
             } else {
                 for (int i = 0; i < postCourses.size(); i++) {
                     if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
                         postCourse.setUpdateDate(date);
-                        postCourse.setUpdateUser(currentUser.getId());
-                        postCourse.setTenantId(currentUser.getTenantId());
+                        postCourse.setUpdateUser(user.getId());
+                        postCourse.setTenantId(user.getTenantId());
                         postCourses.set(i, postCourse);
                     }
                 }
@@ -158,20 +157,38 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setPhoneNumber(store.getPhoneNumber());
         store.setPersonCharge(store.getPersonCharge());
         store.setUpdateDate(date);
-        store.setUpdateUser(currentUser.getId());
-        store.setTenantId(currentUser.getTenantId());
+        store.setUpdateUser(user.getId());
+        store.setTenantId(user.getTenantId());
         store.setPostCourses(postCourses);
-        storeRepository.save(store);
+        try {
+            storeRepository.save(store);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.store.null.code"), toStr("err.store.null.msg"));
+        }
+
     }
 
     @Override
-    public Store findOneByStoreId(String storeId) {
-        return storeRepository.findOneByStoreId(storeId);
+    public Store findOneByStoreIdAndTenantId(String storeId, int tenantId) {
+        try {
+            return storeRepository.findOneByStoreIdAndTenantId(storeId, tenantId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
+        }
+
     }
 
     @Override
-    public Store findOneByCode(String code) {
-        return storeRepository.findOneByCode(code);
+    public Store findOneByCodeAndTenantId(String code, int tenantId) {
+        try {
+            return storeRepository.findOneByCodeAndTenantId(code, tenantId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
+        }
+
     }
 
 }

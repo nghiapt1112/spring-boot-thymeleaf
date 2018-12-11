@@ -4,6 +4,7 @@ import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
+import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +36,22 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
     }
 
     @Override
-    public List<PostCourse> findAllByStoreId(String storeId) {
-        return postCourseRepository.findAllByStoreId(storeId);
+    public List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId) {
+        return postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeId);
     }
 
     @Override
     @Transactional
-    public boolean deleteByStoreIds(List<String> storeIds) {
-        postCourseRepository.deleteByStoreIds(storeIds);
-        storeRepository.deleteByStoreIds(storeIds);
-        return true;
+    public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
+        try {
+            postCourseRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
+            storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.store.deleteFail.code"), toStr("err.store.deleteFail.msg"));
+        }
+
+
     }
 }

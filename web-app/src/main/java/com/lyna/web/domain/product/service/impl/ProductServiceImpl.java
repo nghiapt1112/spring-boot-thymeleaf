@@ -5,11 +5,11 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
 import com.lyna.web.domain.product.service.ProductService;
+import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,47 +24,64 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public void update(Product product, UsernamePasswordAuthenticationToken principal) {
-        User currentUser = (User) principal.getPrincipal();
+    public void update(Product product, User user) {
         Date date = new Date();
         product.setUpdateDate(date);
-        product.setUpdateUser(currentUser.getId());
-        product.setTenantId(currentUser.getTenantId());
-        productRepository.save(product);
-
-    }
-
-    @Override
-    public Product findOneByProductId(String productId) {
-        return productRepository.findOneByProductId(productId);
-    }
-
-    @Override
-    public List<Product> findByTenantId(int tenantId) {
-        return productRepository.findByTenantId(tenantId);
-
-    }
-
-    @Override
-    @Transactional
-    public void create(Product product, UsernamePasswordAuthenticationToken principal) throws DomainException {
-        User currentUser = (User) principal.getPrincipal();
-        Date date = new Date();
-        product.setCreateDate(date);
-        product.setTenantId(currentUser.getTenantId());
-        product.setCreateUser(currentUser.getId());
+        product.setUpdateUser(user.getId());
+        product.setTenantId(user.getTenantId());
 
         try {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
+                throw new StoreException(toInteger("err.product.null.code"), toStr("err.product.null.msg"));
         }
 
     }
 
     @Override
-    public Product findOneByCode(String code) {
-        return productRepository.findOneByCode(code);
+    public Product findOneByProductIdAndTenantId(String productId, int tenantId) {
+        try {
+            return productRepository.findOneByProductIdAndTenantId(productId, tenantId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+        }
+    }
+
+    @Override
+    public List<Product> findByTenantIdAndTenantId(int tenantId) {
+        try {
+            return productRepository.findByTenantId(tenantId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void create(Product product, User user) throws DomainException {
+        Date date = new Date();
+        product.setCreateDate(date);
+        product.setTenantId(user.getTenantId());
+        product.setCreateUser(user.getId());
+        try {
+            productRepository.save(product);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.product.null.code"), toStr("err.product.null.msg"));
+        }
+    }
+
+    @Override
+    public Product findOneByCodeAndTenantId(String code, int tenantId) {
+        try {
+            return productRepository.findOneByCodeAndTenantId(code, tenantId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+        }
 
     }
 }

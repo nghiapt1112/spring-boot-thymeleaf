@@ -10,17 +10,17 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findByTenantId(int tenantId);
 
-    List<String> getAllByCode(int tenantId, List<String> storeCodes);
+    List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes);
 
     List<Store> getAll(int tenantId, List<String> storeCodes);
 
     List<Store> getAll(int tenantId, String search);
 
-    Store findOneByStoreId(String storeId);
+    Store findOneByStoreIdAndTenantId(String storeId, int tenantId);
 
-    Store findOneByCode(String code);
+    Store findOneByCodeAndTenantId(String code, int tenantId);
 
-    boolean deleteByStoreIds(List<String> storeIds);
+    boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
 
 }

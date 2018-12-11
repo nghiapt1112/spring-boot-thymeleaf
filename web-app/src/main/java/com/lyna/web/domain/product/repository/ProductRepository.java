@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
-    Product findOneByProductId(String productId);
+    Product findOneByProductIdAndTenantId(String productId, int tenantId);
 
-    boolean deleteByProductIds(List<String> productIds);
+    boolean deleteByProductIdsAndTenantId(List<String> productIds, int tenantId);
 
-    Product findOneByCode(String code);
+    Product findOneByCodeAndTenantId(String code, int tenantId);
 
     List<Product> findByTenantId(int tenantId);
 

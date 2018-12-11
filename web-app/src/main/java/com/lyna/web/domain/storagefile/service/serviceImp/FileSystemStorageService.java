@@ -237,7 +237,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     private void setMapData(int tenantId) throws StorageException {
         try {
-            List<String> stores = storeRepository.getAllByCode(tenantId, listStoreCode);
+            List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
             List<String> products = productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
             List<Product> productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);

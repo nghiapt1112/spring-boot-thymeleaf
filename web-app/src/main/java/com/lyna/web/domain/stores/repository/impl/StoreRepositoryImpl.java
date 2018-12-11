@@ -46,7 +46,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public List<String> getAllByCode(int tenantId, List<String> storeCodes) {
+    public List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes) {
         if (storeCodes.size() > 0) {
             Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", String.class);
             query.setParameter("tenantId", tenantId)
@@ -95,32 +95,33 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public boolean deleteByStoreIds(List<String> storeIds) throws DomainException {
-        try {
-            String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds)";
+    public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
+
+            String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
             entityManager.createQuery(query)
-                    .setParameter("storeIds", storeIds).executeUpdate();
+                    .setParameter("storeIds", storeIds)
+                    .setParameter("tenantId", tenantId)
+                    .executeUpdate();
             return true;
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            return false;
-        }
     }
 
     @Override
-    public Store findOneByStoreId(String storeId) {
+    public Store findOneByStoreIdAndTenantId(String storeId, int tenantId) {
         return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId", Store.class)
+                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId AND s.tenantId=:tenantId", Store.class)
                 .setParameter("storeId", storeId)
+                .setParameter("tenantId", tenantId)
                 .getSingleResult();
     }
 
     @Override
-    public Store findOneByCode(String code) {
+    public Store findOneByCodeAndTenantId(String code, int tenantId) {
         return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.code=:code", Store.class)
+                .createQuery("SELECT s FROM Store s WHERE s.code=:code AND s.tenantId=:tenantId", Store.class)
                 .setParameter("code", code)
+                .setParameter("tenantId", tenantId)
                 .getSingleResult();
+
     }
 
 }

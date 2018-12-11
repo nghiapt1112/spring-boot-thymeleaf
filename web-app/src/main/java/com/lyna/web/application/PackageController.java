@@ -51,12 +51,13 @@ public class PackageController extends AbstractCustomController {
     public String create(UsernamePasswordAuthenticationToken principal,
                          Model model, @Valid @ModelAttribute("package") Package mpackage,
                          BindingResult result) {
+        User user = (User) principal.getPrincipal();
         if (Objects.isNull(mpackage) || result.hasErrors()) {
             model.addAttribute("package", mpackage);
             return PACKAGE_REGISTER_PAGE;
         }
 
-        packageService.create(mpackage, principal);
+        packageService.create(mpackage, user);
         return REDIRECT_PACKAGE_LIST_PAGE;
     }
 
@@ -64,12 +65,13 @@ public class PackageController extends AbstractCustomController {
     @IsAdmin
     public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("package")
             Package mpackage, BindingResult result) {
+        User user = (User) principal.getPrincipal();
         if (Objects.isNull(mpackage) || result.hasErrors()) {
             model.addAttribute("package", mpackage);
             return PACKAGE_EDIT_PAGE;
         }
 
-        packageService.update(mpackage, principal);
+        packageService.update(mpackage, user);
 
         return REDIRECT_PACKAGE_LIST_PAGE;
 
@@ -77,24 +79,26 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
-        User currentUser = (User) principal.getPrincipal();
-        model.addAttribute("packages", packageService.findByTenantId(currentUser.getTenantId()));
+        User user = (User) principal.getPrincipal();
+        model.addAttribute("packages", packageService.findByTenantId(user.getTenantId()));
         return PACKAGE_LIST_PAGE;
     }
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByPackageIds(@RequestParam(value = "packageIds[]") List<String> packageIds) {
+    String deleteByPackageIds(@RequestParam(value = "packageIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
         if (!Objects.isNull(packageIds) && !CollectionUtils.isEmpty(packageIds)) {
-            deliveryDetailService.deleteByPackageIds(packageIds);
+            deliveryDetailService.deleteByPackageIdsAndTenantId(packageIds, user.getTenantId());
             return "true";
         }
         return "false";
     }
 
     @GetMapping(value = "/update/{packageId}")
-    public String updatePackage(@PathVariable("packageId") String packageId, Model model) {
-        model.addAttribute("package", packageService.findOneByPakageId(packageId));
+    public String updatePackage(@PathVariable("packageId") String packageId, Model model, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
+        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId,user.getTenantId()));
         return PACKAGE_EDIT_PAGE;
     }
 

@@ -9,8 +9,8 @@ public interface PostCourseService {
 
     void update(PostCourse postCourse);
 
-    List<PostCourse> findAllByStoreId(String storeId);
+    List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId);
 
-    boolean deleteByStoreIds(List<String> storeIds);
+    boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
 }

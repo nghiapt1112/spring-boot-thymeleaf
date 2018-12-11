@@ -22,10 +22,11 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostCourse> findAllByStoreId(String storeId) {
+    public List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId) {
         return entityManager
-                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId", PostCourse.class)
+                .createQuery("SELECT p FROM PostCourse p WHERE p.storeId = :storeId AND p.tenantId = :tenantId", PostCourse.class)
                 .setParameter("storeId", storeId)
+                .setParameter("tenantId", tenantId)
                 .getResultList();
     }
 
@@ -75,14 +76,13 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
-    public boolean deleteByStoreIds(List<String> storeIds) throws DomainException {
-        try {
-            String query = "DELETE FROM PostCourse p WHERE p.storeId in (:storeIds)";
-            entityManager.createQuery(query).setParameter("storeIds", storeIds).executeUpdate();
+    public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId){
+            String query = "DELETE FROM PostCourse p WHERE p.storeId in (:storeIds) AND p.tenantId=:tenantId";
+            entityManager.createQuery(query)
+                    .setParameter("storeIds", storeIds)
+                    .setParameter("tenantId", tenantId)
+                    .executeUpdate();
             return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
+
     }
 }

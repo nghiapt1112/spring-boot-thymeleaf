@@ -54,13 +54,13 @@ public class ProductController extends AbstractCustomController {
     public String create(UsernamePasswordAuthenticationToken principal,
                          Model model, @Valid @ModelAttribute("product") Product product,
                          BindingResult result) {
-
+        User user = (User) principal.getPrincipal();
         if (Objects.isNull(product) || result.hasErrors()) {
             model.addAttribute("product", product);
             return PRODUCT_REGISTER_PAGE;
         }
         try {
-            if (!Objects.isNull(productService.findOneByCode(product.getCode()))) {
+            if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(),user.getTenantId()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_REGISTER_PAGE;
@@ -70,7 +70,7 @@ public class ProductController extends AbstractCustomController {
         }
 
 
-        productService.create(product, principal);
+        productService.create(product, user);
         return REDIRECT_PRODUCT_LIST_PAGE;
     }
 
@@ -78,14 +78,14 @@ public class ProductController extends AbstractCustomController {
     @IsAdmin
     public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("product")
             Product product, BindingResult result) {
-
+        User user = (User) principal.getPrincipal();
         if (Objects.isNull(product) || result.hasErrors()) {
             model.addAttribute("product", product);
             return PRODUCT_EDIT_PAGE;
         }
 
         try {
-            if (!Objects.isNull(productService.findOneByCode(product.getCode()))) {
+            if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(),user.getTenantId()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
@@ -94,7 +94,7 @@ public class ProductController extends AbstractCustomController {
             log.error(e.getMessage());
         }
 
-        productService.update(product, principal);
+        productService.update(product, user);
 
         return REDIRECT_PRODUCT_LIST_PAGE;
 
@@ -102,24 +102,26 @@ public class ProductController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
-        User currentUser = (User) principal.getPrincipal();
-        model.addAttribute("products", productService.findByTenantId(currentUser.getTenantId()));
+        User user = (User) principal.getPrincipal();
+        model.addAttribute("products", productService.findByTenantIdAndTenantId(user.getTenantId()));
         return PRODUCT_LIST_PAGE;
     }
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByProductIds(@RequestParam(value = "productIds[]") List<String> productIds) {
+    String deleteByProductIds(@RequestParam(value = "productIds[]") List<String> productIds, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
         if (!Objects.isNull(productIds) && !CollectionUtils.isEmpty(productIds)) {
-            orderDetailService.deleteByProductIds(productIds);
+            orderDetailService.deleteByProductIdsAndTenantId(productIds,user.getTenantId());
             return "true";
         }
         return "false";
     }
 
     @GetMapping(value = "/update/{productId}")
-    public String updateProduct(@PathVariable("productId") String productId, Model model) {
-        Product product = productService.findOneByProductId(productId);
+    public String updateProduct(@PathVariable("productId") String productId, Model model,UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
+        Product product = productService.findOneByProductIdAndTenantId(productId, user.getTenantId());
         codeExisted = product.getCode();
         model.addAttribute("product", product);
         return PRODUCT_EDIT_PAGE;
