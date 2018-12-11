@@ -85,4 +85,20 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         }
         return false;
     }
+
+    @Override
+    public String checkExists(String postcourseId) {
+        try {
+            String query = "SELECT a.orderId FROM Order a WHERE a.postCourseId = :postCourseId";
+            List list = entityManager.createQuery(query)
+                    .setParameter("postCourseId", postcourseId)
+                    .getResultList();
+            if (list != null && list.size() > 0)
+                return (String) list.get(0);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new StorageException("CSVのデータが不正。");
+        }
+        return null;
+    }
 }

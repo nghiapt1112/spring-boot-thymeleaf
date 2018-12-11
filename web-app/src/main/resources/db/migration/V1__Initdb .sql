@@ -199,7 +199,7 @@ CREATE TABLE `t_delivery_detail`  (
   INDEX `package_id`(`package_id`) USING BTREE,
   CONSTRAINT `t_delivery_detail_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_delivery_detail_ibfk_2` FOREIGN KEY (`delivery_id`) REFERENCES `t_delivery` (`delivery_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_delivery_detail_ibfk_3` FOREIGN KEY (`package_id`) REFERENCES `m_package` (`pakage_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `t_delivery_detail_ibfk_3` FOREIGN KEY (`package_id`) REFERENCES `m_package` (package_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 -- ----------------------------
@@ -241,7 +241,7 @@ CREATE TABLE `t_logistics_detail`  (
   INDEX `package_id`(`package_id`) USING BTREE,
   CONSTRAINT `t_logistics_detail_ibfk_1` FOREIGN KEY (`logistics_id`) REFERENCES `t_logistics` (`logistics_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_logistics_detail_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_logistics_detail_ibfk_3` FOREIGN KEY (`package_id`) REFERENCES `m_package` (`pakage_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `t_logistics_detail_ibfk_3` FOREIGN KEY (`package_id`) REFERENCES `m_package` (package_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
 
 -- ----------------------------

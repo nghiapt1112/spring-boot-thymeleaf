@@ -18,4 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     Order save(Order order);
 
     boolean checkExists(String postCourseId, String productId, String quantity);
+
+    String checkExists(String postcourseId);
 }

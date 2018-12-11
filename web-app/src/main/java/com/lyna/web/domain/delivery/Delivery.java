@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "t_delivery")
@@ -19,7 +20,6 @@ import javax.persistence.Table;
         @NamedQuery(name = "Delivery.countAll", query = "SELECT COUNT(x) FROM Delivery x")
 })
 @Data
-@NoArgsConstructor
 public class Delivery extends AbstractEntity {
 
     @Id
@@ -30,4 +30,8 @@ public class Delivery extends AbstractEntity {
 
     @Column(name = "order_id", nullable = false)
     public String orderId;
+
+    public Delivery() {
+        this.deliveryId = UUID.randomUUID().toString();
+    }
 }
