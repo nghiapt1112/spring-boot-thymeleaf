@@ -29,7 +29,7 @@ import java.util.UUID;
 public class Package extends AbstractEntity {
 
     @Id
-    @Column(name = "pakage_id", nullable = false)
+    @Column(name = "package_id", nullable = false)
     public String packageId;
 
     @NotBlank(message = "'荷姿名'は必須です。")

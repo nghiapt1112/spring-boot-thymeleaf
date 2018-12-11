@@ -42,7 +42,7 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
             return true;
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            throw e;
         }
+        return true;
     }
 }

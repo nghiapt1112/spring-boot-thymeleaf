@@ -19,7 +19,7 @@ public interface StoreService {
 
     Page<Store> findPaginated(int tenantId);
 
-    String deleteStore(String storeIds);
+    String deleteStore(List<String> storeIds);
 
     void create(Store store, UsernamePasswordAuthenticationToken principal);
 

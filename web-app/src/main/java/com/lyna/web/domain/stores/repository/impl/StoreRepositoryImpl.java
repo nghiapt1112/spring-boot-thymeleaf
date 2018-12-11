@@ -95,15 +95,16 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public boolean deletebyStoreId(List<String> listStoreId) throws DomainException {
+    public boolean deletebyStoreId(List<String> storeIds) throws DomainException {
         try {
-            String query = "DELETE FROM Store u WHERE u.storeId in (:storelist)";
-            entityManager.createQuery(query).setParameter("storelist", listStoreId).executeUpdate();
+            String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds)";
+            entityManager.createQuery(query)
+                    .setParameter("storeIds", storeIds).executeUpdate();
             return true;
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            throw e;
         }
+        return true;
     }
 
     @Override
