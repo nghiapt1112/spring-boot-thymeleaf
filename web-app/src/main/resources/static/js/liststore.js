@@ -58,7 +58,7 @@ function addViaAjax() {
         contentType: 'application/json; charset=utf-8',
         url: "/store/delete",
         data: {
-            storeId: storeIds.toString()
+            arrayStoreId: storeIds
         },
         dataType: 'json',
         timeout: 100000,

@@ -176,12 +176,12 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String addNew(HttpServletRequest request) {
+    String deleteStore(HttpServletRequest request, @RequestParam(value = "arrayStoreId[]") List<String> listStoreId) {
         ObjectMapper mapper = new ObjectMapper();
-        String storeIds = request.getParameter("storeId");
+        //String storeIds = request.getParameter("storeId");
         String ajaxResponse = "";
         try {
-            String response = storeService.deleteStore(storeIds);
+            String response = storeService.deleteStore(listStoreId);
             ajaxResponse = mapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

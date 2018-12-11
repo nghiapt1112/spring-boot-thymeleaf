@@ -1,1 +1,1 @@
-ALTER TABLE t_order MODIFY order_date timestamp DEFAULT CURRENT_TIMESTAMP ;
+ALTER TABLE m_package CHANGE pakage_id package_id varchar(36) NOT NULL COMMENT 'ID';

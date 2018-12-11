@@ -87,18 +87,11 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Override
     @Transactional
-    public String deleteStore(String storeIds) {
-        boolean isDeletedStore = false;
-        List<String> listStoreId = new ArrayList();
+    public String deleteStore(List<String> storeIds) {
+        boolean isDeletedStore;
 
-        String[] arrayStoreId = storeIds.split(",");
-        for (String storeId : arrayStoreId) {
-            listStoreId.add(storeId);
-        }
-
-        if (userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(listStoreId)) {
-            isDeletedStore = storeRepository.deletebyStoreId(listStoreId);
-        }
+        userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(storeIds);
+        isDeletedStore = storeRepository.deletebyStoreId(storeIds);
 
         if (isDeletedStore)
             return toStr("delete.msg.success.code");
