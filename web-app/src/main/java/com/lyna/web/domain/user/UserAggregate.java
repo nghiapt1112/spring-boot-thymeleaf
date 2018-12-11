@@ -78,16 +78,14 @@ public class UserAggregate extends AbstractObject {
             this.rolePerStore = new ArrayList<>();
             this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
         } else {
-            Set<String> uniqueExistedStoreId = this.rolePerStore.stream().map(el -> el.getStoreId()).collect(Collectors.toSet());
+            Set<String> uniqueExistedStoreIds = this.rolePerStore.stream().map(el -> el.getStoreId()).collect(Collectors.toSet());
+
+            //
             stores.stream()
-                    .filter(store -> !uniqueExistedStoreId.contains(store.getStoreId()))
+                    .filter(store -> !uniqueExistedStoreIds.contains(store.getStoreId()))
                     .forEach(store -> {
-                        UserStoreRole aggregate = new UserStoreRole();
-                        aggregate.setId(UUID.randomUUID().toString());
-                        aggregate.setStoreId(store.getStoreId());
-                        aggregate.setName(store.getName());
-                        aggregate.parseRole(StoreRoleType.NO_PERMISSION.getShortVal());
-                        this.rolePerStore.add(aggregate);
+                        // assign user to new store with NO_PERMISSION role in Store.
+                        this.rolePerStore.add(new UserStoreRole(store));
                     });
 
         }
@@ -108,6 +106,13 @@ class UserStoreRole {
     private String storeId;
     private boolean canView;
     private boolean canEdit;
+
+    public UserStoreRole(Store store) {
+        this.setId(UUID.randomUUID().toString());
+        this.setStoreId(store.getStoreId());
+        this.setName(store.getName());
+        this.parseRole(StoreRoleType.NO_PERMISSION.getShortVal());
+    }
 
     public static UserStoreRole fromStoreEntity(Store store) {
         UserStoreRole aggregate = new UserStoreRole();
