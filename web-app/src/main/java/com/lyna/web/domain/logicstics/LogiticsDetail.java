@@ -1,6 +1,7 @@
 package com.lyna.web.domain.logicstics;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.mpackage.Package;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,8 @@ public class LogiticsDetail extends AbstractEntity {
 
     @Column(name = "logistics_id", nullable = false)
     public String logisticsId;
+
+    @OneToOne
+    @JoinColumn(name = "package_id", referencedColumnName = "pakage_id", insertable = false, updatable = false)
+    public Package pack;
 }

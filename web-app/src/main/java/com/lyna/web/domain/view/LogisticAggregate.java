@@ -1,8 +1,9 @@
 package com.lyna.web.domain.view;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
+import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.logicstics.LogisticDTO;
-import com.lyna.web.domain.mpackage.Package;
+import com.lyna.web.domain.logicstics.LogiticsDetail;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.lyna.web.infrastructure.utils.DateTimeUtils.convertDateToString;
-
+import static com.lyna.web.domain.view.PackageAggregate.fromDeliveryDetailEntity;
+import static com.lyna.web.domain.view.PackageAggregate.fromLogisticDetailEntity;
 @Data
 @NoArgsConstructor
 public class LogisticAggregate extends AbstractObject {
@@ -25,19 +27,11 @@ public class LogisticAggregate extends AbstractObject {
     private String courseName;
     private BigDecimal amount;
 
-    private String logisticAmount;
-    private String logisticPackageId;
-
-
-    private String deliveryAmount;
-    private String deliveryPackageId;
-    private List<Package> packages;
-
-    //    private String logisticPackageName;
-//    private String logisticAmount;
-//    private String deliveryAmount;
-//    private String deliveryPackageName;
+    private List<PackageAggregate> deliveryDetails;
     private boolean deliveryData;
+
+    private String deliveryId;
+    private String logisticId;
 
 
     public static LogisticAggregate fromLogisticDTO(LogisticDTO dto) {
@@ -49,34 +43,31 @@ public class LogisticAggregate extends AbstractObject {
         aggregate.postName = dto.getPostName();
         aggregate.courseName = dto.getCourseName();
         aggregate.amount = dto.getAmount();
+
+
         if (dto.isDeliveryData()) {
             aggregate.deliveryData = true;
         }
-//        TODO: set logisticPackageId and deliveryPackageId
-        aggregate.deliveryPackageId = dto.getDeliveryPackageId();
-        aggregate.logisticPackageId = dto.getLogisticPackageId();
-//        aggregate.logisticPackageName = dto.getLogisticPackageName();
-//        aggregate.logisticAmount = dto.getLogisticAmount();
-//        aggregate.deliveryAmount = dto.getDeliveryAmount();
-//        aggregate.deliveryPackageName = dto.getDeliveryPackageName();
+        aggregate.logisticId = dto.getLogisticId();
+        aggregate.deliveryId = dto.getDeliveryId();
 
         return aggregate;
     }
 
-    public void updatePackage(Map<String, Package> packageById) {
-        if (Objects.isNull(this.packages)) {
-            this.packages = new ArrayList<>();
+    public void updatePackage(Map<String, List<LogiticsDetail>> logisticDetailsById, Map<String, List<DeliveryDetail>> deliveryDetailsById) {
+        if (Objects.isNull(this.deliveryDetails)) {
+            this.deliveryDetails = new ArrayList<>();
+        }
+        if (this.deliveryData) {
+            for ( DeliveryDetail deliveryDetail: deliveryDetailsById.get(this.deliveryId)) {
+                this.deliveryDetails.add(fromDeliveryDetailEntity(deliveryDetail));
+            }
+        } else {
+            for (LogiticsDetail el : logisticDetailsById.get(this.logisticId)) {
+                this.deliveryDetails.add(fromLogisticDetailEntity(el));
+            }
         }
 
-        Package deliveryPackage = null;
-        if (this.deliveryData) {
-            deliveryPackage = packageById.get(this.deliveryPackageId);
-        } else {
-            deliveryPackage = packageById.get(this.logisticPackageId);
-        }
-        if (Objects.isNull(deliveryPackage)) {
-            // DATA ERROR
-        }
-        this.packages.add(deliveryPackage);
     }
 }
+

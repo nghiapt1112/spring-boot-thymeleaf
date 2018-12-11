@@ -17,12 +17,29 @@
         </section>
         <section class="content content-right">
             <div>
-                <form action="#" th:action="@{/user/register/}" th:object="${userRegisterAggregate}" method="post">
-                    <p class="row"><label class="col-md-2">メールアドレス: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
-                    <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード: </label> <input id="password" class="col-md-3" type="password" th:field="*{password}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード(確認用):</label> <input id="confirmPasswd" class="col-md-3" type="password" th:field="*{confirmPasswd}"/></p>
-                    <!--<p th:if="${#fields.hasErrors('confirmPasswd')}">Re-confirmed password is incorrect.</p>-->
+                <form name="register-form" action="#" th:action="@{/user/register/}"
+                      th:object="${userRegisterAggregate}" method="POST">
+                    <p class="row"><label class="col-md-2">メールアドレス: </label><input name="email" id="email" class="col-md-3" type="text"
+                                                                                   th:field="*{email}" required/></p>
+                    <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text"
+                                                                                 th:field="*{userName}" required/></p>
+                    <p class="row"><label for="password" class="col-md-2">パスワード: </label> <input class="col-md-3"
+                                                                                                 type="password"
+                                                                                                 name="password"
+                                                                                                 id="password"
+                                                                                                 th:field="*{password}"
+                                                                                                 onkeyup='check();'
+                                                                                                 required/>
+                    </p>
+                    <p class="row"><label for="password" class="col-md-2">パスワード(確認用):</label> <input class="col-md-3"
+                                                                                                     type="password"
+                                                                                                     name="confirm_password"
+                                                                                                     id="confirm_password"
+                                                                                                     th:field="*{password}"
+                                                                                                     onkeyup='check();'
+                                                                                                     required/>
+                    </p>
+                    <span id='message'></span>
                     <hr>
 
                     <div class="row">
@@ -33,29 +50,27 @@
                     <div class="row" th:each="item,el : ${userPerRoles}">
                         <label class="col-md-2" th:text="${item.name}"> </label>
                         <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
-                        <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}" />
+                        <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
                         <div class="col-md-1 text-center">
-                            <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
+                            <input type="checkbox"
+                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
                         </div>
                         <div class="col-md-1 text-center">
-                            <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canEdit}">
+                            <input type="checkbox"
+                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canEdit}">
                         </div>
                     </div>
-
                     <br>
                     <div class="col-md-5 text-center">
-                        <input type="submit" value="Submit" class="btn btn-primary"/>
+                        <input type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary" onkeyup='check();'/>
                     </div>
-
                 </form>
             </div>
         </section>
     </div>
 </div>
-
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/mainMenu_t.js" th:src="@{/js/listUser.js}"></script>
-
-
+<script type="text/javascript" src="/js/mainMenu.js" th:src="@{/js/listUser.js}"></script>
+<script type="text/javascript" th:src="@{/js/validate-form-register.js}"></script>
 </body>
 </html>
