@@ -3,6 +3,7 @@ package com.lyna.web.domain.storagefile.service.serviceImp;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.Delivery;
+import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
 import com.lyna.web.domain.order.Order;
@@ -346,13 +347,19 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             }
         });
 
-        List<Package> packagesInDb =
-
-                mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
+        List<String> packages = Arrays.asList("便", "ばんじゅう", "箱");
 
 
-                    String deliveryDetailId = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, packageId);
-                });
+        mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
+            packages.forEach(packageCode -> {
+                String deliveryDetailId = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, packageCode, tenantId);
+                if (deliveryDetailId == null) {
+                    DeliveryDetail deliveryDetail = new DeliveryDetail();
+                    deliveryDetail.setTenantId(tenantId);
+                    deliveryDetail.setPackageId(pac);
+                }
+            });
+        });
     }
 
     private void setMapData(int tenantId) throws StorageException {
