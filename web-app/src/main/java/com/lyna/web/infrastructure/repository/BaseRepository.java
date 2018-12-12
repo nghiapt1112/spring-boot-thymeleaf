@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Objects;
 
-public class BaseRepository<E extends AbstractEntity, ID extends Serializable> extends SimpleJpaRepository<E, ID> implements PagingRepository {
+public class BaseRepository<E extends AbstractObject, ID extends Serializable> extends SimpleJpaRepository<E, ID> implements PagingRepository {
     private static final int NO_RECORDS = -1;
 
     protected final Logger LOGGER = LoggerFactory.getLogger(getClass());

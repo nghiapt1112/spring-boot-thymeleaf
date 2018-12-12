@@ -133,13 +133,13 @@
                                             <td th:text="*{logistic.getOrderDate()}"></td>
                                             <td th:text="${logistic.getStoreName()}"></td>
                                             <td th:text="${logistic.getPostName()}"></td>
-                                            <td th:text="${logistic.getTotalOrder()}"></td>
+                                            <td > number order</td>
                                             <td th:text="${logistic.getAmount()}"></td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
-                                            <td>----</td>
+                                            <td>----</td> <!--tray-->
+                                            <td th:text="${logistic.getPackageBox()}"></td>
+                                            <td th:text="${logistic.getPackageCase()}"></td>
+                                            <td th:text="${logistic.getTotalWeight()}"></td>
+                                            <td th:text="${logistic.getTotalCapacity()}"></td>
                                             <td th:text="${logistic.getCourseName()}"></td>
 
                                         </tr>

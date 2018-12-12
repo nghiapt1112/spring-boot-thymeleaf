@@ -1,10 +1,12 @@
 package com.lyna.web.domain.logicstics.service;
 
-import com.lyna.commons.infrustructure.object.RequestPage;
-import com.lyna.web.domain.logicstics.LogisticResponsePage;
-import com.lyna.web.domain.logicstics.StoreResponsePage;
+import com.lyna.web.domain.logicstics.LogisticView;
+import com.lyna.web.domain.view.LogisticAggregate;
+
+import java.util.List;
 
 public interface LogisticService {
-    LogisticResponsePage findLogisticsAndPaging(RequestPage requestPage);
-    StoreResponsePage findOrdersAndPaging(RequestPage requestPage);
+    List<LogisticAggregate> findLogisticsView(int tenantId);
+
+    List<LogisticView> findOrdersView();
 }

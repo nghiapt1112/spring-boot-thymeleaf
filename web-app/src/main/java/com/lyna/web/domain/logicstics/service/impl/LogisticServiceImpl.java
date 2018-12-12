@@ -1,88 +1,60 @@
 package com.lyna.web.domain.logicstics.service.impl;
 
-import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.delivery.DeliveryDetail;
-import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
-import com.lyna.web.domain.logicstics.LogisticResponsePage;
-import com.lyna.web.domain.logicstics.LogiticsDetail;
-import com.lyna.web.domain.logicstics.StoreResponsePage;
-import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
-import com.lyna.web.domain.logicstics.repository.LogisticRepository;
+import com.lyna.web.domain.logicstics.DeliveryView;
+import com.lyna.web.domain.logicstics.LogisticView;
+import com.lyna.web.domain.logicstics.repository.LogisticViewRepository;
 import com.lyna.web.domain.logicstics.service.LogisticService;
-import com.lyna.web.domain.order.Order;
-import com.lyna.web.domain.order.service.OrderService;
-import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.view.LogisticAggregate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.lyna.web.domain.logicstics.Logistics.MAIN_MENU_LOGISTIC_DELIVERY_LIST;
-import static com.lyna.web.domain.stores.Store.MAIN_MENU_STORE_ORDER_LIST;
 
 @Service
 public class LogisticServiceImpl extends BaseService implements LogisticService {
 
-    @Autowired
-    private LogisticRepository logisticRepository;
 
     @Autowired
-    private StoreRepository storeRepository;
+    private LogisticViewRepository logisticViewRepository;
 
-    @Autowired
-    private LogisticDetailRepository logisticDetailRepository;
+    @Override
+    public List<LogisticAggregate> findLogisticsView(int tenantId) {
+        List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId);
+        List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId);
 
-    @Autowired
-    private DeliveryDetailRepository deliveryDetailRepository;
-
-    @Autowired
-    private OrderService orderService;
-
-    public LogisticResponsePage findLogisticsAndPaging(RequestPage logisticRequestPage) {
-        LogisticResponsePage responses = this.logisticRepository.findWithPaging(logisticRequestPage, LogisticResponsePage.class, MAIN_MENU_LOGISTIC_DELIVERY_LIST);
-
-        if (Objects.isNull(responses)) {
-            throw new DomainException("[parse.response.error]");
-        }
-        List<LogisticAggregate> logisticAggregates = responses.getResults();
-        Collection<String> orderIds = orderService.findByTenantId(logisticRequestPage.getTenantId())
+        Map<String, DeliveryView> deliveryViewByOrderId = deliveryView
                 .stream()
-                .map(Order::getOrderId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toMap(DeliveryView::getOrderId, v -> v, (v1, v2) -> v1));
 
-        Map<String, List<LogiticsDetail>> logisticDetailsById = this.logisticDetailRepository
-                .findByOrderIds(logisticRequestPage.getTenantId(), orderIds)
-                .stream().collect(Collectors.groupingBy(LogiticsDetail::getLogisticsId));
-
-
-        Map<String, List<DeliveryDetail>> deliveryDetailsById = this.deliveryDetailRepository
-                .findByOrderIds(logisticRequestPage.getTenantId(), orderIds)
-                .stream().collect(Collectors.groupingBy(DeliveryDetail::getDeliveryId));
-
-
-        logisticAggregates.stream()
-                .peek(el -> el.updatePackage(logisticDetailsById, deliveryDetailsById))
+        return logisticView.stream()
+                .map(el -> LogisticAggregate.parseFromViewDTO(el, deliveryViewByOrderId))
                 .collect(Collectors.toList());
 
-        return responses;
+    }
+
+    @SuppressWarnings("unused")
+    private List<String> findOrderPushedToDeliveryAPI(List<LogisticView> logisticView, Map<String, DeliveryView> deliveryViewByOrderId) {
+        if (CollectionUtils.isEmpty(logisticView) || MapUtils.isEmpty(deliveryViewByOrderId)) {
+            return Collections.EMPTY_LIST;
+        }
+
+        return logisticView
+                .stream()
+                .filter(el -> deliveryViewByOrderId.containsKey(el.getOrderId()))
+                .map(LogisticView::getOrderId)
+                .collect(Collectors.toList());
+
     }
 
     @Override
-    public StoreResponsePage findOrdersAndPaging(RequestPage orderRequestPage) {
-
-
-        StoreResponsePage responses = this.storeRepository.findWithPaging(orderRequestPage, StoreResponsePage.class, MAIN_MENU_STORE_ORDER_LIST);
-        if (Objects.isNull(responses)) {
-            throw new DomainException("[parse.response.error]");
-        }
-        return responses;
+    public List<LogisticView> findOrdersView() {
+        return null;
     }
 
 }
