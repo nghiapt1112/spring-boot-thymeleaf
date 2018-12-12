@@ -131,7 +131,8 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="logistic: ${logisticData}">
+
+                                        <tr class="" th:each="logistic: ${logisticData}" th:classappend="${logistic.isDeliveryData() ? 'bg-green': ''}" >
                                             <td th:text="*{logistic.getOrderDate()}"></td>
                                             <td th:text="${logistic.getStoreName()}"></td>
                                             <td th:text="${logistic.getPostName()}"></td>
@@ -143,8 +144,8 @@
                                             <td th:text="${logistic.getTotalWeight()}"></td>
                                             <td th:text="${logistic.getTotalCapacity()}"></td>
                                             <td th:text="${logistic.getCourseName()}"></td>
-
                                         </tr>
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -152,22 +153,14 @@
                                     <table id="table-order" class="table table-bordered">
                                         <thead style="background: #337ab7">
                                         <tr>
-                                            <!--<th>日付</th>-->
-                                            <!--<th>店舗</th>-->
-                                            <!--<th>便</th>-->
-                                            <!--<th>商品</th>-->
-                                            <!--<th>個数</th>-->
-                                            <!--<th>大分類</th>-->
-                                            <!--<th>中分類</th>-->
-                                            <!--<th>小分類</th>-->
-                                            <th>Order Date</th>
-                                            <th>Store Name</th>
-                                            <th>Post</th>
-                                            <th>Product name</th>
-                                            <th>So Luong</th>
-                                            <th>Category1</th>
-                                            <th>Category2</th>
-                                            <th>Category3</th>
+                                            <th>日付</th>
+                                            <th>店舗</th>
+                                            <th>便</th>
+                                            <th>商品</th>
+                                            <th>個数</th>
+                                            <th>大分類</th>
+                                            <th>中分類</th>
+                                            <th>小分類</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -176,7 +169,7 @@
                                             <td th:text="${order.getStoreName()}"></td>
                                             <td th:text="${order.getPostName()}"></td>
                                             <td th:text="${order.getProductName()}"></td>
-                                            <td th:text="${order.getAmount()}"></td>
+                                            <td th:text="${order.getOrderAmount()}"></td>
                                             <td th:text="${order.getFirstCategory()}"></td>
                                             <td th:text="${order.getSecondCategory()}"></td>
                                             <td th:text="${order.getThirdCategory()}"></td>

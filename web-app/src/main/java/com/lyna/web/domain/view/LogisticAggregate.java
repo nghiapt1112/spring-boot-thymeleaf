@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -47,13 +48,24 @@ public class LogisticAggregate extends AbstractObject {
         aggregate.postName = logisticView.getPostName();
         aggregate.amount = logisticView.getAmount();
         aggregate.price = logisticView.getPrice();
-        aggregate.totalPackage = logisticView.getTotalPackage();
-        aggregate.packageCase = logisticView.getPackageCase();
-        aggregate.packageBox = logisticView.getPackageBox();
-        aggregate.totalWeight = logisticView.getTotalWeight();
-        aggregate.totalCapacity = logisticView.getTotalCapacity();
         aggregate.courseName = logisticView.getCourseName();
-        aggregate.isDeliveryData = false;
+
+        DeliveryView deliveryView = deliveryViewByOrderId.get(aggregate.orderId);
+        if (Objects.nonNull(deliveryView)) {
+            // delivery Data
+            aggregate.isDeliveryData = true;
+            aggregate.totalPackage = deliveryView.getTotalPackage();
+            aggregate.packageCase = deliveryView.getPackageCase();
+            aggregate.packageBox = deliveryView.getPackageBox();
+            aggregate.totalWeight = deliveryView.getTotalWeight();
+            aggregate.totalCapacity = deliveryView.getTotalCapacity();
+        } else {
+            aggregate.totalPackage = logisticView.getTotalPackage();
+            aggregate.packageCase = logisticView.getPackageCase();
+            aggregate.packageBox = logisticView.getPackageBox();
+            aggregate.totalWeight = logisticView.getTotalWeight();
+            aggregate.totalCapacity = logisticView.getTotalCapacity();
+        }
         return aggregate;
     }
 }

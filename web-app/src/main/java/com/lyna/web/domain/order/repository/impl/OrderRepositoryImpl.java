@@ -2,6 +2,7 @@ package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.order.Order;
+import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.exception.StorageException;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.stores.Store;
@@ -75,6 +76,12 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     public List<Order> findByTenantId(int tenantId) {
         return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId")
                 .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
+
+    @Override
+    public List<OrderView> findOverViews(int tenantId) {
+        return entityManager.createQuery("SELECT o FROM OrderView o", OrderView.class)
                 .getResultList();
     }
 }

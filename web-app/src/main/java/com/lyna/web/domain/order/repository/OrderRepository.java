@@ -1,6 +1,7 @@
 package com.lyna.web.domain.order.repository;
 
 import com.lyna.web.domain.order.Order;
+import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.view.CsvOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     boolean checkExists(String postCourseId, String productId, String quantity);
 
     List<Order> findByTenantId(int tenantId);
+
+    List<OrderView> findOverViews(int tenantId);
 }
