@@ -27,11 +27,6 @@ public class MainController extends AbstractCustomController {
     private OrderService orderService;
 
     @GetMapping("/mainScreen")
-    public String mainScreen() {
-        return "main/mainMenu";
-    }
-
-    @GetMapping("/mainScreen-test")
     public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
