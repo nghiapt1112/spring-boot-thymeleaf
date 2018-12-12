@@ -52,9 +52,4 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
     }
 
-    @Override
-    public List<LogisticView> findOrdersView() {
-        return null;
-    }
-
 }
