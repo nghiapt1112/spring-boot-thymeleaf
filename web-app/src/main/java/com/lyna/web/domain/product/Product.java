@@ -66,7 +66,6 @@ public class Product extends AbstractEntity {
     private Set<OrderDetail> orderDetails;
 
     public Product() {
-
         this.productId = UUID.randomUUID().toString();
     }
 }

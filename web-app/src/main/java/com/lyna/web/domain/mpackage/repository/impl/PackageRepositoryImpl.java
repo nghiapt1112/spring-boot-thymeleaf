@@ -1,19 +1,21 @@
 package com.lyna.web.domain.mpackage.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
+import com.lyna.web.infrastructure.repository.BaseRepository;
+import com.lyna.web.infrastructure.repository.PagingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
-public class PackageRepositoryImpl extends BaseRepository<Package, String> implements PackageRepository {
+public class PackageRepositoryImpl extends BaseRepository<Package, String> implements PackageRepository, PagingRepository {
 
     private final Logger log = LoggerFactory.getLogger(PackageRepositoryImpl.class);
 
@@ -22,6 +24,13 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
     }
 
     @Override
+    public List<Package> findByIds(int tenantId, Collection<String> ids) {
+        return super.entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.tenantId = :tenantId AND p.pakageId IN (:ids)", Package.class)
+                .setParameter("tenantId", tenantId).setParameter("ids", ids)
+                .getResultList();
+    }
+
     @Transactional
     public Package findOneByPackageIdAndTenantId(String packageId, int tenantId) throws DomainException {
         return entityManager
@@ -50,4 +59,5 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
                 .setParameter("tenantId", tenantId)
                 .getResultList();
     }
+
 }

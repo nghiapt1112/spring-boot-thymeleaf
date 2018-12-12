@@ -1,13 +1,18 @@
 package com.lyna.web.domain.postCourse;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.order.Order;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,6 +33,10 @@ public class PostCourse extends AbstractEntity {
     @Column(name = "store_id")
     private String storeId;
 
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "post_course_id")
+    private Set<Order> orders;
 
     public PostCourse() {
         this.postCourseId = UUID.randomUUID().toString();

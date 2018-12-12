@@ -1,17 +1,17 @@
 CREATE VIEW `v_logicstic` AS
 SELECT
     t0.order_id AS order_id,
-    t0.order_date AS 日付,
-    t0.store_name AS 店舗,
-    t0.post AS 便,
-    t0.amount AS 発注個数,
-    t0.price AS 金額,
-    t1.packageId AS ばんじゅう,
-    t2.cases AS ケース,
-    t3.BOX AS 箱,
-    ((COALESCE(t1.weight, 0) + COALESCE(t2.weight, 0)) + COALESCE(t3.weight, 0)) AS 総重量,
-    ((COALESCE(t1.cap, 0) + COALESCE(t2.cap, 0)) + COALESCE(t3.cap, 0)) AS 総才数,
-    t0.course AS コース
+    t0.order_date AS order_date,
+    t0.store_name AS store_name,
+    t0.post AS post_name,
+    t0.amount AS amount,
+    t0.price AS price,
+    t1.packageId AS total_package,
+    t2.cases AS package_case,
+    t3.BOX AS package_box,
+    ((COALESCE(t1.weight, 0) + COALESCE(t2.weight, 0)) + COALESCE(t3.weight, 0)) AS total_weight,
+    ((COALESCE(t1.cap, 0) + COALESCE(t2.cap, 0)) + COALESCE(t3.cap, 0)) AS total_capacity,
+    t0.course AS course_name
 FROM
     (SELECT
         l.logistics_id AS logistics_id,

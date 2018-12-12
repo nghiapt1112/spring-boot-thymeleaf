@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -71,15 +69,19 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         this.throwIfExisted(user.getEmail());
 
-        User createdUser = this.createUser(user.withDefaultFields(currentUser));
-        userStoreAuthorityService.assignUserToStore(
-                aggregate.toUserStoreAuthorities()
-                        .peek(el -> {
-                            el.setUserId(createdUser.getId());
-                            el.initDefaultCreateFields(currentUser);
-                        })
-                        .collect(Collectors.toList()));
-        return createdUser;
+        try {
+            User createdUser = this.createUser(user.withDefaultFields(currentUser));
+            userStoreAuthorityService.assignUserToStore(
+                    aggregate.toUserStoreAuthorities()
+                            .peek(el -> {
+                                el.setUserId(createdUser.getId());
+                                el.initDefaultCreateFields(currentUser);
+                            })
+                            .collect(Collectors.toList()));
+            return createdUser;
+        } catch (RuntimeException e) {
+            throw new UserException(toInteger("err.user.createFailed.code"), toStr("err.user.createFailed.msg"));
+        }
     }
 
     private void throwIfExisted(String email) {
@@ -145,39 +147,49 @@ public class UserServiceImpl extends BaseService implements UserService {
         User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
         oldUser.updateInfo(userToUpdate);
-        this.userRepository.save(oldUser);
+        try {
+            this.userRepository.save(oldUser);
 
-        List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
+            List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
 
-        Map<String, Short> authorityById = newUserStoreAuthority.stream()
-                .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
+            Map<String, Short> authorityById = newUserStoreAuthority.stream()
+                    .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
 
-        this.userStoreAuthorityService.assignUserToStore(
-                oldUser.getStoreAuthoritiesAsStream()
-                        .filter(el -> authorityById.containsKey(el.getId()))
-                        .peek(el -> {
-                            el.setAuthority(authorityById.get(el.getId()));
-                            el.initDefaultUpdateFields(currentUser);
-                        })
-                        .collect(Collectors.toList())
-        );
-        Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
+            this.userStoreAuthorityService.assignUserToStore(
+                    oldUser.getStoreAuthoritiesAsStream()
+                            .filter(el -> authorityById.containsKey(el.getId()))
+                            .peek(el -> {
+                                el.setAuthority(authorityById.get(el.getId()));
+                                el.initDefaultUpdateFields(currentUser);
+                            })
+                            .collect(Collectors.toList())
+            );
+            Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
 
-        this.userStoreAuthorityService.assignUserToStore(
-                newUserStoreAuthority.stream()
-                        .filter(el -> !oldAuthorities.contains(el.getId()))
-                        .peek(el -> {
-                            el.setUserId(currentUser.getId());
-                            el.setTenantId(currentUser.getTenantId());
-                            el.initDefaultCreateFields(currentUser);
-                        })
-                        .collect(Collectors.toList())
-        );
+
+            this.userStoreAuthorityService.assignUserToStore(
+                    newUserStoreAuthority.stream()
+                            .filter(el -> !oldAuthorities.contains(el.getId()))
+                            .peek(el -> {
+                                el.setUserId(currentUser.getId());
+                                el.setTenantId(currentUser.getTenantId());
+                                el.initDefaultCreateFields(currentUser);
+                            })
+                            .collect(Collectors.toList())
+            );
+        } catch (RuntimeException e) {
+            throw new UserException(toInteger("err.user.updateFailed.code"), toStr("err.user.updateFailed.msg"));
+        }
     }
 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
-        return this.userRepository.findUsersWithPaging(userRequestPage);
+        UserResponsePage userResponPage = this.userRepository.findUsersWithPaging(userRequestPage);
+        if (Objects.isNull(userRequestPage)) {
+            throw new UserException(toInteger("err.user.pageError.code"), toStr("err.user.pageError.msg"));
+        }
+        return userResponPage;
+
     }
 
     @Override

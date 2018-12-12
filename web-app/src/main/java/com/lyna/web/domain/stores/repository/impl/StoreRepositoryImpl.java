@@ -1,9 +1,9 @@
 package com.lyna.web.domain.stores.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
+import com.lyna.web.infrastructure.repository.BaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
