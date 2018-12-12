@@ -34,7 +34,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-                throw new StoreException(toInteger("err.product.null.code"), toStr("err.product.null.msg"));
+            throw new StoreException(toInteger("err.product.updateError.code"), toStr("err.product.updateError.msg"));
         }
 
     }
@@ -70,7 +70,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.null.code"), toStr("err.product.null.msg"));
+            throw new StoreException(toInteger("err.product.saveError.code"), toStr("err.product.saveError.msg"));
         }
     }
 

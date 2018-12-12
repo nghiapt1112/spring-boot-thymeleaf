@@ -7,3 +7,4 @@ import java.util.Collection;
 public interface UserStoreAuthorityService {
     void assignUserToStore(Collection<UserStoreAuthority> userStoreAuthorities);
 }
+

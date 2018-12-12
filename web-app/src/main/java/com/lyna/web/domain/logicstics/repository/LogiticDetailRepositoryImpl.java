@@ -21,11 +21,11 @@ public class LogiticDetailRepositoryImpl extends BaseRepository<LogiticsDetail, 
 
     @Override
     public boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId) throws DomainException {
-            String query = "DELETE FROM LogiticsDetail l WHERE l.packageId in (:packageIds) AND l.tenantId=:tenantId";
-            entityManager.createQuery(query)
-                    .setParameter("packageIds", packageIds)
-                    .setParameter("tenantId", tenantId)
-                    .executeUpdate();
-            return true;
+        String query = "DELETE FROM LogiticsDetail l WHERE l.packageId in (:packageIds) AND l.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("packageIds", packageIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
     }
 }

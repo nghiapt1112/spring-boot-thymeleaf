@@ -58,15 +58,11 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
-        try {
-            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
-            query.setParameter("tenantId", tenantId)
-                    .setParameter("storeCodes", storeCodes);
-            List list = query.getResultList();
-            return list;
-        } catch (Exception ex) {
-            throw ex;
-        }
+        Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
+        query.setParameter("tenantId", tenantId)
+                .setParameter("storeCodes", storeCodes);
+        List list = query.getResultList();
+        return list;
     }
 
     @Override
@@ -97,12 +93,12 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     @Override
     public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
 
-            String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
-            entityManager.createQuery(query)
-                    .setParameter("storeIds", storeIds)
-                    .setParameter("tenantId", tenantId)
-                    .executeUpdate();
-            return true;
+        String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("storeIds", storeIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
     }
 
     @Override

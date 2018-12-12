@@ -33,7 +33,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
             packageRepository.save(mpackage);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.null.code"), toStr("err.package.null.msg"));
+            throw new StoreException(toInteger("err.package.updateError.code"), toStr("err.package.updateError.msg"));
         }
 
     }
@@ -50,7 +50,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
             packageRepository.save(mpackage);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.null.code"), toStr("err.package.null.msg"));
+            throw new StoreException(toInteger("err.package.saveError.code"), toStr("err.package.saveError.msg"));
         }
 
     }

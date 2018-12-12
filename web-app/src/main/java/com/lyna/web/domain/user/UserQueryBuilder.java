@@ -65,13 +65,13 @@ public class UserQueryBuilder extends QueryBuilder {
     }
 
     /**
-     *Return example data: Limit 0,10 (Take 10 items from index 0)
+     * Return example data: Limit 0,10 (Take 10 items from index 0)
      */
     @Override
     public String buildLimit() {
         int itemsPerPage = this.requestPage.getNoOfRowInPage();
         int currentPage = this.requestPage.getCurrentPage();
-        int offset = (currentPage -1)* itemsPerPage;
+        int offset = (currentPage - 1) * itemsPerPage;
         return " LIMIT " + offset + "," + itemsPerPage + " ";
     }
 

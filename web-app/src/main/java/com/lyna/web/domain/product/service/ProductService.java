@@ -2,7 +2,6 @@ package com.lyna.web.domain.product.service;
 
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.user.User;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface ProductService {
 
     List<Product> findByTenantIdAndTenantId(int tenantId);
 
-    void create(Product product,  User user);
+    void create(Product product, User user);
 
     Product findOneByCodeAndTenantId(String code, int tenantId);
 

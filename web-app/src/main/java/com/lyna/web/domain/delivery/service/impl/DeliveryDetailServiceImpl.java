@@ -37,7 +37,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
             LogiticDetailRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             packageRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new StoreException(toInteger("err.package.deleteFail.code"), toStr("err.package.deleteFail.msg"));
         }
