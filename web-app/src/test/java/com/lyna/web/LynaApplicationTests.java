@@ -10,11 +10,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class LynaApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+    }
 
     public void printAsJson(Object o) {
         System.out.println(JsonUtils.toJson(o));
     }
+
 }

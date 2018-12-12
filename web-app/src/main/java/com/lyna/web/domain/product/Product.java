@@ -17,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
@@ -34,11 +35,13 @@ public class Product extends AbstractEntity {
     @Column(name = "product_id", nullable = false)
     private String productId;
 
-    @NotBlank(message = "店舗コードは必須です。")
+
+    @NotBlank(message = "商品コードは必須です。")
     @Column
     private String code;
 
-    @NotBlank(message = "荷姿名は必須です。")
+    @NotBlank(message = "商品名は必須です。")
+
     @Column
     private String name;
 
@@ -46,6 +49,7 @@ public class Product extends AbstractEntity {
     private String unit;
 
     @Column
+    @NotNull(message = "単価を正しく入力してください。")
     private BigDecimal price;
 
     @Column

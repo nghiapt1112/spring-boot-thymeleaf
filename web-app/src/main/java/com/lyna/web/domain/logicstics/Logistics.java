@@ -49,7 +49,8 @@ public class Logistics extends AbstractEntity {
     public static final String MAIN_MENU_LOGISTIC_DELIVERY_LIST = "logistic_delivery";
     @Id
     @Column(name = "logistics_id", nullable = false)
-    public String id;
+//    public String id;
+    public String logisticsId;
 
     @Column(name = "order_id", nullable = false)
     public String orderId;

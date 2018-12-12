@@ -5,7 +5,16 @@ import com.lyna.web.domain.mpackage.Package;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
@@ -32,6 +41,6 @@ public class LogiticsDetail extends AbstractEntity {
     public String logisticsId;
 
     @OneToOne
-    @JoinColumn(name = "package_id", referencedColumnName = "pakage_id", insertable = false, updatable = false)
+    @JoinColumn(name = "package_id", referencedColumnName = "package_id", insertable = false, updatable = false)
     public Package pack;
 }

@@ -31,10 +31,13 @@ public class OrderDetail extends AbstractEntity {
 
     @Column
     public BigDecimal amount;
+
     @Column(name = "order_id", nullable = false)
     public String orderId;
+
     @Column(name = "product_id")
     public String productId;
+
     @JsonIgnore
     @OneToMany
     @JoinColumn(name = "product_id")

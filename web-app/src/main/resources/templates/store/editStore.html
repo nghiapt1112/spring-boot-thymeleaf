@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head(' 店舗編集')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/editStore.css" th:href="@{/css/editStore.css}"/>
+    <link rel="Stylesheet" type="text/css" href="/css/editStore.css" th:href="@{/css/editContant.css}"/>
 
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
@@ -28,13 +28,17 @@
                             </div>
                             <div class="box-body">
                                 <form th:action="@{/store/update}" method="post" th:object="${store}">
+                                    <input type="hidden" th:field="*{tenantId}">
                                     <input type="hidden" th:field="*{storeId}">
+                                    <input type="hidden" th:field="*{createDate}">
+                                    <input type="hidden" th:field="*{createUser}">
                                     <div class="col-md-12">
                                         <span class="col-md-5">店舗コード </span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
-                                            <em id="errorPost" class="error">“店舗コード”は必須です。</em>
+                                            <em id="errorCode" class="error">“店舗コード”は必須です。</em>
+                                            <em id="error_show" style="color: red" th:utext="${errorCodeShow}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 
@@ -95,6 +99,10 @@
                                                    th:field="*{postCourses[__${postCourse.index}__].postCourseId}">
                                             <input type="hidden"
                                                    th:field="*{postCourses[__${postCourse.index}__].storeId}">
+                                            <input type="hidden"
+                                                   th:field="*{postCourses[__${postCourse.index}__].createDate}">
+                                            <input type="hidden"
+                                                   th:field="*{postCourses[__${postCourse.index}__].createUser}">
                                             <div class=" form-group  col-md-5 div-input-post">
                                                 <div class=" col-md-5 title-input-post"><span>便</span></div>
                                                 <div class=" col-md-7 edit-checkbox title-input-post">

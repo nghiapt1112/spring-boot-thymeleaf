@@ -8,4 +8,11 @@ import java.util.List;
 
 public interface PackageRepository extends JpaRepository<Package, String> {
     List<Package> findByIds(int tenantId, Collection<String> ids);
+
+    Package findOneByPackageIdAndTenantId(String packageId, int tenantId);
+
+    boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId);
+
+    List<Package> findByTenantId(int tenantId);
+
 }

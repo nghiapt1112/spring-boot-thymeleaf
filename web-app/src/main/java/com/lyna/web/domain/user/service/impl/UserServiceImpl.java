@@ -23,7 +23,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -142,12 +147,14 @@ public class UserServiceImpl extends BaseService implements UserService {
         User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
         oldUser.updateInfo(userToUpdate);
-
-        Map<String, Short> authorityById = aggregate.toUserStoreAuthorities()
-                .collect(Collectors.toMap(UserStoreAuthority::getId, UserStoreAuthority::getAuthority, (v1, v2) -> v1));
-
         try {
             this.userRepository.save(oldUser);
+
+            List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
+
+            Map<String, Short> authorityById = newUserStoreAuthority.stream()
+                    .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
+
             this.userStoreAuthorityService.assignUserToStore(
                     oldUser.getStoreAuthoritiesAsStream()
                             .filter(el -> authorityById.containsKey(el.getId()))
@@ -157,10 +164,22 @@ public class UserServiceImpl extends BaseService implements UserService {
                             })
                             .collect(Collectors.toList())
             );
+            Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
+
+
+            this.userStoreAuthorityService.assignUserToStore(
+                    newUserStoreAuthority.stream()
+                            .filter(el -> !oldAuthorities.contains(el.getId()))
+                            .peek(el -> {
+                                el.setUserId(currentUser.getId());
+                                el.setTenantId(currentUser.getTenantId());
+                                el.initDefaultCreateFields(currentUser);
+                            })
+                            .collect(Collectors.toList())
+            );
         } catch (RuntimeException e) {
             throw new UserException(toInteger("err.user.updateFailed.code"), toStr("err.user.updateFailed.msg"));
         }
-
     }
 
     @Override

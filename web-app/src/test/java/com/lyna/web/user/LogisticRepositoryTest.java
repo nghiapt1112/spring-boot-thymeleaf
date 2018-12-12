@@ -91,7 +91,7 @@ public class LogisticRepositoryTest extends LynaApplicationTests {
         int limitData = 200;
         Set<String> packageIds = allLogistics.stream()
                 .limit(limitData)
-                .map(el -> el.getPakageId())
+                .map(el -> el.getPackageId())
                 .collect(Collectors.toSet());
 
         Collection<Package> data = this.packageRepository.findByIds(1, packageIds);

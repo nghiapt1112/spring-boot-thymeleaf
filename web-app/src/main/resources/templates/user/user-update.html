@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー編集')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" href="/css/registerUser.css" th:href="@{/css/registerUser.css}"/>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <!--<header th:replace="layout :: header"></header>-->
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
-    <!--<div th:replace="layout :: content-left"></div>-->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -16,45 +16,116 @@
             </h1>
         </section>
         <section class="content content-right">
-            <div>
-                <form action="#" th:action="@{/user/update}" th:object="${aggregate}" method="POST">
-                    <input hidden th:field="*{userId}"/>
-                    <p class="row"><label class="col-md-2">メールアドレス: </label><input class="col-md-3" type="text" th:field="*{email}"/></p>
-                    <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text" th:field="*{userName}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード: </label> <input class="col-md-3" type="password" th:field="*{password}"/></p>
-                    <p class="row"><label class="col-md-2">パスワード(確認用):</label> <input class="col-md-3" type="password" th:field="*{confirmPasswd}"/></p>
-                    <hr>
-
-                    <div class="row">
-                        <label class="col-md-1 col-md-offset-2 text-center">参照</label>
-                        <label class="col-md-1 text-center">編集</label>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
                     </div>
 
-                    <div class="row" th:each="item,el : ${aggregate.getRolePerStore()}">
-                        <label class="col-md-2" th:text="${item.name}"> </label>
-                        <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].id}"/>
-                        <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].name}"/>
-                        <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].storeId}" />
-                        <div class="col-md-1 text-center">
-                            <input type="checkbox" th:field="${aggregate.rolePerStore[__${el.index}__].canView}" th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
+                    <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div style="text-align: center;" class="box-header">
+                                <p class="box-titles"></p>
+                            </div>
+                            <div class="box-body">
+                                <form th:action="@{/user/update}" th:method="post" th:object="${aggregate}">
+                                    <input hidden th:field="*{userId}"/>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">メールアドレス </span>
+                                        <div class=" form-group col-md-6 has-feedback">
+                                            <input id="email" class="form-control" type="text" th:field="*{email}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorEmail" class="error">メールアドレスは必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('email')}"
+                                                th:errors="*{email}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー名</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="userName" class="form-control" type="text" th:field="*{userName}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorUserName" class="error">ユーザー名は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('userName')}"
+                                                th:errors="*{userName}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">パスワード</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="password" class="form-control" type="password"
+                                                   th:field="*{password}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorPassword" class="error">ユーザー名は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('password')}"
+                                                th:errors="*{password}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">パスワード(確認用)</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="repPassword" class="form-control" type="password"
+                                                   th:field="*{password}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('password')}"
+                                                th:errors="*{password}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12 tileRoleStore">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">参照</div>
+                                        <div class="col-md-4">編集</div>
+                                    </div>
+                                    <th:block th:if="${#lists.isEmpty(aggregate.getRolePerStore())}">
+
+                                    </th:block>
+                                    <th:block th:unless="${#lists.isEmpty(aggregate.getRolePerStore())}">
+                                        <div class="col-md-12 roleStore"
+                                             th:each="item,el : ${aggregate.getRolePerStore()}">
+                                            <input hidden th:field="${aggregate.rolePerStore[__${el.index}__].id}"/>
+                                            <input hidden
+                                                   th:field="${aggregate.rolePerStore[__${el.index}__].name}"/>
+                                            <input hidden
+                                                   th:field="${aggregate.rolePerStore[__${el.index}__].storeId}"/>
+                                            <div class=" form-group  col-md-4">
+                                                <span th:text="${item.name}"> </span>
+
+                                            </div>
+                                            <div class=" form-group  col-md-4 iputCanview">
+                                                <input type="checkbox"
+                                                       th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
+                                                       th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
+                                            </div>
+                                            <div class=" form-group  col-md-4 inputCanedit">
+                                                <input type="checkbox"
+                                                       th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
+                                                       th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                    <div class="col-md-12  button-submit">
+                                        <button TYPE="submit" class="btn btn-primary" id="save">登録</button>
+                                    </div>
+
+                                </form>
+                            </div>
                         </div>
-                        <div class="col-md-1 text-center">
-                            <input type="checkbox" th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}" th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}">
-                        </div>
                     </div>
-
-                    <br>
-                    <div class="col-md-5 text-center">
-                        <input type="submit" value="Submit" class="btn btn-primary"/>
+                    <div class="col-md-2">
                     </div>
+                </div>
 
-                </form>
             </div>
+
         </section>
     </div>
-
 </div>
 <footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/registerStore.js" th:src="@{/js/registerUser.js}"></script>
 
 </body>
 </html>

@@ -88,5 +88,6 @@ public class Store extends AbstractEntity {
     public Store() {
         this.storeId = UUID.randomUUID().toString();
     }
+
 }
 

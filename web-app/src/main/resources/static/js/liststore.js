@@ -58,7 +58,7 @@ function addViaAjax() {
         contentType: 'application/json; charset=utf-8',
         url: "/store/delete",
         data: {
-            storeId: storeIds.toString()
+            storeIds: storeIds
         },
         dataType: 'json',
         timeout: 100000,
@@ -71,7 +71,6 @@ function addViaAjax() {
         },
         error: function (e) {
             alert("削除しました。");
-            console.log("ERROR: ", e);
         }
     });
 };

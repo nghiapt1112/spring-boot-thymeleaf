@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -32,12 +33,26 @@ public class PostCourse extends AbstractEntity {
     @Column(name = "store_id")
     private String storeId;
 
-//    @JsonIgnore
+    @JsonIgnore
     @OneToMany
     @JoinColumn(name = "post_course_id")
     private Set<Order> orders;
 
     public PostCourse() {
         this.postCourseId = UUID.randomUUID().toString();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PostCourse that = (PostCourse) o;
+        return Objects.equals(postCourseId, that.postCourseId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postCourseId);
     }
 }
