@@ -122,7 +122,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.null.code"), toStr("err.store.null.msg"));
+            throw new StoreException(toInteger("err.store.saveError.code"), toStr("err.store.saveError.msg"));
         }
 
     }
@@ -178,7 +178,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             return storeRepository.findOneByStoreIdAndTenantId(storeId, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
+            throw new StoreException(toInteger("err.store.updateError.code"), toStr("err.store.updateError.msg"));
         }
 
     }

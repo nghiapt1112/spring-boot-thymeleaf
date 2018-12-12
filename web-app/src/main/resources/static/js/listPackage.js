@@ -21,12 +21,12 @@ function deletePackage() {
         alert('少なくともいずれか一つを選らんでください。');
         return false;
     } else if (confirm('削除してもよろしいですか？')) {
-        addViaAjax();
+        deleteViaAjax();
     }
 }
 
 //
-function addViaAjax() {
+function deleteViaAjax() {
     var packageIds = [];
     $("#table-package > tbody input:checked").each(function () {
         packageIds.push($(this).val());

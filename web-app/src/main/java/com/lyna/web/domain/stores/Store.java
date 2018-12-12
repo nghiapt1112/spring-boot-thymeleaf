@@ -8,19 +8,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-import javax.persistence.Column;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,29 +20,8 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = "Store.getAll", query = "SELECT c FROM Store c WHERE c.tenantId = :tenantId ORDER BY c.name")
 })
-@SqlResultSetMapping(
-        name = Store.MAIN_MENU_STORE_ORDER_LIST,
-        classes = {
-                @ConstructorResult(
-                        targetClass = StoreDTO.class,
-                        columns = {
-                                @ColumnResult(name = "orderDate", type = Date.class),
-                                @ColumnResult(name = "storeName", type = String.class),
-                                @ColumnResult(name = "postName", type = String.class),
-                                @ColumnResult(name = "productName", type = String.class),
-                                @ColumnResult(name = "amount", type = Integer.class),
-                                @ColumnResult(name = "productPrice", type = BigDecimal.class),
-                                @ColumnResult(name = "firstCategory", type = String.class),
-                                @ColumnResult(name = "secondCategory", type = String.class),
-                                @ColumnResult(name = "thirdCategory", type = String.class)
-                        }
-                )
-        }
-)
 @Data
 public class Store extends AbstractEntity {
-    public static final String MAIN_MENU_STORE_ORDER_LIST = "store_order";
-
     @Id
     @Column(name = "store_id", nullable = false)
     private String storeId;
@@ -81,7 +50,7 @@ public class Store extends AbstractEntity {
     private String phoneNumber;
 
     @Valid
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 

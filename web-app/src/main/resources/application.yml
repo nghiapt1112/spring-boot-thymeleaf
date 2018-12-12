@@ -17,8 +17,8 @@ spring:
     dbcp2:
       driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: root
-    url: jdbc:mysql://localhost:3306/dev_package?createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8&useSSL=false
+    password: 123456aA@
+    url: jdbc:mysql://localhost:3306/package?createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8&useSSL=false
   jpa:
     show-sql: true
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect

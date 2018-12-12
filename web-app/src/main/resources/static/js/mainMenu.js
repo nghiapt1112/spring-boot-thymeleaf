@@ -1,89 +1,163 @@
-$(function() {
-    $.fn.dataTable.ext.search.push(
-        function( settings, data, dataIndex ) {
-            var d_min = new Date($('#min').val());
-            var m_min = d_min.getMonth() + 1;
-            var month_min = (m_min < 10 ? '0' : '') + m_min;
-            var day_min = (d_min.getDate() < 10 ? '0' : '') + d_min.getDate();
-            var year_min = d_min.getFullYear();
-            var date1_min = year_min + month_min + day_min ;
+$(document).ready(function () {
+    $("#min").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    $("#max").datepicker({
+        format: 'yyyy/mm/dd'
+    });
 
-            var d_max = new Date($('#max').val());
-            var m_max = d_max.getMonth() + 1;
-            var month_max = (m_max < 10 ? '0' : '') + m_max;
-            var day_max = (d_max.getDate() < 10 ? '0' : '') + d_max.getDate();
-            var year_max = d_max.getFullYear();
-            var date2_max = year_max + month_max + day_max ;
+});
 
-            var d_value = new Date(data[0]);
-            var m_value = d_value.getMonth() + 1;
-            var month_value = (m_value < 10 ? '0' : '') + m_value;
-            var day_value = (d_value.getDate() < 10 ? '0' : '') + d_value.getDate();
-            var year_value = d_value.getFullYear();
-            var date_value = year_value + month_value + day_value;
-
-            var min = parseInt( date1_min, 10 );
-            var max = parseInt( date2_max, 10 );
-            var date = parseInt(date_value) || 0;
-            var post = parseInt($("#post").val(),10);
-            var post_value = parseInt(data[2] || 0);
-
-            if (
-                ( isNaN( post ) && isNaN( min ) && isNaN(max)) ||
-                ( isNaN( post ) && isNaN( min ) && date <= max) ||
-                ( isNaN(post) && min <= date && isNaN( max )  ) ||
-                ( isNaN(post) && min <= date && date <= max ) ||
-                ( post === post_value && isNaN(min) && isNaN(max) ) ||
-                ( post === post_value && min <= date && isNaN(max) ) ||
-                ( post === post_value && isNaN(min) && date <= max) ||
-                ( min <= date   && date <= max  && post === post_value)
-
-
-            )
-            {
-                return true;
-            }
-            return false;
-
-
-        });
-
-    $(document).ready(function() {
+$(function () {
+    $(document).ready(function () {
         var table = $('#table-order').DataTable();
-        $('#search').click( function() {
+        $('#search').click(function () {
             table.draw();
-        } );
+        });
         var table = $('#table-logicstic').DataTable();
-        $('#search').click( function() {
+        $('#search').click(function () {
             table.draw();
-        } );
+        });
         $("#min").datepicker({
             format: 'yyyy/mm/dd'
         });
         $("#max").datepicker({
             format: 'yyyy/mm/dd'
         });
-    } );
-
-
+    });
 });
+
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("myBtn");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function () {
+    modal.style.display = "block";
+}
+span.onclick = function () {
+    modal.style.display = "none";
+}
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+$(function () {
+    $('button[type=submit]').click(function (e) {
+        e.preventDefault();
+        //Disable submit button
+        $(this).prop('disabled', true);
+
+        var form = document.forms[0];
+        var formData = new FormData(form);
+
+        // Ajax call for file uploaling
+        var ajaxReq = $.ajax({
+            url: "/upload/file",
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function () {
+                //Get XmlHttpRequest object
+                var xhr = $.ajaxSettings.xhr();
+
+                //Set onprogress event handler
+                xhr.upload.onprogress = function (event) {
+                    var perc = Math.round((event.loaded / event.total) * 100);
+                    $('#progressBar').text(perc + '%');
+                    $('#progressBar').css('width', perc + '%');
+                };
+                return xhr;
+            },
+            beforeSend: function (xhr) {
+                //Reset alert message and progress bar
+                $('#alertMsg').text('');
+                $('#progressBar').text('');
+                $('#progressBar').css('width', '0%');
+            }
+        });
+
+        // Called on success of file upload
+        ajaxReq.done(function (msg) {
+            $('#alertMsg').text(msg);
+            $('input[type=file]').val('');
+            $('button[type=submit]').prop('disabled', false);
+        });
+
+        // Called on failure of file upload
+        ajaxReq.fail(function (jqXHR) {
+            $('#alertMsg').text(jqXHR.responseText + '(' + jqXHR.status +
+                ' - ' + jqXHR.statusText + ')');
+            $('button[type=submit]').prop('disabled', false);
+        });
+    });
+});
+
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("myBtn");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function () {
+    modal.style.display = "block";
+}
+span.onclick = function () {
+    modal.style.display = "none";
+}
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 $(function () {
     $('#table-order').DataTable({
-        'paging'      : true,
+        'paging': true,
         'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : true,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': true,
+        'order': [],
+        "columnDefs": [{'orderable': false, 'targets': [0]}],
+        "language": {
+            "lengthMenu": "  _MENU_ 件を表示",
+            "zeroRecords": "該当データが存在しません。",
+            "info": "_TOTAL_ 件中 _START_ ~ _END_  件を表示",
+            "infoEmpty": "該当データが存在しません。",
+            "infoFiltered": "(件を表示 _MAX_ total records)",
+            "search": "検索:",
+            "paginate": {
+                "previous": " 前へ ",
+                "next": "  次へ "
+            }
+        }
     })
     $('#table-logicstic').DataTable({
-        'paging'      : true,
+        'paging': true,
         'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : true
+        'searching': true,
+        'ordering': true,
+        'info': true,
+
+        'autoWidth': true,
+        'order': [],
+        "columnDefs": [{'orderable': false, 'targets': [0]}],
+        "language": {
+            "lengthMenu": "  _MENU_ 件を表示",
+            "zeroRecords": "該当データが存在しません。",
+            "info": "_TOTAL_ 件中 _START_ ~ _END_  件を表示",
+            "infoEmpty": "該当データが存在しません。",
+            "infoFiltered": "(件を表示 _MAX_ total records)",
+            "search": "検索:",
+            "paginate": {
+                "previous": " 前へ ",
+                "next": "  次へ "
+            }
+        }
     })
 })
+
+
 
  
 

@@ -41,17 +41,13 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
     }
 
     public boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId) throws DomainException {
-        try {
-            String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:packageIds) AND d.tenantId=:tenantId";
-            entityManager.createQuery(query)
-                    .setParameter("packageIds", packageIds)
-                    .setParameter("tenantId", tenantId)
-                    .executeUpdate();
-            return true;
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            return false;
-        }
+        String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:packageIds) AND d.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("packageIds", packageIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
+
     }
 
 }
