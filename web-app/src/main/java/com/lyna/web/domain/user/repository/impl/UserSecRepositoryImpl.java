@@ -16,6 +16,7 @@ public class UserSecRepositoryImpl extends SimpleJpaRepository<User, Long> {
         super(User.class, em);
     }
 
+    @SuppressWarnings("unused")
     public User findByEmail(String email) {
         String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities WHERE u.email = :email";
         return (User) entityManager.createQuery(query).setParameter("email", email).getSingleResult();

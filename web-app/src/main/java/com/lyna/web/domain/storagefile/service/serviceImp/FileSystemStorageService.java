@@ -1,6 +1,7 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.Order;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,6 +83,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> store(int tenantId, MultipartFile file) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
@@ -341,7 +344,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void saveDataMaster() {
+    private void saveDataMaster() throws DomainException {
         //save all store
         storeRepository.saveAll(storeIterable);
         //save all postcourse
@@ -350,7 +353,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         productRepository.saveAll(productIterable);
     }
 
-    private void saveDataOrder() {
+    private void saveDataOrder() throws DomainException {
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
     }

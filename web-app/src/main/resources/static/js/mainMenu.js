@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-
-$(document).ready(function() {
+$(document).ready(function () {
     $("#min").datepicker({
         format: 'yyyy/mm/dd'
     });
@@ -8,8 +6,8 @@ $(document).ready(function() {
         format: 'yyyy/mm/dd'
     });
 
-} );
-=======
+});
+
 $(function () {
     $(document).ready(function () {
         var table = $('#table-order').DataTable();
@@ -110,7 +108,6 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 }
->>>>>>> dev
 
 $(function () {
     $('#table-order').DataTable({
@@ -119,7 +116,6 @@ $(function () {
         'searching': true,
         'ordering': true,
         'info': true,
-<<<<<<< HEAD
         'autoWidth': true,
         'order': [],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
@@ -135,8 +131,6 @@ $(function () {
                 "next": "  次へ "
             }
         }
-=======
->>>>>>> dev
     })
     $('#table-logicstic').DataTable({
         'paging': true,
@@ -144,7 +138,7 @@ $(function () {
         'searching': true,
         'ordering': true,
         'info': true,
-<<<<<<< HEAD
+
         'autoWidth': true,
         'order': [],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
@@ -160,13 +154,9 @@ $(function () {
                 "next": "  次へ "
             }
         }
-        })
-  })
-=======
-        'autoWidth': true
     })
 })
->>>>>>> dev
+
 
 
  

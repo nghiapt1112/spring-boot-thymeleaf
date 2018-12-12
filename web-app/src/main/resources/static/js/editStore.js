@@ -4,7 +4,7 @@ let addRow = function () {
     let rowIndex = document.querySelectorAll('.item').length;
     let row = document.createElement('div');
     row.classList.add('item', 'order_course', 'col-md-12');
-    fieldsNames.forEach((fieldName) = > {
+    fieldsNames.forEach((fieldName) => {
         let rowPostCourseId = document.createElement('input');
     if (fieldName === 'postCourseId') {
         rowPostCourseId.type = 'hidden';

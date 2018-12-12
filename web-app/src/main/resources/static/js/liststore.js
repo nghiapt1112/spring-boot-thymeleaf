@@ -41,12 +41,12 @@ function deleteStore() {
         alert('少なくともいずれか一つを選らんでください。');
         return false;
     } else if (confirm('削除してもよろしいですか？')) {
-        addViaAjax();
+        deleteViaAjax();
     }
 }
 
 
-function addViaAjax() {
+function deleteViaAjax() {
     var storeIds = [];
     var checkboxes = $('input[name="storeid"]');
     checkboxes.filter(":checked").map(function () {

@@ -21,12 +21,11 @@ function deleteProduct() {
         alert('少なくともいずれか一つを選らんでください。');
         return false;
     } else if (confirm('削除してもよろしいですか？')) {
-        addViaAjax();
+        deleteViaAjax();
     }
 }
 
-//
-function addViaAjax() {
+function deleteViaAjax() {
     var productIds = [];
     $("#table-product > tbody input:checked").each(function () {
         productIds.push($(this).val());

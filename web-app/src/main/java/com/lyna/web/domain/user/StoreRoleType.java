@@ -9,23 +9,15 @@ public enum StoreRoleType {
     private static final Map<Integer, StoreRoleType> storeRoleByValue = new HashMap<>();
 
     static {
-        for(StoreRoleType el : StoreRoleType.values()) {
+        for (StoreRoleType el : StoreRoleType.values()) {
             storeRoleByValue.put(el.getVal(), el);
         }
     }
+
     private int val;
 
     StoreRoleType(int val) {
         this.val = val;
-    }
-
-
-    public int getVal() {
-        return val;
-    }
-
-    public short getShortVal() {
-        return (short) val;
     }
 
     public static StoreRoleType fromVal(int val) {
@@ -38,6 +30,14 @@ public enum StoreRoleType {
 
     public static int intOf(String val) {
         return StoreRoleType.valueOf(val).getVal();
+    }
+
+    public int getVal() {
+        return val;
+    }
+
+    public short getShortVal() {
+        return (short) val;
     }
 
 }

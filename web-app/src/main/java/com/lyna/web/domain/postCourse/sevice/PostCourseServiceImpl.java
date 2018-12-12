@@ -1,6 +1,5 @@
 package com.lyna.web.domain.postCourse.sevice;
 
-import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
@@ -26,16 +25,6 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
     private StoreRepository storeRepository;
 
     @Override
-    @Transactional
-    public void update(PostCourse postCourse) throws DomainException {
-        try {
-            postCourseRepository.save(postCourse);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    @Override
     public List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId) {
         return postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeId);
     }
@@ -47,7 +36,7 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
             postCourseRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
             storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new StoreException(toInteger("err.store.deleteFail.code"), toStr("err.store.deleteFail.msg"));
         }

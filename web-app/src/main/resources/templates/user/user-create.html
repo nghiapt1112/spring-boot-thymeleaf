@@ -16,104 +16,11 @@
             </h1>
         </section>
         <section class="content content-right">
-<<<<<<< HEAD
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-2">
-                    </div>
-
-                    <div class="col-md-8">
-                        <div class="box box-primary">
-                            <div style="text-align: center;" class="box-header">
-                                <p class="box-titles"></p>
-                            </div>
-                            <div class="box-body">
-                                <form th:action="@{/user/register}" th:method="post" th:object="${userRegisterAggregate}">
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">メールアドレス </span>
-                                        <div class=" form-group col-md-6 has-feedback">
-                                            <input id="email" class="form-control" type="text" th:field="*{email}"
-                                                   th:errorclass="field-error">
-                                            <em id="errorEmail" class="error">メールアドレスは必須です。</em>
-                                            <em class="error_show" th:if="${#fields.hasErrors('email')}"
-                                                th:errors="*{email}"></em>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー名</span>
-                                        <div class="form-group col-md-6" style="">
-                                            <input id="userName" class="form-control" type="text" th:field="*{userName}"
-                                                   th:errorclass="field-error">
-                                           <em id="errorUserName" class="error">ユーザー名は必須です。</em>
-                                            <em class="error_show" th:if="${#fields.hasErrors('userName')}"
-                                                th:errors="*{userName}"></em>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">パスワード</span>
-                                        <div class="form-group col-md-6" style="">
-                                            <input id="password" class="form-control" type="password" th:field="*{password}"
-                                                   th:errorclass="field-error">
-                                            <em id="errorPassword" class="error">ユーザー名は必須です。</em>
-                                            <em class="error_show" th:if="${#fields.hasErrors('password')}"
-                                                th:errors="*{password}"></em>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="col-md-5">パスワード(確認用)</span>
-                                        <div class="form-group col-md-6" style="">
-                                            <input id="repPassword" class="form-control" type="password" th:field="*{password}"
-                                                   th:errorclass="field-error">
-                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
-                                            <em class="error_show" th:if="${#fields.hasErrors('password')}"
-                                                th:errors="*{password}"></em>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12 tileRoleStore">
-                                        <div class="col-md-4"></div>
-                                        <div class="col-md-4">参照</div>
-                                        <div class="col-md-4">編集</div>
-                                    </div>
-                                    <th:block th:if="${#lists.isEmpty(userPerRoles)}">
-
-                                    </th:block>
-                                    <th:block th:unless="${#lists.isEmpty(userPerRoles)}">
-                                        <div class="col-md-12 roleStore"
-                                                 th:each="item,el : ${userPerRoles}">
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}" />
-                                            <div class=" form-group  col-md-4">
-                                                <span th:text="${item.name}"> </span>
-                                            </div>
-                                            <div class=" form-group  col-md-4 iputCanview">
-                                                <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
-                                            </div>
-                                            <div class=" form-group  col-md-4 inputCanedit">
-                                                <input type="checkbox" th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canEdit}">
-                                            </div>
-                                        </div>
-                                    </th:block>
-                                    <div class="col-md-12  button-submit">
-                                        <button TYPE="submit" class="btn btn-primary" id="save" >登録 </button>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                </div>
-
-=======
             <div>
                 <form name="register-form" action="#" th:action="@{/user/register/}"
                       th:object="${userRegisterAggregate}" method="POST">
-                    <p class="row"><label class="col-md-2">メールアドレス: </label><input name="email" id="email" class="col-md-3" type="text"
+                    <p class="row"><label class="col-md-2">メールアドレス: </label><input name="email" id="email"
+                                                                                   class="col-md-3" type="text"
                                                                                    th:field="*{email}" required/></p>
                     <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text"
                                                                                  th:field="*{userName}" required/></p>
@@ -131,8 +38,7 @@
                                                                                                      id="confirm_password"
                                                                                                      th:field="*{password}"
                                                                                                      onkeyup='check();'
-                                                                                                     required/>
-                    </p>
+                                                                                                     required/></p>
                     <span id='message'></span>
                     <hr>
 
@@ -155,23 +61,19 @@
                         </div>
                     </div>
                     <br>
+
                     <div class="col-md-5 text-center">
-                        <input type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary" onkeyup='check();'/>
+                        <input type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary"
+                               onkeyup='check();'/>
                     </div>
                 </form>
->>>>>>> dev
             </div>
 
         </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<<<<<<< HEAD
-<script type="text/javascript" src="/js/registerStore.js" th:src="@{/js/registerUser.js}"></script>
-
-=======
-<script type="text/javascript" src="/js/mainMenu.js" th:src="@{/js/listUser.js}"></script>
+<script type="text/javascript" src="/js/registerUser.js" th:src="@{/js/registerUser.js}"></script>
 <script type="text/javascript" th:src="@{/js/validate-form-register.js}"></script>
->>>>>>> dev
 </body>
 </html>
