@@ -8,6 +8,8 @@ SELECT
     pr.price AS price,
     p.package_id AS package_id,
     p.NAME AS package_name,
+    p.full_load_weight AS full_load_weight,
+    p.full_load_capacity AS full_load_capacity,
     pc.course AS course,
     o.order_id AS order_id
 FROM
