@@ -29,21 +29,22 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId);
         List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId);
 
-        Map<String, List<PackageAggregate>> packagesByOrderId = logisticView.stream()
+        Map<String, List<PackageAggregate>> logisticPackagesByOrderId = logisticView.stream()
                 .parallel()
                 .map(PackageAggregate::fromLogisticView) // to PackageAggregate
                 .collect(Collectors.groupingBy(el -> el.getOrderId())); // group packageByOrderId
 
-        Map<String, DeliveryView> deliveryViewByOrderId = deliveryView
-                .stream()
+        Map<String, List<PackageAggregate>> deliveryPackagesByOrderId = deliveryView.stream()
                 .parallel()
-                .collect(Collectors.toMap(DeliveryView::getOrderId, v -> v, (v1, v2) -> v1));
+                .map(PackageAggregate::fromDeliveryView) // to PackageAggregate
+                .collect(Collectors.groupingBy(el -> el.getOrderId())); // group packageByOrderId
 
-        return logisticView.stream()
+
+        List<LogisticAggregate> val = logisticView.stream()
                 .parallel()
-                .map(el -> LogisticAggregate.parseFromViewDTO(el, deliveryViewByOrderId, packagesByOrderId))
+                .map(el -> LogisticAggregate.parseFromViewDTO(el, logisticPackagesByOrderId, deliveryPackagesByOrderId))
                 .collect(Collectors.toList());
-
+        return val;
     }
 
     @SuppressWarnings("unused")

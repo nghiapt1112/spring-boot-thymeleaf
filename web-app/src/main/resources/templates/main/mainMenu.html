@@ -122,9 +122,10 @@
                                             <th>便</th>
                                             <th>発注個数</th>
                                             <th>金額</th>
-                                            <th>ばんじゅう</th>
-                                            <th>箱</th>
-                                            <th>ケース</th>
+                                            <!--<th>ばんじゅう</th>-->
+                                            <!--<th>箱</th>-->
+                                            <!--<th>ケース</th>-->
+                                            <th th:each="item: ${packageTypes}" th:text="${item}"></th>
                                             <th>総重量</th>
                                             <th>総才数</th>
                                             <th>コース</th>
@@ -136,11 +137,10 @@
                                             <td th:text="*{logistic.getOrderDate()}"></td>
                                             <td th:text="${logistic.getStoreName()}"></td>
                                             <td th:text="${logistic.getPostName()}"></td>
-                                            <td > number order</td>
                                             <td th:text="${logistic.getAmount()}"></td>
-                                            <td>----</td> <!--tray-->
-                                            <td th:text="${logistic.getPackageBox()}"></td>
-                                            <td th:text="${logistic.getPackageCase()}"></td>
+                                            <td th:text="${logistic.getPrice()}"></td>
+                                            <!--<td th:each="pkg: ${logistic.getPackageWithNames()}" th:text="${pkg.getName()}"></td>-->
+                                            <th th:each="item: ${packageTypes}" th:text="${item}"></th>
                                             <td th:text="${logistic.getTotalWeight()}"></td>
                                             <td th:text="${logistic.getTotalCapacity()}"></td>
                                             <td th:text="${logistic.getCourseName()}"></td>

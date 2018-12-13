@@ -1,12 +1,14 @@
 package com.lyna.web.domain.view;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
+import com.lyna.web.domain.logicstics.DeliveryView;
 import com.lyna.web.domain.logicstics.LogisticView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -20,13 +22,6 @@ public class PackageAggregate extends AbstractObject {
     private BigDecimal fullLoadCapacity;
     private BigDecimal amount;
 
-//    public static PackageAggregate fromDeliveryDetailEntity(DeliveryDetail deliveryDetail) {
-//        PackageAggregate aggregate = new PackageAggregate();
-//        aggregate.amount = deliveryDetail.getAmount();
-//        aggregate.packageName = deliveryDetail.getPack().getName();
-//        return aggregate;
-//    }
-
     public static PackageAggregate fromLogisticView(LogisticView logisticView) {
         PackageAggregate aggregate = new PackageAggregate();
         aggregate.orderId = logisticView.getOrderId();
@@ -36,5 +31,32 @@ public class PackageAggregate extends AbstractObject {
         aggregate.fullLoadCapacity = logisticView.getTotalCapacity();
         aggregate.amount = logisticView.getAmount();
         return aggregate;
+    }
+
+    public static PackageAggregate fromDeliveryView(DeliveryView deliveryView) {
+        PackageAggregate aggregate = new PackageAggregate();
+        aggregate.orderId = deliveryView.getOrderId();
+        aggregate.packageName = deliveryView.getPackageName();
+        aggregate.packageId = deliveryView.getPackageId();
+        aggregate.fullLoadWeight = deliveryView.getTotalWeight();
+        aggregate.fullLoadCapacity = deliveryView.getTotalCapacity();
+        aggregate.amount = deliveryView.getAmount();
+        return aggregate;
+    }
+
+    public BigDecimal getAmount() {
+        return Objects.isNull(amount) ? new BigDecimal(0) : amount;
+    }
+
+    public boolean packageNameNotNull() {
+        return Objects.nonNull(this.packageName);
+    }
+
+    public BigDecimal getFullLoadWeight() {
+        return Objects.isNull(fullLoadWeight) ? new BigDecimal(0) : fullLoadWeight;
+    }
+
+    public BigDecimal getFullLoadCapacity() {
+        return Objects.isNull(fullLoadCapacity) ? new BigDecimal(0) : fullLoadCapacity;
     }
 }

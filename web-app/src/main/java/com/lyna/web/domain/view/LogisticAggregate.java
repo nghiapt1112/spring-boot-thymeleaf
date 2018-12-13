@@ -1,13 +1,13 @@
 package com.lyna.web.domain.view;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
-import com.lyna.web.domain.logicstics.DeliveryView;
 import com.lyna.web.domain.logicstics.LogisticView;
 import com.lyna.web.infrastructure.utils.DateTimeUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,9 +42,15 @@ public class LogisticAggregate extends AbstractObject {
 
     private boolean isDeliveryData;
 
-    private Map<String, BigDecimal> packageAmountByName;
+    private List<PackageName> packageWithNames;
 
-    public static LogisticAggregate parseFromViewDTO(LogisticView logisticView, Map<String, DeliveryView> deliveryViewByOrderId, Map<String, List<PackageAggregate>> packagesByOrderId) {
+    {
+        totalWeight = new BigDecimal(0);
+        totalCapacity = new BigDecimal(0);
+    }
+    public static LogisticAggregate parseFromViewDTO(LogisticView logisticView,
+                                                     Map<String, List<PackageAggregate>> logisticPackagesByOrderId,
+                                                     Map<String, List<PackageAggregate>> deliveryPackagesByOrderId) {
         LogisticAggregate aggregate = new LogisticAggregate();
         aggregate.orderId = logisticView.getOrderId();
         aggregate.orderDate = DateTimeUtils.convertDateToString(logisticView.getOrderDate());
@@ -54,38 +60,45 @@ public class LogisticAggregate extends AbstractObject {
         aggregate.price = logisticView.getPrice();
         aggregate.courseName = logisticView.getCourse();
 
-        parsePackage(packagesByOrderId.get(aggregate.orderId));
-        DeliveryView deliveryView = deliveryViewByOrderId.get(aggregate.orderId);
-        if (Objects.nonNull(deliveryView)) {
+
+        List<PackageAggregate> deliveryPackage = deliveryPackagesByOrderId.get(aggregate.orderId);
+
+        if (Objects.nonNull(deliveryPackage)) {
             // delivery Data
             aggregate.isDeliveryData = true;
-//            aggregate.totalPackage = deliveryView.getTotalPackage();
-//            aggregate.packageCase = deliveryView.getPackageCase();
-//            aggregate.packageBox = deliveryView.getPackageBox();
-            aggregate.totalWeight = deliveryView.getTotalWeight();
-            aggregate.totalCapacity = deliveryView.getTotalCapacity();
+            aggregate.packageWithNames = parsePackage(deliveryPackage);
+            fillWithPackageInfo(deliveryPackagesByOrderId, aggregate);
         } else {
-//            aggregate.totalPackage = logisticView.getTotalPackage();
-//            aggregate.packageCase = logisticView.getPackageCase();
-//            aggregate.packageBox = logisticView.getPackageBox();
-            aggregate.totalWeight = logisticView.getTotalWeight();
-            aggregate.totalCapacity = logisticView.getTotalCapacity();
+            aggregate.packageWithNames = parsePackage(logisticPackagesByOrderId.get(aggregate.orderId));
+            fillWithPackageInfo(logisticPackagesByOrderId, aggregate);
         }
+
         return aggregate;
     }
 
-    private static Map<String, BigDecimal> parsePackage(List<PackageAggregate> packages) {
+    private static void fillWithPackageInfo(Map<String, List<PackageAggregate>> logisticPackagesByOrderId, LogisticAggregate aggregate) {
+        for( PackageAggregate el : logisticPackagesByOrderId.get(aggregate.getOrderId())) {
+            aggregate.totalWeight = aggregate.totalWeight.add(el.getFullLoadWeight());
+            aggregate.totalCapacity = aggregate.totalCapacity.add(el.getFullLoadCapacity());
+        }
+    }
+
+    private static List<PackageName> parsePackage(List<PackageAggregate> packages) {
         if (Objects.isNull(packages)) {
             return null;
         }
 
         Map<String, BigDecimal> packageAmountByName = packages.stream()
+                .filter(el -> Objects.nonNull(el.getPackageName()))
                 .collect(Collectors.groupingBy(
                         PackageAggregate::getPackageName,
                         Collectors.reducing(BigDecimal.ZERO, PackageAggregate::getAmount, BigDecimal::add)
                 ));
 
-        return packageAmountByName;
+        return packageAmountByName.entrySet().stream()
+                .map(el -> new PackageName(el.getKey(), el.getValue()))
+                .sorted(Comparator.comparing(PackageName::getName))
+                .collect(Collectors.toList());
     }
 }
 
