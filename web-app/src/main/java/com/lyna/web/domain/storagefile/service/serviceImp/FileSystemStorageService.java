@@ -83,7 +83,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<String> store(int tenantId, MultipartFile file) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
@@ -256,7 +256,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 CsvOrder csvOrder = mapStoreOrder.get(code);
                 Store store = new Store();
                 store.setCode(code);
-                store.setName(code);
+                store.setName(csvOrder.getName());
                 store.setTenantId(tenantId);
                 ((HashSet<Store>) storeIterable).add(store);
 
