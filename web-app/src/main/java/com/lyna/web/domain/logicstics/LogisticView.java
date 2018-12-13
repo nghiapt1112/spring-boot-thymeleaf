@@ -22,13 +22,16 @@ public class LogisticView extends AbstractObject {
     private String orderId;
 
     @Column
+    private String logistics_id;
+
+    @Column
     private Date orderDate;
 
     @Column
     private String storeName;
 
     @Column
-    private String postName;
+    private String post;
 
     @Column
     private BigDecimal amount;
@@ -37,20 +40,17 @@ public class LogisticView extends AbstractObject {
     private BigDecimal price;
 
     @Column
-    private Long totalPackage;
+    private String packageId;
 
     @Column
-    private Long packageCase;
+    private String packageName;
 
-    @Column
-    private Long packageBox;
-
-    @Column
+    @Column(name = "full_load_weight")
     private BigDecimal totalWeight;
 
-    @Column
+    @Column(name = "full_load_capacity")
     private BigDecimal totalCapacity;
 
     @Column
-    private String courseName;
+    private String course;
 }

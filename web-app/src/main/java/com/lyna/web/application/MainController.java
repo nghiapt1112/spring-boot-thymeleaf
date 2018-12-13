@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Collections;
+
 
 @Controller
 public class MainController extends AbstractCustomController {
@@ -26,7 +28,7 @@ public class MainController extends AbstractCustomController {
     public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
-        model.addAttribute("logisticData", logisticService.findLogisticsView(currentUser.getTenantId()));
+        model.addAttribute("logisticData", Collections.EMPTY_LIST);
         model.addAttribute("orderData", orderService.findOrderViews(currentUser.getTenantId()));
         return "main/mainMenu";
     }

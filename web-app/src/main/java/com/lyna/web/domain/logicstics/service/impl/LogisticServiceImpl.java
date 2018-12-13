@@ -6,6 +6,7 @@ import com.lyna.web.domain.logicstics.LogisticView;
 import com.lyna.web.domain.logicstics.repository.LogisticViewRepository;
 import com.lyna.web.domain.logicstics.service.LogisticService;
 import com.lyna.web.domain.view.LogisticAggregate;
+import com.lyna.web.domain.view.PackageAggregate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,19 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId);
         List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId);
 
+        Map<String, List<PackageAggregate>> packagesByOrderId = logisticView.stream()
+                .parallel()
+                .map(PackageAggregate::fromLogisticView) // to PackageAggregate
+                .collect(Collectors.groupingBy(el -> el.getOrderId())); // group packageByOrderId
+
         Map<String, DeliveryView> deliveryViewByOrderId = deliveryView
                 .stream()
+                .parallel()
                 .collect(Collectors.toMap(DeliveryView::getOrderId, v -> v, (v1, v2) -> v1));
 
         return logisticView.stream()
-                .map(el -> LogisticAggregate.parseFromViewDTO(el, deliveryViewByOrderId))
+                .parallel()
+                .map(el -> LogisticAggregate.parseFromViewDTO(el, deliveryViewByOrderId, packagesByOrderId))
                 .collect(Collectors.toList());
 
     }
