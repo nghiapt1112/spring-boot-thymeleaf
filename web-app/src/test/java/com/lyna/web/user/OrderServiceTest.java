@@ -1,6 +1,7 @@
 package com.lyna.web.user;
 
 import com.lyna.web.LynaApplicationTests;
+import com.lyna.web.domain.order.OrderAggregate;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.service.OrderService;
 import org.junit.Assert;
@@ -17,7 +18,7 @@ public class OrderServiceTest extends LynaApplicationTests {
 
     @Test
     public void findOrderViews() {
-        List<OrderView> orderViews = this.orderService.findOrderViews(1);
+        List<OrderAggregate> orderViews = this.orderService.findOrderViews(1);
 
         Assert.assertNotNull(orderViews);
         printAsJson(orderViews);
