@@ -6,6 +6,8 @@ import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
+import com.lyna.web.domain.mpackage.Package;
+import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.exception.StorageException;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +63,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Iterable<Store> storeIterable;
     Iterable<PostCourse> postCoursesIterable;
     Iterable<Delivery> deliveryIterable;
+    Iterable<DeliveryDetail> deliveryDetailIterable;
 
     Iterable<Order> orderIterable;
     Iterable<OrderDetail> orderDetailIterable;
@@ -84,6 +88,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private DeliveryRepository deliveryRepository;
     @Autowired
     private DeliveryDetailRepository deliveryDetailRepository;
+    @Autowired
+    private PackageRepository packageRepository;
+
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -91,6 +98,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
+    @Transactional
     public List<String> store(int tenantId, MultipartFile file, int type) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
@@ -121,7 +129,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     deliveryIterator = orderRepository.getMapDelivery(reader);
                     processUploadDelivery(deliveryIterator);
                     setMapDataDelivery(tenantId);
-                    saveDataMaster();
+                    if (mapError.size() == 0) {
+                        saveDataMaster();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -200,7 +210,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapProductIdCsvOrder = new HashMap<>();
         mapError = new ArrayList<>();
         deliveryIterable = new HashSet<>();
-
+        deliveryDetailIterable = new HashSet<>();
     }
 
     public void setDataMapProduct() {
@@ -347,16 +357,33 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             }
         });
 
-        List<String> packages = Arrays.asList("便", "ばんじゅう", "箱");
-
+        List<Package> packageList = packageRepository.getListByName(tenantId);
 
         mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
-            packages.forEach(packageCode -> {
-                String deliveryDetailId = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, packageCode, tenantId);
+            String trayAmount = ((CsvDelivery) csv).getTray();
+            String trayCase = ((CsvDelivery) csv).getCaseP();
+            String trayBox = ((CsvDelivery) csv).getBox();
+            packageList.forEach(aPackage -> {
+                String deliveryDetailId = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, aPackage.packageId, tenantId);
                 if (deliveryDetailId == null) {
+                    BigDecimal amount = new BigDecimal(0);
+                    if (aPackage.getName().equals("ばんじゅう")) {
+                        amount = new BigDecimal(trayAmount);
+                    } else if (aPackage.getName().equals("箱")) {
+                        amount = new BigDecimal(trayBox);
+                    } else
+                        amount = new BigDecimal(trayCase);
+
                     DeliveryDetail deliveryDetail = new DeliveryDetail();
+                    deliveryDetail.setDeliveryId(deliveryId);
                     deliveryDetail.setTenantId(tenantId);
-                    deliveryDetail.setPackageId(pac);
+                    deliveryDetail.setPackageId(aPackage.getPackageId());
+                    deliveryDetail.setAmount(amount);
+                    deliveryDetail.setCreateDate(new Date());
+                    deliveryDetail.setCreateUser("");
+                    deliveryDetail.setUpdateDate(new Date());
+                    deliveryDetail.setUpdateUser("");
+                    ((HashSet<DeliveryDetail>) deliveryDetailIterable).add(deliveryDetail);
                 }
             });
         });
@@ -479,6 +506,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         postCourseRepository.saveAll(postCoursesIterable);
         //Save all product
         productRepository.saveAll(productIterable);
+        //Save delivery
+        deliveryRepository.saveAll(deliveryIterable);
+        //save delivery detail
+        deliveryDetailRepository.saveAll(deliveryDetailIterable);
     }
 
     private void saveDataOrder() {

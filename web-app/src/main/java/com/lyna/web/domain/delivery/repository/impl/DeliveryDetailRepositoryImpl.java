@@ -16,13 +16,12 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
     }
 
     @Override
-    public String checkExistByDeliveryId(String deliveryId, String packageName, int tenantId) {
+    public String checkExistByDeliveryId(String deliveryId, String packageId, int tenantId) {
         List list = entityManager
-                .createQuery("SELECT deliveryDetailId from  DeliveryDetail d join Package p on d.packageId = p.packageId " +
-                        " WHERE d.deliveryId = :deliveryId and d.tenantId = :tenantId  and p.name =  :packageName")
+                .createQuery("SELECT deliveryDetailId from  DeliveryDetail d  WHERE d.deliveryId = :deliveryId and d.tenantId = :tenantId  and d.packageId =  :packageId")
                 .setParameter("deliveryId", deliveryId)
                 .setParameter("tenantId", tenantId)
-                .setParameter("packageName", packageName)
+                .setParameter("packageId", packageId)
                 .getResultList();
         if (list != null && list.size() > 0)
             return (String) list.get(0);

@@ -24,7 +24,6 @@ public class Delivery extends AbstractEntity {
 
     @Id
     @Column(name = "delivery_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String deliveryId;
 
 

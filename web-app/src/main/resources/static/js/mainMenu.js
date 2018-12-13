@@ -40,9 +40,14 @@ $(function () {
         var form = document.forms[0];
         var formData = new FormData(form);
 
+        value = $("#quizID").val();
+        var url = "/upload/file";
+        if (value == 2)
+            url = "/upload/fileDelivery";
+
         // Ajax call for file uploaling
         var ajaxReq = $.ajax({
-            url: "/upload/file",
+            url: url,
             type: 'POST',
             data: formData,
             cache: false,
@@ -86,9 +91,15 @@ $(function () {
 
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("myBtn");
+var btndelivery = document.getElementById("deliveryBtn");
 var span = document.getElementsByClassName("close")[0];
 btn.onclick = function () {
     modal.style.display = "block";
+    document.getElementById("quizID").value = "1";
+}
+btndelivery.onclick = function () {
+    modal.style.display = "block";
+    document.getElementById("quizID").value = "2";
 }
 span.onclick = function () {
     modal.style.display = "none";

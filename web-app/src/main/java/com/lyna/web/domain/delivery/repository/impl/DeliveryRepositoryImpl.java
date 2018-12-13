@@ -14,13 +14,13 @@ import java.util.List;
 public class DeliveryRepositoryImpl extends BaseRepository<Delivery, Long> implements DeliveryRepository {
 
     public DeliveryRepositoryImpl(EntityManager em) {
-        super(DeliveryDetail.class, em);
+        super(Delivery.class, em);
     }
 
     @Override
     public String checkExistByOrderIdAndOrderDate(String orderId, String orderDate) {
         List list = entityManager
-                .createQuery("SELECT d.orderId FROM Delivery d WHERE d.orderId = :orderId")
+                .createQuery("SELECT d.deliveryId FROM Delivery d WHERE d.orderId = :orderId")
                 .setParameter("orderId", orderId)
                 .getResultList();
         if (list != null && list.size() > 0)

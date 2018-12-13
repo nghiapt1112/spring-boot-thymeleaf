@@ -1,10 +1,9 @@
 package com.lyna.web.domain.mpackage.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
+import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
-import com.lyna.web.infrastructure.repository.BaseRepository;
-import com.lyna.web.infrastructure.repository.PagingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public class PackageRepositoryImpl extends BaseRepository<Package, String> implements PackageRepository, PagingRepository {
+public class PackageRepositoryImpl extends BaseRepository<Package, String> implements PackageRepository {
 
     private final Logger log = LoggerFactory.getLogger(PackageRepositoryImpl.class);
 
@@ -57,6 +56,14 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
         return entityManager
                 .createQuery("SELECT p FROM Package p WHERE p.tenantId=:tenantId order by p.name", Package.class)
                 .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Package> getListByName(int tenantId) {
+        return super.entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.tenantId = :tenantId ", Package.class)
+                .setParameter("tenantId", tenantId).setParameter("tenantId", tenantId)
                 .getResultList();
     }
 

@@ -31,7 +31,7 @@ CREATE TABLE `m_tenant`  (
 DROP TABLE IF EXISTS `m_package`;
 CREATE TABLE `m_package`  (
   `tenant_id` int(11) NOT NULL COMMENT 'テナントID',
-  `pakage_id` varchar(36) COMMENT 'ID',
+  `package_id` varchar(36) COMMENT 'ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '荷姿名称',
   `unit` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '単位',
   `empty_weight` decimal(11, 2) NULL COMMENT '空の時の重量（ｋｇ）',
@@ -42,7 +42,7 @@ CREATE TABLE `m_package`  (
   `create_user` varchar(36)  NULL COMMENT '作成ユーザーID',
   `update_date` timestamp(0) NULL COMMENT '更新日時',
   `update_user` varchar(36)  NULL COMMENT '更新ユーザーID',
-  PRIMARY KEY (`pakage_id`) USING BTREE,
+  PRIMARY KEY (`package_id`) USING BTREE,
   INDEX `tenant_id`(`tenant_id`) USING BTREE,
   CONSTRAINT `m_package_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `m_tenant` (`tenant_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ;
