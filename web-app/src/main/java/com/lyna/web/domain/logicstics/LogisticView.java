@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "v_logicstic")
@@ -53,4 +54,8 @@ public class LogisticView extends AbstractObject {
 
     @Column
     private String course;
+
+    public boolean isPackageNameNonNull() {
+        return Objects.nonNull(packageName);
+    }
 }

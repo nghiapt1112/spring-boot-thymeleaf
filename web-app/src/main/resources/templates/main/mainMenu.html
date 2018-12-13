@@ -125,7 +125,7 @@
                                             <!--<th>ばんじゅう</th>-->
                                             <!--<th>箱</th>-->
                                             <!--<th>ケース</th>-->
-                                            <th th:each="item: ${packageTypes}" th:text="${item}"></th>
+                                            <th th:each="item: ${packageTypes}" th:text="${item.getName()}"></th>
                                             <th>総重量</th>
                                             <th>総才数</th>
                                             <th>コース</th>
@@ -139,8 +139,8 @@
                                             <td th:text="${logistic.getPostName()}"></td>
                                             <td th:text="${logistic.getAmount()}"></td>
                                             <td th:text="${logistic.getPrice()}"></td>
-                                            <!--<td th:each="pkg: ${logistic.getPackageWithNames()}" th:text="${pkg.getName()}"></td>-->
-                                            <th th:each="item: ${packageTypes}" th:text="${item}"></th>
+                                            <td th:each="pkg: ${logistic.getPackageWithNames()}" th:text="${pkg.getAmount()}"></td>
+                                            <!--<th th:each="item: ${packageTypes}" th:text="${item}"></th>-->
                                             <td th:text="${logistic.getTotalWeight()}"></td>
                                             <td th:text="${logistic.getTotalCapacity()}"></td>
                                             <td th:text="${logistic.getCourseName()}"></td>

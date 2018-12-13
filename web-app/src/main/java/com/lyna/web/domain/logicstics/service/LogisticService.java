@@ -1,10 +1,11 @@
 package com.lyna.web.domain.logicstics.service;
 
-import com.lyna.web.domain.view.LogisticAggregate;
-
-import java.util.List;
+import java.util.Map;
 
 public interface LogisticService {
-    List<LogisticAggregate> findLogisticsView(int tenantId);
+     static final String LOGISTIC_DATA = "logisticData";
+     static final String PKG_TYPE = "packageTypes";
+
+    Map<String, Object> findLogisticsView(int tenantId);
 
 }

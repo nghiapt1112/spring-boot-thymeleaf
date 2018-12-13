@@ -5,8 +5,13 @@ import com.lyna.web.domain.logicstics.LogisticView;
 import com.lyna.web.infrastructure.utils.DateTimeUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +53,8 @@ public class LogisticAggregate extends AbstractObject {
         totalWeight = new BigDecimal(0);
         totalCapacity = new BigDecimal(0);
     }
-    public static LogisticAggregate parseFromViewDTO(LogisticView logisticView,
+
+    public static LogisticAggregate parseFromViewDTO(LogisticView logisticView, Collection<PackageName> totalPackageName,
                                                      Map<String, List<PackageAggregate>> logisticPackagesByOrderId,
                                                      Map<String, List<PackageAggregate>> deliveryPackagesByOrderId) {
         LogisticAggregate aggregate = new LogisticAggregate();
@@ -73,11 +79,24 @@ public class LogisticAggregate extends AbstractObject {
             fillWithPackageInfo(logisticPackagesByOrderId, aggregate);
         }
 
+        //Fill all package_type into each row to make each row will have equal package column.
+        List<PackageName> oldPkgWithName = new ArrayList<>(aggregate.packageWithNames);
+        for (PackageName pkgName : totalPackageName) {
+            PackageName checkingPkg = oldPkgWithName.stream().filter(el -> el.getName().equals(pkgName.getName()))
+                    .findFirst().orElse(null);
+            if (Objects.isNull(checkingPkg)) {
+                aggregate.packageWithNames.add(new PackageName(pkgName.getName(), pkgName.getAmount()));
+            }
+        }
+        aggregate.packageWithNames.stream().sorted(Comparator.comparing(PackageName::getName));
         return aggregate;
     }
 
-    private static void fillWithPackageInfo(Map<String, List<PackageAggregate>> logisticPackagesByOrderId, LogisticAggregate aggregate) {
-        for( PackageAggregate el : logisticPackagesByOrderId.get(aggregate.getOrderId())) {
+    /**
+     * sum all weigh and capacity for each order
+     */
+    private static void fillWithPackageInfo(Map<String, List<PackageAggregate>> packageByOrderId, LogisticAggregate aggregate) {
+        for( PackageAggregate el : packageByOrderId.get(aggregate.getOrderId())) {
             aggregate.totalWeight = aggregate.totalWeight.add(el.getFullLoadWeight());
             aggregate.totalCapacity = aggregate.totalCapacity.add(el.getFullLoadCapacity());
         }
@@ -88,17 +107,23 @@ public class LogisticAggregate extends AbstractObject {
             return null;
         }
 
-        Map<String, BigDecimal> packageAmountByName = packages.stream()
-                .filter(el -> Objects.nonNull(el.getPackageName()))
+        return packages.stream()
+                .filter(el -> Objects.nonNull(el.getPackageName())) // packageName not null
                 .collect(Collectors.groupingBy(
                         PackageAggregate::getPackageName,
                         Collectors.reducing(BigDecimal.ZERO, PackageAggregate::getAmount, BigDecimal::add)
-                ));
-
-        return packageAmountByName.entrySet().stream()
+                ))// create map: name-totalAmount
+                .entrySet().stream()
                 .map(el -> new PackageName(el.getKey(), el.getValue()))
-                .sorted(Comparator.comparing(PackageName::getName))
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getPackageTypes() {
+        if (CollectionUtils.isEmpty(this.packageWithNames)) {
+            return Collections.EMPTY_LIST;
+        } else {
+            return this.packageWithNames.stream().map(PackageName::getName).collect(Collectors.toList());
+        }
     }
 }
 
