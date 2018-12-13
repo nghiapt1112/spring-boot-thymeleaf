@@ -11,14 +11,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @ToString
 public class CsvDelivery {
-    @CsvBindByName
-    private String name;
+    @CsvBindByName(column = "店舗")
+    private String storeName;
 
     @CsvBindByName(column = "日付")
     private String orderDate;
 
     @CsvBindByName(column = "店舗")
-    private String store;
+    private String storeCode;
 
     @CsvBindByName(column = "便")
     private String post;
