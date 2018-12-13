@@ -20,7 +20,7 @@ public class DomainException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    protected DomainException(String message) {
+    public DomainException(String message) {
         super(message);
         this.domainCode = Domain.General.code();
         this.errorCode = UNKNOWN_ERROR;
@@ -62,7 +62,8 @@ public class DomainException extends RuntimeException {
     }
 
     public enum Domain {
-        General(1), Validate(2), User(3), CSV(4), Store(5), Product(6);
+        General(1), Validate(2), User(3), CSV(4), Store(5), Product(6), Package(7), Delivery(8),
+        DeliveryDetail(9), Logistics(10), PostCourse(11);
 
         private int domainCode;
 

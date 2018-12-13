@@ -1,6 +1,6 @@
 let addRow = function () {
     let listName = 'postCourses'; //list name in Catalog.class
-    let fieldsNames = ['tenantId', 'storeId', 'updateDate', 'createDate', 'createUser', 'updateUser', 'post', 'course', 'delete']; //field names from Movie.class
+    let fieldsNames = ['post', 'course', 'delete']; //field names from Movie.class
     let rowIndex = document.querySelectorAll('.item').length; //we can add mock class to each movie-row
     let row = document.createElement('div');
     row.classList.add('item', 'order_course', 'col-md-12');
@@ -22,7 +22,7 @@ let addRow = function () {
 
         let emPost = document.createElement('em');
         emPost.classList.add('error');
-        emPost.textContent = 'post is required';
+        emPost.textContent = '店舗コードは必須です。';
 
         rowSpanPost.appendChild(spanPost);
         rowInputPost.appendChild(inputPost);
@@ -45,12 +45,8 @@ let addRow = function () {
         inputCourse.type = 'text';
         inputCourse.id = fieldName + rowIndex;
         inputCourse.setAttribute('name', listName + '[' + rowIndex + '].' + fieldName);
-        let emCourse = document.createElement('em');
-        emCourse.classList.add('error');
-        emCourse.textContent = 'course is required';
         rowSpanCourse.appendChild(spanCourse);
         rowInputCourse.appendChild(inputCourse);
-        rowInputCourse.appendChild(emCourse);
         rowCourse.appendChild(rowSpanCourse);
         rowCourse.appendChild(rowInputCourse);
     }
@@ -75,20 +71,37 @@ let addRow = function () {
 
 
 $(document).ready(function () {
+
+    $("body").on("click", "#add", function (event) {
+        event.preventDefault();
+        addRow();
+        $(this).closest("body").find(".item").each(function (index1) {
+            $(this).find("input").each(function (index) {
+
+                if (0 === index) {
+                    $(this).attr('name', 'postCourses[' + parseInt(index1) + '].post');
+                    $(this).attr('id', 'post' + parseInt(index1));
+                } else if (1 === index) {
+                    $(this).attr('name', 'postCourses[' + parseInt(index1) + '].course');
+                }
+
+            })
+
+        })
+    })
+
     $("body").on("click", "#save", function (event) {
         let checkForm = true;
         var code = $("#code").val();
         if (code === "" || code.trim() === "") {
-            $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
-            $("#errorPost").removeClass("error").addClass("error_show");
+            $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
-            $("#errorPost").removeClass("error_show").addClass("error");
+            $("#errorCode").removeClass("error_show").addClass("error");
         }
 
         var name = $("#name").val();
         if (name === "" || name.trim() === "") {
-            $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -101,11 +114,9 @@ $(document).ready(function () {
                     let postIndex = '#post' + index1;
                     let postvalue = $(this).closest("div").find(postIndex).val();
                     if (postvalue === "" || postvalue.trim() === "") {
-                        $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
                         $(this).closest("div").find("em").removeClass("error").addClass("error_show");
                         checkForm = false;
                     } else {
-                        /*$(this).closest("body").find(".button-submit").find("button").attr("data-toggle","modal").attr("data-target","#exampleModal");*/
                         $(this).closest("div").find("em").removeClass("error_show").addClass("error");
                     }
 
@@ -132,25 +143,6 @@ $(document).ready(function () {
                 } else if (1 === index) {
                     $(this).attr('name', 'postCourses[' + parseInt(index1) + '].course');
                     $(this).attr('id', 'course' + parseInt(index1));
-                }
-
-            })
-
-        })
-    })
-
-
-    $("body").on("click", "#add", function (event) {
-        event.preventDefault();
-        addRow();
-        $(this).closest("body").find(".item").each(function (index1) {
-            $(this).find("input").each(function (index) {
-
-                if (0 === index) {
-                    $(this).attr('name', 'postCourses[' + parseInt(index1) + '].post');
-                    $(this).attr('id', 'post' + parseInt(index1));
-                } else if (1 === index) {
-                    $(this).attr('name', 'postCourses[' + parseInt(index1) + '].course');
                 }
 
             })

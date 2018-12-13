@@ -29,6 +29,6 @@ public class ApplicationController {
 
     @RequestMapping({"/mainMenu", "/"})
     public String mainMenu() {
-        return "main/mainMenu";
+        return "redirect:/mainScreen";
     }
 }

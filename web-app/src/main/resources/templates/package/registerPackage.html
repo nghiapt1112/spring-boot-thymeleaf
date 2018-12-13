@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('荷姿登録')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/registerPackage.css" th:href="@{/css/registerContant.css}"/>
+</head>
+<body id="body" class="hold-transition skin-blue sidebar-mini">
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <div th:include="fragments/header/header.html :: header" class="main-header"></div>
+    <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                荷姿登録
+            </h1>
+        </section>
+        <section class="content content-right">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div style="text-align: center;" class="box-header">
+                                <p class="box-titles"></p>
+                            </div>
+                            <div class="box-body">
+                                <form th:action="@{/package/create}" th:method="post" th:object="${package}">
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">荷姿名</span>
+                                        <div class=" form-group col-md-6 has-feedback">
+                                            <input id="name" class="form-control" type="text" th:field="*{name}"
+                                                   th:errorclass="field-error">
+                                            <em id="errorName" class="error">荷姿名は必須です。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('name')}"
+                                                th:errors="*{name}"></em>
+
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">単位</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{unit}">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">空の重量</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{emptyWeight}"
+                                                   id="emptyWeight">
+                                            <em id="errorEmptyWeight" class="error">空の重量を正しく入力してください。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">満載の重量</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{fullLoadWeight}"
+                                                   id="fullLoadWeight">
+                                            <em id="errorFullLoadWeight" class="error">満載の重量を正しく入力してください。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">空の才数</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{emptyCapacity}"
+                                                   id="emptyCapacity">
+                                            <em id="errorEmptyCapacity" class="error">空の才数を正しく入力してください。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">満載の才数</span>
+                                        <div class=" form-group col-md-6" style="">
+                                            <input class="form-control" type="text" th:field="*{fullLoadCapacity}"
+                                                   id="fullLoadCapacity">
+                                            <em id="errorFullLoadCapacity" class="error">満載の才数を正しく入力してください。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12  button-submit">
+                                        <button TYPE="submit" class="btn btn-primary" id="save">登録</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" src="/js/registerPackage.js" th:src="@{/js/registerPackage.js}"></script>
+</body>
+</html>

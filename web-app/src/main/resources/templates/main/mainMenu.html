@@ -29,12 +29,9 @@
                         <input type="hidden" id="quizID"/>
                     </div>
                 </div>
-                <!-- The Modal -->
                 <div id="myModal" class="modal">
-                    <!-- Modal content -->
                     <div class="modal-content" id="modelContent">
                         <span class="close">&times;</span>
-                        <!-- File Upload From -->
                         <form action="#" enctype="multipart/form-data" th:action="@{/upload/file}" method="POST">
                             <div class="form-group">
                                 <label for="files">データ取り込み</label>
@@ -53,38 +50,34 @@
                         </form>
 
                         <br/>
-                        <!-- Bootstrap Progress bar -->
                         <div class="progress">
                             <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
                                  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%
                             </div>
                         </div>
-                        <!-- Alert -->
                         <div id="alertMsg" style="color: red;font-size: 18px;"></div>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="box box-primary">
                         <div class="box-header">
-                            <!--<h3 class="box-title">Search Product</h3>-->
                         </div>
                         <div class="box-body">
-                            <!-- <form class="form-inline" action="/action_page.php"> -->
                             <div class="col-md-12" style="padding: 0">
                                 <div style="padding: 0" class="col-md-1">
                                     <label for="pwd">日付</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="">
-                                        <input type="text" class="form-control" id="min" placeholder="Input date">
+                                    <div>
+                                        <input type="text" class="form-control" id="min">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-1" style="padding: 0">
                                     <label style="justify-content: center; display: flex;" for="pwd">-</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="">
-                                        <input type="text" class="form-control" id="max" placeholder="Input date">
+                                    <div>
+                                        <input type="text" class="form-control" id="max">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
@@ -93,8 +86,8 @@
                                     <label for="pwd">便</label>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
-                                    <div class="">
-                                        <input type="text" class="form-control" id="post" placeholder="Input post">
+                                    <div>
+                                        <input type="text" class="form-control" id="post">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-2" style="padding: 0">
@@ -107,7 +100,6 @@
                                 </div>
 
                             </div>
-                            <!-- </form>	 -->
                         </div>
                     </div>
                 </div>
@@ -131,59 +123,30 @@
                                             <th>便</th>
                                             <th>発注個数</th>
                                             <th>金額</th>
-                                            <th>ばんじゅう</th>
-                                            <th>箱</th>
-                                            <th>ケース</th>
+                                            <!--<th>ばんじゅう</th>-->
+                                            <!--<th>箱</th>-->
+                                            <!--<th>ケース</th>-->
+                                            <th th:each="item: ${packageTypes}" th:text="${item.getName()}"></th>
                                             <th>総重量</th>
                                             <th>総才数</th>
                                             <th>コース</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>10/23/2018</td>
-                                            <td>店舗A</td>
 
-                                            <td>1</td>
-                                            <td>100</td>
-                                            <td>1000</td>
-                                            <td>10</td>
-                                            <td>2</td>
-                                            <td>0</td>
-                                            <td>250kg</td>
-                                            <td>100</td>
-                                            <td>コースA</td>
-
+                                        <tr class="" th:each="logistic: ${logisticData}" th:classappend="${logistic.isDeliveryData() ? 'bg-green': ''}" >
+                                            <td th:text="*{logistic.getOrderDate()}"></td>
+                                            <td th:text="${logistic.getStoreName()}"></td>
+                                            <td th:text="${logistic.getPostName()}"></td>
+                                            <td th:text="${logistic.getAmount()}"></td>
+                                            <td th:text="${logistic.getPrice()}"></td>
+                                            <td th:each="pkg: ${logistic.getPackageWithNames()}" th:text="${pkg.getAmount()}"></td>
+                                            <!--<th th:each="item: ${packageTypes}" th:text="${item}"></th>-->
+                                            <td th:text="${logistic.getTotalWeight()}"></td>
+                                            <td th:text="${logistic.getTotalCapacity()}"></td>
+                                            <td th:text="${logistic.getCourseName()}"></td>
                                         </tr>
-                                        <tr>
-                                            <td>10/23/2018</td>
-                                            <td>店舗A</td>
-                                            <td>3</td>
-                                            <td>50</td>
-                                            <td>4000</td>
-                                            <td>10</td>
-                                            <td>5</td>
-                                            <td>1</td>
-                                            <td>120kg</td>
-                                            <td>50</td>
-                                            <td>コースA</td>
 
-
-                                        </tr>
-                                        <tr>
-                                            <td>10/23/2018</td>
-                                            <td>店舗B</td>
-                                            <td>1</td>
-                                            <td>100</td>
-                                            <td>800</td>
-                                            <td>20</td>
-                                            <td>2</td>
-                                            <td>1</td>
-                                            <td>200kg</td>
-                                            <td>190</td>
-                                            <td>コースB</td>
-
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -202,38 +165,15 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>01/20/2018</td>
-                                            <td>店舗A</td>
-                                            <td>便１</td>
-                                            <td>マグロ</td>
-                                            <td>100</td>
-                                            <td>魚介</td>
-                                            <td>海鮮</td>
-                                            <td>魚</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>12/29/2018</td>
-                                            <td>店舗A</td>
-                                            <td>便１</td>
-                                            <td>サンドイッチ</td>
-                                            <td>50</td>
-                                            <td>食品</td>
-                                            <td>パン類</td>
-                                            <td>定温</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>03/20/2018</td>
-                                            <td>店舗B</td>
-                                            <td>便１</td>
-                                            <td>おにぎり</td>
-                                            <td>10</td>
-                                            <td>食品</td>
-                                            <td>米類</td>
-                                            <td>冷蔵</td>
-
+                                        <tr th:each="order: ${orderData}">
+                                            <td th:text="${order.getOrderDate()}"></td>
+                                            <td th:text="${order.getStoreName()}"></td>
+                                            <td th:text="${order.getPostName()}"></td>
+                                            <td th:text="${order.getProductName()}"></td>
+                                            <td th:text="${order.getOrderAmount()}"></td>
+                                            <td th:text="${order.getFirstCategory()}"></td>
+                                            <td th:text="${order.getSecondCategory()}"></td>
+                                            <td th:text="${order.getThirdCategory()}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -246,6 +186,7 @@
         </section>
     </div>
 </div>
+
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" src="/js/mainMenu.js" th:src="@{/js/mainMenu.js}"></script>
 </body>

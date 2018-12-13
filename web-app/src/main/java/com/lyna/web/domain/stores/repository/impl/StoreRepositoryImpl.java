@@ -1,16 +1,15 @@
 package com.lyna.web.domain.stores.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
+import com.lyna.web.infrastructure.repository.BaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -22,9 +21,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
 
-    @PersistenceContext
-    private EntityManager em;
-
     public StoreRepositoryImpl(EntityManager em) {
         super(Store.class, em);
     }
@@ -34,7 +30,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
         //ToDo: LinhNM: test if tenantId is null => has get info ?
         TypedQuery<Store> query =
-                em.createNamedQuery("Store.getAll", Store.class)
+                entityManager.createNamedQuery("Store.getAll", Store.class)
                         .setParameter("tenantId", tenantId);
         List<Store> results = query.getResultList();
 
@@ -42,18 +38,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    @Transactional
-    public Store save(Store store) {
-        if (store.getStoreId() == null) {
-            em.persist(store);
-            return store;
-        } else {
-            return em.merge(store);
-        }
-    }
-
-    @Override
-    public List<Store> findAll(int tenantId) {
+    public List<Store> findByTenantId(int tenantId) {
         return entityManager
                 .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
                 .setParameter("tenantId", tenantId)
@@ -61,7 +46,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public List<String> getAllByCode(int tenantId, List<String> storeCodes) {
+    public List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes) {
         if (storeCodes.size() > 0) {
             Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", String.class);
             query.setParameter("tenantId", tenantId)
@@ -73,15 +58,11 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
-        try {
-            Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
-            query.setParameter("tenantId", tenantId)
-                    .setParameter("storeCodes", storeCodes);
-            List list = query.getResultList();
-            return list;
-        } catch (Exception ex) {
-            throw ex;
-        }
+        Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
+        query.setParameter("tenantId", tenantId)
+                .setParameter("storeCodes", storeCodes);
+        List list = query.getResultList();
+        return list;
     }
 
     @Override
@@ -110,48 +91,33 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
     }
 
     @Override
-    public boolean deletebyStoreId(List<String> listStoreId) throws DomainException {
-        try {
-            String query = "DELETE FROM Store u WHERE u.storeId in (:storelist)";
-            entityManager.createQuery(query).setParameter("storelist", listStoreId).executeUpdate();
-            return true;
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            throw e;
-        }
+    public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
+
+        String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("storeIds", storeIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
     }
 
     @Override
-    public Store findOneByStoreId(String storeId) {
+    public Store findOneByStoreIdAndTenantId(String storeId, int tenantId) {
         return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId", Store.class)
+                .createQuery("SELECT s FROM Store s WHERE s.storeId=:storeId AND s.tenantId=:tenantId", Store.class)
                 .setParameter("storeId", storeId)
+                .setParameter("tenantId", tenantId)
                 .getSingleResult();
     }
 
     @Override
-    public void updateStore(Store store) {
+    public Store findOneByCodeAndTenantId(String code, int tenantId) {
+        return entityManager
+                .createQuery("SELECT s FROM Store s WHERE s.code=:code AND s.tenantId=:tenantId", Store.class)
+                .setParameter("code", code)
+                .setParameter("tenantId", tenantId)
+                .getSingleResult();
 
-        try {
-            String hql = "UPDATE Store s set s.tenantId = :tenantId, s.updateUser = :updateUser, s.updateDate = :updateDate,"
-                    + "s.code = :code, s.name = :name, s.majorArea = :majorArea, s.area = :area, s.address = :address,"
-                    + "s.personCharge = :personCharge, s.phoneNumber = :phoneNumber WHERE s.storeId=:storeId";
-            entityManager.createQuery(hql)
-                    .setParameter("tenantId", store.getTenantId())
-                    .setParameter("updateUser", store.getUpdateUser())
-                    .setParameter("updateDate", store.getUpdateDate())
-                    .setParameter("code", store.getCode())
-                    .setParameter("name", store.getName())
-                    .setParameter("majorArea", store.getMajorArea())
-                    .setParameter("area", store.getArea())
-                    .setParameter("address", store.getAddress())
-                    .setParameter("personCharge", store.getPersonCharge())
-                    .setParameter("phoneNumber", store.getPhoneNumber())
-                    .setParameter("storeId", store.getStoreId())
-                    .executeUpdate();
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            throw e;
-        }
     }
+
 }

@@ -1,15 +1,19 @@
 package com.lyna.web.domain.product.service;
 
-import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.product.Product;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.lyna.web.domain.user.User;
 
 import java.util.List;
 
 public interface ProductService {
-    void updateProduct(Product product, UsernamePasswordAuthenticationToken principal);
-    Product findOneByProductId(String productId);
-    List<Product> findAll();
-    void createProduct(Product product, UsernamePasswordAuthenticationToken principal);
-    boolean deletebyProductId(List<String> listProductId);
+    void update(Product product, User user);
+
+    Product findOneByProductIdAndTenantId(String productId, int tenantId);
+
+    List<Product> findByTenantIdAndTenantId(int tenantId);
+
+    void create(Product product, User user);
+
+    Product findOneByCodeAndTenantId(String code, int tenantId);
+
 }

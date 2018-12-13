@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー 登録')"></head>
+    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" href="/css/registerUser.css" th:href="@{/css/registerUser.css}"/>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <!--<header th:replace="layout :: header"></header>-->
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
-    <!--<div th:replace="layout :: content-left"></div>-->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -19,7 +19,8 @@
             <div>
                 <form name="register-form" action="#" th:action="@{/user/register/}"
                       th:object="${userRegisterAggregate}" method="POST">
-                    <p class="row"><label class="col-md-2">メールアドレス: </label><input name="email" id="email" class="col-md-3" type="text"
+                    <p class="row"><label class="col-md-2">メールアドレス: </label><input name="email" id="email"
+                                                                                   class="col-md-3" type="text"
                                                                                    th:field="*{email}" required/></p>
                     <p class="row"><label class="col-md-2">ユーザー名: </label><input class="col-md-3" type="text"
                                                                                  th:field="*{userName}" required/></p>
@@ -37,8 +38,7 @@
                                                                                                      id="confirm_password"
                                                                                                      th:field="*{password}"
                                                                                                      onkeyup='check();'
-                                                                                                     required/>
-                    </p>
+                                                                                                     required/></p>
                     <span id='message'></span>
                     <hr>
 
@@ -61,16 +61,19 @@
                         </div>
                     </div>
                     <br>
+
                     <div class="col-md-5 text-center">
-                        <input type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary" onkeyup='check();'/>
+                        <input type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary"
+                               onkeyup='check();'/>
                     </div>
                 </form>
             </div>
+
         </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/mainMenu.js" th:src="@{/js/listUser.js}"></script>
+<script type="text/javascript" src="/js/registerUser.js" th:src="@{/js/registerUser.js}"></script>
 <script type="text/javascript" th:src="@{/js/validate-form-register.js}"></script>
 </body>
 </html>

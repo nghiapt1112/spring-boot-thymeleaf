@@ -5,9 +5,15 @@ import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
+import com.lyna.web.domain.view.CsvDelivery;
+import com.lyna.web.domain.view.CsvOrder;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -27,5 +33,15 @@ public class DeliveryRepositoryImpl extends BaseRepository<Delivery, Long> imple
             return (String) list.get(0);
 
         return null;
+    }
+
+    @Override
+    public Iterator<CsvDelivery> getMapDelivery(Reader reader) {
+        CsvToBean<CsvDelivery> csvToBean = new CsvToBeanBuilder(reader)
+                .withType(CsvDelivery.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<CsvDelivery> csvUserIterator = csvToBean.iterator();
+        return csvUserIterator;
     }
 }

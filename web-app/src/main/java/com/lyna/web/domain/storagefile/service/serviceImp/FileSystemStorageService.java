@@ -1,5 +1,6 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.Delivery;
@@ -126,7 +127,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     saveDataMaster();
                     saveDataOrder();
                 } else {
-                    deliveryIterator = orderRepository.getMapDelivery(reader);
+                    deliveryIterator = deliveryRepository.getMapDelivery(reader);
                     processUploadDelivery(deliveryIterator);
                     setMapDataDelivery(tenantId);
                     if (mapError.size() == 0) {
@@ -306,7 +307,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     private void setMapDataDelivery(int tenantId) throws StorageException {
-        List<String> stores = storeRepository.getAllByCode(tenantId, listStoreCode);
+        List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
         List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
 
         listStoreCode.removeIf(x -> stores.contains(x));
@@ -341,7 +342,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
         });
 
-        //mapDeliveryIdCsv = new HashMap<>();
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
             String orderId = orderRepository.checkExists(postcodesId);
             if (orderId != null) {
@@ -357,7 +357,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             }
         });
 
-        List<Package> packageList = packageRepository.getListByName(tenantId);
+        List<Package> packageList = packageRepository.findByTenantId(tenantId);
 
         mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
             String trayAmount = ((CsvDelivery) csv).getTray();
@@ -391,7 +391,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     private void setMapData(int tenantId) throws StorageException {
         try {
-            List<String> stores = storeRepository.getAllByCode(tenantId, listStoreCode);
+            List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
             List<String> products = null;
             List<Product> productInDB = null;
@@ -408,7 +408,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 CsvOrder csvOrder = (CsvOrder) mapStoreCodeCsv.get(code);
                 Store store = new Store();
                 store.setCode(code);
-                store.setName(code);
+                store.setName(csvOrder.getName());
                 store.setTenantId(tenantId);
                 ((HashSet<Store>) storeIterable).add(store);
 
@@ -440,7 +440,12 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 product.setCategory2(csvOrder.getCategory2());
                 product.setCategory3(csvOrder.getCategory3());
                 product.setTenantId(tenantId);
-
+                product.setUpdateUser("");
+                product.setUpdateDate(new Date());
+                product.setCreateUser("");
+                product.setCreateDate(new Date());
+                product.setUnit("");
+                product.setPrice(new BigDecimal(0));
                 ((HashSet<Product>) productIterable).add(product);
                 mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
                 mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
@@ -499,7 +504,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void saveDataMaster() {
+    private void saveDataMaster() throws DomainException {
         //save all store
         storeRepository.saveAll(storeIterable);
         //save all postcourse
@@ -512,7 +517,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         deliveryDetailRepository.saveAll(deliveryDetailIterable);
     }
 
-    private void saveDataOrder() {
+    private void saveDataOrder() throws DomainException {
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
     }

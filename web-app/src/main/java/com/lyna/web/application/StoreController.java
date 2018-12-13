@@ -9,6 +9,8 @@ import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +18,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,22 +38,23 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
-    private static final String STORE_LIST_PAGE = "store/liststore";
-    private static final String STORE_EDIT_PAGE = "store/editStore";
-    private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
-    private static final String STORE_REGISTER_PAGE = "store/registerStore";
-
-
-    @Autowired
-    private StoreService storeService;
-
 
     @Autowired
     private PostCourseService postCourseService;
 
+    private static final String STORE_LIST_PAGE = "store/liststore";
+    private static final String STORE_EDIT_PAGE = "store/editStore";
+    private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
+    private static final String STORE_REGISTER_PAGE = "store/registerStore";
+    private final Logger log = LoggerFactory.getLogger(StoreController.class);
+    @Autowired
+    private StoreService storeService;
+
+    private String codeExisted;
+
     @GetMapping(value = "/create")
     @IsAdmin
-    public String registerStore(Model model, @ModelAttribute("store") Store store) {
+    public String createStore(Model model, @ModelAttribute("store") Store store) {
         List<PostCourse> postCourses = new ArrayList<PostCourse>();
         postCourses.add(new PostCourse());
         store.setPostCourses(postCourses);
@@ -55,46 +63,62 @@ public class StoreController extends AbstractCustomController {
     }
 
     @PostMapping(value = "/create")
-    public String CreateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store") Store store, BindingResult result, RedirectAttributes redirect) {
-        if (result.hasErrors()) {
+    public String create(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
+            Store store, BindingResult result) {
+        User user = (User) principal.getPrincipal();
+        if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
             return STORE_REGISTER_PAGE;
         }
-        if (null == store) {
-            return STORE_REGISTER_PAGE;
+
+        try {
+            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(),user.getTenantId()))) {
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("store", store);
+                return STORE_REGISTER_PAGE;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
-        storeService.createStore(store, principal);
+
+        storeService.create(store, user);
 
         return REDIRECT_STORE_LIST_PAGE;
 
     }
 
     @PostMapping(value = "/update")
-    @IsAdmin
-    public String updateStore(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
-            Store store, BindingResult result, RedirectAttributes redirect) {
-        if (result.hasErrors()) {
+    public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
+            Store store, BindingResult result) {
+        User user = (User) principal.getPrincipal();
+
+        if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
             return STORE_EDIT_PAGE;
         }
-        if (Objects.isNull(store)) {
-            return STORE_EDIT_PAGE;
+
+        try {
+            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(), user.getTenantId()))) {
+                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("store", store);
+                return STORE_EDIT_PAGE;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
 
-        storeService.updateStore(store, principal);
-
-        List<PostCourse> postCourses = store.getPostCourses();
-        if (!Objects.isNull(postCourses) && !postCourses.isEmpty()) {
-            postCourseService.updatePostCourse(postCourses, principal, store.getStoreId());
-        }
+        storeService.update(store, user);
 
         return REDIRECT_STORE_LIST_PAGE;
 
     }
 
     @GetMapping(value = "/update/{storeId}")
-    public String editStore(@PathVariable("storeId") String storeId, Model model) {
-        model.addAttribute("store", storeService.findOneByStoreId(storeId));
+    public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId, Model model) {
+        User user = (User) principal.getPrincipal();
+        Store store = storeService.findOneByStoreIdAndTenantId(storeId, user.getTenantId());
+        codeExisted = store.getCode();
+        model.addAttribute("store", store);
         return STORE_EDIT_PAGE;
     }
 
@@ -163,12 +187,12 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String addNew(HttpServletRequest request) {
+    String deleteStore(UsernamePasswordAuthenticationToken principal,HttpServletRequest request, @RequestParam(value = "storeIds[]") List<String> storeIds) {
+        User user = (User) principal.getPrincipal();
         ObjectMapper mapper = new ObjectMapper();
-        String storeIds = request.getParameter("storeId");
         String ajaxResponse = "";
         try {
-            String response = storeService.deleteStore(storeIds);
+            boolean response = postCourseService.deleteByStoreIdsAndTenantId(storeIds,user.getTenantId());
             ajaxResponse = mapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

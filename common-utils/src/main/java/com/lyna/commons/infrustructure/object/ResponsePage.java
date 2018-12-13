@@ -2,14 +2,15 @@ package com.lyna.commons.infrustructure.object;
 
 import java.util.List;
 
-public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractObject> extends AbstractObject {
+public abstract class ResponsePage<E extends AbstractObject, O extends AbstractObject> extends AbstractObject {
     protected int totalPage;
     protected int pageNo;
     protected int noOfRowInPage;
     protected long totalRecords;
     protected List<O> results;
 
-    public ResponsePage() {}
+    public ResponsePage() {
+    }
 
     public void withData(int noOfRowInPage, List<E> rawResults, long totalRecords) {
         this.noOfRowInPage = noOfRowInPage;
@@ -36,5 +37,8 @@ public abstract class ResponsePage<E extends AbstractEntity, O extends AbstractO
         return totalRecords;
     }
 
-    public abstract List<O> getResults();
+    public List<O> getResults() {
+        return this.results;
+    }
+
 }

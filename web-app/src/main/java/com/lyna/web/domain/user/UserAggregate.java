@@ -8,11 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,7 +27,11 @@ public class UserAggregate extends AbstractObject {
     @NotEmpty
     private String userName;
 
+    @NotEmpty
     private String password;
+
+    @NotEmpty
+    private String confirmPasswd;
 
     private List<UserStoreRole> rolePerStore;
 
@@ -74,24 +74,51 @@ public class UserAggregate extends AbstractObject {
     public void updateRolePerStore(List<Store> stores) {
         if (CollectionUtils.isEmpty(this.rolePerStore)) {
             this.rolePerStore = new ArrayList<>();
+            this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
+        } else {
+            Set<String> uniqueExistedStoreIds = this.rolePerStore.stream().map(el -> el.getStoreId()).collect(Collectors.toSet());
+
+            //
+            stores.stream()
+                    .filter(store -> !uniqueExistedStoreIds.contains(store.getStoreId()))
+                    .forEach(store -> {
+                        // assign user to new store with NO_PERMISSION role in Store.
+                        this.rolePerStore.add(new UserStoreRole(store));
+                    });
+
         }
-        this.rolePerStore = stores.stream().map(UserStoreRole::fromStoreEntity).collect(Collectors.toList());
+
     }
 
     public String getName() {
         return this.userName;
+    }
+
+    public boolean isDataValid() {
+        if (!this.password.equals(this.confirmPasswd)) {
+            return false;
+        }
+        // TODO: Validate other special fields.
+        return true;
     }
 }
 
 
 @Data
 @NoArgsConstructor
-class UserStoreRole {
+class UserStoreRole extends AbstractObject{
     private String id;
     private String name;
     private String storeId;
     private boolean canView;
     private boolean canEdit;
+
+    public UserStoreRole(Store store) {
+        this.setId(UUID.randomUUID().toString());
+        this.setStoreId(store.getStoreId());
+        this.setName(store.getName());
+        this.parseRole(StoreRoleType.NO_PERMISSION.getShortVal());
+    }
 
     public static UserStoreRole fromStoreEntity(Store store) {
         UserStoreRole aggregate = new UserStoreRole();

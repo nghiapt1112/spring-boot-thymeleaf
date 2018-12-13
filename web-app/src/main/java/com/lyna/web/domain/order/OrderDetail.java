@@ -1,10 +1,20 @@
 package com.lyna.web.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.product.Product;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -27,6 +37,11 @@ public class OrderDetail extends AbstractEntity {
 
     @Column(name = "product_id")
     public String productId;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "product_id")
+    private Set<Product> products;
 
     public OrderDetail() {
         this.orderDetailId = UUID.randomUUID().toString();

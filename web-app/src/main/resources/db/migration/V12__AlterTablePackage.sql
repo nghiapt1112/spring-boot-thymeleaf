@@ -1,0 +1,1 @@
+ALTER TABLE m_package CHANGE pakage_id package_id varchar(36) NOT NULL COMMENT 'ID';

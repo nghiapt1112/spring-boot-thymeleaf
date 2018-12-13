@@ -5,14 +5,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    void updateProduct(Product product);
+public interface ProductRepository extends JpaRepository<Product, String> {
+    Product findOneByProductIdAndTenantId(String productId, int tenantId);
 
-    Product findOneByProductId(String productId);
+    boolean deleteByProductIdsAndTenantId(List<String> productIds, int tenantId);
 
-    boolean deletebyProductId(List<String> listProductId);
+    Product findOneByCodeAndTenantId(String code, int tenantId);
+
+    List<Product> findByTenantId(int tenantId);
 
     List<String> getListProductCodeByProductCode(int tenantId, List<String> products);
 
     List<Product> getProductsByProductCode(int tenantId, List<String> products);
+
 }
+
+

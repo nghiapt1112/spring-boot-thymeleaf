@@ -1,11 +1,11 @@
-package com.lyna.web.domain.order.repository.repositoryImpl;
+package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.order.Order;
+import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.exception.StorageException;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.stores.Store;
-import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -24,9 +23,6 @@ import java.util.List;
 public class OrderRepositoryImpl extends BaseRepository<Order, String> implements OrderRepository {
 
     private final Logger log = LoggerFactory.getLogger(OrderRepositoryImpl.class);
-
-    @PersistenceContext
-    private EntityManager em;
 
     public OrderRepositoryImpl(EntityManager em) {
         super(Store.class, em);
@@ -38,28 +34,18 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
                 .withType(CsvOrder.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
-        Iterator<CsvOrder> csvOrderIterator = csvToBean.iterator();
-        return csvOrderIterator;
-    }
-
-    @Override
-    public Iterator<CsvDelivery> getMapDelivery(Reader targetReader) {
-        CsvToBean<CsvDelivery> csvToBean = new CsvToBeanBuilder(targetReader)
-                .withType(CsvDelivery.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();
-        Iterator<CsvDelivery> csvDeliveryIterator = csvToBean.iterator();
-        return csvDeliveryIterator;
+        Iterator<CsvOrder> csvUserIterator = csvToBean.iterator();
+        return csvUserIterator;
     }
 
     @Override
     public Order save(Order order) {
         try {
             if (order.getOrderId() == null) {
-                em.persist(order);
+                entityManager.persist(order);
                 return order;
             } else {
-                em.merge(order);
+                entityManager.merge(order);
             }
         } catch (Exception ex) {
             log.error(ex.getMessage());
@@ -87,11 +73,25 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
-    public String checkExists(String postcourseId) {
+    public List<Order> findByTenantId(int tenantId) {
+        return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId")
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
+
+    @Override
+    public List<OrderView> findOverViews(int tenantId) {
+        return entityManager.createQuery("SELECT o FROM OrderView o", OrderView.class)
+                .getResultList();
+    }
+
+    @Override
+    public String checkExists(String postCourseId) throws StorageException {
         try {
-            String query = "SELECT a.orderId FROM Order a WHERE a.postCourseId = :postCourseId";
+            String query = "SELECT a.orderId FROM Order a " +
+                    "WHERE a.postCourseId = :postCourseId ";
             List list = entityManager.createQuery(query)
-                    .setParameter("postCourseId", postcourseId)
+                    .setParameter("postCourseId", postCourseId)
                     .getResultList();
             if (list != null && list.size() > 0)
                 return (String) list.get(0);

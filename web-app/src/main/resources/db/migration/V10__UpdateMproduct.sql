@@ -1,0 +1,1 @@
+ALTER TABLE m_product DROP COLUMN temperature;

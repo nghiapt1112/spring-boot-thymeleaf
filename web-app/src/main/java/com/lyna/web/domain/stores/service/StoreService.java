@@ -1,31 +1,36 @@
 package com.lyna.web.domain.stores.service;
 
 import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 
 public interface StoreService {
-    List<Store> findAll(int tenantId);
+    List<Store> findByTenantId(int tenantId);
+
+    default List<Store> findAll(int tenantId) {
+        return this.findByTenantId(tenantId);
+    }
 
     List<Store> getStoreList(int principal, String search);
 
     List<Store> getStoreList(int principal);
 
-    @SuppressWarnings("unused")
     Page<Store> findPaginated(Pageable of, int tenantId, String searchText);
 
     Page<Store> findPaginated(int tenantId);
 
-    String deleteStore(String storeIds);
+    String deleteStoreAndTenantId(List<String> storeIds, int tenantId);
 
-    void createStore(Store store, UsernamePasswordAuthenticationToken principal);
+    void create(Store store, User user);
 
-    void updateStore(Store store, UsernamePasswordAuthenticationToken principal);
+    void update(Store store, User user);
 
-    Store findOneByStoreId(String storeId);
+    Store findOneByStoreIdAndTenantId(String code, int tenantId);
+
+    Store findOneByCodeAndTenantId(String code, int tenantId);
 
 
 }

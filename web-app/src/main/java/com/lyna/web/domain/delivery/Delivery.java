@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class Delivery extends AbstractEntity {
 
     @Id
-    @Column(name = "delivery_id", nullable = false)
+    @Column(name = "delivery_id", nullable = false)   
     public String deliveryId;
 
 

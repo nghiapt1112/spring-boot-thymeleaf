@@ -9,10 +9,6 @@ import java.util.Date;
 
 @MappedSuperclass
 public class AbstractEntity extends AbstractObject {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Column(name = "id")
-//    protected int id;
 
     @Column(name = "tenant_id")
     protected int tenantId;
