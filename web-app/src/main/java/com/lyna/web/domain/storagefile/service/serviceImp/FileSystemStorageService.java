@@ -393,10 +393,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         try {
             List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
-            List<String> products = null;
-            List<Product> productInDB = null;
-            productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
-            productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
+            List<String> products = productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
+            List<Product> productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
             listProductCode.removeIf(x -> products.contains(x));
 
             listStoreCode.removeIf(x -> stores.contains(x));

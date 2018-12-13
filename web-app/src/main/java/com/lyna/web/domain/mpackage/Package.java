@@ -23,7 +23,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "m_package")
 @NamedQueries({
-        @NamedQuery(name = "Package.countAll", query = "SELECT COUNT(x) FROM Package x")
+        @NamedQuery(name = "Package.getAll", query = "SELECT x FROM Package x")
 })
 @Data
 public class Package extends AbstractEntity {

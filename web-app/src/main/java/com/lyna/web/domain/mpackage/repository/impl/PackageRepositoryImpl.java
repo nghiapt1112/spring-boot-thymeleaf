@@ -31,7 +31,6 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
                 .getResultList();
     }
 
-    @Transactional
     public Package findOneByPackageIdAndTenantId(String packageId, int tenantId) throws DomainException {
         return entityManager
                 .createQuery("SELECT p FROM Package p WHERE p.packageId=:packageId AND p.tenantId=:tenantId", Package.class)
@@ -51,11 +50,9 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
     }
 
     @Override
-    @Transactional
     public List<Package> findByTenantId(int tenantId) {
-
-        return entityManager
-                .createQuery("SELECT p FROM Package p WHERE p.tenantId=:tenantId order by p.name", Package.class)
+        return super.entityManager
+                .createQuery("SELECT p FROM Package p ", Package.class)
                 .setParameter("tenantId", tenantId)
                 .getResultList();
     }
