@@ -52,7 +52,6 @@ import java.util.stream.Stream;
 public class FileSystemStorageService extends BaseService implements StorageService {
 
     private final Path rootLocation;
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     List<String> listStoreCode;
     List<String> listProductCode;
     List<String> ListPost;
@@ -217,8 +216,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
             CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
             String postCourseId = mapCsvPostCourseId.get(sOrder);
-            boolean isExists = orderRepository.checkExists(postCourseId, productId, csvOrder.getQuantity());
-            if (!isExists) {
+            String orderId = orderRepository.checkExists(postCourseId, sOrder.getOrderDate());
+            if (orderId == null) {
                 mapProductIdOrder.put(productId, csvOrder);
             }
         });
@@ -237,6 +236,14 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (csvOrder.getPost() == null || csvOrder.getPost().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
+            if (csvOrder.getOrderDate() == null || csvOrder.getOrderDate().isEmpty()) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+
+            if (DataUtils.converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null) {
+                mapError.add("行目 " + row + " にデータが不正");
+            }
+
             if (csvOrder.getQuantity() == null || csvOrder.getQuantity().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
@@ -252,10 +259,15 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
             row++;
 
-            String keyOrder = csvOrder.getStoreCode() + "_" + csvOrder.getPost();
-            String skeyCheck = keyOrder.trim().toLowerCase() + "_" + csvOrder.getProductCode().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
+            String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "_" + csvOrder.getPost().trim().toLowerCase();
+            String skeyCheck = keyOrder + "_" + csvOrder.getProductCode().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
             if (!setOrder.contains(skeyCheck)) {
                 setOrder.add(skeyCheck);
+
+                csvOrder.setPost(csvOrder.getPost().toLowerCase().trim());
+                csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
+                csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
+
                 mapStorePostCode.put(keyOrder, csvOrder);
                 listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
                 listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
@@ -492,6 +504,37 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Map<String, String> mapKeyOrderId = new HashMap<>();
             HashSet<String> setOrderDetail = new HashSet<>();
 
+           /* mapCsvPostCourseId.forEach((CsvOrder, postCourseId) -> {
+                String orderId = "";
+                if (!setOrderDetail.contains(postCourseId + "_" + productId)) {
+                    setOrderDetail.add(postCourseId + "_" + productId);
+                    if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(postCourseId)) {
+                        orderId = mapKeyOrderId.get(postCourseId);
+                    } else {
+                        Order order = new Order();
+                        orderId = order.getOrderId();
+                        mapKeyOrderId.put(postCourseId, orderId);
+
+                        Date date = DataUtils.converStringToDate(CsvOrder.getOrderDate());
+                        if (date == null)
+                            date = new Date();
+                        order.setOrderDate(date);
+
+                        order.setPostCourseId(postCourseId);
+                        order.setTenantId(tenantId);
+                        ((HashSet<Order>) orderIterable).add(order);
+                    }
+
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrderId(orderId);
+                    orderDetail.setProductId(productId);
+                    BigDecimal quantity = new BigDecimal(CsvOrder.getQuantity());
+                    orderDetail.setAmount(quantity);
+                    orderDetail.setTenantId(tenantId);
+                    ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
+                }
+            });*/
+
             mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
                 CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
                 String postCourseId = mapCsvPostCourseId.get(sOrder);
@@ -505,12 +548,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                         orderId = order.getOrderId();
                         mapKeyOrderId.put(postCourseId, orderId);
 
-                        try {
-                            Date date = formatter.parse(sOrder.getOrderDate());
-                            order.setOrderDate(date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        Date date = DataUtils.converStringToDate(sOrder.getOrderDate());
+                        if (date == null)
+                            date = new Date();
+                        order.setOrderDate(date);
 
                         order.setPostCourseId(postCourseId);
                         order.setTenantId(tenantId);
