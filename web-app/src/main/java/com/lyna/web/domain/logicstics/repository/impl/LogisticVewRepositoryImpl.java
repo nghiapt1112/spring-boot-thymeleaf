@@ -20,9 +20,9 @@ public class LogisticVewRepositoryImpl extends BaseRepository<LogisticView, Stri
 
     @Override
     public List<LogisticView> findLogistics(int tenantId, RequestPage logisticRequestPage) {
-        String sqlQuery = logisticRequestPage.buildSelect()
-                .append(logisticRequestPage.buildFrom())
-                .append(logisticRequestPage.buildWhere())
+        String sqlQuery = logisticRequestPage.getSelect()
+                .append(logisticRequestPage.getFrom())
+                .append(logisticRequestPage.getWhere())
                 .toString();
 
         TypedQuery<LogisticView> jpqlQuery = entityManager.createQuery(sqlQuery, LogisticView.class);

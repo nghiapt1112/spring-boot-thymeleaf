@@ -3,6 +3,7 @@ package com.lyna.web.application;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.logicstics.LogisticRequestPage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
+import com.lyna.web.domain.order.OrderRequestPage;
 import com.lyna.web.domain.order.service.OrderService;
 import com.lyna.web.domain.user.User;
 import org.apache.commons.lang3.StringUtils;
@@ -44,18 +45,27 @@ public class MainController extends AbstractCustomController {
                              @RequestParam(required = false) String postName) {
         User currentUser = (User) principal.getPrincipal();
 
-        LogisticRequestPage requestPage = new LogisticRequestPage();
-        requestPage
+        LogisticRequestPage logisticQueryBuilder = new LogisticRequestPage();
+        logisticQueryBuilder
                 .withTenantId(currentUser.getTenantId())
                 .addSearchField(START_DATE, Objects.isNull(start) ? getCurrentDate() : fromNumber(start))
                 .addSearchField(END_DATE, Objects.isNull(end) ? getCurrentDate() : fromNumber(end))
-                .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName);
+                .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
+                .build();
 
-        Map<String, Object> logisticData = logisticService.findLogisticsView(currentUser.getTenantId(), requestPage);
+        Map<String, Object> logisticData = logisticService.findLogisticsView(currentUser.getTenantId(), logisticQueryBuilder);
+
+        OrderRequestPage orderQueryBuilder = new OrderRequestPage();
+        orderQueryBuilder
+                .withTenantId(currentUser.getTenantId())
+                .addSearchField(START_DATE, Objects.isNull(start) ? getCurrentDate() : fromNumber(start))
+                .addSearchField(END_DATE, Objects.isNull(end) ? getCurrentDate() : fromNumber(end))
+                .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
+                .build();
 
         model.addAttribute(LOGISTIC_DATA, logisticData.get(LOGISTIC_DATA));
         model.addAttribute(PKG_TYPE, logisticData.get(PKG_TYPE));
-        model.addAttribute("orderData", orderService.findOrderViews(currentUser.getTenantId()));
+        model.addAttribute("orderData", orderService.findOrderViews(currentUser.getTenantId(), orderQueryBuilder));
         return "main/mainMenu";
     }
 
