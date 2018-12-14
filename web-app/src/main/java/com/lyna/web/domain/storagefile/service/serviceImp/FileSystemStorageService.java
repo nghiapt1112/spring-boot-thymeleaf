@@ -45,6 +45,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -255,7 +256,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             row++;
 
             String keyOrder = csvOrder.getStoreCode() + "_" + csvOrder.getPost();
-            String skeyCheck = keyOrder + "_" + csvOrder.getProductCode();
+            String skeyCheck = keyOrder.trim().toLowerCase() + "_" + csvOrder.getProductCode().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
             if (!setOrder.contains(skeyCheck)) {
                 setOrder.add(skeyCheck);
                 mapStorePostCode.put(keyOrder, csvOrder);
@@ -298,24 +299,28 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             row++;
 
             String keyOrder = csvDelivery.getStoreCode() + "_" + csvDelivery.getPost();
-            String skeyCheck = keyOrder + "_" + csvDelivery.getOrderDate();
+            String skeyCheck = keyOrder.trim().toLowerCase() + "_" + csvDelivery.getOrderDate().trim().toLowerCase();
             if (!setDelivery.contains(skeyCheck)) {
                 setDelivery.add(skeyCheck);
                 mapStorePostCode.put(keyOrder, csvDelivery);
-                listStoreCode.add(csvDelivery.getStoreCode());
-                ListPost.add(csvDelivery.getPost());
-                mapStoreCodeCsv.put(csvDelivery.getStoreCode(), csvDelivery);
+                listStoreCode.add(csvDelivery.getStoreCode().trim().toLowerCase());
+                ListPost.add(csvDelivery.getPost().trim().toLowerCase());
+                mapStoreCodeCsv.put(csvDelivery.getStoreCode().trim().toLowerCase(), csvDelivery);
             }
         }
     }
 
     private void setMapDataDelivery(int tenantId) throws StorageException {
-        List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
+        List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
         List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
 
-        listStoreCode.removeIf(x -> stores.contains(x));
+        List<String> stores = result.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
+
+        listStoreCode.removeIf(x -> stores.contains(x.trim().toLowerCase()));
         storesInDb.forEach(store -> {
-            mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode()));
+            mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode().toLowerCase().trim()));
         });
 
         listStoreCode.forEach(code -> {
@@ -350,6 +355,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 else {
                     Delivery delivery = new Delivery();
                     delivery.setOrderId(orderId);
+                    delivery.setTenantId(tenantId);
+                    delivery.setCreateDate(new Date());
+                    delivery.setCreateUser("");
+                    delivery.setUpdateDate(new Date());
+                    delivery.setUpdateUser("");
                     mapDeliveryIdCsv.put(delivery.getDeliveryId(), csv);
                     ((HashSet<Delivery>) deliveryIterable).add(delivery);
                 }
@@ -523,12 +533,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         deliveryRepository.saveAll(deliveryIterable);
         //save delivery detail
         deliveryDetailRepository.saveAll(deliveryDetailIterable);
-        deliveryDetailRepository.flush();
     }
 
     private void saveDataOrder() throws DomainException {
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
-        orderDetailRepository.flush();
     }
 }
