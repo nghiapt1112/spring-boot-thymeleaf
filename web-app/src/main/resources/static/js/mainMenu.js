@@ -27,20 +27,6 @@ $(function () {
     });
 });
 
-var modal = document.getElementById('myModal');
-var btn = document.getElementById("myBtn");
-var span = document.getElementsByClassName("close")[0];
-btn.onclick = function () {
-    modal.style.display = "block";
-}
-span.onclick = function () {
-    modal.style.display = "none";
-}
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
 $(function () {
     $('button[type=submit]').click(function (e) {
         e.preventDefault();
@@ -106,10 +92,12 @@ var span = document.getElementsByClassName("close")[0];
 btn.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "1";
+    $('#alertMsg').text('');
 }
 btndelivery.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "2";
+    $('#alertMsg').text('');
 }
 span.onclick = function () {
     modal.style.display = "none";
