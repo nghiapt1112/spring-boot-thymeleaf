@@ -1,5 +1,6 @@
 package com.lyna.web.domain.order.repository;
 
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.view.CsvOrder;
@@ -20,7 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<Order> findByTenantId(int tenantId);
 
-    List<OrderView> findOverViews(int tenantId);
+    List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage);
 
-    String checkExists(String postcourseId);
+    String checkExists(String postcourseId, String orderDate);
 }

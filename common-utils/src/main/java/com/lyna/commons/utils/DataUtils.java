@@ -2,21 +2,15 @@ package com.lyna.commons.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class DataUtils {
 
-    public static boolean isNumeric(String str)
-    {
-        try
-        {
+    public static boolean isNumeric(String str) {
+        try {
             double d = Double.parseDouble(str);
-        }
-        catch(NumberFormatException nfe)
-        {
+        } catch (NumberFormatException nfe) {
             return false;
         }
         return true;
@@ -137,5 +131,30 @@ public class DataUtils {
             return false;
         }
 
+    }
+
+    public static Date converStringToDate(String dateInString) {
+        Date date = null;
+
+        if (dateInString.contains("-")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+            try {
+                date = formatter.parse(dateInString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (dateInString.contains("/")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+            try {
+                date = formatter.parse(dateInString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return date;
     }
 }

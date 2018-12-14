@@ -48,7 +48,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
     @Override
     public List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes) {
         if (storeCodes.size() > 0) {
-            Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and s.code in (:code) order by s.code,s.name", String.class);
+            Query query = entityManager.createQuery("SELECT s.code FROM Store s WHERE s.tenantId=:tenantId and LOWER(s.code) in (:code) order by s.code,s.name", String.class);
             query.setParameter("tenantId", tenantId)
                     .setParameter("code", storeCodes);
             return query.getResultList();
@@ -58,7 +58,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
 
     @Override
     public List<Store> getAll(int tenantId, List<String> storeCodes) throws DomainException {
-        Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and s.code in (:storeCodes) order by s.code,s.name", Store.class);
+        Query query = entityManager.createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId and LOWER(s.code) in (:storeCodes) order by s.code,s.name", Store.class);
         query.setParameter("tenantId", tenantId)
                 .setParameter("storeCodes", storeCodes);
         List list = query.getResultList();

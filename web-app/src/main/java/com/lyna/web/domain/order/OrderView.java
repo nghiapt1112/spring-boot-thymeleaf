@@ -21,6 +21,9 @@ public class OrderView extends AbstractObject {
     private String orderId;
 
     @Column
+    private int tenantId;
+
+    @Column
     private Date orderDate;
 
     @Column

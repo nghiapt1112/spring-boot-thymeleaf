@@ -1,5 +1,6 @@
 package com.lyna.web.domain.logicstics.service.impl;
 
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.logicstics.DeliveryView;
 import com.lyna.web.domain.logicstics.LogisticView;
@@ -27,9 +28,9 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
     private LogisticViewRepository logisticViewRepository;
 
     @Override
-    public Map<String, Object> findLogisticsView(int tenantId) {
-        List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId);
-        List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId);
+    public Map<String, Object> findLogisticsView(int tenantId, RequestPage logisticRequestPage) {
+        List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId, logisticRequestPage);
+        List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId, logisticRequestPage);
 
         Map<String, List<PackageAggregate>> logisticPackagesByOrderId = logisticView.stream()
                 .parallel()

@@ -13,11 +13,14 @@ import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.view.UserList;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +38,9 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/user")
 public class UserController extends AbstractCustomController {
+
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -82,16 +87,24 @@ public class UserController extends AbstractCustomController {
     }
 
 
-    @GetMapping(value = {"/profile}"})
-    @IsAdmin
-    public String updateUserById(Model model, UsernamePasswordAuthenticationToken principal) {
+    @GetMapping(value = {"/profile"})
+    public String updateProfilePage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), currentUser.getId()));
 
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
-        return "user/user-update";
+        return "user/profile";
     }
+
+
+    @PostMapping(value = {"/profile"})
+    public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate) {
+        User currentUser = (User) principal.getPrincipal();
+        this.userService.update(currentUser, aggregate);
+        return "redirect:/mainScreen";
+    }
+
 
     @PostMapping(value = {"/update", "/update/"})
     @IsAdmin

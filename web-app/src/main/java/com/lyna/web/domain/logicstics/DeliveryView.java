@@ -21,6 +21,9 @@ public class DeliveryView {
     private String orderId;
 
     @Column
+    private int tenantId;
+
+    @Column
     private String delivery_id;
 
     @Column
