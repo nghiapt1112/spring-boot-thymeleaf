@@ -27,7 +27,7 @@
                                 <p class="box-titles"></p>
                             </div>
                             <div class="box-body">
-                                <form th:action="@{/user/update}" th:method="post" th:object="${aggregate}">
+                                <form th:action="@{/user/profile}" th:method="post" th:object="${aggregate}">
                                     <input hidden th:field="*{userId}"/>
                                     <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス </span>
