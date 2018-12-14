@@ -1,5 +1,6 @@
 CREATE OR REPLACE VIEW `v_delivery` AS
 SELECT
+    l.tenant_id AS tenant_id,
     l.delivery_id AS delivery_id,
     o.order_date AS order_date,
     s.NAME AS store_name,

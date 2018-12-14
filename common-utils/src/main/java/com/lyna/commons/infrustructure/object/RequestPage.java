@@ -1,7 +1,5 @@
 package com.lyna.commons.infrustructure.object;
 
-import com.lyna.commons.infrustructure.repository.QueryBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +59,11 @@ public abstract class RequestPage extends AbstractObject {
 
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public RequestPage withTenantId(int tenantId) {
+        this.tenantId = tenantId;
+        return this;
     }
 
     /**

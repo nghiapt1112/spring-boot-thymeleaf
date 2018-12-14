@@ -134,13 +134,25 @@ public class DataUtils {
     }
 
     public static Date converStringToDate(String dateInString) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
         Date date = null;
-        try {
-            date = formatter.parse(dateInString);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (dateInString.contains("-")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+            try {
+                date = formatter.parse(dateInString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (dateInString.contains("/")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+            try {
+                date = formatter.parse(dateInString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         return date;

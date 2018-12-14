@@ -7,7 +7,7 @@
                     <a href="/mainScreen" th:href="@{/mainScreen}"><i style="padding-right: 12%" class="glyphicon glyphicon-home"></i>メインメニュー
                     </a>
                 </li>
-                <li class=" treeview">
+                <li sec:authorize="hasRole('ADMIN')" class="treeview">
                     <a href="#">
                         <i class="fa fa-cube"></i>
                         <span>商品マスター</span>
@@ -27,7 +27,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li sec:authorize="hasRole('ADMIN')" class="treeview">
                     <a href="#">
                         <i class="glyphicon glyphicon-inbox"></i>
                         <span>荷姿マスタ</span>
@@ -48,7 +48,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li sec:authorize="hasRole('ADMIN')" class="treeview">
                     <a href="#">
                         <i class="glyphicon glyphicon-modal-window"></i>
                         <span>店舗マスター</span>
@@ -67,7 +67,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li sec:authorize="hasRole('ADMIN')" class="treeview">
                     <a href="#">
                         <i class="fa fa-user"></i>
                         <span>ユーザー管理</span>

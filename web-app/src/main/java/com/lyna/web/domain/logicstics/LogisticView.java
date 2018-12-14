@@ -23,6 +23,9 @@ public class LogisticView extends AbstractObject {
     private String orderId;
 
     @Column
+    private int tenantId;
+
+    @Column
     private String logistics_id;
 
     @Column
