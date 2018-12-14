@@ -146,6 +146,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public void update(User currentUser, UserAggregate aggregate) {
         User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
         oldUser.updateInfo(userToUpdate);
         try {
             this.userRepository.save(oldUser);
