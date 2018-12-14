@@ -17,7 +17,7 @@ public class CsvDelivery {
     @CsvBindByName(column = "日付")
     private String orderDate;
 
-    @CsvBindByName(column = "店舗")
+    @CsvBindByName(column = "店舗コード")
     private String storeCode;
 
     @CsvBindByName(column = "便")

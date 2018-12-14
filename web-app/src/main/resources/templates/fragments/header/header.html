@@ -4,7 +4,7 @@
   <header class="main-header" th:fragment="header">
 	
     <span class="logo">
-      <span class="logo-mini"><b>LY</b>NA</span>
+      <span class="logo-mini">LYNA</span>
       <span class="logo-lg">LYNA</span>
     </span>
      <nav class="navbar navbar-static-top">
@@ -14,7 +14,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li class="dropdown user user-menu">
-            <a href="/user/update-info-user/" th:href="@{'/user/update-info-user/'}">
+            <a th:href="@{'/user/profile'}">
               <i class="glyphicon glyphicon-user"></i>
               <span class="hidden-xs"><label sec:authentication="principal.name"></label></span>
             </a>
