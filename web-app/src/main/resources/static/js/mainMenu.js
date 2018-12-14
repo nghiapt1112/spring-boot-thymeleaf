@@ -78,8 +78,7 @@ $(function () {
 
         // Called on failure of file upload
         ajaxReq.fail(function (jqXHR) {
-            $('#alertMsg').text(jqXHR.responseText + '(' + jqXHR.status +
-                ' - ' + jqXHR.statusText + ')');
+            $('#alertMsg').text(jqXHR.responseText);
             $('button[type=submit]').prop('disabled', false);
         });
     });

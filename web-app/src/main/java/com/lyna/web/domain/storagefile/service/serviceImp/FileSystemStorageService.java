@@ -337,19 +337,12 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             String store = ((CsvDelivery) csvDelivery).getStoreCode();
 
             String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-            if (postCourseId == null) {
-                PostCourse postCourse = new PostCourse();
-                postCourse.setPost(post);
-                postCourse.setStoreId(storeId);
-                postCourse.setTenantId(tenantId);
-                postCourseId = postCourse.getPostCourseId();
-                ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
-            }
+            postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
             mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
         });
 
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
-            String orderId = orderRepository.checkExists(postcodesId);
+            String orderId = orderRepository.checkExists(postcodesId, ((CsvDelivery) csv).getOrderDate());
             if (orderId != null) {
                 String deliveryId = deliveryRepository.checkExistByOrderIdAndOrderDate(orderId, ((CsvDelivery) csv).getOrderDate());
                 if (deliveryId != null)
@@ -360,6 +353,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     mapDeliveryIdCsv.put(delivery.getDeliveryId(), csv);
                     ((HashSet<Delivery>) deliveryIterable).add(delivery);
                 }
+            } else {
+                mapError.add("発注データが存在しない。");
             }
         });
 
@@ -399,6 +394,18 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         });
     }
 
+    private String getGetPostCourseId(int tenantId, String storeId, String post, String postCourseId) {
+        if (postCourseId == null) {
+            PostCourse postCourse = new PostCourse();
+            postCourse.setPost(post);
+            postCourse.setStoreId(storeId);
+            postCourse.setTenantId(tenantId);
+            postCourseId = postCourse.getPostCourseId();
+            ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
+        }
+        return postCourseId;
+    }
+
     private void setMapData(int tenantId) throws StorageException {
         try {
             List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
@@ -428,14 +435,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 String store = ((CsvOrder) csvOrder).getStoreCode();
 
                 String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-                if (postCourseId == null) {
-                    PostCourse postCourse = new PostCourse();
-                    postCourse.setPost(post);
-                    postCourse.setStoreId(storeId);
-                    postCourse.setTenantId(tenantId);
-                    postCourseId = postCourse.getPostCourseId();
-                    ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
-                }
+                postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
                 mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
             });
 
@@ -523,10 +523,12 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         deliveryRepository.saveAll(deliveryIterable);
         //save delivery detail
         deliveryDetailRepository.saveAll(deliveryDetailIterable);
+        deliveryDetailRepository.flush();
     }
 
     private void saveDataOrder() throws DomainException {
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
+        orderDetailRepository.flush();
     }
 }
