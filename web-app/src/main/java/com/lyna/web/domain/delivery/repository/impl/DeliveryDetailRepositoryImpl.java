@@ -50,4 +50,16 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
 
     }
 
+    public String checkExistByDeliveryId(String deliveryId, String packageId, int tenantId) {
+        List list = entityManager
+                .createQuery("SELECT deliveryDetailId from  DeliveryDetail d  WHERE d.deliveryId = :deliveryId and d.tenantId = :tenantId  and d.packageId =  :packageId")
+                .setParameter("deliveryId", deliveryId)
+                .setParameter("tenantId", tenantId)
+                .setParameter("packageId", packageId)
+                .getResultList();
+        if (list != null && list.size() > 0)
+            return (String) list.get(0);
+        return null;
+    }
+
 }

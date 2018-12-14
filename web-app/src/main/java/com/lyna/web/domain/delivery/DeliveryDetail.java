@@ -14,6 +14,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "t_delivery_detail")
@@ -21,7 +22,6 @@ import java.math.BigDecimal;
         @NamedQuery(name = "DeliveryDetail.countAll", query = "SELECT COUNT(x) FROM DeliveryDetail x")
 })
 @Data
-@NoArgsConstructor
 public class DeliveryDetail extends AbstractEntity {
 
     @Id
@@ -40,4 +40,8 @@ public class DeliveryDetail extends AbstractEntity {
     @OneToOne
     @JoinColumn(name = "package_id", referencedColumnName = "package_id", insertable = false, updatable = false)
     public Package pack;
+
+    public DeliveryDetail() {
+        this.deliveryDetailId = UUID.randomUUID().toString();
+    }
 }

@@ -84,4 +84,21 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         return entityManager.createQuery("SELECT o FROM OrderView o", OrderView.class)
                 .getResultList();
     }
+
+    @Override
+    public String checkExists(String postCourseId) throws StorageException {
+        try {
+            String query = "SELECT a.orderId FROM Order a " +
+                    "WHERE a.postCourseId = :postCourseId ";
+            List list = entityManager.createQuery(query)
+                    .setParameter("postCourseId", postCourseId)
+                    .getResultList();
+            if (list != null && list.size() > 0)
+                return (String) list.get(0);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new StorageException("CSVのデータが不正。");
+        }
+        return null;
+    }
 }
