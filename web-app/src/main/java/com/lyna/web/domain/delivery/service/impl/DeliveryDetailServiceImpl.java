@@ -5,8 +5,8 @@ import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.impl.DeliveryDetailRepositoryImpl;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
 import com.lyna.web.domain.logicstics.repository.LogiticDetailRepository;
+import com.lyna.web.domain.mpackage.exception.PackageException;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
-import com.lyna.web.domain.stores.exception.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.deleteFail.code"), toStr("err.package.deleteFail.msg"));
+            throw new PackageException(toInteger("err.package.deleteFail.code"), toStr("err.package.deleteFail.msg"));
         }
     }
 }

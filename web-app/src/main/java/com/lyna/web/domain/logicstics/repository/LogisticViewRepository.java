@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface LogisticViewRepository {
     List<LogisticView> findLogistics(int tenantId);
+
     List<DeliveryView> findDeliveries(int tenantId);
 
 }

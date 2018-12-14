@@ -2,6 +2,7 @@ package com.lyna.web.domain.postCourse.sevice;
 
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.exception.PostCourseException;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
@@ -26,7 +27,13 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
 
     @Override
     public List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId) {
-        return postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeId);
+        try {
+            return postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new PostCourseException(toInteger("err.postCourse.notFound.code"), toStr("err.postCourse.notFound.msg"));
+        }
+
     }
 
     @Override

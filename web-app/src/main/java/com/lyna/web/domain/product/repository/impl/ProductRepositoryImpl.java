@@ -3,9 +3,6 @@ package com.lyna.web.domain.product.repository.impl;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
-import com.lyna.web.domain.stores.repository.impl.StoreRepositoryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,19 +12,15 @@ import java.util.List;
 @Repository
 public class ProductRepositoryImpl extends BaseRepository<Product, String> implements ProductRepository {
 
-    private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
-
-
     public ProductRepositoryImpl(EntityManager em) {
         super(Product.class, em);
     }
 
 
-    @Override
     @Transactional
     public Product findOneByProductIdAndTenantId(String productId, int tenantId) {
         return entityManager
-                .createQuery("SELECT p FROM Product p WHERE p.productId=:productId AND P.tenantId=:tenantId", Product.class)
+                .createQuery("SELECT p FROM Product p WHERE p.productId=:productId AND p.tenantId=:tenantId", Product.class)
                 .setParameter("productId", productId)
                 .setParameter("tenantId", tenantId)
                 .getSingleResult();
@@ -44,7 +37,6 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
     }
 
     @Override
-    @Transactional
     public Product findOneByCodeAndTenantId(String code, int tenantId) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.code=:code AND p.tenantId=:tenantId", Product.class)
@@ -55,7 +47,6 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
     }
 
     @Override
-    @Transactional
     public List<Product> findByTenantId(int tenantId) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId=:tenantId order by p.name", Product.class)
@@ -72,7 +63,6 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
     }
 
     @Override
-    @Transactional
     public List<Product> getProductsByProductCode(int tenantId, List<String> products) {
         return entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.tenantId = :tenantId and  p.code in (:products)")

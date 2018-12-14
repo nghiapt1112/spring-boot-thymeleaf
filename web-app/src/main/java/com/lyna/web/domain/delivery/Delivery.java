@@ -2,16 +2,7 @@ package com.lyna.web.domain.delivery;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -24,7 +15,7 @@ import java.util.UUID;
 public class Delivery extends AbstractEntity {
 
     @Id
-    @Column(name = "delivery_id", nullable = false)   
+    @Column(name = "delivery_id", nullable = false)
     public String deliveryId;
 
 

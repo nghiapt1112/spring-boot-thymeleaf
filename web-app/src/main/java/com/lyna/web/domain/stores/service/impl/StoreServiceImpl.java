@@ -88,7 +88,6 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     }
 
     @Override
-    @Transactional
     public String deleteStoreAndTenantId(List<String> storeIds, int tenantId) {
         boolean isDeletedStore;
 
@@ -101,9 +100,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             return toStr("err.store.delete.msg");
     }
 
-    @Transactional
     @Override
-    public void create(Store store, User user) throws DomainException {
+    @Transactional
+    public void create(Store store, User user) {
         Date date = new Date();
         store.setCreateDate(date);
         store.setTenantId(user.getTenantId());
@@ -127,30 +126,30 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void update(Store store, User user) {
         Date date = new Date();
         List<PostCourse> postCourses = postCourseService.findAllByStoreIdAndTenantId(user.getTenantId(), store.getStoreId());
         List<PostCourse> postCoursesUpdate = store.getPostCourses();
-        for (PostCourse postCourse : postCoursesUpdate) {
-            if (!postCourses.contains(postCourse)) {
-                postCourse.setCreateDate(date);
-                postCourse.setCreateUser(user.getId());
-                postCourse.setTenantId(user.getTenantId());
-                postCourse.setStoreId(store.getStoreId());
-                postCourses.add(postCourse);
-            } else {
-                for (int i = 0; i < postCourses.size(); i++) {
-                    if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
-                        postCourse.setUpdateDate(date);
-                        postCourse.setUpdateUser(user.getId());
-                        postCourse.setTenantId(user.getTenantId());
-                        postCourses.set(i, postCourse);
+        if (!Objects.isNull(postCoursesUpdate)) {
+            for (PostCourse postCourse : postCoursesUpdate) {
+                if (!postCourses.contains(postCourse)) {
+                    postCourse.setCreateDate(date);
+                    postCourse.setCreateUser(user.getId());
+                    postCourse.setTenantId(user.getTenantId());
+                    postCourse.setStoreId(store.getStoreId());
+                    postCourses.add(postCourse);
+                } else {
+                    for (int i = 0; i < postCourses.size(); i++) {
+                        if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
+                            postCourse.setUpdateDate(date);
+                            postCourse.setUpdateUser(user.getId());
+                            postCourses.set(i, postCourse);
+                        }
                     }
                 }
             }
-
         }
         store.setCode(store.getCode());
         store.setName(store.getName());
@@ -161,13 +160,12 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         store.setPersonCharge(store.getPersonCharge());
         store.setUpdateDate(date);
         store.setUpdateUser(user.getId());
-        store.setTenantId(user.getTenantId());
         store.setPostCourses(postCourses);
         try {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.null.code"), toStr("err.store.null.msg"));
+            throw new StoreException(toInteger("err.store.updateError.code"), toStr("err.store.updateError.msg"));
         }
 
     }
@@ -178,7 +176,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             return storeRepository.findOneByStoreIdAndTenantId(storeId, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.updateError.code"), toStr("err.store.updateError.msg"));
+            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
         }
 
     }

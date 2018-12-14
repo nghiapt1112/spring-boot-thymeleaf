@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface LogisticDetailRepository extends JpaRepository<LogiticsDetail, String>, PagingRepository {
     List<LogiticsDetail> findByLogisticIds(int tenantId, Collection<String> logisticIds);
+
     List<LogiticsDetail> findByOrderIds(int tenantId, Collection<String> orderIds);
 
 }

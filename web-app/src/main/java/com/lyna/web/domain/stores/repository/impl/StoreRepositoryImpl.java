@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements StoreRepository {
+public class StoreRepositoryImpl extends BaseRepository<Store, String> implements StoreRepository {
 
     private final Logger log = LoggerFactory.getLogger(StoreRepositoryImpl.class);
 
@@ -92,7 +92,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, Long> implements 
 
     @Override
     public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
-
         String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
         entityManager.createQuery(query)
                 .setParameter("storeIds", storeIds)

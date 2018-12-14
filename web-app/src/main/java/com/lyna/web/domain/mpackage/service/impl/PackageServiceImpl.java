@@ -2,9 +2,9 @@ package com.lyna.web.domain.mpackage.service.impl;
 
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.mpackage.Package;
+import com.lyna.web.domain.mpackage.exception.PackageException;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.mpackage.service.PackageService;
-import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +24,16 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     private PackageRepository packageRepository;
 
     @Override
+    @Transactional
     public void update(Package mpackage, User user) {
         Date date = new Date();
         mpackage.setUpdateDate(date);
         mpackage.setUpdateUser(user.getId());
-        mpackage.setTenantId(user.getTenantId());
         try {
             packageRepository.save(mpackage);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.updateError.code"), toStr("err.package.updateError.msg"));
+            throw new PackageException(toInteger("err.package.updateError.code"), toStr("err.package.updateError.msg"));
         }
 
     }
@@ -50,7 +50,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
             packageRepository.save(mpackage);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.saveError.code"), toStr("err.package.saveError.msg"));
+            throw new PackageException(toInteger("err.package.saveError.code"), toStr("err.package.saveError.msg"));
         }
 
     }
@@ -61,18 +61,17 @@ public class PackageServiceImpl extends BaseService implements PackageService {
             return packageRepository.findOneByPackageIdAndTenantId(pakageId, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.notFound.code"), toStr("err.package.notFound.msg"));
+            throw new PackageException(toInteger("err.package.notFound.code"), toStr("err.package.notFound.msg"));
         }
     }
 
     @Override
-
     public List<Package> findByTenantId(int tenantId) {
         try {
             return packageRepository.findByTenantId(tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.package.notFound.code"), toStr("err.package.notFound.msg"));
+            throw new PackageException(toInteger("err.package.notFound.code"), toStr("err.package.notFound.msg"));
         }
 
     }
