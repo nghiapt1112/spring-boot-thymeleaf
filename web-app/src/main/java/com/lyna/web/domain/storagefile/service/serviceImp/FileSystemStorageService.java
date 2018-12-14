@@ -472,7 +472,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 CsvOrder csvOrder = mapProduct.get(code);
                 Product product = new Product();
                 product.setCode(code);
-                product.setName(csvOrder.getStoreName());
+                product.setName(csvOrder.getProductName());
                 product.setCategory1(csvOrder.getCategory1());
                 product.setCategory2(csvOrder.getCategory2());
                 product.setCategory3(csvOrder.getCategory3());
@@ -503,37 +503,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         if (mapError.size() == 0) {
             Map<String, String> mapKeyOrderId = new HashMap<>();
             HashSet<String> setOrderDetail = new HashSet<>();
-
-           /* mapCsvPostCourseId.forEach((CsvOrder, postCourseId) -> {
-                String orderId = "";
-                if (!setOrderDetail.contains(postCourseId + "_" + productId)) {
-                    setOrderDetail.add(postCourseId + "_" + productId);
-                    if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(postCourseId)) {
-                        orderId = mapKeyOrderId.get(postCourseId);
-                    } else {
-                        Order order = new Order();
-                        orderId = order.getOrderId();
-                        mapKeyOrderId.put(postCourseId, orderId);
-
-                        Date date = DataUtils.converStringToDate(CsvOrder.getOrderDate());
-                        if (date == null)
-                            date = new Date();
-                        order.setOrderDate(date);
-
-                        order.setPostCourseId(postCourseId);
-                        order.setTenantId(tenantId);
-                        ((HashSet<Order>) orderIterable).add(order);
-                    }
-
-                    OrderDetail orderDetail = new OrderDetail();
-                    orderDetail.setOrderId(orderId);
-                    orderDetail.setProductId(productId);
-                    BigDecimal quantity = new BigDecimal(CsvOrder.getQuantity());
-                    orderDetail.setAmount(quantity);
-                    orderDetail.setTenantId(tenantId);
-                    ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
-                }
-            });*/
 
             mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
                 CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
