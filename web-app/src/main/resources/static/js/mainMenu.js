@@ -156,7 +156,26 @@ $(function () {
     })
 })
 
+// call search API
 
+function searchMainMenu() {
+    let logisticAPI = '/mainScreen';
+    var startDate = document.getElementById("min").value;
+    var endDate = document.getElementById("max").value;
+    var postName = document.getElementById("post").value;
+
+    if (startDate) {
+        logisticAPI += '?start=' + new Date(startDate).getTime()
+    }
+    if (endDate) {
+        logisticAPI += '&end='+new Date(endDate).getTime()
+    }
+    if (postName) {
+        logisticAPI += '&postName='+postName
+    }
+
+    window.location.replace(logisticAPI)
+}
 
  
 
