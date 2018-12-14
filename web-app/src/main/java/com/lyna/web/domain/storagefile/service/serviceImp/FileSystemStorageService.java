@@ -89,9 +89,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private DeliveryRepository deliveryRepository;
     @Autowired
     private DeliveryDetailRepository deliveryDetailRepository;
-    @Autowired
-    private PackageRepository packageRepository;
-
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -237,19 +234,19 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             CsvOrder csvOrder = orderIterator.next();
             int row = 1;
 
-            if (csvOrder.getPost() != null && csvOrder.getPost().isEmpty()) {
+            if (csvOrder.getPost() == null || csvOrder.getPost().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvOrder.getQuantity() != null && csvOrder.getQuantity().isEmpty()) {
+            if (csvOrder.getQuantity() == null || csvOrder.getQuantity().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvOrder.getStoreCode() != null && csvOrder.getStoreCode().isEmpty()) {
+            if (csvOrder.getStoreCode() == null || csvOrder.getStoreCode().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvOrder.getProductCode() != null && csvOrder.getProductCode().isEmpty()) {
+            if (csvOrder.getProductCode() == null || csvOrder.getProductCode().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvOrder.getQuantity() != null && !DataUtils.isNumeric(csvOrder.getQuantity())) {
+            if (csvOrder.getQuantity() == null || !DataUtils.isNumeric(csvOrder.getQuantity())) {
                 mapError.add("数量は数字データではない");
             }
 
@@ -260,11 +257,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (!setOrder.contains(skeyCheck)) {
                 setOrder.add(skeyCheck);
                 mapStorePostCode.put(keyOrder, csvOrder);
-                listStoreCode.add(csvOrder.getStoreCode());
-                listProductCode.add(csvOrder.getProductCode());
-                ListPost.add(csvOrder.getPost());
-                mapProduct.put(csvOrder.getProductCode(), csvOrder);
-                mapStoreCodeCsv.put(csvOrder.getStoreCode(), csvOrder);
+                listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
+                listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
+                ListPost.add(csvOrder.getPost().trim().toLowerCase());
+                mapProduct.put(csvOrder.getProductCode().trim().toLowerCase(), csvOrder);
+                mapStoreCodeCsv.put(csvOrder.getStoreCode().trim().toLowerCase(), csvOrder);
             }
         }
     }
@@ -276,23 +273,23 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             CsvDelivery csvDelivery = deliveryIterator.next();
             int row = 1;
 
-            if (csvDelivery.getPost() != null && csvDelivery.getPost().isEmpty()) {
+            if (csvDelivery.getPost() == null || csvDelivery.getPost().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvDelivery.getStoreCode() != null && csvDelivery.getStoreCode().isEmpty()) {
+            if (csvDelivery.getStoreCode() == null || csvDelivery.getStoreCode().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvDelivery.getStoreName() != null && csvDelivery.getStoreName().isEmpty()) {
+            if (csvDelivery.getStoreName() == null || csvDelivery.getStoreName().isEmpty()) {
                 mapError.add("行目 " + row + " にデータが不正");
             }
-            if (csvDelivery.getBox() != null && !DataUtils.isNumeric(csvDelivery.getBox())) {
+            if (csvDelivery.getBox() == null || !DataUtils.isNumeric(csvDelivery.getBox())) {
                 mapError.add("数量は数字データではない");
             }
-            if (csvDelivery.getCaseP() != null && !DataUtils.isNumeric(csvDelivery.getCaseP())) {
+            if (csvDelivery.getCaseP() == null || !DataUtils.isNumeric(csvDelivery.getCaseP())) {
                 mapError.add("数量は数字データではない");
             }
 
-            if (csvDelivery.getTray() != null && !DataUtils.isNumeric(csvDelivery.getTray())) {
+            if (csvDelivery.getTray() == null || !DataUtils.isNumeric(csvDelivery.getTray())) {
                 mapError.add("数量は数字データではない");
             }
 
@@ -418,15 +415,25 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     private void setMapData(int tenantId) throws StorageException {
         try {
-            List<String> stores = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
+            List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
-            List<String> products = productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
+            List<String> resultProducts = productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
             List<Product> productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
+
+            List<String> stores = result.stream()
+                    .map(String::toLowerCase)
+                    .collect(Collectors.toList());
+
+            List<String> products = resultProducts.stream()
+                    .map(String::toLowerCase)
+                    .collect(Collectors.toList());
+
             listProductCode.removeIf(x -> products.contains(x));
 
             listStoreCode.removeIf(x -> stores.contains(x));
+
             storesInDb.forEach(store -> {
-                mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode()));
+                mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode().trim().toLowerCase()));
             });
 
             listStoreCode.forEach(code -> {
