@@ -1,6 +1,7 @@
 package com.lyna.web.domain.order.service.ServiceImp;
 
 
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderAggregate;
@@ -27,8 +28,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public List<OrderAggregate> findOrderViews(int tenantId) {
-        List<OrderView> orderViews = this.orderRepository.findOverViews(tenantId);
+    public List<OrderAggregate> findOrderViews(int tenantId, RequestPage requestPage) {
+        List<OrderView> orderViews = this.orderRepository.findOverViews(tenantId, requestPage);
         if (CollectionUtils.isEmpty(orderViews)) {
             return Collections.EMPTY_LIST;
         }

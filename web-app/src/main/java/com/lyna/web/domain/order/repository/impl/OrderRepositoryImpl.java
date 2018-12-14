@@ -1,6 +1,6 @@
 package com.lyna.web.domain.order.repository.impl;
 
-import com.lyna.commons.infrustructure.repository.BaseRepository;
+import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
@@ -8,6 +8,7 @@ import com.lyna.web.domain.order.exception.StorageException;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.view.CsvOrder;
+import com.lyna.web.infrastructure.repository.BaseRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -82,9 +84,14 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
-    public List<OrderView> findOverViews(int tenantId) {
-        return entityManager.createQuery("SELECT o FROM OrderView o", OrderView.class)
-                .getResultList();
+    public List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage) {
+        TypedQuery<OrderView> tQuery = entityManager.createQuery(
+                orderRequestPage.getSelect()
+                        .append(orderRequestPage.getFrom())
+                        .append(orderRequestPage.getWhere())
+                        .toString(), OrderView.class);
+        fillParams(tQuery, orderRequestPage.getParams());
+        return tQuery.getResultList();
     }
 
     @Override

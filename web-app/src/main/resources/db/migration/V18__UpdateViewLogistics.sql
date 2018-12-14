@@ -1,5 +1,6 @@
 CREATE OR REPLACE VIEW `v_logicstic` AS
 SELECT
+    l.tenant_id AS tenant_id,
     l.logistics_id AS logistics_id,
     o.order_date AS order_date,
     s.NAME AS store_name,

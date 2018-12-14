@@ -1,7 +1,5 @@
 package com.lyna.commons.infrustructure.object;
 
-import com.lyna.commons.infrustructure.repository.QueryBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,11 +61,24 @@ public abstract class RequestPage extends AbstractObject {
         this.tenantId = tenantId;
     }
 
+    public RequestPage withTenantId(int tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
+
     /**
      * Query builder
      */
     protected static final StringBuilder EMPTY_STR = new StringBuilder();
     protected Map<String, Object> params = new HashMap<>();
+
+    protected StringBuilder select;
+    protected StringBuilder from;
+    protected StringBuilder where;
+    protected StringBuilder groupBy;
+    protected StringBuilder orderBy;
+    protected StringBuilder limit;
+    protected StringBuilder count;
 
     public abstract StringBuilder buildGroupBy();
 
@@ -96,4 +107,26 @@ public abstract class RequestPage extends AbstractObject {
                 .append(this.buildLimit()).toString();
     }
 
+    public void build() {
+        this.select = this.buildSelect();
+        this.from = this.buildFrom();
+        this.where = this.buildWhere();
+        this.groupBy = this.buildGroupBy();
+        this.orderBy = this.buildOrderBy();
+        this.limit = this.buildLimit();
+        this.count = this.buildCount();
+    }
+
+
+    public StringBuilder getSelect() {
+        return select;
+    }
+
+    public StringBuilder getFrom() {
+        return from;
+    }
+
+    public StringBuilder getWhere() {
+        return where;
+    }
 }
