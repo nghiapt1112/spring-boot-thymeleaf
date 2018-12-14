@@ -1,6 +1,7 @@
 package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.exception.StorageException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -86,15 +88,19 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
-    public String checkExists(String postCourseId) throws StorageException {
+    public String checkExists(String postCourseId, String orderDate) throws StorageException {
         try {
-            String query = "SELECT a.orderId FROM Order a " +
-                    "WHERE a.postCourseId = :postCourseId ";
-            List list = entityManager.createQuery(query)
-                    .setParameter("postCourseId", postCourseId)
-                    .getResultList();
-            if (list != null && list.size() > 0)
-                return (String) list.get(0);
+            Date date = DataUtils.converStringToDate(orderDate);
+            if (date != null) {
+                String query = "SELECT a.orderId FROM Order a " +
+                        "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate";
+                List list = entityManager.createQuery(query)
+                        .setParameter("postCourseId", postCourseId)
+                        .setParameter("orderDate", date)
+                        .getResultList();
+                if (list != null && list.size() > 0)
+                    return (String) list.get(0);
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new StorageException("CSVのデータが不正。");

@@ -1,99 +1,23 @@
-CREATE VIEW `v_logicstic` AS
+CREATE OR REPLACE VIEW `v_delivery` AS
 SELECT
-    t0.order_id AS order_id,
-    t0.order_date AS order_date,
-    t0.store_name AS store_name,
-    t0.post AS post_name,
-    t0.amount AS amount,
-    t0.price AS price,
-    t1.packageId AS total_package,
-    t2.cases AS package_case,
-    t3.BOX AS package_box,
-    ((COALESCE(t1.weight, 0) + COALESCE(t2.weight, 0)) + COALESCE(t3.weight, 0)) AS total_weight,
-    ((COALESCE(t1.cap, 0) + COALESCE(t2.cap, 0)) + COALESCE(t3.cap, 0)) AS total_capacity,
-    t0.course AS course_name
+    l.delivery_id AS delivery_id,
+    o.order_date AS order_date,
+    s.NAME AS store_name,
+    pc.post AS post,
+    od.amount AS amount,
+    pr.price AS price,
+    p.package_id AS package_id,
+    p.NAME AS package_name,
+    pc.course AS course,
+    o.order_id AS order_id
 FROM
-    (SELECT
-        l.logistics_id AS logistics_id,
-            o.order_date AS order_date,
-            s.name AS store_name,
-            pc.post AS post,
-            SUM(od.amount) AS amount,
-            SUM(pr.price) AS price,
-            pc.course AS course,
-            o.order_id AS order_id
-    FROM
-        t_logistics l
-    JOIN t_logistics_detail ld ON l.logistics_id = ld.logistics_id
-    JOIN t_order o ON l.order_id = o.order_id
-    JOIN t_order_detail od ON o.order_id = od.order_id
-    JOIN m_product pr ON pr.product_id = od.product_id
-    JOIN m_post_course pc ON pc.post_course_id = o.post_course_id
-    JOIN m_store s ON pc.store_id = s.store_id
-    GROUP BY o.order_id) t0
-        LEFT JOIN
-    (SELECT
-        l.logistics_id AS logistics_id,
-            SUM(od.amount) AS amount,
-            SUM(pr.price) AS price,
-            COALESCE(COUNT(p.package_id), 0) AS packageId,
-            SUM(p.full_load_weight) AS weight,
-            SUM(p.full_load_capacity) AS cap,
-            o.order_id AS order_id,
-            pc.course AS course
-    FROM
-        t_logistics l
-    JOIN t_logistics_detail ld ON l.logistics_id = ld.logistics_id
-    JOIN m_package p ON ld.package_id = p.package_id
-    JOIN t_order o ON l.order_id = o.order_id
-    JOIN t_order_detail od ON o.order_id = od.order_id
-    JOIN m_product pr ON pr.product_id = od.product_id
-    JOIN m_post_course pc ON pc.post_course_id = o.post_course_id
-    JOIN m_store s ON pc.store_id = s.store_id
-    WHERE
-        p.name = 'ばんじゅう'
-    GROUP BY o.order_id) t1 ON t0.logistics_id = t1.logistics_id
-        LEFT JOIN
-    (SELECT
-        l.logistics_id AS logistics_id,
-            SUM(od.amount) AS amount,
-            SUM(pr.price) AS price,
-            COALESCE(COUNT(p.package_id), 0) AS cases,
-            COALESCE(SUM(p.full_load_weight), 0) AS weight,
-            SUM(p.full_load_capacity) AS cap,
-            o.order_id AS order_id,
-            pc.course AS course
-    FROM
-        t_logistics l
-    JOIN t_logistics_detail ld ON l.logistics_id = ld.logistics_id
-    JOIN m_package p ON ld.package_id = p.package_id
-    JOIN t_order o ON l.order_id = o.order_id
-    JOIN t_order_detail od ON o.order_id = od.order_id
-    JOIN m_product pr ON pr.product_id = od.product_id
-    JOIN m_post_course pc ON pc.post_course_id = o.post_course_id
-    JOIN m_store s ON pc.store_id = s.store_id
-    WHERE
-        p.name = 'ケース'
-    GROUP BY o.order_id) t2 ON t0.logistics_id = t2.logistics_id
-        LEFT JOIN
-    (SELECT
-        l.logistics_id AS logistics_id,
-            SUM(od.amount) AS amount,
-            SUM(pr.price) AS price,
-            COUNT(p.package_id) AS BOX,
-            COALESCE(SUM(p.full_load_weight), 0) AS weight,
-            SUM(p.full_load_capacity) AS cap,
-            o.order_id AS order_id,
-            pc.course AS course
-    FROM
-        t_logistics l
-    JOIN t_logistics_detail ld ON l.logistics_id = ld.logistics_id
-    JOIN m_package p ON ld.package_id = p.package_id
-    JOIN t_order o ON l.order_id = o.order_id
-    JOIN t_order_detail od ON o.order_id = od.order_id
-    JOIN m_product pr ON pr.product_id = od.product_id
-    JOIN m_post_course pc ON pc.post_course_id = o.post_course_id
-    JOIN m_store s ON pc.store_id = s.store_id
-    WHERE
-        p.name = '箱'
-    GROUP BY o.order_id) t3 ON t0.logistics_id = t3.logistics_id
+    t_delivery l
+    LEFT OUTER JOIN t_delivery_detail ld ON l.delivery_id = ld.delivery_id
+    LEFT OUTER JOIN t_order o ON l.order_id = o.order_id
+    LEFT OUTER JOIN t_order_detail od ON o.order_id = od.order_id
+    LEFT OUTER JOIN m_product pr ON pr.product_id = od.product_id
+    LEFT OUTER JOIN m_post_course pc ON pc.post_course_id = o.post_course_id
+    LEFT OUTER JOIN m_store s ON pc.store_id = s.store_id
+    LEFT OUTER JOIN m_package p ON p.package_id = ld.package_id
+ORDER BY
+    l.delivery_id;

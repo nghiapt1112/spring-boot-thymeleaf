@@ -74,12 +74,12 @@ $(function () {
             $('#alertMsg').text(msg);
             $('input[type=file]').val('');
             $('button[type=submit]').prop('disabled', false);
+            window.location.href = "/mainScreen";
         });
 
         // Called on failure of file upload
         ajaxReq.fail(function (jqXHR) {
-            $('#alertMsg').text(jqXHR.responseText + '(' + jqXHR.status +
-                ' - ' + jqXHR.statusText + ')');
+            $('#alertMsg').text(jqXHR.responseText);
             $('button[type=submit]').prop('disabled', false);
         });
     });
