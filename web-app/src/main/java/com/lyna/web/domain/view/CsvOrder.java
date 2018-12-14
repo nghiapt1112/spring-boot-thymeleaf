@@ -24,10 +24,10 @@ public class CsvOrder {
     @CsvBindByName(column = "便")
     private String post;
 
-    @CsvBindByName(column = "商品")
+    @CsvBindByName(column = "商品コード")
     private String productCode;
 
-    @CsvBindByName(column = "個数")
+    @CsvBindByName(column = "商品")
     private String productName;
 
     @CsvBindByName(column = "個数")
