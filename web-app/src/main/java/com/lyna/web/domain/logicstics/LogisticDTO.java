@@ -4,7 +4,6 @@ import com.lyna.commons.infrustructure.object.AbstractObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;

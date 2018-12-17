@@ -182,9 +182,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     }
 
     @Override
-    public Store findOneByCodeAndTenantId(String code, int tenantId) {
+    public Store findOneByCode(String code) {
         try {
-            return storeRepository.findOneByCodeAndTenantId(code, tenantId);
+            return storeRepository.findOneByCode(code);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));

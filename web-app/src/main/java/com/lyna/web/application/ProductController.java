@@ -14,13 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -40,8 +34,6 @@ public class ProductController extends AbstractCustomController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    private String codeExisted;
-
 
     @GetMapping(value = "/create")
     public String createProduct(Model model) {
@@ -60,7 +52,7 @@ public class ProductController extends AbstractCustomController {
             return PRODUCT_REGISTER_PAGE;
         }
         try {
-            if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(),user.getTenantId()))) {
+            if (!Objects.isNull(productService.findOneByCode(product.getCode()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_REGISTER_PAGE;
@@ -83,9 +75,9 @@ public class ProductController extends AbstractCustomController {
             model.addAttribute("product", product);
             return PRODUCT_EDIT_PAGE;
         }
-
+        Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(),product.getTenantId());
         try {
-            if (!product.getCode().equals(codeExisted) && !Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(), product.getTenantId()))) {
+            if (!product.getCode().equals(productExisted.getCode()) && !Objects.isNull(productService.findOneByCode(product.getCode()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
@@ -123,7 +115,6 @@ public class ProductController extends AbstractCustomController {
                                 @PathVariable("tenantId") int tenantId, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         Product product = productService.findOneByProductIdAndTenantId(productId, tenantId);
-        codeExisted = product.getCode();
         model.addAttribute("product", product);
         return PRODUCT_EDIT_PAGE;
 

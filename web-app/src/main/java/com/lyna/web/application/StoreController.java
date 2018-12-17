@@ -43,8 +43,6 @@ public class StoreController extends AbstractCustomController {
     @Autowired
     private StoreService storeService;
 
-    private String codeExisted;
-
     @GetMapping(value = "/create")
     @IsAdmin
     public String createStore(Model model, @ModelAttribute("store") Store store) {
@@ -65,19 +63,16 @@ public class StoreController extends AbstractCustomController {
         }
 
         try {
-            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(),user.getTenantId()))) {
+            if (!Objects.isNull(storeService.findOneByCode(store.getCode()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_REGISTER_PAGE;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
-
         storeService.create(store, user);
-
         return REDIRECT_STORE_LIST_PAGE;
-
     }
 
     @PostMapping(value = "/update")
@@ -88,9 +83,9 @@ public class StoreController extends AbstractCustomController {
             model.addAttribute("store", store);
             return STORE_EDIT_PAGE;
         }
-
+        Store storeExisted = storeService.findOneByStoreIdAndTenantId(store.getStoreId(), store.getTenantId());
         try {
-            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(), store.getTenantId()))) {
+            if (!store.getCode().equals(storeExisted.getCode()) && !Objects.isNull(storeService.findOneByCode(store.getCode()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_EDIT_PAGE;
@@ -98,9 +93,7 @@ public class StoreController extends AbstractCustomController {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
         storeService.update(store, user);
-
         return REDIRECT_STORE_LIST_PAGE;
 
     }
@@ -110,7 +103,6 @@ public class StoreController extends AbstractCustomController {
                               @PathVariable("tenantId") int tenantId, Model model) {
         User user = (User) principal.getPrincipal();
         Store store = storeService.findOneByStoreIdAndTenantId(storeId, tenantId);
-        codeExisted = store.getCode();
         model.addAttribute("store", store);
         return STORE_EDIT_PAGE;
     }
@@ -180,12 +172,12 @@ public class StoreController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String deleteStore(UsernamePasswordAuthenticationToken principal,HttpServletRequest request, @RequestParam(value = "storeIds[]") List<String> storeIds) {
+    String deleteStore(UsernamePasswordAuthenticationToken principal, HttpServletRequest request, @RequestParam(value = "storeIds[]") List<String> storeIds) {
         User user = (User) principal.getPrincipal();
         ObjectMapper mapper = new ObjectMapper();
         String ajaxResponse = "";
         try {
-            boolean response = postCourseService.deleteByStoreIdsAndTenantId(storeIds,user.getTenantId());
+            boolean response = postCourseService.deleteByStoreIdsAndTenantId(storeIds, user.getTenantId());
             ajaxResponse = mapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
