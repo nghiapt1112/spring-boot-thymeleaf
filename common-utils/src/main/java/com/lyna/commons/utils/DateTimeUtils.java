@@ -22,15 +22,6 @@ public final class DateTimeUtils {
         return format.format(date);
     }
 
-    public static String convertLongToDateString(Long date) {
-        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-        if (date != null) {
-            return format.format(date);
-        } else {
-            return format.format(new Date());
-        }
-    }
-
     public static String converDateToString(Date date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT);
         Instant instant = date.toInstant();

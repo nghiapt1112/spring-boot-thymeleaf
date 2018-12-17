@@ -15,9 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.lyna.commons.utils.DateTimeUtils.*;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.END_DATE;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.POST_NAME;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.START_DATE;
@@ -42,13 +45,16 @@ public class MainController extends AbstractCustomController {
                              @RequestParam(required = false) Long end,
                              @RequestParam(required = false) String postName) {
         User currentUser = (User) principal.getPrincipal();
+        Date startDay = Objects.isNull(start) ? getCurrentDate() : fromNumber(start);
+        Date endDay = Objects.isNull(end) ? getCurrentDate() : fromNumber(end);
+        String newPostName = (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName;
 
         LogisticRequestPage logisticQueryBuilder = new LogisticRequestPage();
         logisticQueryBuilder
                 .withTenantId(currentUser.getTenantId())
-                .addSearchField(START_DATE, Objects.isNull(start) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(start))
-                .addSearchField(END_DATE, Objects.isNull(end) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(end))
-                .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
+                .addSearchField(START_DATE, startDay)
+                .addSearchField(END_DATE, endDay)
+                .addSearchField(POST_NAME, newPostName)
                 .build();
 
         Map<String, Object> logisticData = logisticService.findLogisticsView(currentUser.getTenantId(), logisticQueryBuilder);
@@ -56,21 +62,17 @@ public class MainController extends AbstractCustomController {
         OrderRequestPage orderQueryBuilder = new OrderRequestPage();
         orderQueryBuilder
                 .withTenantId(currentUser.getTenantId())
-                .addSearchField(START_DATE, Objects.isNull(start) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(start))
-                .addSearchField(END_DATE, Objects.isNull(end) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(end))
-                .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
+                .addSearchField(START_DATE, startDay)
+                .addSearchField(END_DATE, endDay)
+                .addSearchField(POST_NAME, newPostName)
                 .build();
-
-
-        String dateStart = DateTimeUtils.convertLongToDateString(start);
-        String dateEnd = DateTimeUtils.convertLongToDateString(end);
-        model.addAttribute("dateStart", dateStart);
-        model.addAttribute("dateEnd", dateEnd);
-
 
         model.addAttribute(LOGISTIC_DATA, logisticData.get(LOGISTIC_DATA));
         model.addAttribute(PKG_TYPE, logisticData.get(PKG_TYPE));
         model.addAttribute("orderData", orderService.findOrderViews(currentUser.getTenantId(), orderQueryBuilder));
+        model.addAttribute("dateStart", convertDateToString(startDay));
+        model.addAttribute("dateEnd", convertDateToString(endDay));
+        model.addAttribute("postName" , newPostName);
         return "main/mainMenu";
     }
 
