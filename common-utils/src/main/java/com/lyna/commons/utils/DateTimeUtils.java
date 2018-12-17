@@ -12,14 +12,6 @@ public final class DateTimeUtils {
     public static final String DD_MM_YYYY = "yyyy-MM-dd";
     private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
 
-
-//    public static String formatDate(String date, String initDateFormat, String endDateFormat) throws ParseException {
-//        Date initDate = new SimpleDateFormat(initDateFormat).parse(date);
-//        SimpleDateFormat formatter = new SimpleDateFormat(endDateFormat);
-//        String parsedDate = formatter.format(initDate);
-//        return parsedDate;
-//    }
-
     public static String convertDateToString(Date date, String style) {
         SimpleDateFormat format = new SimpleDateFormat(style);
         return format.format(date);
@@ -30,6 +22,15 @@ public final class DateTimeUtils {
         return format.format(date);
     }
 
+    public static String convertLongToDateString(Long date) {
+        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        if (date != null) {
+            return format.format(date);
+        } else {
+            return format.format(new Date());
+        }
+    }
+
     public static String converDateToString(Date date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT);
         Instant instant = date.toInstant();
@@ -37,7 +38,6 @@ public final class DateTimeUtils {
                 .atZone(ZoneId.of("CET"))
                 .toLocalDateTime();
         return ldt.format(formatter);
-
     }
 
     public static Date getCurrentDate() {
@@ -54,7 +54,7 @@ public final class DateTimeUtils {
         }
     }
 
-     public static Date fromNumber(Long val) {
+    public static Date fromNumber(Long val) {
         return new Date(val);
     }
 

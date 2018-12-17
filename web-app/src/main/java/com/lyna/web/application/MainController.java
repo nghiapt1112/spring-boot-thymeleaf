@@ -1,6 +1,7 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.domain.logicstics.LogisticRequestPage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
 import com.lyna.web.domain.order.OrderRequestPage;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,8 +25,8 @@ import static com.lyna.web.domain.logicstics.LogisticRequestPage.POST_NAME;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.START_DATE;
 import static com.lyna.web.domain.logicstics.service.LogisticService.LOGISTIC_DATA;
 import static com.lyna.web.domain.logicstics.service.LogisticService.PKG_TYPE;
-import static com.lyna.web.infrastructure.utils.DateTimeUtils.fromNumber;
-import static com.lyna.web.infrastructure.utils.DateTimeUtils.getCurrentDate;
+
+import com.lyna.commons.utils.*;
 
 @Controller
 public class MainController extends AbstractCustomController {
@@ -48,8 +50,8 @@ public class MainController extends AbstractCustomController {
         LogisticRequestPage logisticQueryBuilder = new LogisticRequestPage();
         logisticQueryBuilder
                 .withTenantId(currentUser.getTenantId())
-                .addSearchField(START_DATE, Objects.isNull(start) ? getCurrentDate() : fromNumber(start))
-                .addSearchField(END_DATE, Objects.isNull(end) ? getCurrentDate() : fromNumber(end))
+                .addSearchField(START_DATE, Objects.isNull(start) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(start))
+                .addSearchField(END_DATE, Objects.isNull(end) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(end))
                 .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
                 .build();
 
@@ -58,10 +60,17 @@ public class MainController extends AbstractCustomController {
         OrderRequestPage orderQueryBuilder = new OrderRequestPage();
         orderQueryBuilder
                 .withTenantId(currentUser.getTenantId())
-                .addSearchField(START_DATE, Objects.isNull(start) ? getCurrentDate() : fromNumber(start))
-                .addSearchField(END_DATE, Objects.isNull(end) ? getCurrentDate() : fromNumber(end))
+                .addSearchField(START_DATE, Objects.isNull(start) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(start))
+                .addSearchField(END_DATE, Objects.isNull(end) ? DateTimeUtils.getCurrentDate() : DateTimeUtils.fromNumber(end))
                 .addSearchField(POST_NAME, (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName)
                 .build();
+
+
+        String dateStart = DateTimeUtils.convertLongToDateString(start);
+        String dateEnd = DateTimeUtils.convertLongToDateString(end);
+        model.addAttribute("dateStart", dateStart);
+        model.addAttribute("dateEnd", dateEnd);
+
 
         model.addAttribute(LOGISTIC_DATA, logisticData.get(LOGISTIC_DATA));
         model.addAttribute(PKG_TYPE, logisticData.get(PKG_TYPE));
