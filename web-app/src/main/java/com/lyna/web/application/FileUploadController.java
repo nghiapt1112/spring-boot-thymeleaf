@@ -60,8 +60,7 @@ public class FileUploadController {
     public ResponseEntity<Object> handleFileUpload(Model model, @RequestParam("file") MultipartFile file,
                                                    UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        int tenantId = user.getTenantId();
-        List<String> mapError = storageService.store(tenantId, file, 1);
+        List<String> mapError = storageService.store(user, file, 1);
         List<String> results = new ArrayList<>();
         results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {
@@ -76,8 +75,7 @@ public class FileUploadController {
     public ResponseEntity<Object> handleFileUploadDelivery(Model model, @RequestParam("file") MultipartFile file,
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        int tenantId = user.getTenantId();
-        List<String> mapError = storageService.store(tenantId, file, 2);
+        List<String> mapError = storageService.store(user, file, 2);
         List<String> results = new ArrayList<>();
         results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {
