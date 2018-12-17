@@ -9,8 +9,7 @@ INSERT INTO m_user (`tenant_id`, `user_id`, `email`, `password`, `name`, `role`,
 VALUES
 (1, '507f191e810c19729de860ea', 'admin@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_admin', 1, '2018-11-13 16:07:42'),
 (1, '507f191e810c19729de860eb', 'user@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_user', 0, '2018-11-13 16:07:42'),
-(1, '507f191e810c19729de860ec', 'view@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_view_only', 0, '2018-11-13 16:07:42'),
-(1, '507f191e810c19729de860ed', 'free@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_free', 0, '2018-11-13 16:07:42')
+(1, '507f191e810c19729de860ec', 'view@tenant1.com', '$2a$10$wW33WsvWzFMAJw7jICe2re24P5vcUeAjwYIO2lF8KGEj2B0gcMw06', 'user_view_only', 0, '2018-11-13 16:07:42')
 ;
 
 INSERT INTO m_store(`store_id`, `tenant_id`, `code`, `name`, `major_area`, `area`, `create_date`, `create_user`)
