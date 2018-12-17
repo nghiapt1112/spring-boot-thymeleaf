@@ -77,8 +77,9 @@
                                                    name="packageId">
                                         </td>
                                         <td>
-                                            <a href="/package/update/{packageId}(packageId=${package.packageId})"
-                                               th:href="@{/package/update/{packageId}(packageId=${package.packageId})}"
+                                            <a href="store-edit"
+                                               th:href="@{/package/update/{packageId}/{tenantId}/
+                                               (packageId=${package.packageId},tenantId=${package.tenantId})}"
                                                class="" th:text="${package.name}"></a>
                                         </td>
                                         <td th:text="${package.unit}"></td>

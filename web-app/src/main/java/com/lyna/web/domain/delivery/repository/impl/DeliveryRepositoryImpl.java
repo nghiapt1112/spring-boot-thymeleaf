@@ -2,11 +2,8 @@ package com.lyna.web.domain.delivery.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.delivery.Delivery;
-import com.lyna.web.domain.delivery.DeliveryDetail;
-import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
 import com.lyna.web.domain.view.CsvDelivery;
-import com.lyna.web.domain.view.CsvOrder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Repository;

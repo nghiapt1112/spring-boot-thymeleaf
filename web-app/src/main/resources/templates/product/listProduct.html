@@ -74,8 +74,9 @@
                                         </td>
                                         <td th:text="${product.code}"></td>
                                         <td>
-                                            <a href="/product/update/{productId}(productId=${product.productId})"
-                                               th:href="@{/product/update/{productId}(productId=${product.productId})}"
+                                            <a href="store-edit"
+                                               th:href="@{/product/update/{productId}/{tenantId}/
+                                               (productId=${product.productId},tenantId=${product.tenantId})}"
                                                class="" th:text="${product.name}"></a>
                                         </td>
                                         <td th:text="${product.unit}"></td>

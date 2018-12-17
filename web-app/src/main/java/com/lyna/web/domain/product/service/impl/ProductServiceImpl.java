@@ -3,9 +3,9 @@ package com.lyna.web.domain.product.service.impl;
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.product.Product;
+import com.lyna.web.domain.product.exeption.ProductException;
 import com.lyna.web.domain.product.repository.ProductRepository;
 import com.lyna.web.domain.product.service.ProductService;
-import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +24,16 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     private ProductRepository productRepository;
 
     @Override
+    @Transactional
     public void update(Product product, User user) {
         Date date = new Date();
         product.setUpdateDate(date);
         product.setUpdateUser(user.getId());
-        product.setTenantId(user.getTenantId());
-
         try {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.updateError.code"), toStr("err.product.updateError.msg"));
+            throw new ProductException(toInteger("err.product.updateError.code"), toStr("err.product.updateError.msg"));
         }
 
     }
@@ -45,7 +44,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             return productRepository.findOneByProductIdAndTenantId(productId, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+            throw new ProductException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
         }
     }
 
@@ -55,7 +54,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             return productRepository.findByTenantId(tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+            throw new ProductException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
         }
     }
 
@@ -70,7 +69,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.saveError.code"), toStr("err.product.saveError.msg"));
+            throw new ProductException(toInteger("err.product.saveError.code"), toStr("err.product.saveError.msg"));
         }
     }
 
@@ -80,7 +79,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             return productRepository.findOneByCodeAndTenantId(code, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
+            throw new ProductException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));
         }
 
     }
