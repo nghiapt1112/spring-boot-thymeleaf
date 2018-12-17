@@ -2,10 +2,17 @@ package com.lyna.commons.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class DataUtils {
+
+    private static final String DATE_FORMAT = "yyyy/MM/dd";
+    private static final String DATE_FORMAT_VI = "yyyy-MM-dd";
 
     public static boolean isNumeric(String str) {
         try {
@@ -137,7 +144,7 @@ public class DataUtils {
         Date date = null;
 
         if (dateInString.contains("-")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_VI, Locale.ENGLISH);
 
             try {
                 date = formatter.parse(dateInString);
@@ -147,7 +154,7 @@ public class DataUtils {
         }
 
         if (dateInString.contains("/")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH);
             try {
                 date = formatter.parse(dateInString);
             } catch (ParseException e) {

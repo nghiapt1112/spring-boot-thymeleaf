@@ -1,7 +1,8 @@
 package com.lyna.web.domain.order;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
-import com.lyna.web.infrastructure.utils.DateTimeUtils;
+import com.lyna.commons.utils.DataUtils;
+import com.lyna.commons.utils.DateTimeUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +32,7 @@ public class OrderAggregate extends AbstractObject {
     public static OrderAggregate parseFromView(OrderView orderView) {
         OrderAggregate aggregate = new OrderAggregate();
         aggregate.orderId = orderView.getOrderId();
-        aggregate.orderDate = DateTimeUtils.convertDateToString(orderView.getOrderDate());
+        aggregate.orderDate = DateTimeUtils.converDateToString(orderView.getOrderDate());
         aggregate.storeName = orderView.getStoreName();
         aggregate.postName = orderView.getPostName();
         aggregate.productName = orderView.getProductName();
