@@ -343,6 +343,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 store.setName(csvDelivery.getStoreCode());
             store.setTenantId(tenantId);
             store.setCreateUser(user.getName());
+            store.setCreateDate(new Date());
             ((HashSet<Store>) storeIterable).add(store);
 
             mapStore.put(store.getStoreId(), csvDelivery);
@@ -422,6 +423,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             postCourse.setStoreId(storeId);
             postCourse.setTenantId(user.getTenantId());
             postCourse.setCreateUser(user.getName());
+            postCourse.setCreateDate(new Date());
             postCourseId = postCourse.getPostCourseId();
             ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
         }
@@ -460,7 +462,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 store.setTenantId(tenantId);
                 ((HashSet<Store>) storeIterable).add(store);
                 store.setCreateUser(user.getName());
-
+                store.setCreateDate(new Date());
                 mapStore.put(store.getStoreId(), csvOrder);
             });
 
@@ -528,6 +530,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                             date = new Date();
                         order.setOrderDate(date);
                         order.setCreateUser(user.getName());
+                        order.setCreateDate(new Date());
                         order.setPostCourseId(postCourseId);
                         order.setTenantId(tenantId);
                         ((HashSet<Order>) orderIterable).add(order);
