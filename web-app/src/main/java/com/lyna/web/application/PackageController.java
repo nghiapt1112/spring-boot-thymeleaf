@@ -95,10 +95,11 @@ public class PackageController extends AbstractCustomController {
         return "false";
     }
 
-    @GetMapping(value = "/update/{packageId}")
-    public String updatePackage(@PathVariable("packageId") String packageId, Model model, UsernamePasswordAuthenticationToken principal) {
+    @GetMapping(value = "/update/{packageId}/{tenantId}")
+    public String updatePackage(@PathVariable("packageId") String packageId, Model model,
+                                @PathVariable("tenantId") int tenantId,UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
-        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId,user.getTenantId()));
+        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId,tenantId));
         return PACKAGE_EDIT_PAGE;
     }
 

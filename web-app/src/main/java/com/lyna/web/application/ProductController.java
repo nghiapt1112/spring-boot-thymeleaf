@@ -85,7 +85,7 @@ public class ProductController extends AbstractCustomController {
         }
 
         try {
-            if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(),user.getTenantId()))) {
+            if (!product.getCode().equals(codeExisted) && !Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(), product.getTenantId()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
@@ -118,10 +118,11 @@ public class ProductController extends AbstractCustomController {
         return "false";
     }
 
-    @GetMapping(value = "/update/{productId}")
-    public String updateProduct(@PathVariable("productId") String productId, Model model,UsernamePasswordAuthenticationToken principal) {
+    @GetMapping(value = "/update/{productId}/{tenantId}")
+    public String updateProduct(@PathVariable("productId") String productId, Model model,
+                                @PathVariable("tenantId") int tenantId, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
-        Product product = productService.findOneByProductIdAndTenantId(productId, user.getTenantId());
+        Product product = productService.findOneByProductIdAndTenantId(productId, tenantId);
         codeExisted = product.getCode();
         model.addAttribute("product", product);
         return PRODUCT_EDIT_PAGE;

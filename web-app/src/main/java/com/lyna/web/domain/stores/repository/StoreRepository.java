@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface StoreRepository extends JpaRepository<Store, Long>, PagingRepository {
+public interface StoreRepository extends JpaRepository<Store, String>, PagingRepository {
     List<Store> getAll(int tenantId);
 
     List<Store> findByTenantId(int tenantId);

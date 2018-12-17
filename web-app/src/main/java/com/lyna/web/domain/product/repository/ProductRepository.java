@@ -18,6 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     List<Product> getProductsByProductCode(int tenantId, List<String> products);
 
+
 }
 
 

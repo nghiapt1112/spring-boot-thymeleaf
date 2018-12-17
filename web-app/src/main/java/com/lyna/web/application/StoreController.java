@@ -18,13 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -39,14 +33,13 @@ import java.util.stream.IntStream;
 @RequestMapping("/store")
 public class StoreController extends AbstractCustomController {
 
-    @Autowired
-    private PostCourseService postCourseService;
-
     private static final String STORE_LIST_PAGE = "store/liststore";
     private static final String STORE_EDIT_PAGE = "store/editStore";
     private static final String REDIRECT_STORE_LIST_PAGE = "redirect:/store/list";
     private static final String STORE_REGISTER_PAGE = "store/registerStore";
     private final Logger log = LoggerFactory.getLogger(StoreController.class);
+    @Autowired
+    private PostCourseService postCourseService;
     @Autowired
     private StoreService storeService;
 
@@ -91,19 +84,18 @@ public class StoreController extends AbstractCustomController {
     public String update(UsernamePasswordAuthenticationToken principal, Model model, @Valid @ModelAttribute("store")
             Store store, BindingResult result) {
         User user = (User) principal.getPrincipal();
-
         if (Objects.isNull(store) || result.hasErrors()) {
             model.addAttribute("store", store);
             return STORE_EDIT_PAGE;
         }
 
         try {
-            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(), user.getTenantId()))) {
+            if (!store.getCode().equals(codeExisted) && !Objects.isNull(storeService.findOneByCodeAndTenantId(store.getCode(), store.getTenantId()))) {
                 model.addAttribute("errorCodeShow", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_EDIT_PAGE;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
@@ -113,10 +105,11 @@ public class StoreController extends AbstractCustomController {
 
     }
 
-    @GetMapping(value = "/update/{storeId}")
-    public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId, Model model) {
+    @GetMapping(value = "/update/{storeId}/{tenantId}")
+    public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId,
+                              @PathVariable("tenantId") int tenantId, Model model) {
         User user = (User) principal.getPrincipal();
-        Store store = storeService.findOneByStoreIdAndTenantId(storeId, user.getTenantId());
+        Store store = storeService.findOneByStoreIdAndTenantId(storeId, tenantId);
         codeExisted = store.getCode();
         model.addAttribute("store", store);
         return STORE_EDIT_PAGE;

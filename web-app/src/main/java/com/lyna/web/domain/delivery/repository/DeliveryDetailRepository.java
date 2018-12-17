@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface DeliveryDetailRepository extends JpaRepository<DeliveryDetail, String> {
     List<DeliveryDetail> findByDeliveryIds(int tenantId, Collection<String> deliveryIds);
+
     List<DeliveryDetail> findByOrderIds(int tenantId, Collection<String> orderIds);
+
     boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId);
 
     String checkExistByDeliveryId(String deliveryId, String packageId, int tenantId);
