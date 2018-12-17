@@ -1,6 +1,5 @@
 package com.lyna.web.domain.storagefile.service;
 
-import com.lyna.web.domain.user.User;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +10,7 @@ import java.util.stream.Stream;
 public interface StorageService {
     void init();
 
-    List<String> store(User user, MultipartFile file, int type);
+    List<String> store(int tenantId, MultipartFile file, int type);
 
     Stream<Path> loadAll();
 
