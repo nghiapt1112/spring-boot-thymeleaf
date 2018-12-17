@@ -1,8 +1,9 @@
 package com.lyna.web.domain.view;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
+import com.lyna.commons.utils.DataUtils;
+import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.domain.logicstics.LogisticView;
-import com.lyna.web.infrastructure.utils.DateTimeUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,7 +60,7 @@ public class LogisticAggregate extends AbstractObject {
                                                      Map<String, List<PackageAggregate>> deliveryPackagesByOrderId) {
         LogisticAggregate aggregate = new LogisticAggregate();
         aggregate.orderId = logisticView.getOrderId();
-        aggregate.orderDate = DateTimeUtils.convertDateToString(logisticView.getOrderDate());
+        aggregate.orderDate = DateTimeUtils.converDateToString(logisticView.getOrderDate());
         aggregate.storeName = logisticView.getStoreName();
         aggregate.postName = logisticView.getPost();
         aggregate.amount = logisticView.getAmount();
@@ -96,7 +97,7 @@ public class LogisticAggregate extends AbstractObject {
      * sum all weigh and capacity for each order
      */
     private static void fillWithPackageInfo(Map<String, List<PackageAggregate>> packageByOrderId, LogisticAggregate aggregate) {
-        for( PackageAggregate el : packageByOrderId.get(aggregate.getOrderId())) {
+        for (PackageAggregate el : packageByOrderId.get(aggregate.getOrderId())) {
             aggregate.totalWeight = aggregate.totalWeight.add(el.getFullLoadWeight());
             aggregate.totalCapacity = aggregate.totalCapacity.add(el.getFullLoadCapacity());
         }
