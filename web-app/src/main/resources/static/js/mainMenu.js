@@ -164,11 +164,16 @@ function searchMainMenu() {
     var endDate = document.getElementById("max").value;
     var postName = document.getElementById("post").value;
 
+    var currentDate = new Date().setHours(0,0,0,0)
     if (startDate) {
         logisticAPI += '?start=' + new Date(startDate).getTime()
+    } else {
+        logisticAPI += '?start=' + currentDate
     }
     if (endDate) {
-        logisticAPI += '&end='+new Date(endDate).getTime()
+        logisticAPI += '&end=' + new Date(endDate).getTime()
+    } else {
+        logisticAPI += '&end=' + currentDate
     }
     if (postName) {
         logisticAPI += '&postName='+postName
