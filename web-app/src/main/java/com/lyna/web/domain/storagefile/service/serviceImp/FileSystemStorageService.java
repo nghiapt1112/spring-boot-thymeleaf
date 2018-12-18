@@ -349,7 +349,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             store.setTenantId(tenantId);
             ((HashSet<Store>) storeIterable).add(store);
 
-            mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
+            mapStoreCodeStoreId.put(store.getCode().trim(), store.getStoreId());
         });
 
         mapStorePostCode.forEach((storeCodeOrderDate, csvDelivery) -> {
@@ -357,7 +357,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             String post = ((CsvDelivery) csvDelivery).getPost();
             String skey = storeCode + "_" + post;
             if (!setStoreCodePost.containsKey(skey)) {
-                String storeId = mapStoreCodeStoreId.get(storeCode);
+                String storeId = mapStoreCodeStoreId.get(storeCode.trim());
                 String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
                 postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
                 setStoreCodePost.put(skey, postCourseId);
