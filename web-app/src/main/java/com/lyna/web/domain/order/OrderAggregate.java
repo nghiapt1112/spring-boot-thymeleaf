@@ -1,7 +1,6 @@
 package com.lyna.web.domain.order;
 
 import com.lyna.commons.infrustructure.object.AbstractObject;
-import com.lyna.commons.utils.DataUtils;
 import com.lyna.commons.utils.DateTimeUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
