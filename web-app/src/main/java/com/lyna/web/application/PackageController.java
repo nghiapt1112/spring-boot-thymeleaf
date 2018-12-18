@@ -13,12 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -97,9 +97,8 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping(value = "/update/{packageId}/{tenantId}")
     public String updatePackage(@PathVariable("packageId") String packageId, Model model,
-                                @PathVariable("tenantId") int tenantId,UsernamePasswordAuthenticationToken principal) {
-        User user = (User) principal.getPrincipal();
-        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId,tenantId));
+                                @PathVariable("tenantId") int tenantId) {
+        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId, tenantId));
         return PACKAGE_EDIT_PAGE;
     }
 

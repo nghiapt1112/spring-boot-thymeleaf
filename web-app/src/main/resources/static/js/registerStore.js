@@ -64,11 +64,9 @@ let addRow = function () {
     row.appendChild(rowCourse);
     row.appendChild(rowDelete);
 
-
 });
     document.getElementById('postCourseList').appendChild(row);
 };
-
 
 $(document).ready(function () {
 

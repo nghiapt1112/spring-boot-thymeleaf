@@ -37,14 +37,14 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
     }
 
     @Override
-    public Product findOneByCodeAndTenantId(String code, int tenantId) {
+    public Product findOneByCode(String code) {
         return entityManager
-                .createQuery("SELECT p FROM Product p WHERE p.code=:code AND p.tenantId=:tenantId", Product.class)
+                .createQuery("SELECT p FROM Product p WHERE p.code=:code", Product.class)
                 .setParameter("code", code)
-                .setParameter("tenantId", tenantId)
                 .getSingleResult();
 
     }
+
 
     @Override
     public List<Product> findByTenantId(int tenantId) {
