@@ -19,9 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.lyna.commons.utils.DateTimeUtils.getCurrentDate;
-import static com.lyna.commons.utils.DateTimeUtils.fromNumber;
-import static com.lyna.commons.utils.DateTimeUtils.convertDateToString;
+import static com.lyna.commons.utils.DateTimeUtils.*;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.END_DATE;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.POST_NAME;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.START_DATE;
@@ -46,8 +44,8 @@ public class MainController extends AbstractCustomController {
                              @RequestParam(required = false) Long end,
                              @RequestParam(required = false) String postName) {
         User currentUser = (User) principal.getPrincipal();
-        Date startDay = Objects.isNull(start) ? getCurrentDate() : fromNumber(start);
-        Date endDay = Objects.isNull(end) ? getCurrentDate() : fromNumber(end);
+        Date startDay = Objects.isNull(start) ? getDateWithoutTimeUsingCalendar() : fromNumber(start);
+        Date endDay = Objects.isNull(end) ? getDateMaxTimeUsingCalendar() : fromNumber(end);
         String searchPostName = (StringUtils.isEmpty(postName) || StringUtils.isEmpty(postName.trim())) ? null : postName;
 
         LogisticRequestPage logisticQueryBuilder = new LogisticRequestPage();
@@ -73,7 +71,7 @@ public class MainController extends AbstractCustomController {
         model.addAttribute("orderData", orderService.findOrderViews(currentUser.getTenantId(), orderQueryBuilder));
         model.addAttribute("dateStart", convertDateToString(startDay));
         model.addAttribute("dateEnd", convertDateToString(endDay));
-        model.addAttribute("postName" , searchPostName);
+        model.addAttribute("postName", searchPostName);
         return "main/mainMenu";
     }
 

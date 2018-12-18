@@ -1,7 +1,6 @@
 package com.lyna.web.user;
 
 import com.lyna.web.LynaApplicationTests;
-import com.lyna.web.domain.logicstics.LogisticRequestPage;
 import com.lyna.web.domain.order.OrderAggregate;
 import com.lyna.web.domain.order.OrderRequestPage;
 import com.lyna.web.domain.order.service.OrderService;
@@ -11,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.lyna.commons.utils.DateTimeUtils.convertStringToDate;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.END_DATE;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.POST_NAME;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.START_DATE;
-import static com.lyna.web.infrastructure.utils.DateTimeUtils.convertStringToDate;
 
 public class OrderServiceTest extends LynaApplicationTests {
 
