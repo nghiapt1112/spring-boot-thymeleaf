@@ -97,8 +97,7 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping(value = "/update/{packageId}/{tenantId}")
     public String updatePackage(@PathVariable("packageId") String packageId, Model model,
-                                @PathVariable("tenantId") int tenantId, UsernamePasswordAuthenticationToken principal) {
-        User user = (User) principal.getPrincipal();
+                                @PathVariable("tenantId") int tenantId) {
         model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId, tenantId));
         return PACKAGE_EDIT_PAGE;
     }

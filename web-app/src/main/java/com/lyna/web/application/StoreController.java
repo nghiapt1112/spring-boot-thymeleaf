@@ -105,9 +105,8 @@ public class StoreController extends AbstractCustomController {
     }
 
     @GetMapping(value = "/update/{storeId}/{tenantId}")
-    public String updateStore(UsernamePasswordAuthenticationToken principal, @PathVariable("storeId") String storeId,
+    public String updateStore(@PathVariable("storeId") String storeId,
                               @PathVariable("tenantId") int tenantId, Model model) {
-        User user = (User) principal.getPrincipal();
         Store store = storeService.findOneByStoreIdAndTenantId(storeId, tenantId);
         model.addAttribute("store", store);
         return STORE_EDIT_PAGE;
