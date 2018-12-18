@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public final class DateTimeUtils {
@@ -22,17 +23,24 @@ public final class DateTimeUtils {
         return format.format(date);
     }
 
-    public static String converDateToString(Date date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT);
-        Instant instant = date.toInstant();
-        LocalDateTime ldt = instant
-                .atZone(ZoneId.of("CET"))
-                .toLocalDateTime();
-        return ldt.format(formatter);
+    public static Date getDateWithoutTimeUsingCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
     }
 
-    public static Date getCurrentDate() {
-        return new Date();
+    public static Date getDateMaxTimeUsingCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 59);
+
+        return calendar.getTime();
     }
 
     public static Date convertStringToDate(String dateStr) {

@@ -32,7 +32,7 @@ public class OrderAggregate extends AbstractObject {
     public static OrderAggregate parseFromView(OrderView orderView) {
         OrderAggregate aggregate = new OrderAggregate();
         aggregate.orderId = orderView.getOrderId();
-        aggregate.orderDate = DateTimeUtils.converDateToString(orderView.getOrderDate());
+        aggregate.orderDate = DateTimeUtils.convertDateToString(orderView.getOrderDate());
         aggregate.storeName = orderView.getStoreName();
         aggregate.postName = orderView.getPostName();
         aggregate.productName = orderView.getProductName();

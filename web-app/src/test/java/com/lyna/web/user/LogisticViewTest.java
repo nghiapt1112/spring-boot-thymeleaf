@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.lyna.commons.utils.DateTimeUtils.convertStringToDate;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.END_DATE;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.POST_NAME;
 import static com.lyna.web.domain.logicstics.LogisticRequestPage.START_DATE;
-import static com.lyna.web.infrastructure.utils.DateTimeUtils.convertStringToDate;
 
 public class LogisticViewTest extends LynaApplicationTests {
 

@@ -22,7 +22,7 @@ public class StoreAggregate extends AbstractObject {
 
     public static StoreAggregate fromDTO(StoreDTO el) {
         StoreAggregate aggregate = new StoreAggregate();
-        aggregate.orderDate = DateTimeUtils.converDateToString(el.getOrderDate());
+        aggregate.orderDate = DateTimeUtils.convertDateToString(el.getOrderDate());
         aggregate.storeName = el.getStoreName();
         aggregate.postName = el.getPostName();
         aggregate.productName = el.getProductName();

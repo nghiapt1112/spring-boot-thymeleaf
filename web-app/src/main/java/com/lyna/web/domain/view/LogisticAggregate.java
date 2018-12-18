@@ -60,7 +60,7 @@ public class LogisticAggregate extends AbstractObject {
                                                      Map<String, List<PackageAggregate>> deliveryPackagesByOrderId) {
         LogisticAggregate aggregate = new LogisticAggregate();
         aggregate.orderId = logisticView.getOrderId();
-        aggregate.orderDate = DateTimeUtils.converDateToString(logisticView.getOrderDate());
+        aggregate.orderDate = DateTimeUtils.convertDateToString(logisticView.getOrderDate());
         aggregate.storeName = logisticView.getStoreName();
         aggregate.postName = logisticView.getPost();
         aggregate.amount = logisticView.getAmount();

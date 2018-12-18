@@ -1,7 +1,7 @@
 package com.lyna.web.common;
 
+import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.LynaApplicationTests;
-import com.lyna.web.infrastructure.utils.DateTimeUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
