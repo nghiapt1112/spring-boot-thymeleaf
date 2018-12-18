@@ -53,9 +53,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     List<String> listProductCode;
     List<String> ListPost;
     Map<String, CsvOrder> mapProduct;
+    Map<String, CsvOrder> mapProductOrderCsv;
     Map<String, Object> mapStorePostCode;
-    Map<String, Object> mapStoreCodeCsv;
     Map<String, Object> mapStore;
+    Map<String, Object> mapStoreCodeOrderCsv;
     Iterable<Product> productIterable;
     Iterable<Store> storeIterable;
     Iterable<PostCourse> postCoursesIterable;
@@ -115,7 +116,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     orderIterator = orderRepository.getMapOrder(reader);
                     processUpload(orderIterator);
                     setMapData(tenantId);
-                    setDataMapProduct();
+                    //setDataMapProduct();
                     setDataOrder(tenantId);
                     saveDataMaster();
                     saveDataOrder();
@@ -187,9 +188,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         listProductCode = new ArrayList<>();
         ListPost = new ArrayList<>();
         mapProduct = new HashMap<>();
+        mapProductOrderCsv = new HashMap<>();
         mapStorePostCode = new HashMap<>();
-        mapStoreCodeCsv = new HashMap<>();
         mapStore = new HashMap<>();
+        mapStoreCodeOrderCsv = new HashMap<>();
         productIterable = new HashSet<>();
         storeIterable = new HashSet<>();
         postCoursesIterable = new HashSet<>();
@@ -210,10 +212,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     public void setDataMapProduct() {
         //If Orderdate, Store, Post, Product,quantity exists in db => message
         Map<String, CsvOrder> mapProductIdOrder = new HashMap<>();
-        mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
-            CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
-            String postCourseId = mapCsvPostCourseId.get(sOrder);
-            String orderId = orderRepository.checkExists(postCourseId, sOrder.getOrderDate());
+        mapProductIdCsvOrder.forEach((productIdOrderDate, csvOrder) -> {
+            String productId = getProductIdForKey(productIdOrderDate);
+            String postCourseId = mapCsvPostCourseId.get(csvOrder);
+            String orderId = orderRepository.checkExists(postCourseId, csvOrder.getOrderDate());
             if (orderId == null) {
                 mapProductIdOrder.put(productId, csvOrder);
             }
@@ -221,6 +223,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
         mapProductIdCsvOrder.clear();
         mapProductIdCsvOrder = mapProductIdOrder;
+    }
+
+    private String getProductIdForKey(String productIdOrderDate) {
+        String[] sProductIdOrderDate = productIdOrderDate.split("_");
+        return sProductIdOrderDate[0];
     }
 
     private void processUpload(Iterator<CsvOrder> orderIterator) {
@@ -256,21 +263,21 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
             row++;
 
-            String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "_" + csvOrder.getPost().trim().toLowerCase();
-            String skeyCheck = keyOrder + "_" + csvOrder.getProductCode().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
+            String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "_" + csvOrder.getPost().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
+            String skeyCheck = keyOrder + "_" + csvOrder.getProductCode().trim().toLowerCase();
             if (!setOrder.contains(skeyCheck)) {
                 setOrder.add(skeyCheck);
 
                 csvOrder.setPost(csvOrder.getPost().toLowerCase().trim());
                 csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
                 csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
-
+                mapStore.put(csvOrder.getStoreCode().toLowerCase().trim(), csvOrder);
                 mapStorePostCode.put(keyOrder, csvOrder);
                 listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
                 listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
                 ListPost.add(csvOrder.getPost().trim().toLowerCase());
                 mapProduct.put(csvOrder.getProductCode().trim().toLowerCase(), csvOrder);
-                mapStoreCodeCsv.put(csvOrder.getStoreCode().trim().toLowerCase(), csvOrder);
+                mapProductOrderCsv.put(csvOrder.getProductCode().trim().toLowerCase() + "_" + csvOrder.getOrderDate().trim(), csvOrder);
             }
         }
     }
@@ -304,14 +311,14 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
             row++;
 
-            String keyOrder = csvDelivery.getStoreCode() + "_" + csvDelivery.getPost();
+            String keyOrder = csvDelivery.getStoreCode() + "_" + csvDelivery.getPost() + "_" + csvDelivery.getOrderDate();
             String skeyCheck = keyOrder.trim().toLowerCase() + "_" + csvDelivery.getOrderDate().trim().toLowerCase();
             if (!setDelivery.contains(skeyCheck)) {
                 setDelivery.add(skeyCheck);
+                mapStore.put(csvDelivery.getStoreCode().toLowerCase().trim(), csvDelivery);
                 mapStorePostCode.put(keyOrder, csvDelivery);
                 listStoreCode.add(csvDelivery.getStoreCode().trim().toLowerCase());
                 ListPost.add(csvDelivery.getPost().trim().toLowerCase());
-                mapStoreCodeCsv.put(csvDelivery.getStoreCode().trim().toLowerCase(), csvDelivery);
             }
         }
     }
@@ -319,6 +326,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void setMapDataDelivery(int tenantId) throws StorageException {
         List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
         List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
+        Map<String, String> mapStoreCodeStoreId = new HashMap<>();
+        Map<String, String> setStoreCodePost = new HashMap<>();
 
         List<String> stores = result.stream()
                 .map(String::toLowerCase)
@@ -326,11 +335,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
         listStoreCode.removeIf(x -> stores.contains(x.trim().toLowerCase()));
         storesInDb.forEach(store -> {
-            mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode().toLowerCase().trim()));
+            mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
         });
 
         listStoreCode.forEach(code -> {
-            CsvDelivery csvDelivery = (CsvDelivery) mapStoreCodeCsv.get(code);
+            CsvDelivery csvDelivery = (CsvDelivery) mapStore.get(code);
             Store store = new Store();
             store.setCode(code);
             if (csvDelivery.getStoreName() != null) {
@@ -340,17 +349,24 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             store.setTenantId(tenantId);
             ((HashSet<Store>) storeIterable).add(store);
 
-            mapStore.put(store.getStoreId(), csvDelivery);
+            mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
         });
 
-        mapStore.forEach((storeId, csvDelivery) -> {
+        mapStorePostCode.forEach((storeCodeOrderDate, csvDelivery) -> {
+            String storeCode = getProductIdForKey(storeCodeOrderDate);
             String post = ((CsvDelivery) csvDelivery).getPost();
-            String store = ((CsvDelivery) csvDelivery).getStoreCode();
-
-            String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-            postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
-            mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
+            String skey = storeCode + "_" + post;
+            if (!setStoreCodePost.containsKey(skey)) {
+                String storeId = mapStoreCodeStoreId.get(storeCode);
+                String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
+                postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
+                setStoreCodePost.put(skey, postCourseId);
+                mapCsvPostCourseId.put(csvDelivery, postCourseId);
+            } else {
+                mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(skey));
+            }
         });
+
 
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
             String orderId = orderRepository.checkExists(postcodesId, ((CsvDelivery) csv).getOrderDate());
@@ -428,6 +444,12 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
             List<String> resultProducts = productRepository.getListProductCodeByProductCode(tenantId, listProductCode);
             List<Product> productInDB = productRepository.getProductsByProductCode(tenantId, listProductCode);
+            Map<String, String> mapProductCodeProductId = new HashMap<>();
+            Map<String, String> mapStoreCodeStoreId = new HashMap<>();
+            Set<String> setStoreCode = new HashSet<>();
+            Set<String> setProductCode = new HashSet<>();
+            Map<String, String> setStoreCodePost = new HashMap<>();
+            //Todo:check exists code
 
             List<String> stores = result.stream()
                     .map(String::toLowerCase)
@@ -442,54 +464,69 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             listStoreCode.removeIf(x -> stores.contains(x));
 
             storesInDb.forEach(store -> {
-                mapStore.put(store.getStoreId(), mapStoreCodeCsv.get(store.getCode().trim().toLowerCase()));
+                mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
             });
 
             listStoreCode.forEach(code -> {
-                CsvOrder csvOrder = (CsvOrder) mapStoreCodeCsv.get(code);
-                Store store = new Store();
-                store.setCode(code);
-                store.setName(csvOrder.getStoreName());
-                store.setTenantId(tenantId);
-                ((HashSet<Store>) storeIterable).add(store);
-
-                mapStore.put(store.getStoreId(), csvOrder);
+                if (!setStoreCode.contains(code)) {
+                    setStoreCode.add(code);
+                    CsvOrder csvOrder = (CsvOrder) mapStore.get(code);
+                    Store store = new Store();
+                    store.setCode(code);
+                    store.setName(csvOrder.getStoreName());
+                    store.setTenantId(tenantId);
+                    ((HashSet<Store>) storeIterable).add(store);
+                    mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
+                }
             });
 
-            mapStore.forEach((storeId, csvOrder) -> {
+            mapStorePostCode.forEach((storeCodeOrderDate, csvOrder) -> {
                 String post = ((CsvOrder) csvOrder).getPost();
-                String store = ((CsvOrder) csvOrder).getStoreCode();
-
-                String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-                postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
-                mapCsvPostCourseId.put(mapStorePostCode.get(store + "_" + post), postCourseId);
+                String storeCode = getProductIdForKey(storeCodeOrderDate);
+                String skey = storeCode + "_" + post;
+                if (!setStoreCodePost.containsKey(skey)) {
+                    String storeId = mapStoreCodeStoreId.get(storeCode);
+                    String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
+                    postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
+                    setStoreCodePost.put(skey, postCourseId);
+                    mapCsvPostCourseId.put(csvOrder, postCourseId);
+                } else {
+                    mapCsvPostCourseId.put(csvOrder, setStoreCodePost.get(skey));
+                }
             });
 
             listProductCode.forEach(code -> {
-                CsvOrder csvOrder = mapProduct.get(code);
-                Product product = new Product();
-                product.setCode(code);
-                product.setName(csvOrder.getProductName());
-                product.setCategory1(csvOrder.getCategory1());
-                product.setCategory2(csvOrder.getCategory2());
-                product.setCategory3(csvOrder.getCategory3());
-                product.setTenantId(tenantId);
-                product.setUpdateUser("");
-                product.setUpdateDate(new Date());
-                product.setCreateUser("");
-                product.setCreateDate(new Date());
-                product.setUnit("");
-                product.setPrice(new BigDecimal(0));
-                ((HashSet<Product>) productIterable).add(product);
-                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
-                mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
+                if (!setProductCode.contains(code)) {
+                    setProductCode.add(code);
+                    CsvOrder csvOrder = mapProduct.get(code);
+                    Product product = new Product();
+                    product.setCode(code);
+                    product.setName(csvOrder.getProductName());
+                    product.setCategory1(csvOrder.getCategory1());
+                    product.setCategory2(csvOrder.getCategory2());
+                    product.setCategory3(csvOrder.getCategory3());
+                    product.setTenantId(tenantId);
+                    product.setUpdateUser("");
+                    product.setUpdateDate(new Date());
+                    product.setCreateUser("");
+                    product.setCreateDate(new Date());
+                    product.setUnit("");
+                    product.setPrice(new BigDecimal(0));
+                    ((HashSet<Product>) productIterable).add(product);
+                    mapProductCodeProductId.put(code, product.getProductId());
+                }
             });
 
             productInDB.forEach(product -> {
                 String productCode = product.getCode();
-                CsvOrder csvOrder = mapProduct.get(productCode);
-                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), product.getProductId());
-                mapProductIdCsvOrder.put(product.getProductId(), csvOrder);
+                mapProductCodeProductId.put(productCode, product.getProductId());
+            });
+
+            mapProductOrderCsv.forEach((sProductCodeOderDate, csvOrder) -> {
+                String productCode = getProductIdForKey(sProductCodeOderDate);
+                String productId = mapProductCodeProductId.get(productCode);
+                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), productId);
+                mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
             throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to storeCode file
@@ -499,39 +536,37 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void setDataOrder(int tenantId) {
         if (mapError.size() == 0) {
             Map<String, String> mapKeyOrderId = new HashMap<>();
-            HashSet<String> setOrderDetail = new HashSet<>();
 
-            mapProductIdCsvOrder.forEach((productId, csvOrder) -> {
-                CsvOrder sOrder = mapProductIdCsvOrder.get(productId);
-                String postCourseId = mapCsvPostCourseId.get(sOrder);
+            mapProductIdCsvOrder.forEach((sProductIdOrderDate, csvOrder) -> {
+                String postCourseId = mapCsvPostCourseId.get(csvOrder);
+                String productId = getProductIdForKey(sProductIdOrderDate);
                 String orderId = "";
-                if (!setOrderDetail.contains(postCourseId + "_" + productId)) {
-                    setOrderDetail.add(postCourseId + "_" + productId);
-                    if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(postCourseId)) {
-                        orderId = mapKeyOrderId.get(postCourseId);
-                    } else {
-                        Order order = new Order();
-                        orderId = order.getOrderId();
-                        mapKeyOrderId.put(postCourseId, orderId);
+                String key = postCourseId + "_" + productId + csvOrder.getOrderDate().trim();
 
-                        Date date = DataUtils.converStringToDate(sOrder.getOrderDate());
-                        if (date == null)
-                            date = new Date();
-                        order.setOrderDate(date);
+                if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(key)) {
+                    orderId = mapKeyOrderId.get(key);
+                } else {
+                    Order order = new Order();
+                    orderId = order.getOrderId();
+                    mapKeyOrderId.put(key, orderId);
+                    Date date = DataUtils.converStringToDate(csvOrder.getOrderDate());
+                    if (date == null)
+                        date = new Date();
+                    order.setOrderDate(date);
 
-                        order.setPostCourseId(postCourseId);
-                        order.setTenantId(tenantId);
-                        ((HashSet<Order>) orderIterable).add(order);
-                    }
-
-                    OrderDetail orderDetail = new OrderDetail();
-                    orderDetail.setOrderId(orderId);
-                    orderDetail.setProductId(productId);
-                    BigDecimal quantity = new BigDecimal(sOrder.getQuantity());
-                    orderDetail.setAmount(quantity);
-                    orderDetail.setTenantId(tenantId);
-                    ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
+                    order.setPostCourseId(postCourseId);
+                    order.setTenantId(tenantId);
+                    ((HashSet<Order>) orderIterable).add(order);
                 }
+
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrderId(orderId);
+                orderDetail.setProductId(productId);
+                BigDecimal quantity = new BigDecimal(csvOrder.getQuantity());
+                orderDetail.setAmount(quantity);
+                orderDetail.setTenantId(tenantId);
+                ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
+
             });
         }
     }
