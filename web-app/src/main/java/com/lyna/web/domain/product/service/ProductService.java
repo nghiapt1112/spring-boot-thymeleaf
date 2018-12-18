@@ -14,6 +14,6 @@ public interface ProductService {
 
     void create(Product product, User user);
 
-    Product findOneByCodeAndTenantId(String code, int tenantId);
+    Product findOneByCode(String code);
 
 }

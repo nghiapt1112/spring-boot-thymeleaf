@@ -7,7 +7,7 @@ public abstract class RequestPage extends AbstractObject {
     protected int tenantId;
     protected int noOfRowInPage;
     protected int currentPage;
-    protected Map<String, Object> sortFields;
+    protected Map<String, Object>  sortFields;
     protected Map<String, Object> searchFields;
 
     {

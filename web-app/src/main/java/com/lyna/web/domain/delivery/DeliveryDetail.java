@@ -2,12 +2,13 @@ package com.lyna.web.domain.delivery;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
 import lombok.Data;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.UUID;
 
