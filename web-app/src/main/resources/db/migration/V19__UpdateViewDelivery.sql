@@ -23,4 +23,5 @@ FROM
     LEFT OUTER JOIN m_store s ON pc.store_id = s.store_id
     LEFT OUTER JOIN m_package p ON p.package_id = ld.package_id
 ORDER BY
+    o.order_date,
     l.delivery_id;
