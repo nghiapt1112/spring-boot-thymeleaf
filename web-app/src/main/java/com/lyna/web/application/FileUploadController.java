@@ -1,5 +1,6 @@
 package com.lyna.web.application;
 
+import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.User;
@@ -88,8 +89,8 @@ public class FileUploadController {
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<?> handleStorageFileNotFound(StorageException exc) {
         return ResponseEntity.notFound().build();
     }
 }

@@ -106,15 +106,12 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         initData();
         try {
             if (file.isEmpty()) {
-                /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+                throw new StoreException(toInteger("err.csv.storeCodeEmpty.code"), toStr("err.csv.storeCodeEmpty.msg " + filename));
+               /* 空のファイルを保存出来ない。*/
             }
             if (filename.contains("..")) {
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-                // This is a security check
-                /*throw new StorageException(
-                        "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
-                                + filename);*/
+                throw new StoreException(toInteger("err.csv.seeOtherPath.code"), toStr("err.csv.seeOtherPath.msg " + filename));
+               /* 現在のディレクトリの外に相対パスを持つファイルを保存できません。*/
             }
 
             try (InputStream inputStream = file.getInputStream()) {
@@ -139,9 +136,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 }
             }
         } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /* throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to storeCode file*/
-        }
+            throw new StoreException(toInteger("err.csv.saveFileFail.code"), toStr("err.csv.saveFileFail.code " + filename));
+            /*ファイル保存に失敗しました。*/
+         }
         return mapError;
     }
 
@@ -152,8 +149,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
         } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /*throw new StorageException("Failed to read stored files", e);*/
+            throw new StoreException(toInteger("err.csv.readFileFail.code"), toStr("err.csv.readFileFail.msg"));
+            /*throw new StorageException("Failed to read stored files");*/
         }
 
     }
@@ -171,13 +168,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-                /*throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);*/
+                throw new StoreException(toInteger("err.csv.readFileFail.code"), toStr("err.csv.readFileFail.msg " + filename));
 
             }
         } catch (MalformedURLException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            throw new StoreException(toInteger("err.csv.readFileFail.code"), toStr("err.csv.readFileFail.msg"));
             /*throw new StorageFileNotFoundException("保存されたファイルの読み込みは失敗した " + filename, e);*/
         }
     }
@@ -192,7 +187,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            throw new StoreException(toInteger("err.csv.createDirectories.code"), toStr("err.csv.createDirectories.msg "));
             /*throw new StorageException("Could not initialize storage", e);*/
         }
     }
@@ -543,7 +538,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            throw new StoreException(toInteger("err.csv.saveFileFail.code"), toStr("err.csv.saveFileFail.msg"));
             /* throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to storeCode file*/
         }
     }
