@@ -1,6 +1,11 @@
 server:
   port: 20124
 
+logging:
+  level:
+    ROOT: DEBUG
+    com.lyna.web: DEBUG
+
 spring:
   application:
     name: lyna-spring-boot-thymeleaf
