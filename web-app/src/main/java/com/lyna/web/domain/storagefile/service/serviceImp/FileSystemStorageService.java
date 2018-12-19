@@ -7,6 +7,8 @@ import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
+import com.lyna.web.domain.mpackage.Package;
+import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
@@ -93,6 +95,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private DeliveryRepository deliveryRepository;
     @Autowired
     private DeliveryDetailRepository deliveryDetailRepository;
+    @Autowired
+    private PackageRepository packageRepository;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -104,43 +108,39 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     public List<String> store(int tenantId, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
-        try {
-            if (file.isEmpty()) {
-                /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            }
-            if (filename.contains("..")) {
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-                // This is a security check
-                /*throw new StorageException(
-                        "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
-                                + filename);*/
-            }
+        if (file.isEmpty()) {
+            /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+        }
+        if (filename.contains("..")) {
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            // This is a security check
+            /*throw new StorageException(
+                    "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
+                            + filename);*/
+        }
 
-            try (InputStream inputStream = file.getInputStream()) {
-                Reader reader = new InputStreamReader(inputStream);
-                Iterator<CsvOrder> orderIterator;
-                Iterator<CsvDelivery> deliveryIterator;
-                if (type == 1) {
-                    orderIterator = orderRepository.getMapOrder(reader);
-                    processUpload(orderIterator);
-                    setMapData(tenantId);
-                    //setDataMapProduct();
-                    setDataOrder(tenantId);
+        try (InputStream inputStream = file.getInputStream()) {
+            Reader reader = new InputStreamReader(inputStream);
+            Iterator<CsvOrder> orderIterator;
+            Iterator<CsvDelivery> deliveryIterator;
+            if (type == 1) {
+                orderIterator = orderRepository.getMapOrder(reader);
+                processUpload(orderIterator);
+                setMapData(tenantId);
+                setDataOrder(tenantId);
+                saveDataMaster();
+                saveDataOrder();
+            } else {
+                deliveryIterator = deliveryRepository.getMapDelivery(reader);
+                processUploadDelivery(deliveryIterator);
+                setMapDataDelivery(tenantId);
+                if (mapError.size() == 0) {
                     saveDataMaster();
-                    saveDataOrder();
-                } else {
-                    deliveryIterator = deliveryRepository.getMapDelivery(reader);
-                    processUploadDelivery(deliveryIterator);
-                    setMapDataDelivery(tenantId);
-                    if (mapError.size() == 0) {
-                        saveDataMaster();
-                    }
                 }
             }
-        } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /* throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to storeCode file*/
+        } catch (Exception ex) {
+            throw new StorageException("ファイル保存に失敗しました。" + filename);
         }
         return mapError;
     }
@@ -404,17 +404,17 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             }
         });
 
-        Map<String, String> mapPackage = new HashMap<>();
-
-        mapPackage.put("507f191e666c19119de222bb", "ばんじゅう");
-        mapPackage.put("507f191e666c19119de222bc", "箱");
-        mapPackage.put("507f191e666c19119de222be", "ケース");
+        List<Package> mapPackage = packageRepository.findAllByTenantId(tenantId);
 
         mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
             String trayAmount = ((CsvDelivery) csv).getTray();
             String trayCase = ((CsvDelivery) csv).getCaseP();
             String trayBox = ((CsvDelivery) csv).getBox();
-            mapPackage.forEach((packageId, packageName) -> {
+
+            mapPackage.forEach(aPackage -> {
+                String packageName = aPackage.getName();
+                String packageId = aPackage.getPackageId();
+
                 String deliveryDetailId = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, packageId, tenantId);
                 if (deliveryDetailId == null) {
                     BigDecimal amount = new BigDecimal(0);
@@ -422,19 +422,21 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                         amount = new BigDecimal(trayAmount);
                     } else if (packageName.equals("箱")) {
                         amount = new BigDecimal(trayBox);
-                    } else
+                    } else if (packageName.equals("ケース"))
                         amount = new BigDecimal(trayCase);
 
-                    DeliveryDetail deliveryDetail = new DeliveryDetail();
-                    deliveryDetail.setDeliveryId(deliveryId);
-                    deliveryDetail.setTenantId(tenantId);
-                    deliveryDetail.setPackageId(packageId);
-                    deliveryDetail.setAmount(amount);
-                    deliveryDetail.setCreateDate(new Date());
-                    deliveryDetail.setCreateUser("");
-                    deliveryDetail.setUpdateDate(new Date());
-                    deliveryDetail.setUpdateUser("");
-                    ((HashSet<DeliveryDetail>) deliveryDetailIterable).add(deliveryDetail);
+                    if (amount.compareTo(BigDecimal.ZERO) > 0) {
+                        DeliveryDetail deliveryDetail = new DeliveryDetail();
+                        deliveryDetail.setDeliveryId(deliveryId);
+                        deliveryDetail.setTenantId(tenantId);
+                        deliveryDetail.setPackageId(packageId);
+                        deliveryDetail.setAmount(amount);
+                        deliveryDetail.setCreateDate(new Date());
+                        deliveryDetail.setCreateUser("");
+                        deliveryDetail.setUpdateDate(new Date());
+                        deliveryDetail.setUpdateUser("");
+                        ((HashSet<DeliveryDetail>) deliveryDetailIterable).add(deliveryDetail);
+                    }
                 }
             });
         });

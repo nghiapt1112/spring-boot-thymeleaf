@@ -35,6 +35,14 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
     }
 
     @Override
+    public List<Package> findAllByTenantId(int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.tenantId = :tenantId ", Package.class)
+                .setParameter(tenantId, tenantId)
+                .getResultList();
+    }
+
+    @Override
     public boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
         String query = "DELETE FROM Package p WHERE p.packageId in (:packageIds) AND p.tenantId=:tenantId";
         entityManager.createQuery(query)
