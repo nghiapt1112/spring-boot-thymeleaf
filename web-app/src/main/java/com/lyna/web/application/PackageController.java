@@ -35,8 +35,6 @@ public class PackageController extends AbstractCustomController {
     @Autowired
     private PackageService packageService;
     @Autowired
-    private LogiticDetailService logiticDetailService;
-    @Autowired
     private DeliveryDetailService deliveryDetailService;
 
     @GetMapping(value = "/create")
