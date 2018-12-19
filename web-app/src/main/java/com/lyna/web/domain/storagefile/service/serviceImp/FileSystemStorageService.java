@@ -9,8 +9,6 @@ import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
-import com.lyna.web.domain.order.exception.StorageException;
-import com.lyna.web.domain.order.exception.StorageFileNotFoundException;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
@@ -18,8 +16,10 @@ import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
 import com.lyna.web.domain.storagefile.StorageProperties;
+import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
+import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
@@ -41,7 +41,14 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -94,18 +101,20 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     @Transactional
-    public List<String> store(int tenantId, MultipartFile file, int type) throws StorageException {
+    public List<String> store(int tenantId, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         try {
             if (file.isEmpty()) {
-                throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file
+                /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
+                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
             }
             if (filename.contains("..")) {
+                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
                 // This is a security check
-                throw new StorageException(
+                /*throw new StorageException(
                         "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
-                                + filename);
+                                + filename);*/
             }
 
             try (InputStream inputStream = file.getInputStream()) {
@@ -130,7 +139,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 }
             }
         } catch (IOException e) {
-            throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to storeCode file
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            /* throw new StorageException("ファイル保存に失敗しました。" + filename, e);//Failed to storeCode file*/
         }
         return mapError;
     }
@@ -142,7 +152,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
         } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            /*throw new StorageException("Failed to read stored files", e);*/
         }
 
     }
@@ -160,12 +171,14 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+                /*throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);*/
 
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("保存されたファイルの読み込みは失敗した " + filename, e);
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            /*throw new StorageFileNotFoundException("保存されたファイルの読み込みは失敗した " + filename, e);*/
         }
     }
 
@@ -179,7 +192,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            /*throw new StorageException("Could not initialize storage", e);*/
         }
     }
 
@@ -529,7 +543,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
-            throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to storeCode file
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            /* throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to storeCode file*/
         }
     }
 
