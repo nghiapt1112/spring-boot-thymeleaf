@@ -194,32 +194,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    @Transactional
-    public String deleteUser(String sUserId) {
-        boolean isDeletedUser = false;
-        List<String> listUserId = new ArrayList();
-
-        String[] arrayUserId = sUserId.split(",");
-        for (String userId : arrayUserId) {
-            listUserId.add(userId);
-        }
-
-        try {
-            boolean isDeletedStoreAuthority = userStoreAuthority.deleteUserStoreAuthorityByUserId(listUserId);
-            if (isDeletedStoreAuthority) {
-                isDeletedUser = userRepository.deleteByUserId(listUserId);
-            }
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-
-        if (isDeletedUser)
-            return "Success";
-        else
-            return null;
-    }
-
-    @Override
     public int getCountUser(int tenantId) {
         List<User> userList = this.userRepository.findAllByTenantId(tenantId);
         if (Objects.isNull(userList)) {

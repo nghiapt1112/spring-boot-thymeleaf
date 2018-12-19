@@ -44,15 +44,13 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     }
 
     @Override
-    public Boolean deleteByUserId(List<String> sUserId) {
-        try {
-            String query = "DELETE FROM User u WHERE u.id in (:usertId)";
-            entityManager.createQuery(query).setParameter("usertId", sUserId).executeUpdate();
+    public Boolean deleteByUserIds(List<String> userIds, int tenantId) {
+            String query = "DELETE FROM User u WHERE u.id in (:userIds) AND u.tenantId=:tenantId";
+            entityManager.createQuery(query)
+                    .setParameter("userIds", userIds)
+                    .setParameter("tenantId", tenantId)
+                    .executeUpdate();
             return true;
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-        return false;
     }
 
     @Override

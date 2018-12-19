@@ -3,7 +3,7 @@ $(document).ready(function () {
         var numberFormat = /^(\d{1,10})(?:\.\d\d?)?$/;
         var checkForm = true;
         var code = $("#code").val();
-        if (code === "" || code.trim() === "") {
+        if (isEmpty(code)) {
             $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (name == null || name === "" || name.trim() === "") {
+        if (isEmpty(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
 
         var price = $("#price").val();
-        if (price == null || price === "" || price.trim() === "" || !numberFormat.test(price)) {
+        if (isEmpty(price) || !numberFormat.test(price)) {
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {

@@ -31,9 +31,9 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
 
     @Override
     @Transactional
-    public boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
+    public boolean deleteDeliveryDetailByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
         try {
-            deliveryDetailRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
+            deliveryDetailRepository.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, tenantId);
             LogiticDetailRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             packageRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             return true;

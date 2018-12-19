@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('店舗登録')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerContant.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -148,6 +148,7 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/registerStore.js" th:src="@{/js/registerStore.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/registerStore.js}"></script>
 </body>
 </html>

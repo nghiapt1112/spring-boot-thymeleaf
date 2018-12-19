@@ -23,7 +23,7 @@
                            th:href="@{/product/create}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
-                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteProduct()">削除</a>
+                        <a style="border-radius: 0px;" class="btn btn-primary" id="delete">削除</a>
                     </div>
                     <div class="col-md-8">
                     </div>
@@ -74,8 +74,7 @@
                                         </td>
                                         <td th:text="${product.code}"></td>
                                         <td>
-                                            <a href="store-edit"
-                                               th:href="@{/product/update/{productId}/{tenantId}/
+                                            <a th:href="@{/product/update/{productId}/{tenantId}/
                                                (productId=${product.productId},tenantId=${product.tenantId})}"
                                                class="" th:text="${product.name}"></a>
                                         </td>
@@ -97,9 +96,7 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/listProduct.js" th:src="@{/js/listProduct.js}"></script>
-<!-- DataTables -->
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/js/utils/table-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/listProduct.js}"></script>
 </body>
 </html>

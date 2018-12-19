@@ -97,7 +97,6 @@ let addRow = function () {
 $(document).ready(function () {
     $("body").on("click", "#save", function (event) {
 
-
         $("#postCourseList").closest("body").find(".item").each(function (index1) {
             $(this).find("input[type=text]").each(function (index) {
                 if (index === 0) {
@@ -107,10 +106,9 @@ $(document).ready(function () {
             })
         })
 
-
         let checkForm = true;
         var code = $("#code").val();
-        if (code == null || code === "" || code.trim() === "") {
+        if (isEmpty(code)) {
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -118,7 +116,7 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (name == null || name === "" || name.trim() === "") {
+        if (isEmpty(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -131,7 +129,7 @@ $(document).ready(function () {
                 if (0 === index) {
                     let postIndex = '#post' + index1;
                     let postvalue = $(this).closest("div").find(postIndex).val();
-                    if (postvalue === "" || postvalue.trim() === "") {
+                    if (isEmpty(postvalue)) {
                         $(this).closest("div").find("em").removeClass("error").addClass("error_show");
                         checkForm = false;
                     } else {

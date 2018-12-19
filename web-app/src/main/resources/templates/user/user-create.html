@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー 登録')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
-    <link rel="Stylesheet" type="text/css" href="/css/registerUser.css" th:href="@{/css/registerUser.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerUser.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -26,7 +26,7 @@
                                 <p class="box-titles"></p>
                             </div>
                             <div class="box-body">
-                                <form name="register-form" action="#" th:action="@{/user/register/}"
+                                <form name="register-form" th:action="@{/user/register/}"
                                       th:object="${userRegisterAggregate}" method="POST">
                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス</span>
@@ -113,7 +113,7 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/string-utils.js" th:src="@{/js/string-utils.js}"></script>
-<script type="text/javascript" src="/js/registerUser.js" th:src="@{/js/registerUser.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/registerUser.js}"></script>
 </body>
 </html>

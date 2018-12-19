@@ -21,16 +21,13 @@ public class UserStoreAuthorityRepositoryImpl extends BaseRepository<UserStoreAu
     }
 
     @Override
-    public Boolean deleteUserStoreAuthorityByUserId(List<String> userIds) {
-        try {
-            String query = "DELETE FROM UserStoreAuthority u WHERE u.userId in (:userId)";
+    public Boolean deleteUserStoreAuthorityByUserIds(List<String> userIds, int tenantId) {
+            String query = "DELETE FROM UserStoreAuthority u WHERE u.userId in (:userId) AND u.tenantId=:tenantId";
             entityManager.createQuery(query)
-                    .setParameter("userId", userIds).executeUpdate();
+                    .setParameter("userId", userIds)
+                    .setParameter("tenantId", tenantId)
+                    .executeUpdate();
             return true;
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-        return false;
     }
 
     @Override
