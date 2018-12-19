@@ -7,18 +7,17 @@ import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -86,13 +85,9 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByPackageIds(@RequestParam(value = "packageIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByPackageIds(@RequestParam(value = "ojectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
-        if (!Objects.isNull(packageIds) && !CollectionUtils.isEmpty(packageIds)) {
-            deliveryDetailService.deleteByPackageIdsAndTenantId(packageIds, user.getTenantId());
-            return "true";
-        }
-        return "false";
+        return deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId()) + "";
     }
 
     @GetMapping(value = "/update/{packageId}/{tenantId}")

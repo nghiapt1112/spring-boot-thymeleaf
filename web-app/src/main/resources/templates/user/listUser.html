@@ -5,14 +5,12 @@
     <!-- default header name is X-CSRF-TOKEN -->
     <!--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
     <head th:replace="layout :: head('List User')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/actualResults.css" th:href="@{/css/listUser.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/listUser.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
-    <!--<header th:replace="layout :: header"></header>-->
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
-    <!--<div th:replace="layout :: content-left"></div>-->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -21,14 +19,13 @@
         </section>
         <section class="content content-right">
             <div class="row">
-                <!--<form action="#" th:action="@{/deleteUser/}" method="post">-->
                 <div class="col-md-12 button_top">
                     <div class="col-md-2 button-top-order">
                         <a style="border-radius: 0px;" type="submit" class="btn btn-primary"
                            th:href="@{/user/register}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
-                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deleteUser()">削除</a>
+                        <a style="border-radius: 0px;" class="btn btn-primary" id="delete">削除</a>
                     </div>
                     <div class="col-md-8">
                     </div>
@@ -37,19 +34,6 @@
                 <div class="col-md-12">
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="box-body">
-                            <!-- <div class="form-group row">
-                                 <div class="col-md-1">
-                                     <select class="form-control" id="pageSizeSelect" onchange="search()">
-                                         <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
-                                                 th:value="${pageSize}"
-                                                 th:selected="${pageSize} == ${limit}"></option>
-                                     </select>
-                                 </div>
-                                 <div class="col-md-2 pull-right">
-                                     <input type="text" placeholder="検索" class="form-control search-input"
-                                            id="search-box" onblur="search()">
-                                 </div>
-                             </div>-->
                             <div class="row">
                                 <div class="col-md-12">
                                     <table id="listUser" class="table table-bordered table-hover">
@@ -74,7 +58,7 @@
                                                            class="chkCheckBoxId" name="userid">
                                                 </div>
                                             </td>
-                                            <td><a href="/user/update" th:href="@{'/user/update/'+ ${user.userId}}"
+                                            <td><a th:href="@{'/user/update/'+ ${user.userId}}"
                                                    th:text="${user.email}"></a></td>
                                             <td th:text="${user.name}"></td>
                                             <td th:each="store: ${storeModel}">
@@ -85,26 +69,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <!--Common Paging-->
-                            <!--<div class="row">
-                                <div class="col-md-12 text-right">
-                                    <ul class="pagination margin-0">
-                                        <li>
-                                            <a class="pageLink"
-                                               th:onclick="'changePage(\'pre\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'">前へ</a>
-                                        </li>
-                                        <li th:each="page, element : ${#numbers.sequence(1, pageData.getTotalPage())}">
-                                            <a class="pageLink"
-                                               th:onclick="'changePage(\'page\','+ ${page} + ',' + ${limit} + ')'"
-                                               th:text="${page}"></a>
-                                        </li>
-                                        <li>
-                                            <a class="pageLink"
-                                               th:onclick="'changePage(\'next\','+${currentPage}+',' +${pageData.getTotalPage()}+ ')'">次へ</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -115,7 +79,7 @@
 
 </div>
 <footer th:replace="layout :: footer"></footer>
+<script type="text/javascript" th:src="@{/js/utils/table-utils.js}"></script>
 <script type="text/javascript" th:src="@{/js/listUser.js}"></script>
-<!--<script type="text/javascript" th:src="@{/js/paging-common.js}"></script>-->
 </body>
 </html>

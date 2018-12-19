@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     UserResponsePage findUsersWithPaging(RequestPage userRequestPage);
 
-    Boolean deleteByUserId(List<String> names);
+    Boolean deleteByUserIds(List<String> userIds, int tenantId);
 
     List<User> findAllByTenantId(int tenantId);
 

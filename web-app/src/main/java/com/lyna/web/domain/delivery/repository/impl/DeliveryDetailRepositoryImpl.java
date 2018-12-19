@@ -34,8 +34,9 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
                 .setParameter("orderIds", orderIds)
                 .getResultList();
     }
-
-    public boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
+    
+    @Override
+    public boolean deleteDeliveryDetailByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
         String query = "DELETE FROM DeliveryDetail d WHERE d.packageId in (:packageIds) AND d.tenantId=:tenantId";
         entityManager.createQuery(query)
                 .setParameter("packageIds", packageIds)

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('荷姿一覧')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/listPackage.css" th:href="@{/css/listPackage.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/listPackage.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -23,7 +23,7 @@
                            th:href="@{/store/create}">新規登録</a>
                     </div>
                     <div class="col-md-2 button-top-delivery">
-                        <a style="border-radius: 0px;" class="btn btn-primary" onclick="deletePackage()">削除</a>
+                        <a style="border-radius: 0px;" class="btn btn-primary" id="delete">削除</a>
                     </div>
                     <div class="col-md-8">
                     </div>
@@ -77,8 +77,7 @@
                                                    name="packageId">
                                         </td>
                                         <td>
-                                            <a href="store-edit"
-                                               th:href="@{/package/update/{packageId}/{tenantId}/
+                                            <a th:href="@{/package/update/{packageId}/{tenantId}/
                                                (packageId=${package.packageId},tenantId=${package.tenantId})}"
                                                class="" th:text="${package.name}"></a>
                                         </td>
@@ -100,9 +99,6 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/listPackage.js" th:src="@{/js/listPackage.js}"></script>
-<!-- DataTables -->
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/js/utils/table-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/listPackage.js}"></script>
 </body>
-</html>

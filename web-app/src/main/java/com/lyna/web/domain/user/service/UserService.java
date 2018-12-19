@@ -29,7 +29,5 @@ public interface UserService {
 
     UserResponsePage findUsersWithPaging(RequestPage userRequestPage);
 
-    String deleteUser(String arrayName);
-
     int getCountUser(int tenantId);
 }

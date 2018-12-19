@@ -1,7 +1,5 @@
 package com.lyna.web.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.domain.stores.Store;
@@ -11,16 +9,14 @@ import com.lyna.web.domain.user.UserAggregate;
 import com.lyna.web.domain.user.UserRequestPage;
 import com.lyna.web.domain.user.UserResponsePage;
 import com.lyna.web.domain.user.service.UserService;
+import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
 import com.lyna.web.security.authorities.IsAdmin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +40,8 @@ public class UserController extends AbstractCustomController {
     private UserService userService;
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private UserStoreAuthorityService userStoreAuthorityService;
 
     private Integer[] PAGE_SIZE() {
         return env.getProperty("lyna.web.pageSize", Integer[].class);
@@ -161,18 +158,9 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String deleteUser(HttpServletRequest request) {
-        String userIds = request.getParameter("userIds");
-        ObjectMapper mapper = new ObjectMapper();
-        String ajaxResponse = "";
-        try {
-            String response = userService.deleteUser(userIds);//
-            ajaxResponse = mapper.writeValueAsString(response);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return ajaxResponse;
+    String deleteByUserIds(@RequestParam(value = "ojectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
+        User user = (User) principal.getPrincipal();
+        return userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId()) + "";
     }
 
 }

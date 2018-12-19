@@ -1,7 +1,8 @@
-package com.lyna.web.domain.postCourse.repository;
+package com.lyna.web.domain.postCourse.repository.impl;
 
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー編集')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
-    <link rel="Stylesheet" type="text/css" href="/css/registerUser.css" th:href="@{/css/registerUser.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerUser.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -98,7 +98,6 @@
                                     <div class="col-md-12  button-submit">
                                         <button TYPE="submit" class="btn btn-primary" id="btnSubmit">登録</button>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -106,15 +105,13 @@
                     <div class="col-md-2">
                     </div>
                 </div>
-
             </div>
-
         </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/string-utils.js" th:src="@{/js/string-utils.js}"></script>
-<script type="text/javascript" src="/js/editUser.js" th:src="@{/js/editUser.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/editUser.js}"></script>
 
 </body>
 </html>

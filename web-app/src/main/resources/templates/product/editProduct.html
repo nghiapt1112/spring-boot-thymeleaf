@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('商品登録')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/editProduct.css" th:href="@{/css/editContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/editContant.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -111,6 +111,7 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/editProduct.js" th:src="@{/js/editProduct.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/editProduct.js}"></script>
 </body>
 </html>

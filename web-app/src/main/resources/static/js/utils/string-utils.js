@@ -3,6 +3,5 @@ function isEmpty(input) {
 }
 
 function isNotEmpty(input) {
-    // return input != null && input != "" && input.trim() != "";
     return !isEmpty(input);
 }
