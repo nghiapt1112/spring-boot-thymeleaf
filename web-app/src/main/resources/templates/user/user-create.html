@@ -28,14 +28,14 @@
                             <div class="box-body">
                                 <form name="register-form" th:action="@{/user/register/}"
                                       th:object="${userRegisterAggregate}" method="POST">
-                                   <div class="col-md-12">
+                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス</span>
                                         <div class="form-group col-md-6" style="">
                                             <input name="email" id="email" class="form-control" type="text"
-                                                   th:field="*{email}" required  th:errorclass="field-error"/>
-                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
-                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
-                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
+                                                   th:field="*{email}" required th:errorclass="field-error"/>
+                                            <em id="errorEmail" class="error">メールアドレスは必須です。</em>
+                                            <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
+                                            <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
@@ -44,7 +44,8 @@
                                         <span class="col-md-5">ユーザー名</span>
                                         <div class="form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{userName}"
-                                                   th:errorclass="field-error" th:oninvalid="setCustomValidity('ユーザー名は必須です。')"/>
+                                                   th:errorclass="field-error"
+                                                   th:oninvalid="setCustomValidity('ユーザー名は必須です。')"/>
                                             <em id="errorUserName" class="error">ユーザー名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('userName')}"
                                                 th:errors="*{userName}"></em>
@@ -63,10 +64,11 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">パスワード</span>
+                                        <span class="col-md-5">パスワード(確認用)</span>
                                         <div class="form-group col-md-6" style="">
-                                            <input class="form-control" type="password" name="confirm_password" id="repPassword"
-                                                   th:field="*{password}" /></p>
+                                            <input class="form-control" type="password" name="confirm_password"
+                                                   id="repPassword"
+                                                   th:field="*{password}"/></p>
                                             <em id="errorPasswordNoRep" class="error">パスワード”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPassword" class="error">ユーザー名は必須です。</em>
                                         </div>
@@ -84,8 +86,10 @@
                                             <div class=" form-group  col-md-4">
                                                 <label th:text="${item.name}"> </label>
                                             </div>
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
+                                            <input hidden
+                                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
+                                            <input hidden
+                                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
                                             <div class=" form-group  col-md-4 inputCanview">
                                                 <input type="checkbox"
                                                        th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
@@ -97,8 +101,9 @@
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <input style="border-radius: 0px ;	width: 30%;" type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary"
-                                               />
+                                        <input style="border-radius: 0px ;	width: 30%;" type="submit" value="登録"
+                                               name="btn-submit" id="btnSubmit" class="btn btn-primary"
+                                        />
                                     </div>
                                 </form>
                             </div>
@@ -109,7 +114,7 @@
                 </div>
 
             </div>
-       </section>
+        </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
