@@ -54,7 +54,7 @@ public class BaseRepository<E extends AbstractObject, ID extends Serializable> e
             responsePageInstance.withData(requestPage.getNoOfRowInPage(), tQuery.getResultList(), this.countTotalRecord(requestPage));
             return responsePageInstance;
         } catch (InstantiationException | IllegalAccessException | RuntimeException e) {
-//            LOGGER.error("Find paging for {}, failed with message: {}, cause: {}", typed, e.getMessage(), e.getCause());
+//            logger.error("Find paging for {}, failed with message: {}, cause: {}", typed, e.getMessage(), e.getCause());
             e.printStackTrace();
             return null;
         }

@@ -2,7 +2,6 @@ package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
@@ -25,6 +24,8 @@ import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -43,20 +44,17 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.lyna.commons.utils.DataUtils.converStringToDate;
+import static com.lyna.commons.utils.DataUtils.isNumeric;
 
 @Service
 public class FileSystemStorageService extends BaseService implements StorageService {
 
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     private final Path rootLocation;
     List<String> listStoreCode;
     List<String> listProductCode;
@@ -79,7 +77,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Map<String, Object> mapDeliveryIdCsv;
     Map<String, String> mapPostCourseIdProductId;
     Map<String, CsvOrder> mapProductIdCsvOrder;
-    List<String> mapError;
+    Set<StorageException> mapError;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -105,45 +103,38 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     @Transactional
-    public List<String> store(int tenantId, MultipartFile file, int type) {
+    public Set<StorageException> store(int tenantId, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         if (file.isEmpty()) {
-            mapError.add("空のファイルを保存出来ない。" + filename);
-            /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
-            //throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            mapError.add(new StorageException(500, "空のファイルを保存出来ない。" + filename));
         }
         if (filename.contains("..")) {
-            //throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            mapError.add("現在のディレクトリの外に相対パスを持つファイルを保存できません。");
-            // This is a security check
-            /*throw new StorageException(
-                    "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
-                            + filename);*/
+            mapError.add(new StorageException(500, "現在のディレクトリの外に相対パスを持つファイルを保存できません"));
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
-            Iterator<CsvOrder> orderIterator;
-            Iterator<CsvDelivery> deliveryIterator;
             if (type == 1) {
-                orderIterator = orderRepository.getMapOrder(reader);
+                Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
                 processUpload(orderIterator);
                 setMapData(tenantId);
                 setDataOrder(tenantId);
                 saveDataMaster();
                 saveDataOrder();
             } else {
-                deliveryIterator = deliveryRepository.getMapDelivery(reader);
+                Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
                 processUploadDelivery(deliveryIterator);
-                setMapDataDelivery(tenantId);
                 if (mapError.size() == 0) {
+                    setMapDataDelivery(tenantId);
+                    saveDataDelivery();
                     saveDataMaster();
                 }
             }
         } catch (Exception ex) {
-            //mapError.add("ファイル保存に失敗しました。");
-            throw new StorageException(DataUtils.convertStringToUTF8("ファイル保存に失敗しました。"));
+            //throw new StorageException(500, "ファイル保存に失敗しました。");
+            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), "ファイル保存に失敗しました。");
+            //mapError.add(new StorageException(500, "ファイル保存に失敗しました。"));
         }
         return mapError;
     }
@@ -155,8 +146,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
         } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /*throw new StorageException("Failed to read stored files", e);*/
+            throw new StorageException("Failed to read stored files", e);
         }
     }
 
@@ -173,14 +163,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-                /*throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);*/
-
+                throw new StorageException("Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /*throw new StorageFileNotFoundException("保存されたファイルの読み込みは失敗した " + filename, e);*/
+            throw new StorageException("保存されたファイルの読み込みは失敗した " + filename, e);
         }
     }
 
@@ -194,8 +180,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /*throw new StorageException("Could not initialize storage", e);*/
+            throw new StorageException("Could not initialize storage", e);
         }
     }
 
@@ -220,25 +205,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapCsvPostCourseId = new HashMap<>();
         mapPostCourseIdProductId = new HashMap<>();
         mapProductIdCsvOrder = new HashMap<>();
-        mapError = new ArrayList<>();
+        mapError = new HashSet<>();
         deliveryIterable = new HashSet<>();
         deliveryDetailIterable = new HashSet<>();
-    }
-
-    public void setDataMapProduct() {
-        //If Orderdate, Store, Post, Product,quantity exists in db => message
-        Map<String, CsvOrder> mapProductIdOrder = new HashMap<>();
-        mapProductIdCsvOrder.forEach((productIdOrderDate, csvOrder) -> {
-            String productId = getProductIdForKey(productIdOrderDate);
-            String postCourseId = mapCsvPostCourseId.get(csvOrder);
-            String orderId = orderRepository.checkExists(postCourseId, csvOrder.getOrderDate());
-            if (orderId == null) {
-                mapProductIdOrder.put(productId, csvOrder);
-            }
-        });
-
-        mapProductIdCsvOrder.clear();
-        mapProductIdCsvOrder = mapProductIdOrder;
     }
 
     private String getProductIdForKey(String productIdOrderDate) {
@@ -249,41 +218,32 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void processUpload(Iterator<CsvOrder> orderIterator) {
         HashSet<String> setOrder = new HashSet<>();
         while (orderIterator.hasNext()) {
-
             CsvOrder csvOrder = orderIterator.next();
             int row = 1;
 
-            if (csvOrder.getPost() == null || csvOrder.getPost().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvOrder.getOrderDate() == null || csvOrder.getOrderDate().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-
-            if (DataUtils.converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-
-            if (csvOrder.getQuantity() == null || csvOrder.getQuantity().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvOrder.getStoreCode() == null || csvOrder.getStoreCode().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvOrder.getProductCode() == null || csvOrder.getProductCode().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvOrder.getQuantity() == null || !DataUtils.isNumeric(csvOrder.getQuantity())) {
-                mapError.add("数量は数字データではない");
+            if (csvOrder.getPost() == null
+                    || csvOrder.getPost().isEmpty()
+                    || csvOrder.getOrderDate() == null
+                    || csvOrder.getOrderDate().isEmpty()
+                    || converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null
+                    || csvOrder.getQuantity() == null
+                    || csvOrder.getQuantity().isEmpty()
+                    || csvOrder.getStoreCode() == null
+                    || csvOrder.getStoreCode().isEmpty()
+                    || csvOrder.getProductCode() == null
+                    || csvOrder.getProductCode().isEmpty()
+                    || csvOrder.getQuantity() == null
+                    || !isNumeric(csvOrder.getQuantity())
+            ) {
+                mapError.add(new StorageException(500, "行目 " + row + " にデータが不正"));
             }
 
             row++;
 
             String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "_" + csvOrder.getPost().trim().toLowerCase() + "_" + csvOrder.getOrderDate();
-            String skeyCheck = keyOrder + "_" + csvOrder.getProductCode().trim().toLowerCase();
-            if (!setOrder.contains(skeyCheck)) {
-                setOrder.add(skeyCheck);
-
+            String skeyOrderCheck = keyOrder + "_" + csvOrder.getProductCode().trim().toLowerCase();
+            if (!setOrder.contains(skeyOrderCheck)) {
+                setOrder.add(skeyOrderCheck);
                 csvOrder.setPost(csvOrder.getPost().toLowerCase().trim());
                 csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
                 csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
@@ -304,29 +264,21 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         while (deliveryIterator.hasNext()) {
             CsvDelivery csvDelivery = deliveryIterator.next();
             int row = 1;
-
-            if (csvDelivery.getPost() == null || csvDelivery.getPost().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
+            if (csvDelivery.getPost() == null
+                    || csvDelivery.getPost().isEmpty()
+                    || csvDelivery.getStoreCode() == null
+                    || csvDelivery.getStoreCode().isEmpty()
+                    || csvDelivery.getStoreName() == null
+                    || csvDelivery.getStoreName().isEmpty()
+                    || csvDelivery.getBox() == null
+                    || !isNumeric(csvDelivery.getBox())
+                    || csvDelivery.getCaseP() == null
+                    || !isNumeric(csvDelivery.getCaseP())
+                    || csvDelivery.getTray() == null
+                    || !isNumeric(csvDelivery.getTray())) {
+                mapError.add(new StorageException(500, "行目 " + row + " にデータが不正"));
             }
-            if (csvDelivery.getStoreCode() == null || csvDelivery.getStoreCode().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvDelivery.getStoreName() == null || csvDelivery.getStoreName().isEmpty()) {
-                mapError.add("行目 " + row + " にデータが不正");
-            }
-            if (csvDelivery.getBox() == null || !DataUtils.isNumeric(csvDelivery.getBox())) {
-                mapError.add("数量は数字データではない");
-            }
-            if (csvDelivery.getCaseP() == null || !DataUtils.isNumeric(csvDelivery.getCaseP())) {
-                mapError.add("数量は数字データではない");
-            }
-
-            if (csvDelivery.getTray() == null || !DataUtils.isNumeric(csvDelivery.getTray())) {
-                mapError.add("数量は数字データではない");
-            }
-
-            row++;
-
+            row += 1;
             String keyOrder = csvDelivery.getStoreCode() + "_" + csvDelivery.getPost() + "_" + csvDelivery.getOrderDate();
             String skeyCheck = keyOrder.trim().toLowerCase() + "_" + csvDelivery.getOrderDate().trim().toLowerCase();
             if (!setDelivery.contains(skeyCheck)) {
@@ -402,7 +354,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     ((HashSet<Delivery>) deliveryIterable).add(delivery);
                 }
             } else {
-                mapError.add("発注データが存在しない。");
+                mapError.add(new StorageException(500, "発注データが存在しない。"));
             }
         });
 
@@ -547,8 +499,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
-            /* throw new StorageException("ファイル保存に失敗しました。", ex);//Failed to storeCode file*/
+            mapError.add(new StorageException(500, "ファイル保存に失敗しました。"));
         }
     }
 
@@ -568,7 +519,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     Order order = new Order();
                     orderId = order.getOrderId();
                     mapKeyOrderId.put(key, orderId);
-                    Date date = DataUtils.converStringToDate(csvOrder.getOrderDate());
+                    Date date = converStringToDate(csvOrder.getOrderDate());
                     if (date == null)
                         date = new Date();
                     order.setOrderDate(date);
@@ -595,8 +546,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         storeRepository.saveAll(storeIterable);
         //save all postcourse
         postCourseRepository.saveAll(postCoursesIterable);
-        //Save all productCode
-        productRepository.saveAll(productIterable);
+    }
+
+    private void saveDataDelivery() {
         //Save delivery
         deliveryRepository.saveAll(deliveryIterable);
         //save delivery detail
@@ -604,6 +556,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     private void saveDataOrder() throws DomainException {
+        //Save all productCode
+        productRepository.saveAll(productIterable);
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
     }
