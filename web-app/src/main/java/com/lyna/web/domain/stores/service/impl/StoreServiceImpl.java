@@ -121,7 +121,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.saveError.code"), toStr("err.store.saveError.msg"));
+            throw new StoreException(toInteger("err.store.saveFailed.code"), toStr("err.store.saveFailed.msg"));
         }
 
     }
@@ -165,7 +165,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.updateError.code"), toStr("err.store.updateError.msg"));
+            throw new StoreException(toInteger("err.store.updateFailed.code"), toStr("err.store.updateFailed.msg"));
         }
 
     }
