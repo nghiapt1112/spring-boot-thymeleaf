@@ -109,11 +109,13 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         if (file.isEmpty()) {
+            mapError.add("空のファイルを保存出来ない。" + filename);
             /* throw new StorageException("空のファイルを保存出来ない。" + filename); //Failed to storeCode empty file*/
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            //throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
         }
         if (filename.contains("..")) {
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            //throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
+            mapError.add("現在のディレクトリの外に相対パスを持つファイルを保存できません。");
             // This is a security check
             /*throw new StorageException(
                     "現在のディレクトリの外に相対パスを持つファイルを保存できません。"//Cannot storeCode file with relative path outside current directory
@@ -140,7 +142,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 }
             }
         } catch (Exception ex) {
-            throw new StorageException("ファイル保存に失敗しました。" + filename);
+            //mapError.add("ファイル保存に失敗しました。");
+            throw new StorageException(DataUtils.convertStringToUTF8("ファイル保存に失敗しました。"));
         }
         return mapError;
     }
@@ -155,7 +158,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), toStr("err.store.storeCodeEmpty.msg"));
             /*throw new StorageException("Failed to read stored files", e);*/
         }
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.lyna.commons.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -163,5 +164,13 @@ public class DataUtils {
         }
 
         return date;
+    }
+
+    public static String convertStringToUTF8(String japanese) {
+        try {
+            return new String(japanese.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            return japanese;
+        }
     }
 }
