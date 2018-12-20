@@ -106,7 +106,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         initData();
         try {
             if (file.isEmpty()) {
-                throw new StoreException(toInteger("err.csv.storeCodeEmpty.code"), toStr("err.csv.storeCodeEmpty.msg " + filename));
+                throw new StoreException(toInteger("err.csv.fileEmpty.code"), toStr("err.csv.fileEmpty.msg " + filename));
                /* 空のファイルを保存出来ない。*/
             }
             if (filename.contains("..")) {
