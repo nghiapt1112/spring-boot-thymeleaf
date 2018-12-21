@@ -46,12 +46,14 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         List<LogisticAggregate> aggregates = logisticView.stream()
                 .parallel()
                 .map(el -> LogisticAggregate.parseFromViewDTO(el, pkgName, groupLPackagesByOrderId(logisticView), deliveryPackagesByOrderId))
+                .distinct()
                 .collect(Collectors.toList());
 
         // show original delivery.
         List<LogisticAggregate> deliveryOriginalView = deliveryView.stream()
                 .filter(el -> !logisticPackagesByOrderId.entrySet().contains(el.getOrderId()))
                 .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName ,deliveryPackagesByOrderId))
+                .distinct()
                 .collect(Collectors.toList());
 
         aggregates.addAll(deliveryOriginalView);

@@ -156,4 +156,16 @@ public class LogisticAggregate extends AbstractObject implements Comparable<Logi
         return aggregate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LogisticAggregate aggregate = (LogisticAggregate) o;
+        return Objects.equals(orderId, aggregate.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
 }
