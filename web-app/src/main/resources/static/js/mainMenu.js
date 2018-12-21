@@ -81,10 +81,8 @@ $(function () {
 
         // Called on failure of file upload
         ajaxReq.fail(function (jqXHR) {
-           /* var myObj = JSON.parse(jqXHR.responseText);
-            console.log(myObj);*/
-
-            $('#alertMsg').text(jqXHR.responseText.replace('[', '').replace(']', '').replace('"', '').replace('"', ""));
+            $('#alertMsg').text(jqXHR.responseText.replace
+            ('[', '').replace(']', '').replace('"', '').replace('"', ""));
             $('button[type=submit]').prop('disabled', false);
         });
     });

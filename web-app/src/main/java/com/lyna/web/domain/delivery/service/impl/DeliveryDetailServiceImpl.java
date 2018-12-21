@@ -39,7 +39,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new PackageException(toInteger("err.package.deleteFail.code"), toStr("err.package.deleteFail.msg"));
+            throw new PackageException(toInteger("err.package.deleteFailed.code"), toStr("err.package.deleteFailed.msg"));
         }
     }
 }

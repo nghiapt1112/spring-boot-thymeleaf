@@ -1,7 +1,7 @@
 package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.object.RequestPage;
-import com.lyna.commons.utils.DataUtils;
+import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.repository.OrderRepository;
@@ -97,7 +97,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     @Override
     public String checkExists(String postCourseId, String orderDate) throws StorageException {
         try {
-            Date date = DataUtils.converStringToDate(orderDate);
+            Date date = DateTimeUtils.converStringToDate(orderDate);
             if (date != null) {
                 String query = "SELECT a.orderId FROM Order a " +
                         "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate";

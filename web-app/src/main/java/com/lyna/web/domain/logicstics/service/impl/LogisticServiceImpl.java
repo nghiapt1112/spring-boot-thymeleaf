@@ -32,17 +32,6 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId, logisticRequestPage);
         List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId, logisticRequestPage);
 
-        Map<String, List<PackageAggregate>> logisticPackagesByOrderId = logisticView.stream()
-                .parallel()
-                .map(PackageAggregate::fromLogisticView) // to PackageAggregate
-                .collect(Collectors.groupingBy(PackageAggregate::getOrderId)); // group packageByOrderId
-
-        Map<String, List<PackageAggregate>> deliveryPackagesByOrderId = deliveryView.stream()
-                .parallel()
-                .map(PackageAggregate::fromDeliveryView) // to PackageAggregate
-                .collect(Collectors.groupingBy(PackageAggregate::getOrderId)); // group packageByOrderId
-
-
         Set<PackageName> pkgName = new HashSet<>();
         logisticView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
                 .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
@@ -51,15 +40,41 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
                 .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
 
 
+        Map<String, List<PackageAggregate>> deliveryPackagesByOrderId = groupDPackagesByOrderId(deliveryView);
+        Map<String, List<PackageAggregate>> logisticPackagesByOrderId = groupLPackagesByOrderId(logisticView);
+        // show override delivery.
         List<LogisticAggregate> aggregates = logisticView.stream()
                 .parallel()
-                .map(el -> LogisticAggregate.parseFromViewDTO(el, pkgName, logisticPackagesByOrderId, deliveryPackagesByOrderId))
+                .map(el -> LogisticAggregate.parseFromViewDTO(el, pkgName, groupLPackagesByOrderId(logisticView), deliveryPackagesByOrderId))
                 .collect(Collectors.toList());
+
+        // show original delivery.
+        List<LogisticAggregate> deliveryOriginalView = deliveryView.stream()
+                .filter(el -> !logisticPackagesByOrderId.entrySet().contains(el.getOrderId()))
+                .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName ,deliveryPackagesByOrderId))
+                .collect(Collectors.toList());
+
+        aggregates.addAll(deliveryOriginalView);
+        aggregates.stream().sorted();
 
         HashMap<String, Object> val = new HashMap<>();
         val.put(LOGISTIC_DATA, aggregates);
         val.put(PKG_TYPE, new ArrayList<>(pkgName));
         return val;
+    }
+
+    private Map<String, List<PackageAggregate>> groupDPackagesByOrderId(List<DeliveryView> deliveryView) {
+        return deliveryView.stream()
+                    .parallel()
+                    .map(PackageAggregate::fromDeliveryView) // to PackageAggregate
+                    .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
+    }
+
+    private Map<String, List<PackageAggregate>> groupLPackagesByOrderId(List<LogisticView> logisticView) {
+        return logisticView.stream()
+                    .parallel()
+                    .map(PackageAggregate::fromLogisticView) // to PackageAggregate
+                    .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
     }
 
 }

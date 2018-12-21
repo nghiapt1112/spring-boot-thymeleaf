@@ -5,10 +5,11 @@
 *.class
 bin/
 .log
-
+/logs/
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
 /*.log
+*.gz

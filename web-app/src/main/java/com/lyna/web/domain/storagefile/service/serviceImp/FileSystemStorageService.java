@@ -20,12 +20,9 @@ import com.lyna.web.domain.storagefile.StorageProperties;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
-import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -48,14 +45,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.lyna.commons.utils.DataUtils.converStringToDate;
 import static com.lyna.commons.utils.DataUtils.isNumeric;
+import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 
 @Service
 public class FileSystemStorageService extends BaseService implements StorageService {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
     private final Path rootLocation;
+
     List<String> listStoreCode;
     List<String> listProductCode;
     List<String> ListPost;
@@ -63,21 +60,18 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Map<String, CsvOrder> mapProductOrderCsv;
     Map<String, Object> mapStorePostCode;
     Map<String, Object> mapStore;
-    Map<String, Object> mapStoreCodeOrderCsv;
     Iterable<Product> productIterable;
     Iterable<Store> storeIterable;
     Iterable<PostCourse> postCoursesIterable;
     Iterable<Delivery> deliveryIterable;
     Iterable<DeliveryDetail> deliveryDetailIterable;
-
     Iterable<Order> orderIterable;
     Iterable<OrderDetail> orderDetailIterable;
 
     Map<Object, String> mapCsvPostCourseId;
     Map<String, Object> mapDeliveryIdCsv;
-    Map<String, String> mapPostCourseIdProductId;
     Map<String, CsvOrder> mapProductIdCsvOrder;
-    Set<StorageException> mapError;
+    Map<Integer, String> mapError;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -103,38 +97,41 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     @Transactional
-    public Set<StorageException> store(int tenantId, MultipartFile file, int type) {
+    public Map<Integer, String> store(int tenantId, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         initData();
         if (file.isEmpty()) {
-            mapError.add(new StorageException(500, "空のファイルを保存出来ない。" + filename));
+            mapError.put(500, "空のファイルを保存出来ない。" + filename);
         }
         if (filename.contains("..")) {
-            mapError.add(new StorageException(500, "現在のディレクトリの外に相対パスを持つファイルを保存できません"));
+            mapError.put(500, "現在のディレクトリの外に相対パスを持つファイルを保存できません");
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
             if (type == 1) {
+                innitDataOrder();
                 Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
                 processUpload(orderIterator);
+
                 setMapData(tenantId);
                 setDataOrder(tenantId);
+
                 saveDataMaster();
                 saveDataOrder();
             } else {
+                innitDataDelivery();
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
                 processUploadDelivery(deliveryIterator);
                 if (mapError.size() == 0) {
                     setMapDataDelivery(tenantId);
-                    saveDataDelivery();
+
                     saveDataMaster();
+                    saveDataDelivery();
                 }
             }
         } catch (Exception ex) {
-            //throw new StorageException(500, "ファイル保存に失敗しました。");
-            throw new StoreException(toInteger("err.store.storeCodeEmpty.code"), "ファイル保存に失敗しました。");
-            //mapError.add(new StorageException(500, "ファイル保存に失敗しました。"));
+            mapError.put(500, "ファイル保存に失敗しました。");
         }
         return mapError;
     }
@@ -186,26 +183,27 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     void initData() {
         listStoreCode = new ArrayList<>();
-        listProductCode = new ArrayList<>();
         ListPost = new ArrayList<>();
-        mapProduct = new HashMap<>();
-        mapProductOrderCsv = new HashMap<>();
         mapStorePostCode = new HashMap<>();
         mapStore = new HashMap<>();
-        mapStoreCodeOrderCsv = new HashMap<>();
-        productIterable = new HashSet<>();
         storeIterable = new HashSet<>();
         postCoursesIterable = new HashSet<>();
+        mapCsvPostCourseId = new HashMap<>();
+        mapError = new HashMap<>();
+    }
 
+    void innitDataOrder() {
+        listProductCode = new ArrayList<>();
+        mapProduct = new HashMap<>();
+        mapProductOrderCsv = new HashMap<>();
+        productIterable = new HashSet<>();
         orderIterable = new HashSet<>();
         orderDetailIterable = new HashSet<>();
-
-        mapDeliveryIdCsv = new HashMap<>();
-
-        mapCsvPostCourseId = new HashMap<>();
-        mapPostCourseIdProductId = new HashMap<>();
         mapProductIdCsvOrder = new HashMap<>();
-        mapError = new HashSet<>();
+    }
+
+    void innitDataDelivery() {
+        mapDeliveryIdCsv = new HashMap<>();
         deliveryIterable = new HashSet<>();
         deliveryDetailIterable = new HashSet<>();
     }
@@ -232,10 +230,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     || csvOrder.getStoreCode().isEmpty()
                     || csvOrder.getProductCode() == null
                     || csvOrder.getProductCode().isEmpty()
-                    || csvOrder.getQuantity() == null
                     || !isNumeric(csvOrder.getQuantity())
             ) {
-                mapError.add(new StorageException(500, "行目 " + row + " にデータが不正"));
+                mapError.put(500, "行目 " + row + " にデータが不正");
             }
 
             row++;
@@ -276,7 +273,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     || !isNumeric(csvDelivery.getCaseP())
                     || csvDelivery.getTray() == null
                     || !isNumeric(csvDelivery.getTray())) {
-                mapError.add(new StorageException(500, "行目 " + row + " にデータが不正"));
+                mapError.put(500, "行目 " + row + " にデータが不正");
             }
             row += 1;
             String keyOrder = csvDelivery.getStoreCode() + "_" + csvDelivery.getPost() + "_" + csvDelivery.getOrderDate();
@@ -326,15 +323,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             String skey = storeCode + "_" + post;
             if (!setStoreCodePost.containsKey(skey)) {
                 String storeId = mapStoreCodeStoreId.get(storeCode.trim());
-                String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-                postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
-                setStoreCodePost.put(skey, postCourseId);
-                mapCsvPostCourseId.put(csvDelivery, postCourseId);
+                setMapStorePostCourse(tenantId, setStoreCodePost, csvDelivery, post, skey, storeId);
             } else {
                 mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(skey));
             }
         });
-
 
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
             String orderId = orderRepository.checkExists(postcodesId, ((CsvDelivery) csv).getOrderDate());
@@ -354,7 +347,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     ((HashSet<Delivery>) deliveryIterable).add(delivery);
                 }
             } else {
-                mapError.add(new StorageException(500, "発注データが存在しない。"));
+                mapError.put(500, "発注データが存在しない。");
             }
         });
 
@@ -396,6 +389,13 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         });
     }
 
+    private void setMapStorePostCourse(int tenantId, Map<String, String> setStoreCodePost, Object csvDelivery, String post, String skey, String storeId) {
+        String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
+        postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
+        setStoreCodePost.put(skey, postCourseId);
+        mapCsvPostCourseId.put(csvDelivery, postCourseId);
+    }
+
     private String getGetPostCourseId(int tenantId, String storeId, String post, String postCourseId) {
         if (postCourseId == null) {
             PostCourse postCourse = new PostCourse();
@@ -419,7 +419,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Set<String> setStoreCode = new HashSet<>();
             Set<String> setProductCode = new HashSet<>();
             Map<String, String> setStoreCodePost = new HashMap<>();
-            //Todo:check exists code
 
             List<String> stores = result.stream()
                     .map(String::toLowerCase)
@@ -456,10 +455,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 String skey = storeCode + "_" + post;
                 if (!setStoreCodePost.containsKey(skey)) {
                     String storeId = mapStoreCodeStoreId.get(storeCode);
-                    String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-                    postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
-                    setStoreCodePost.put(skey, postCourseId);
-                    mapCsvPostCourseId.put(csvOrder, postCourseId);
+                    setMapStorePostCourse(tenantId, setStoreCodePost, csvOrder, post, skey, storeId);
                 } else {
                     mapCsvPostCourseId.put(csvOrder, setStoreCodePost.get(skey));
                 }
@@ -495,11 +491,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             mapProductOrderCsv.forEach((sProductCodeOderDate, csvOrder) -> {
                 String productCode = getProductIdForKey(sProductCodeOderDate);
                 String productId = mapProductCodeProductId.get(productCode);
-                mapPostCourseIdProductId.put(mapCsvPostCourseId.get(csvOrder), productId);
                 mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
-            mapError.add(new StorageException(500, "ファイル保存に失敗しました。"));
+            mapError.put(500, "ファイル保存に失敗しました。");
         }
     }
 
@@ -522,7 +517,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     Date date = converStringToDate(csvOrder.getOrderDate());
                     if (date == null)
                         date = new Date();
+
                     order.setOrderDate(date);
+                    order.setCreateDate(date);
+                    order.setCreateUser("");
 
                     order.setPostCourseId(postCourseId);
                     order.setTenantId(tenantId);
@@ -544,8 +542,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void saveDataMaster() throws DomainException {
         //save all storeCode
         storeRepository.saveAll(storeIterable);
+        storeRepository.flush();
         //save all postcourse
         postCourseRepository.saveAll(postCoursesIterable);
+        postCourseRepository.flush();
     }
 
     private void saveDataDelivery() {
@@ -558,7 +558,13 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void saveDataOrder() throws DomainException {
         //Save all productCode
         productRepository.saveAll(productIterable);
-        orderRepository.saveAll(orderIterable);
+        productRepository.flush();
+        //orderRepository.saveAll(orderIterable);
+        orderIterable.forEach(order -> {
+            orderRepository.save(order);
+            orderRepository.flush();
+        });
         orderDetailRepository.saveAll(orderDetailIterable);
+        orderDetailRepository.flush();
     }
 }

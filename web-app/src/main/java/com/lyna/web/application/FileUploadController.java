@@ -1,6 +1,6 @@
 package com.lyna.web.application;
 
-import com.lyna.web.domain.storagefile.exeption.StorageException;
+import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -56,27 +56,15 @@ public class FileUploadController {
                                                    UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        Set<StorageException> mapError = storageService.store(tenantId, file, 1);
-
+        Map<Integer, String> mapError = storageService.store(tenantId, file, 1);
+        List<String> results = new ArrayList<>();
+        results.add("ファイルは成功にアップロードされた");
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
             return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            List<String> results = new ArrayList<>();
-            results.add("ファイルは成功にアップロードされた");
-            return new ResponseEntity<>(results, HttpStatus.OK);
         }
-    }
 
-    private ResponseEntity<Object> getObjectResponseEntity(Model model, Set<StorageException> mapError) {
-        if (mapError.size() > 0) {
-            model.addAttribute("messageError", mapError);
-            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            List<String> results = new ArrayList<>();
-            results.add("ファイルは成功にアップロードされた");
-            return new ResponseEntity<>(results, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @PostMapping("/fileDelivery")
@@ -84,13 +72,19 @@ public class FileUploadController {
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         int tenantId = user.getTenantId();
-        Set<StorageException> mapError = storageService.store(tenantId, file, 2);
+        Map<Integer, String> mapError = storageService.store(tenantId, file, 2);
+        List<String> results = new ArrayList<>();
+        results.add("ファイルは成功にアップロードされた");
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return getObjectResponseEntity(model, mapError);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
-    @ExceptionHandler(StorageException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageException exc) {
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
 }

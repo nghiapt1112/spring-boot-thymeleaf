@@ -2,7 +2,6 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
-import com.lyna.web.domain.logicstics.service.LogiticDetailService;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
 import com.lyna.web.domain.user.User;
@@ -12,13 +11,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,8 +34,6 @@ public class PackageController extends AbstractCustomController {
     private static final String PACKAGE_REGISTER_PAGE = "package/registerPackage";
     @Autowired
     private PackageService packageService;
-    @Autowired
-    private LogiticDetailService logiticDetailService;
     @Autowired
     private DeliveryDetailService deliveryDetailService;
 

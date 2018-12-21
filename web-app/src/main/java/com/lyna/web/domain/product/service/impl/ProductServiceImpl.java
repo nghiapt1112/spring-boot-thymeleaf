@@ -60,7 +60,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     @Transactional
-    public void create(Product product, User user) throws DomainException {
+    public void create(Product product, User user) {
         Date date = new Date();
         product.setCreateDate(date);
         product.setTenantId(user.getTenantId());
@@ -69,7 +69,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new ProductException(toInteger("err.product.saveError.code"), toStr("err.product.saveError.msg"));
+            throw new ProductException(toInteger("err.product.saveFailed.code"), toStr("err.product.saveFailed.msg"));
         }
     }
 

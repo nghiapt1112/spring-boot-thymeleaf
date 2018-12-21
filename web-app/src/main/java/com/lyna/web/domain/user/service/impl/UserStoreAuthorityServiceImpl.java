@@ -40,7 +40,7 @@ public class UserStoreAuthorityServiceImpl extends BaseService implements UserSt
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new UserException(toInteger("err.user.deleteFail.code"), toStr("err.user.deleteFail.msg"));
+            throw new UserException(toInteger("err.user.deleteFailed.code"), toStr("err.user.deleteFailed.msg"));
         }
 
     }
