@@ -44,8 +44,7 @@
                                         <span class="col-md-5">ユーザー名</span>
                                         <div class="form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{userName}"
-                                                   th:errorclass="field-error"
-                                                   th:oninvalid="setCustomValidity('ユーザー名は必須です。')"/>
+                                                   th:errorclass="field-error"/>
                                             <em id="errorUserName" class="error">ユーザー名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('userName')}"
                                                 th:errors="*{userName}"></em>
@@ -68,7 +67,7 @@
                                         <div class="form-group col-md-6" style="">
                                             <input class="form-control" type="password" name="confirm_password"
                                                    id="repPassword"
-                                                   th:field="*{password}"/></p>
+                                            /></p>
                                             <em id="errorPasswordNoRep" class="error">パスワード”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPassword" class="error">ユーザー名は必須です。</em>
                                         </div>
