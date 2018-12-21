@@ -34,10 +34,10 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
         Set<PackageName> pkgName = new HashSet<>();
         logisticView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
-                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
+                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getPackageAmount())));
 
         deliveryView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
-                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
+                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getPackageAmount())));
 
 
         Map<String, List<PackageAggregate>> deliveryPackagesByOrderId = groupDPackagesByOrderId(deliveryView);
