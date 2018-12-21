@@ -46,7 +46,7 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.deleteFail.code"), toStr("err.store.deleteFail.msg"));
+            throw new StoreException(toInteger("err.store.deleteFailed.code"), toStr("err.store.deleteFailed.msg"));
         }
 
 
