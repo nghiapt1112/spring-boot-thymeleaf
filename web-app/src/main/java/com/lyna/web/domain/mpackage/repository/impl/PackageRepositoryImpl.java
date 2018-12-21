@@ -52,4 +52,12 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
                 .getResultList();
     }
 
+    @Override
+    public List<Package> findAllByTenantId(int tenantId) {
+        return super.entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.tenantId = :tenantId ", Package.class)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
+
 }

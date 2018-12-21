@@ -81,7 +81,8 @@ $(function () {
 
         // Called on failure of file upload
         ajaxReq.fail(function (jqXHR) {
-            $('#alertMsg').text(jqXHR.responseText.replace('[','').replace(']', '').replace('"', '').replace('"', ""));
+            $('#alertMsg').text(jqXHR.responseText.replace
+            ('[', '').replace(']', '').replace('"', '').replace('"', ""));
             $('button[type=submit]').prop('disabled', false);
         });
     });
@@ -95,20 +96,20 @@ btn.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
-}
+};
 btndelivery.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "2";
     $('#alertMsg').text('');
-}
+};
 span.onclick = function () {
     modal.style.display = "none";
-}
+};
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
-}
+};
 dataTable("#table-order");
 dataTable("#table-logicstic");
 
@@ -120,7 +121,7 @@ function searchMainMenu() {
     var endDate = document.getElementById("max").value;
     var postName = document.getElementById("post").value;
 
-    var currentDate = new Date().setHours(0,0,0,0)
+    var currentDate = new Date().setHours(0, 0, 0, 0);
     if (startDate) {
         logisticAPI += '?start=' + new Date(startDate).getTime()
     } else {
@@ -132,7 +133,7 @@ function searchMainMenu() {
         logisticAPI += '&end=' + currentDate
     }
     if (postName) {
-        logisticAPI += '&postName='+postName
+        logisticAPI += '&postName=' + postName
     }
 
     window.location.replace(logisticAPI)
