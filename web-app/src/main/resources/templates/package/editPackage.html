@@ -29,6 +29,8 @@
                                 <form th:action="@{/package/update}" th:method="post" th:object="${package}">
                                     <input type="hidden" th:field="*{tenantId}">
                                     <input type="hidden" th:field="*{packageId}">
+                                    <input type="hidden" th:field="*{createDate}">
+                                    <input type="hidden" th:field="*{createUser}">
                                     <div class="col-md-12">
                                         <span class="col-md-5">荷姿名 *</span>
                                         <div class=" form-group col-md-6 has-feedback">
