@@ -32,7 +32,7 @@
                                     <input type="hidden" th:field="*{createDate}">
                                     <input type="hidden" th:field="*{createUser}">
                                     <div class="col-md-12">
-                                        <span class="col-md-5">商品コード </span>
+                                        <span class="col-md-5">商品コード *</span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
@@ -45,7 +45,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">商品名</span>
+                                        <span class="col-md-5">商品名 *</span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
@@ -65,10 +65,11 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">単価</span>
+                                        <span class="col-md-5">単価 *</span>
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{price}" id="price">
-                                            <em id="errorPrice" class="error">単価を正しく入力してください。</em>
+                                            <em id="errorPrice" class="error">単価は必須です。</em>
+                                            <em id="errorFormatPrice" class="error">単価は半角英数字で入力してください。</em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

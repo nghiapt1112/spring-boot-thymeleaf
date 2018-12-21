@@ -16,3 +16,6 @@ from	t_order o join t_order_detail od on o.order_id=od.order_id
 
   join m_post_course pc on pc.post_course_id=o.post_course_id
   join m_store s on s.store_id=pc.store_id
+
+order by
+  o.order_date

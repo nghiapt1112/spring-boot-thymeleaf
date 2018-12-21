@@ -10,7 +10,7 @@ $(document).ready(function () {
             checkForm = false;
         } else {
             $("#errorEmail").removeClass("error_show").addClass("error");
-            if (!REGEX_EMAIL.test(email)) {
+            if (!isNumberDecimal(email, REGEX_EMAIL)) {
                 $("#errorFormat").removeClass("error").addClass("error_show");
                 checkForm = false;
             } else {
@@ -47,7 +47,7 @@ $(document).ready(function () {
         } else {
             $("#errorRepPassword").removeClass("error_show").addClass("error");
         }
-        if (isNotEmpty(repPassword) && isNotEmpty(password)) {
+        if (isNotEmpty(repPassword) && !isNotEmpty(password)) {
             $("#errorPassword").removeClass("error_show").addClass("error");
             $("#errorRepPassword").removeClass("error_show").addClass("error");
             if (password != repPassword) {

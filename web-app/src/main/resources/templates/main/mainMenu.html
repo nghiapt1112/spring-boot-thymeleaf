@@ -135,8 +135,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
-                                        <tr class="" th:classappend="${logistic.isDeliveryData() ? 'bg-green': ''}"
+                                        <tr th:classappend="${logistic.getBackgroundColor()}"
                                             th:each="logistic: ${logisticData}">
                                             <td th:text="*{logistic.getOrderDate()}"></td>
                                             <td th:text="${logistic.getStoreName()}"></td>
@@ -150,7 +149,6 @@
                                             <td th:text="${logistic.getTotalCapacity()}"></td>
                                             <td th:text="${logistic.getCourseName()}"></td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
