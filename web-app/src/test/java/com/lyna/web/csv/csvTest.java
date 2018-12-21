@@ -1,9 +1,5 @@
 package com.lyna.web.csv;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.opencsv.CSVReader;
 import org.junit.Test;
 
@@ -11,8 +7,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 public class csvTest {
     private static final String CSV_PATH = "./src/test/resources/product-with-header.csv";
