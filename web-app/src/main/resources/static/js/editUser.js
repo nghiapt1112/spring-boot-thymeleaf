@@ -26,10 +26,6 @@ $(document).ready(function () {
             $("#errorUserName").removeClass("error_show").addClass("error");
         }
 
-        if (checkForm === false) {
-            event.preventDefault();
-        }
-
         var password = $("#password").val();
         if (isEmpty(password)) {
             $("#errorPassword").removeClass("error").addClass("error_show");

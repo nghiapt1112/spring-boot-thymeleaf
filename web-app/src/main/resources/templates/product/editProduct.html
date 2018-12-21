@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('商品登録')"></head>
-    <link rel="Stylesheet" type="text/css" th:href="@{/css/editContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/utils/registerUpdate.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -32,7 +32,7 @@
                                     <input type="hidden" th:field="*{createDate}">
                                     <input type="hidden" th:field="*{createUser}">
                                     <div class="col-md-12">
-                                        <span class="col-md-5">商品コード *</span>
+                                        <span class="col-md-5">商品コード<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
@@ -45,7 +45,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">商品名 *</span>
+                                        <span class="col-md-5">商品名<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
@@ -65,7 +65,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">単価 *</span>
+                                        <span class="col-md-5">単価<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{price}" id="price">
                                             <em id="errorPrice" class="error">単価は必須です。</em>

@@ -50,7 +50,7 @@ public class PackageServiceImpl extends BaseService implements PackageService {
             packageRepository.save(mpackage);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new PackageException(toInteger("err.package.saveError.code"), toStr("err.package.saveError.msg"));
+            throw new PackageException(toInteger("err.package.createError.code"), toStr("err.package.createError.msg"));
         }
 
     }

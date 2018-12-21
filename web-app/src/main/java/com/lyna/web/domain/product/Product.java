@@ -1,6 +1,7 @@
 package com.lyna.web.domain.product;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.utils.NumberUtils;
 import com.lyna.web.domain.order.OrderDetail;
 import lombok.Data;
 import org.hibernate.annotations.Cache;
@@ -65,5 +66,13 @@ public class Product extends AbstractEntity {
 
     public Product() {
         this.productId = UUID.randomUUID().toString();
+    }
+	
+	  public BigDecimal getPrice() {
+        return NumberUtils.removeTrailingZero(price);
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = NumberUtils.removeTrailingZero(price);
     }
 }

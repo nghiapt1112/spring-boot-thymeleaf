@@ -121,7 +121,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
             storeRepository.save(store);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.saveFailed.code"), toStr("err.store.saveFailed.msg"));
+            throw new StoreException(toInteger("err.store.createFailed.code"), toStr("err.store.createFailed.msg"));
         }
 
     }

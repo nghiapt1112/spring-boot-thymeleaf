@@ -351,7 +351,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             }
         });
 
-        List<Package> mapPackage = packageRepository.findAllByTenantId(tenantId);
+        List<Package> mapPackage = packageRepository.findByTenantId(tenantId);
 
         mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
             String trayAmount = ((CsvDelivery) csv).getTray();

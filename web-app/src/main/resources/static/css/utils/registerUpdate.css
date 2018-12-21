@@ -29,3 +29,8 @@
 .error_show{
 	color: red;
 }
+.input_require{
+	color: red;
+	margin-left: 7%;
+	font-size: 15px;
+}

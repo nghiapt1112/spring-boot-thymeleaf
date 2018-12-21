@@ -1,8 +1,6 @@
-
 button{
 	border-radius: 0px  ! important;
 }
-
 .button_top{
 	margin-bottom: 2%;
 	padding-top: 2% ! important;
@@ -10,12 +8,7 @@ button{
 .btn-primary{
 	width: 100% ! important;
 }
-.burron-top-order{
-	padding: 0;
-	display: flex;
-	justify-content: center;
-}
-.button-top-delivery{
+.button-top-delivery-order{
 	padding: 0;
 	display: flex;
 	justify-content: center;
@@ -36,13 +29,26 @@ th{
 	color: white ! important;
 	text-align: center;
 }
-.pagination-area {
-	text-align: right;
+.btn-search {
+	background: #337ab7;
+	border-radius: 0;
+	color: #fff;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #337ab7;
 }
-.margin-0 {
-	margin: 0;
+.btn-search:link, .btn-search:visited {
+	color: #fff;
 }
-.search-input {
-	border-color: #d2d6de!important;
+.btn-search:active, .btn-search:hover {
+	background: #1c1c1c;
+	color: #fff;
+}
+.buttonSave, .buttonClose{
+	width: 20% !important;
+	background: #3c8dbc !important;
+}
+.buttonClose{
+	color: white !important;
 }
 

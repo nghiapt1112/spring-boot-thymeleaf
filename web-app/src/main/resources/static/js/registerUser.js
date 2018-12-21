@@ -10,7 +10,7 @@ $(document).ready(function () {
             checkForm = false;
         } else {
             $("#errorEmail").removeClass("error_show").addClass("error");
-            if (!isNumberDecimal(email, REGEX_EMAIL)) {
+            if (!REGEX_EMAIL.test(email)) {
                 $("#errorFormat").removeClass("error").addClass("error_show");
                 checkForm = false;
             } else {
@@ -24,10 +24,6 @@ $(document).ready(function () {
             checkForm = false;
         } else {
             $("#errorUserName").removeClass("error_show").addClass("error");
-        }
-
-        if (checkForm === false) {
-            event.preventDefault();
         }
 
         var password = $("#password").val();
@@ -47,7 +43,7 @@ $(document).ready(function () {
         } else {
             $("#errorRepPassword").removeClass("error_show").addClass("error");
         }
-        if (isNotEmpty(repPassword) && !isNotEmpty(password)) {
+        if (isNotEmpty(repPassword) && isNotEmpty(password)) {
             $("#errorPassword").removeClass("error_show").addClass("error");
             $("#errorRepPassword").removeClass("error_show").addClass("error");
             if (password != repPassword) {

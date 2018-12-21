@@ -1,6 +1,7 @@
 package com.lyna.web.domain.mpackage;
 
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.utils.NumberUtils;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
 import lombok.Data;
@@ -62,5 +63,37 @@ public class Package extends AbstractEntity {
 
     public Package() {
         this.packageId = UUID.randomUUID().toString();
+    }
+	
+	public BigDecimal getEmptyWeight() {
+        return NumberUtils.removeTrailingZero(emptyWeight);
+    }
+
+    public void setEmptyWeight(BigDecimal emptyWeight) {
+        this.emptyWeight = NumberUtils.removeTrailingZero(emptyWeight);;
+    }
+
+    public BigDecimal getFullLoadWeight() {
+        return NumberUtils.removeTrailingZero(fullLoadWeight);
+    }
+
+    public void setFullLoadWeight(BigDecimal fullLoadWeight) {
+        this.fullLoadWeight = NumberUtils.removeTrailingZero(fullLoadWeight);
+    }
+
+    public BigDecimal getEmptyCapacity() {
+        return NumberUtils.removeTrailingZero(emptyCapacity);
+    }
+
+    public void setEmptyCapacity(BigDecimal emptyCapacity) {
+        this.emptyCapacity = NumberUtils.removeTrailingZero(emptyCapacity);
+    }
+
+    public BigDecimal getFullLoadCapacity() {
+        return NumberUtils.removeTrailingZero(fullLoadCapacity);
+    }
+
+    public void setFullLoadCapacity(BigDecimal fullLoadCapacity) {
+        this.fullLoadCapacity = NumberUtils.removeTrailingZero(fullLoadCapacity);
     }
 }

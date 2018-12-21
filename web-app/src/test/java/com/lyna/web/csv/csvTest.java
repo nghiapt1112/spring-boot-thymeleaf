@@ -40,29 +40,5 @@ public class csvTest {
         }
     }
 
-    @Test
-    public void convertMapToJsonString() {
-        Map<String, String> relationshipStatus = new HashMap<>();
-        relationshipStatus.put("bob", "married");
-        relationshipStatus.put("foo", "single");
-        relationshipStatus.put("bar", "divorced");
-        relationshipStatus.put("baz", "single");
-
-        JsonArray collect = relationshipStatus.entrySet().stream().map(r -> {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", r.getKey());
-            jsonObject.addProperty("relationshipStatus", r.getValue());
-            return jsonObject;
-        }).reduce(new JsonArray(), (jsonArray, jsonObject) -> {
-            jsonArray.add(jsonObject);
-            return jsonArray;
-        }, (jsonArray, otherJsonArray) -> {
-            jsonArray.addAll(otherJsonArray);
-            return jsonArray;
-        });
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println("collect = " + gson.toJson(collect));
-    }
 
 }

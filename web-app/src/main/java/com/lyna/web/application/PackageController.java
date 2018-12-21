@@ -91,7 +91,8 @@ public class PackageController extends AbstractCustomController {
     @GetMapping(value = "/update/{packageId}/{tenantId}")
     public String updatePackage(@PathVariable("packageId") String packageId, Model model,
                                 @PathVariable("tenantId") int tenantId) {
-        model.addAttribute("package", packageService.findOneByPakageIdAndTenantId(packageId, tenantId));
+        Package mpackage = packageService.findOneByPakageIdAndTenantId(packageId, tenantId);
+        model.addAttribute("package", mpackage);
         return PACKAGE_EDIT_PAGE;
     }
 

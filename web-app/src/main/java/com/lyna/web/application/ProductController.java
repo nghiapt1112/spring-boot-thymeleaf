@@ -119,8 +119,7 @@ public class ProductController extends AbstractCustomController {
     @GetMapping(value = "/update/{productId}/{tenantId}")
     public String updateProduct(@PathVariable("productId") String productId, Model model,
                                 @PathVariable("tenantId") int tenantId, UsernamePasswordAuthenticationToken principal) {
-        Product product = productService.findOneByProductIdAndTenantId(productId, tenantId);
-        model.addAttribute("product", product);
+        model.addAttribute("product", productService.findOneByProductIdAndTenantId(productId, tenantId));
         return PRODUCT_EDIT_PAGE;
 
     }
