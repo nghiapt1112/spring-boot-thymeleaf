@@ -23,5 +23,5 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage);
 
-    String checkExists(String postcourseId, String orderDate);
+    String checkExists(String postcourseId, String orderDate, int tenantId);
 }

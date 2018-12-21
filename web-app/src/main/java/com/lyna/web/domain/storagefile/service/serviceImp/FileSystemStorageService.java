@@ -330,7 +330,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         });
 
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
-            String orderId = orderRepository.checkExists(postcodesId, ((CsvDelivery) csv).getOrderDate());
+            String orderId = orderRepository.checkExists(postcodesId, ((CsvDelivery) csv).getOrderDate(), tenantId);
             if (orderId != null) {
                 String deliveryId = deliveryRepository.checkExistByOrderIdAndOrderDate(orderId, ((CsvDelivery) csv).getOrderDate());
                 if (deliveryId != null)

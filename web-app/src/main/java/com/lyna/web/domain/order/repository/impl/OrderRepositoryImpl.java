@@ -95,15 +95,16 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
-    public String checkExists(String postCourseId, String orderDate) throws StorageException {
+    public String checkExists(String postCourseId, String orderDate, int tenantId) throws StorageException {
         try {
             Date date = DateTimeUtils.converStringToDate(orderDate);
             if (date != null) {
                 String query = "SELECT a.orderId FROM Order a " +
-                        "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate";
+                        "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate and a.tenantId = :tenantId";
                 List list = entityManager.createQuery(query)
                         .setParameter("postCourseId", postCourseId)
                         .setParameter("orderDate", date)
+                        .setParameter("tenantId", tenantId)
                         .getResultList();
                 if (list != null && list.size() > 0)
                     return (String) list.get(0);
