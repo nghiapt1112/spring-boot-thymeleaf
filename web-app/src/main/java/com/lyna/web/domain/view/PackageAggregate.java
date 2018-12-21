@@ -29,7 +29,7 @@ public class PackageAggregate extends AbstractObject {
         aggregate.packageId = logisticView.getPackageId();
         aggregate.fullLoadWeight = logisticView.getTotalWeight();
         aggregate.fullLoadCapacity = logisticView.getTotalCapacity();
-        aggregate.amount = logisticView.getAmount();
+        aggregate.amount = logisticView.getPackageAmount();
         return aggregate;
     }
 
@@ -40,7 +40,7 @@ public class PackageAggregate extends AbstractObject {
         aggregate.packageId = deliveryView.getPackageId();
         aggregate.fullLoadWeight = deliveryView.getTotalWeight();
         aggregate.fullLoadCapacity = deliveryView.getTotalCapacity();
-        aggregate.amount = deliveryView.getAmount();
+        aggregate.amount = deliveryView.getPackageAmount();
         return aggregate;
     }
 
