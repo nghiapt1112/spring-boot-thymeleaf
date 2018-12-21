@@ -34,10 +34,10 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
         Set<PackageName> pkgName = new HashSet<>();
         logisticView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
-                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
+                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getPackageAmount())));
 
         deliveryView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
-                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getAmount())));
+                .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getPackageAmount())));
 
 
         Map<String, List<PackageAggregate>> deliveryPackagesByOrderId = groupDPackagesByOrderId(deliveryView);
@@ -46,12 +46,14 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         List<LogisticAggregate> aggregates = logisticView.stream()
                 .parallel()
                 .map(el -> LogisticAggregate.parseFromViewDTO(el, pkgName, groupLPackagesByOrderId(logisticView), deliveryPackagesByOrderId))
+                .distinct()
                 .collect(Collectors.toList());
 
         // show original delivery.
         List<LogisticAggregate> deliveryOriginalView = deliveryView.stream()
                 .filter(el -> !logisticPackagesByOrderId.entrySet().contains(el.getOrderId()))
                 .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName ,deliveryPackagesByOrderId))
+                .distinct()
                 .collect(Collectors.toList());
 
         aggregates.addAll(deliveryOriginalView);
