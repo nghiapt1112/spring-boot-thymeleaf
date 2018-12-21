@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public final class DateTimeUtils {
-    public static final String DD_MM_YYYY = "yyyy-MM-dd";
     private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
-    private static final String DATE_FORMAT = "yyyy/MM/dd";
     private static final String DATE_FORMAT_VI = "yyyy-MM-dd";
 
     public static String convertDateToString(Date date, String style) {
@@ -36,7 +34,7 @@ public final class DateTimeUtils {
         }
 
         if (dateInString.contains("/")) {
-            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat(DEFAULT_DATE_FORMAT, Locale.ENGLISH);
             try {
                 date = formatter.parse(dateInString);
             } catch (ParseException e) {
