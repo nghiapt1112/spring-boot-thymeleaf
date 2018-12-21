@@ -38,6 +38,9 @@ public class MainMenuView extends AbstractObject {
     @Column
     protected String packageName;
 
+    @Column
+    protected BigDecimal packageAmount;
+
     @Column(name = "full_load_weight")
     protected BigDecimal totalWeight;
 

@@ -17,7 +17,7 @@ public class LogisticView extends MainMenuView {
 
     @Id
     @Column
-    private String logistics_id;
+    private String logistics_detail_id;
 
     public boolean isPackageNameNonNull() {
         return Objects.nonNull(packageName);

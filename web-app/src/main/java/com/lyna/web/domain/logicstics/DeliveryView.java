@@ -16,7 +16,7 @@ import java.util.Objects;
 public class DeliveryView extends MainMenuView {
     @Id
     @Column
-    private String delivery_id;
+    private String delivery_detail_id;
 
     public boolean isPackageNameNonNull() {
         return Objects.nonNull(packageName);
