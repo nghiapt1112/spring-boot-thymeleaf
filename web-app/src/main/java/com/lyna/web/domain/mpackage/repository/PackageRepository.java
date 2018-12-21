@@ -15,5 +15,4 @@ public interface PackageRepository extends JpaRepository<Package, String> {
 
     List<Package> findByTenantId(int tenantId);
 
-    List<Package> findAllByTenantId(int tenantId);
 }

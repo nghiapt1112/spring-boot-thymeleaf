@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー編集')"></head>
-    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/utils/registerUpdate.css}"/>
     <link rel="Stylesheet" type="text/css" th:href="@{/css/registerUser.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
@@ -29,7 +29,7 @@
                                 <form th:action="@{/user/update}" th:method="post" th:object="${aggregate}">
                                     <input hidden th:field="*{userId}"/>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">メールアドレス *</span>
+                                        <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
@@ -41,7 +41,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー名 *</span>
+                                        <span class="col-md-5">ユーザー名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="userName" class="form-control" type="text" th:field="*{userName}"
                                                    th:errorclass="field-error">
@@ -52,7 +52,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">パスワード *</span>
+                                        <span class="col-md-5">パスワード<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="password" class="form-control" type="password"
                                                    th:field="*{password}"

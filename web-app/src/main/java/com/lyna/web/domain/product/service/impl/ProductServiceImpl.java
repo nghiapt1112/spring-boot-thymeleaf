@@ -69,7 +69,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             productRepository.save(product);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new ProductException(toInteger("err.product.saveFailed.code"), toStr("err.product.saveFailed.msg"));
+            throw new ProductException(toInteger("err.product.createFailed.code"), toStr("err.product.createFailed.msg"));
         }
     }
 

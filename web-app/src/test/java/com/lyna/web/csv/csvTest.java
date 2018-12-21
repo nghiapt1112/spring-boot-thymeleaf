@@ -1,9 +1,5 @@
 package com.lyna.web.csv;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.opencsv.CSVReader;
 import org.junit.Test;
 
@@ -11,8 +7,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 public class csvTest {
     private static final String CSV_PATH = "./src/test/resources/product-with-header.csv";
@@ -40,29 +34,5 @@ public class csvTest {
         }
     }
 
-    @Test
-    public void convertMapToJsonString() {
-        Map<String, String> relationshipStatus = new HashMap<>();
-        relationshipStatus.put("bob", "married");
-        relationshipStatus.put("foo", "single");
-        relationshipStatus.put("bar", "divorced");
-        relationshipStatus.put("baz", "single");
-
-        JsonArray collect = relationshipStatus.entrySet().stream().map(r -> {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", r.getKey());
-            jsonObject.addProperty("relationshipStatus", r.getValue());
-            return jsonObject;
-        }).reduce(new JsonArray(), (jsonArray, jsonObject) -> {
-            jsonArray.add(jsonObject);
-            return jsonArray;
-        }, (jsonArray, otherJsonArray) -> {
-            jsonArray.addAll(otherJsonArray);
-            return jsonArray;
-        });
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println("collect = " + gson.toJson(collect));
-    }
 
 }

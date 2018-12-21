@@ -42,9 +42,6 @@ dependencies {
 
 // https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '2.0.9.RELEASE'
-// https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
-
 }
 
 bootRun {

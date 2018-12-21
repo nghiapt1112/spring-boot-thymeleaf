@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('店舗登録')"></head>
-    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerContant.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/utils/registerUpdate.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -28,7 +28,7 @@
                             <div class="box-body">
                                 <form th:action="@{/store/create}" th:method="post" th:object="${store}">
                                     <div class="col-md-12">
-                                        <span class="col-md-5">店舗コード *</span>
+                                        <span class="col-md-5">店舗コード<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
@@ -41,7 +41,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">店舗名 *</span>
+                                        <span class="col-md-5">店舗名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
@@ -91,7 +91,7 @@
                                         <div class="col-md-12 order_course item" id="deleteRow"
                                              th:each="PostCourse, postCourse : ${store.postCourses}">
                                             <div class=" form-group  col-md-5 div-input-post">
-                                                <div class=" col-md-5 title-input-post"><span>便</span></div>
+                                                <div class=" col-md-5 title-input-post"><span>便<span class="input_require">*</span></span></div>
                                                 <div class=" col-md-7 edit-checkbox title-input-post">
                                                     <input id="post0"
                                                            th:field="*{postCourses[__${postCourse.index}__].post}"
