@@ -3,8 +3,8 @@ package com.lyna.web.domain.order.service.impl;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.order.service.OrderDetailService;
+import com.lyna.web.domain.product.exeption.ProductException;
 import com.lyna.web.domain.product.repository.ProductRepository;
-import com.lyna.web.domain.stores.exception.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class OrderDetailServiceImpl extends BaseService implements OrderDetailSe
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new StoreException(toInteger("err.product.deleteFail.code"), toStr("err.product.deleteFail.msg"));
+            throw new ProductException(toInteger("err.product.deleteFailed.code"), toStr("err.product.deleteFailed.msg"));
         }
 
     }

@@ -41,7 +41,6 @@ public class Product extends AbstractEntity {
     private String code;
 
     @NotBlank(message = "商品名は必須です。")
-
     @Column
     private String name;
 
@@ -49,7 +48,6 @@ public class Product extends AbstractEntity {
     private String unit;
 
     @Column
-    @NotNull(message = "単価を正しく入力してください。")
     private BigDecimal price;
 
     @Column

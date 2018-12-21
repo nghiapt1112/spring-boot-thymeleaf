@@ -32,11 +32,14 @@ public class UserAggregate extends AbstractObject {
 
     private List<UserStoreRole> rolePerStore;
 
+    private short role;
+
     public User toUser() {
         User user = new User();
         user.setEmail(this.email);
         user.setName(this.userName);
         user.setPassword(this.password);
+        user.setRole(this.role);
         return user;
     }
 
@@ -95,7 +98,7 @@ public class UserAggregate extends AbstractObject {
 
 @Data
 @NoArgsConstructor
-class UserStoreRole extends AbstractObject{
+class UserStoreRole extends AbstractObject {
     private String id;
     private String name;
     private String storeId;

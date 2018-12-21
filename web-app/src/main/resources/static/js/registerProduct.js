@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("body").on("click", "#save", function (event) {
-        var numberFormat = /^(\d{1,10})(?:\.\d\d?)?$/;
+        var REGEX_PRICE = /^(\d{1,})(?:\.\d{1,})?$/;
         var checkForm = true;
         var code = $("#code").val();
         if (isEmpty(code)) {
@@ -20,11 +20,18 @@ $(document).ready(function () {
         }
 
         var price = $("#price").val();
-        if (isEmpty(price) || !numberFormat.test(price)) {
+        if (isEmpty(price)) {
+            $("#errorFormatPrice").removeClass("error_show").addClass("error");
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
             $("#errorPrice").removeClass("error_show").addClass("error");
+            if (!REGEX_PRICE.test(price)) {
+                $("#errorFormatPrice").removeClass("error").addClass("error_show");
+                checkForm = false;
+            } else {
+                $("#errorFormatPrice").removeClass("error_show").addClass("error");
+            }
         }
 
         if (checkForm === false) {
@@ -33,4 +40,4 @@ $(document).ready(function () {
 
     })
 
-})
+});

@@ -28,6 +28,17 @@
                             <div class="box-body">
                                 <form name="register-form" th:action="@{/user/register/}"
                                       th:object="${userRegisterAggregate}" method="POST">
+
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div id="role" class="form-group col-md-6" style="">
+                                            <select class="form-control" th:field="*{role}">
+                                                <option value="1">管理者</option>
+                                                <option value="0">一般ユーザー</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
                                     <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス</span>
                                         <div class="form-group col-md-6" style="">
@@ -56,7 +67,7 @@
                                         <div class="form-group col-md-6" style="">
                                             <input class="form-control" type="password" name="password" id="password"
                                                    th:field="*{password}" th:errorclass="field-error"/>
-                                            <em id="errorPassword" class="error">ユーザー名は必須です。</em>
+                                            <em id="errorPassword" class="error">パスワードは必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('password')}"
                                                 th:errors="*{password}"></em>
                                         </div>
@@ -65,11 +76,18 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">パスワード(確認用)</span>
                                         <div class="form-group col-md-6" style="">
+<<<<<<< HEAD
+                                            <input class="form-control" type="password" name="confirm_password" id="repPassword"
+                                                   th:field="*{password}" /></p>
+                                            <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
+                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+=======
                                             <input class="form-control" type="password" name="confirm_password"
                                                    id="repPassword"
                                             /></p>
                                             <em id="errorPasswordNoRep" class="error">パスワード”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPassword" class="error">ユーザー名は必須です。</em>
+>>>>>>> dev
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -111,7 +129,6 @@
                     <div class="col-md-2">
                     </div>
                 </div>
-
             </div>
         </section>
     </div>
