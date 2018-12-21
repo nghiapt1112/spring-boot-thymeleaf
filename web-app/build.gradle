@@ -48,7 +48,6 @@ dependencies {
 bootRun {
     jvmArgs = [
             "-Dspring.output.ansi.enabled=ALWAYS",
-            "-Dspring.datasource.password=root",
             "-Xdebug",
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
     ]
