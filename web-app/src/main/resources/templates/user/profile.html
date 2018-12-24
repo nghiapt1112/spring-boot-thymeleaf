@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:replace="layout :: head('ユーザー編集')"></head>
-    <link rel="Stylesheet" type="text/css" href="/css/registerStore.css" th:href="@{/css/registerContant.css}"/>
-    <link rel="Stylesheet" type="text/css" href="/css/registerUser.css" th:href="@{/css/registerUser.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/utils/registerUpdate.css}"/>
+    <link rel="Stylesheet" type="text/css" th:href="@{/css/registerUser.css}"/>
 </head>
 <body id="body" class="hold-transition skin-blue sidebar-mini">
 <div class="" style="height: auto;min-height: 100%; background: #222d32">
@@ -20,7 +20,6 @@
                 <div class="col-md-12">
                     <div class="col-md-2">
                     </div>
-
                     <div class="col-md-8">
                         <div class="box box-primary">
                             <div style="text-align: center;" class="box-header">
@@ -30,18 +29,19 @@
                                 <form th:action="@{/user/profile}" th:method="post" th:object="${aggregate}">
                                     <input hidden th:field="*{userId}"/>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">メールアドレス </span>
+                                        <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
+                                            <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー名</span>
+                                        <span class="col-md-5">ユーザー名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="userName" class="form-control" type="text" th:field="*{userName}"
                                                    th:errorclass="field-error">
@@ -52,7 +52,7 @@
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">パスワード</span>
+                                        <span class="col-md-5">パスワード<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="password" class="form-control" type="password"
                                                    th:field="*{password}"
@@ -83,7 +83,7 @@
                                                 <span th:text="${item.name}"> </span>
 
                                             </div>
-                                            <div class=" form-group  col-md-4 iputCanview">
+                                            <div class=" form-group  col-md-4 inputCanview">
                                                 <input type="checkbox"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
@@ -96,9 +96,8 @@
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <button TYPE="submit" class="btn btn-primary" id="save">登録</button>
+                                        <button type="submit" class="btn btn-primary" id="save">登録</button>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -106,14 +105,13 @@
                     <div class="col-md-2">
                     </div>
                 </div>
-
             </div>
-
         </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script type="text/javascript" src="/js/registerStore.js" th:src="@{/js/registerUser.js}"></script>
+<script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
+<script type="text/javascript" th:src="@{/js/editUser.js}"></script>
 
 </body>
 </html>

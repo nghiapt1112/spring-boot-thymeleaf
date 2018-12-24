@@ -76,8 +76,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
-                                            <input class="form-control" type="password" name="confirm_password" id="repPassword"
-                                                   th:field="*{password}" /></p>
+                                            <input class="form-control" type="password" name="confirm_password"
+                                                   id="repPassword"/></p>
                                             <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
                                         </div>
@@ -95,8 +95,10 @@
                                             <div class=" form-group  col-md-4">
                                                 <label th:text="${item.name}"> </label>
                                             </div>
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
-                                            <input hidden th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
+                                            <input hidden
+                                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
+                                            <input hidden
+                                                   th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
                                             <div class=" form-group  col-md-4 inputCanview">
                                                 <input type="checkbox"
                                                        th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
@@ -108,8 +110,7 @@
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <input style="border-radius: 0px ;	width: 30%;" type="submit" value="Submit" name="btn-submit" id="btnSubmit" class="btn btn-primary"
-                                               />
+                                        <button type="submit" class="btn btn-primary" id="save">登録</button>
                                     </div>
                                 </form>
                             </div>
@@ -119,7 +120,7 @@
                     </div>
                 </div>
             </div>
-       </section>
+        </section>
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>

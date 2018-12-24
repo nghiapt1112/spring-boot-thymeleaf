@@ -14,3 +14,4 @@ bin/
 /*.log
 *.gz
 web-app/logs/spring-boot-logging.log
+*.tmp
