@@ -21,6 +21,7 @@ import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
+import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +98,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     @Transactional
-    public Map<Integer, String> store(int tenantId, MultipartFile file, int type) {
+    public Map<Integer, String> store(User user, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        int tenantId = user.getTenantId();
+        String userId = user.getId();
         initData();
         if (file.isEmpty()) {
             mapError.put(500, "空のファイルを保存出来ない。" + filename);
@@ -114,8 +117,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
                 processUpload(orderIterator);
 
-                setMapData(tenantId);
-                setDataOrder(tenantId);
+                setMapData(tenantId, userId);
+                setDataOrder(tenantId, userId);
 
                 saveDataMaster();
                 saveDataOrder();
@@ -408,7 +411,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         return postCourseId;
     }
 
-    private void setMapData(int tenantId) throws StorageException {
+    private void setMapData(int tenantId, String userId) throws StorageException {
         try {
             List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
@@ -444,6 +447,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     store.setCode(code);
                     store.setName(csvOrder.getStoreName());
                     store.setTenantId(tenantId);
+                    store.setCreateDate(new Date());
+                    store.setCreateUser(userId);
                     ((HashSet<Store>) storeIterable).add(store);
                     mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
                 }
@@ -472,9 +477,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     product.setCategory2(csvOrder.getCategory2());
                     product.setCategory3(csvOrder.getCategory3());
                     product.setTenantId(tenantId);
-                    product.setUpdateUser("");
-                    product.setUpdateDate(new Date());
-                    product.setCreateUser("");
+                    product.setCreateUser(userId);
                     product.setCreateDate(new Date());
                     product.setUnit("");
                     product.setPrice(new BigDecimal(0));
@@ -498,7 +501,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void setDataOrder(int tenantId) {
+    private void setDataOrder(int tenantId, String userId) {
         if (mapError.size() == 0) {
             Map<String, String> mapKeyOrderId = new HashMap<>();
 
@@ -520,7 +523,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
                     order.setOrderDate(date);
                     order.setCreateDate(date);
-                    order.setCreateUser("");
+                    order.setCreateUser(userId);
 
                     order.setPostCourseId(postCourseId);
                     order.setTenantId(tenantId);
@@ -533,6 +536,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 BigDecimal quantity = new BigDecimal(csvOrder.getQuantity());
                 orderDetail.setAmount(quantity);
                 orderDetail.setTenantId(tenantId);
+                orderDetail.setCreateDate(new Date());
+                orderDetail.setCreateUser(userId);
                 ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
 
             });
