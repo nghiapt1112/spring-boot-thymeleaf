@@ -51,7 +51,7 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/file")
+    @PostMapping("/file/order")
     public ResponseEntity<Object> handleFileUpload(Model model, @RequestParam("file") MultipartFile file,
                                                    UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
@@ -66,7 +66,7 @@ public class FileUploadController {
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
-    @PostMapping("/fileDelivery")
+    @PostMapping("/file/delivery")
     public ResponseEntity<Object> handleFileUploadDelivery(Model model, @RequestParam("file") MultipartFile file,
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
