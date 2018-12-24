@@ -21,6 +21,7 @@ import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
+import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +98,10 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     @Transactional
-    public Map<Integer, String> store(int tenantId, MultipartFile file, int type) {
+    public Map<Integer, String> store(User user, MultipartFile file, int type) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        int tenantId = user.getTenantId();
+        String userId = user.getId();
         initData();
         if (file.isEmpty()) {
             mapError.put(500, "空のファイルを保存出来ない。" + filename);
@@ -114,8 +117,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 Iterator<CsvOrder> orderIterator = orderRepository.getMapOrder(reader);
                 processUpload(orderIterator);
 
-                setMapData(tenantId);
-                setDataOrder(tenantId);
+                setMapData(tenantId, userId);
+                setDataOrder(tenantId, userId);
 
                 saveDataMaster();
                 saveDataOrder();
@@ -124,8 +127,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
                 processUploadDelivery(deliveryIterator);
                 if (mapError.size() == 0) {
-                    setMapDataDelivery(tenantId);
-
+                    setMapDataDelivery(tenantId, userId);
                     saveDataMaster();
                     saveDataDelivery();
                 }
@@ -288,7 +290,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void setMapDataDelivery(int tenantId) throws StorageException {
+    private void setMapDataDelivery(int tenantId, String userId) throws StorageException {
         List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
         List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
         Map<String, String> mapStoreCodeStoreId = new HashMap<>();
@@ -312,6 +314,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             } else
                 store.setName(csvDelivery.getStoreCode());
             store.setTenantId(tenantId);
+            store.setCreateUser(userId);
+            store.setCreateDate(new Date());
             ((HashSet<Store>) storeIterable).add(store);
 
             mapStoreCodeStoreId.put(store.getCode().trim(), store.getStoreId());
@@ -323,7 +327,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             String skey = storeCode + "_" + post;
             if (!setStoreCodePost.containsKey(skey)) {
                 String storeId = mapStoreCodeStoreId.get(storeCode.trim());
-                setMapStorePostCourse(tenantId, setStoreCodePost, csvDelivery, post, skey, storeId);
+                setMapStorePostCourse(tenantId, setStoreCodePost, csvDelivery, post, skey, storeId, userId);
             } else {
                 mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(skey));
             }
@@ -340,9 +344,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     delivery.setOrderId(orderId);
                     delivery.setTenantId(tenantId);
                     delivery.setCreateDate(new Date());
-                    delivery.setCreateUser("");
-                    delivery.setUpdateDate(new Date());
-                    delivery.setUpdateUser("");
+                    delivery.setCreateUser(userId);
                     mapDeliveryIdCsv.put(delivery.getDeliveryId(), csv);
                     ((HashSet<Delivery>) deliveryIterable).add(delivery);
                 }
@@ -379,9 +381,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                         deliveryDetail.setPackageId(packageId);
                         deliveryDetail.setAmount(amount);
                         deliveryDetail.setCreateDate(new Date());
-                        deliveryDetail.setCreateUser("");
-                        deliveryDetail.setUpdateDate(new Date());
-                        deliveryDetail.setUpdateUser("");
+                        deliveryDetail.setCreateUser(userId);
                         ((HashSet<DeliveryDetail>) deliveryDetailIterable).add(deliveryDetail);
                     }
                 }
@@ -389,26 +389,28 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         });
     }
 
-    private void setMapStorePostCourse(int tenantId, Map<String, String> setStoreCodePost, Object csvDelivery, String post, String skey, String storeId) {
+    private void setMapStorePostCourse(int tenantId, Map<String, String> setStoreCodePost, Object csvDelivery, String post, String skey, String storeId, String userId) {
         String postCourseId = postCourseRepository.checkByStoreIdAndPost(storeId, post);
-        postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId);
+        postCourseId = getGetPostCourseId(tenantId, storeId, post, postCourseId, userId);
         setStoreCodePost.put(skey, postCourseId);
         mapCsvPostCourseId.put(csvDelivery, postCourseId);
     }
 
-    private String getGetPostCourseId(int tenantId, String storeId, String post, String postCourseId) {
+    private String getGetPostCourseId(int tenantId, String storeId, String post, String postCourseId, String userId) {
         if (postCourseId == null) {
             PostCourse postCourse = new PostCourse();
             postCourse.setPost(post);
             postCourse.setStoreId(storeId);
             postCourse.setTenantId(tenantId);
+            postCourse.setCreateDate(new Date());
+            postCourse.setCreateUser(userId);
             postCourseId = postCourse.getPostCourseId();
             ((HashSet<PostCourse>) postCoursesIterable).add(postCourse);
         }
         return postCourseId;
     }
 
-    private void setMapData(int tenantId) throws StorageException {
+    private void setMapData(int tenantId, String userId) throws StorageException {
         try {
             List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
             List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
@@ -444,6 +446,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     store.setCode(code);
                     store.setName(csvOrder.getStoreName());
                     store.setTenantId(tenantId);
+                    store.setCreateDate(new Date());
+                    store.setCreateUser(userId);
                     ((HashSet<Store>) storeIterable).add(store);
                     mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
                 }
@@ -455,7 +459,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 String skey = storeCode + "_" + post;
                 if (!setStoreCodePost.containsKey(skey)) {
                     String storeId = mapStoreCodeStoreId.get(storeCode);
-                    setMapStorePostCourse(tenantId, setStoreCodePost, csvOrder, post, skey, storeId);
+                    setMapStorePostCourse(tenantId, setStoreCodePost, csvOrder, post, skey, storeId, userId);
                 } else {
                     mapCsvPostCourseId.put(csvOrder, setStoreCodePost.get(skey));
                 }
@@ -472,9 +476,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     product.setCategory2(csvOrder.getCategory2());
                     product.setCategory3(csvOrder.getCategory3());
                     product.setTenantId(tenantId);
-                    product.setUpdateUser("");
-                    product.setUpdateDate(new Date());
-                    product.setCreateUser("");
+                    product.setCreateUser(userId);
                     product.setCreateDate(new Date());
                     product.setUnit("");
                     product.setPrice(new BigDecimal(0));
@@ -498,7 +500,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void setDataOrder(int tenantId) {
+    private void setDataOrder(int tenantId, String userId) {
         if (mapError.size() == 0) {
             Map<String, String> mapKeyOrderId = new HashMap<>();
 
@@ -520,7 +522,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
                     order.setOrderDate(date);
                     order.setCreateDate(date);
-                    order.setCreateUser("");
+                    order.setCreateUser(userId);
 
                     order.setPostCourseId(postCourseId);
                     order.setTenantId(tenantId);
@@ -533,6 +535,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 BigDecimal quantity = new BigDecimal(csvOrder.getQuantity());
                 orderDetail.setAmount(quantity);
                 orderDetail.setTenantId(tenantId);
+                orderDetail.setCreateDate(new Date());
+                orderDetail.setCreateUser(userId);
                 ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
 
             });
@@ -542,13 +546,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void saveDataMaster() throws DomainException {
         //save all storeCode
         storeRepository.saveAll(storeIterable);
-        storeRepository.flush();
         //save all postcourse
         postCourseRepository.saveAll(postCoursesIterable);
-        postCourseRepository.flush();
     }
 
-    private void saveDataDelivery() {
+    private void saveDataDelivery() throws DomainException {
         //Save delivery
         deliveryRepository.saveAll(deliveryIterable);
         //save delivery detail
@@ -558,13 +560,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void saveDataOrder() throws DomainException {
         //Save all productCode
         productRepository.saveAll(productIterable);
-        productRepository.flush();
-        //orderRepository.saveAll(orderIterable);
-        orderIterable.forEach(order -> {
-            orderRepository.save(order);
-            orderRepository.flush();
-        });
+        orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
-        orderDetailRepository.flush();
     }
 }
