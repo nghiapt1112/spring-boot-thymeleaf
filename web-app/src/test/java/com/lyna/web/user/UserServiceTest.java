@@ -13,7 +13,7 @@ public class UserServiceTest extends LynaApplicationTests {
     private UserService userService;
 
 
-    @Test
+    //@Test
     public void findByName() {
         User user = userService.findByEmail("admin@tenant1.com");
         System.out.println(user);
