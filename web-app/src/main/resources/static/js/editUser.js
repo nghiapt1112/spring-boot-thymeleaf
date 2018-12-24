@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("body").on("click", "#btnSubmit", function (event) {
+    $("body").on("click", "#save", function (event) {
         var checkForm = true;
         var REGEX_EMAIL = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
