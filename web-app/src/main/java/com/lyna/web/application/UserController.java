@@ -80,17 +80,19 @@ public class UserController extends AbstractCustomController {
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
+        model.addAttribute("role", currentUser.getRole());
+
         return "user/user-update";
     }
-
 
     @GetMapping(value = {"/profile"})
     public String updateProfilePage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), currentUser.getId()));
-
+        aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
+        model.addAttribute("role", currentUser.getRole());
         return "user/profile";
     }
 
@@ -98,6 +100,7 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/profile"})
     public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate) {
         User currentUser = (User) principal.getPrincipal();
+        aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
         return "redirect:/mainScreen";
     }
