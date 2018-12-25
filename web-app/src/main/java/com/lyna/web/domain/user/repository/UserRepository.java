@@ -10,11 +10,9 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, String> {
     User findByEmail(String email);
 
-    User findByEmailAndTenantId(String email, int tenantId);
-
     List<User> findAll();
 
-    User findById(int tenantId, String userId);
+    User findByUserIdAndTenantId(int tenantId, String userId);
 
     UserResponsePage findUsersWithPaging(RequestPage userRequestPage);
 

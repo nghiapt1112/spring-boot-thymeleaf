@@ -27,7 +27,7 @@
                             </div>
                             <div class="box-body">
                                 <form th:action="@{/user/update}" method="POST" th:object="${aggregate}">
-                                    <input hidden th:field="*{userId}"/>
+                                    <input type="hidden" th:field="*{userId}"/>
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー権限</span>
                                         <div class="form-group col-md-6" style="">

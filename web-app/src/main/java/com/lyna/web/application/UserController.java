@@ -100,7 +100,7 @@ public class UserController extends AbstractCustomController {
     @IsAdmin
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
-        UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
+        UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findByUserIdAndTenantId(currentUser.getTenantId(), userId));
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
@@ -110,7 +110,7 @@ public class UserController extends AbstractCustomController {
     @GetMapping(value = {"/profile"})
     public String updateProfilePage(Model model, UsernamePasswordAuthenticationToken principal) {
         User currentUser = (User) principal.getPrincipal();
-        UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), currentUser.getId()));
+        UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findByUserIdAndTenantId(currentUser.getTenantId(), currentUser.getId()));
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
@@ -121,9 +121,9 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/profile"})
     public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
-        User userExisted = this.userService.findByEmailAndTenantId(aggregate.getEmail(), currentUser.getTenantId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
         try {
-            if (!currentUser.getEmail().equals(userExisted.getEmail()) && !Objects.isNull(this.userService.findByEmail(userExisted.getEmail()))) {
+            if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
                 model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
                 model.addAttribute("aggregate", aggregate);
@@ -144,9 +144,9 @@ public class UserController extends AbstractCustomController {
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
-        User userExisted = this.userService.findByEmailAndTenantId(aggregate.getEmail(), currentUser.getTenantId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
         try {
-            if (!currentUser.getEmail().equals(userExisted.getEmail()) && !Objects.isNull(this.userService.findByEmail(userExisted.getEmail()))) {
+            if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
                 model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
                 model.addAttribute("aggregate", aggregate);

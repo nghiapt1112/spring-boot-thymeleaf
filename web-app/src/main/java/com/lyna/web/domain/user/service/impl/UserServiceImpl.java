@@ -13,8 +13,6 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,11 +53,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User findByEmailAndTenantId(String email, int tenantId) {
-        return userRepository.findByEmailAndTenantId(email, tenantId);
-    }
-
-    @Override
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -82,13 +75,6 @@ public class UserServiceImpl extends BaseService implements UserService {
             return createdUser;
         } catch (RuntimeException e) {
             throw new UserException(toInteger("err.user.createFailed.code"), toStr("err.user.createFailed.msg"));
-        }
-    }
-
-    private void throwIfExisted(String email) {
-        User userExisted = this.findByEmail(email);
-        if (Objects.nonNull(userExisted)) {
-            throw new UserException(toInteger("err.user.duplicateUser.code"), toStr("err.user.duplicateUser.msg"));
         }
     }
 
@@ -134,8 +120,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User findById(int tenantId, String userId) {
-        User user = this.userRepository.findById(tenantId, userId);
+    public User findByUserIdAndTenantId(int tenantId, String userId) {
+        User user = this.userRepository.findByUserIdAndTenantId(tenantId, userId);
         if (Objects.isNull(user)) {
             throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
         }
@@ -145,7 +131,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     @Transactional
     public void update(User currentUser, UserAggregate aggregate) {
-        User oldUser = this.findById(currentUser.getTenantId(), aggregate.getUserId());
+        User oldUser = this.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
         oldUser.updateInfo(userToUpdate);
