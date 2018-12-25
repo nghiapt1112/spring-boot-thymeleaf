@@ -247,7 +247,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
                 csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
                 mapStore.put(csvOrder.getStoreCode().toLowerCase().trim(), csvOrder);
-                mapStorePostCode.put(keyOrder, csvOrder);
+                mapStorePostCode.put(skeyOrderCheck, csvOrder);
                 listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
                 listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
                 ListPost.add(csvOrder.getPost().trim().toLowerCase());
@@ -283,7 +283,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (!setDelivery.contains(skeyCheck)) {
                 setDelivery.add(skeyCheck);
                 mapStore.put(csvDelivery.getStoreCode().toLowerCase().trim(), csvDelivery);
-                mapStorePostCode.put(keyOrder, csvDelivery);
+                mapStorePostCode.put(skeyCheck, csvDelivery);
                 listStoreCode.add(csvDelivery.getStoreCode().trim().toLowerCase());
                 ListPost.add(csvDelivery.getPost().trim().toLowerCase());
             }
@@ -331,6 +331,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             } else {
                 mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(skey));
             }
+
         });
 
         mapCsvPostCourseId.forEach((csv, postcodesId) -> {
@@ -508,7 +509,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 String postCourseId = mapCsvPostCourseId.get(csvOrder);
                 String productId = getProductIdForKey(sProductIdOrderDate);
                 String orderId = "";
-                String key = postCourseId + "_" + productId + csvOrder.getOrderDate().trim();
+                String key = postCourseId + "_" + csvOrder.getOrderDate().trim();
 
                 if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(key)) {
                     orderId = mapKeyOrderId.get(key);
