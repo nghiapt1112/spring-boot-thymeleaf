@@ -143,5 +143,6 @@ public class User extends AbstractEntity implements UserDetails {
         this.name = userToUpdate.name;
         this.email = userToUpdate.email;
         this.password = userToUpdate.password;
+        this.role = userToUpdate.role;
     }
 }
