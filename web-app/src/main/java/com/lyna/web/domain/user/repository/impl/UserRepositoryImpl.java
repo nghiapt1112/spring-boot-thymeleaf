@@ -20,8 +20,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserRepositoryImpl extends BaseRepository<User, String> implements UserRepository, PagingRepository {
 
-    private final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
-
     public UserRepositoryImpl(EntityManager em) {
         super(User.class, em);
     }
@@ -34,7 +32,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     }
 
     @Override
-    public User findById(int tenantId, String userId) {
+    public User findByUserIdAndTenantId(int tenantId, String userId) {
         String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.tenantId = :tenantId AND u.id = :id";
         List<User> users = entityManager.createQuery(query, User.class)
                 .setParameter("tenantId", tenantId)

@@ -2,12 +2,15 @@ $(document).ready(function () {
     $("body").on("click", "#save", function (event) {
         var REGEX_PRICE = /^(\d{1,})(?:\.\d{1,})?$/;
         var checkForm = true;
+
         var code = $("#code").val();
         if (isEmpty(code)) {
             $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error_show").addClass("error");
         }
 

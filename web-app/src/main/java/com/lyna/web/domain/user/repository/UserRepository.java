@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findAll();
 
-    User findById(int tenantId, String userId);
+    User findByUserIdAndTenantId(int tenantId, String userId);
 
     UserResponsePage findUsersWithPaging(RequestPage userRequestPage);
 

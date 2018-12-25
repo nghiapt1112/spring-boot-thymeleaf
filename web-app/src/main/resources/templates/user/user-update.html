@@ -27,7 +27,7 @@
                             </div>
                             <div class="box-body">
                                 <form th:action="@{/user/update}" method="POST" th:object="${aggregate}">
-                                    <input hidden th:field="*{userId}"/>
+                                    <input type="hidden" th:field="*{userId}"/>
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー権限</span>
                                         <div class="form-group col-md-6" style="">
@@ -44,6 +44,7 @@
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
+                                            <em id="error_exitsted" class="error_show" th:utext="${errorEmailShow}"></em>
                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>

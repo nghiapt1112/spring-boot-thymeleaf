@@ -5,15 +5,18 @@ $(document).ready(function () {
 
         var email = $("#email").val();
         if (isEmpty(email)) {
-            $("#errorEmail").removeClass("error").addClass("error_show");
             $("#errorFormat").removeClass("error_show").addClass("error");
+            $("#error_exitsted").removeClass("error_show").addClass("error");
+            $("#errorEmail").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
-            $("#errorEmail").removeClass("error_show").addClass("error");
             if (!REGEX_EMAIL.test(email)) {
+                $("#errorEmail").removeClass("error_show").addClass("error");
+                $("#error_exitsted").removeClass("error_show").addClass("error");
                 $("#errorFormat").removeClass("error").addClass("error_show");
                 checkForm = false;
             } else {
+                $("#error_exitsted").removeClass("error_show").addClass("error");
                 $("#errorFormat").removeClass("error_show").addClass("error");
             }
         }

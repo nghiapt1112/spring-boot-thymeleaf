@@ -23,7 +23,7 @@ public class UserServiceTest extends LynaApplicationTests {
     @Test
     public void findById() {
         String requestUserId = "507f191e810c19729de860ea";
-        User user = userService.findById(1, requestUserId);
+        User user = userService.findByUserIdAndTenantId(1, requestUserId);
         Assert.assertNotNull(user);
         Assert.assertEquals(1, user.getTenantId());
         Assert.assertEquals(requestUserId, user.getId());

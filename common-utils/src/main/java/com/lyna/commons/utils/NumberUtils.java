@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class NumberUtils {
 
     public static BigDecimal removeTrailingZero(BigDecimal number) {
-        BigDecimal bigDecimal = null;
+        BigDecimal bigDecimal;
         if (number != null) {
             String stringNumber = number.toString();
             int index = stringNumber.indexOf(".");

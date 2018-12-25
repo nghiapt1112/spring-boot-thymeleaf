@@ -23,7 +23,7 @@ public interface UserService {
 
     Page<UserList> findPaginated(List<Store> storeList, int tenantId);
 
-    User findById(int tenantId, String userId);
+    User findByUserIdAndTenantId(int tenantId, String userId);
 
     void update(User currentUser, UserAggregate aggregate);
 
