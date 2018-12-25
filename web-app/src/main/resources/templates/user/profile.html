@@ -89,7 +89,6 @@
                                         <div class="col-md-4">編集</div>
                                     </div>
                                     <th:block th:if="${#lists.isEmpty(aggregate.getRolePerStore())}">
-
                                     </th:block>
                                     <th:block th:unless="${#lists.isEmpty(aggregate.getRolePerStore())}">
                                         <div class="col-md-12 roleStore"
@@ -116,7 +115,7 @@
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <button type="submit" class="btn btn-primary" onkeyup="check()" id="save">登録
+                                        <button type="submit" class="btn btn-primary" id="save">登録
                                         </button>
                                     </div>
                                 </form>
