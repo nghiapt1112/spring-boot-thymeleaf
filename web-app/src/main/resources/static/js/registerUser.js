@@ -43,6 +43,8 @@ $(document).ready(function () {
         } else {
             $("#errorRepPassword").removeClass("error_show").addClass("error");
         }
+
+
         if (isNotEmpty(repPassword) && isNotEmpty(password)) {
             $("#errorPassword").removeClass("error_show").addClass("error");
             $("#errorRepPassword").removeClass("error_show").addClass("error");

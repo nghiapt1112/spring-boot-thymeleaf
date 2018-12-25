@@ -29,6 +29,17 @@
                                 <form th:action="@{/user/profile}" th:method="post" th:object="${aggregate}">
                                     <input hidden th:field="*{userId}"/>
                                     <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
+                                                <option value="1">管理者</option>
+                                                <option value="0">一般ユーザー</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
@@ -57,9 +68,18 @@
                                             <input id="password" class="form-control" type="password"
                                                    th:field="*{password}"
                                                    th:errorclass="field-error">
-                                            <em id="errorPassword" class="error">ユーザー名は必須です。</em>
+                                            <em id="errorPassword" class="error">パスワードは必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('password')}"
                                                 th:errors="*{password}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="confirm_password" class="form-control" type="password">
+                                            <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
+                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -69,7 +89,6 @@
                                         <div class="col-md-4">編集</div>
                                     </div>
                                     <th:block th:if="${#lists.isEmpty(aggregate.getRolePerStore())}">
-
                                     </th:block>
                                     <th:block th:unless="${#lists.isEmpty(aggregate.getRolePerStore())}">
                                         <div class="col-md-12 roleStore"
@@ -84,19 +103,20 @@
 
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
-                                                <input type="checkbox"
+                                                <input type="checkbox" th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanedit">
-                                                <input type="checkbox"
+                                                <input type="checkbox" th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}">
                                             </div>
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <button type="submit" class="btn btn-primary" id="save">登録</button>
+                                        <button type="submit" class="btn btn-primary" id="save">登録
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -112,6 +132,5 @@
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
 <script type="text/javascript" th:src="@{/js/editUser.js}"></script>
-
 </body>
 </html>
