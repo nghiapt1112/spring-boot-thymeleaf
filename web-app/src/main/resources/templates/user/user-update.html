@@ -26,8 +26,19 @@
                                 <p class="box-titles"></p>
                             </div>
                             <div class="box-body">
-                                <form th:action="@{/user/update}" th:method="post" th:object="${aggregate}">
+                                <form th:action="@{/user/update}" method="POST" th:object="${aggregate}">
                                     <input hidden th:field="*{userId}"/>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
+                                                <option value="1">管理者</option>
+                                                <option value="0">一般ユーザー</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
                                     <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
@@ -64,6 +75,15 @@
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
+                                        <div class="form-group col-md-6" style="">
+                                            <input id="confirm_password" class="form-control" type="password">
+                                            <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
+                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
                                     <div class="col-md-12 tileRoleStore">
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4">参照</div>
@@ -85,19 +105,21 @@
 
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
-                                                <input type="checkbox"
+                                                <input type="checkbox" th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanedit">
-                                                <input type="checkbox"
+                                                <input type="checkbox" th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}">
                                             </div>
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <button type="submit" class="btn btn-primary" id="save">登録</button>
+                                        <button type="submit" class="btn btn-primary" id="save">
+                                            登録
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -113,6 +135,5 @@
 <footer th:replace="layout :: footer"></footer>
 <script type="text/javascript" th:src="@{/js/utils/string-utils.js}"></script>
 <script type="text/javascript" th:src="@{/js/editUser.js}"></script>
-
 </body>
 </html>

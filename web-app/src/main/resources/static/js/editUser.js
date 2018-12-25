@@ -37,10 +37,26 @@ $(document).ready(function () {
             $("#errorPassword").removeClass("error_show").addClass("error");
         }
 
+        var confirm_password = $("#confirm_password").val();
+        if (isEmpty(confirm_password)) {
+            $("#errorRepPassword").removeClass("error").addClass("error_show");
+            checkForm = false;
+        } else {
+            $("#errorRepPassword").removeClass("error_show").addClass("error");
+        }
+
+        if (isNotEmpty(password) && isNotEmpty(confirm_password)) {
+            $("#errorPassword").removeClass("error_show").addClass("error");
+            $("#errorRepPassword").removeClass("error_show").addClass("error");
+            if (password != confirm_password) {
+                $("#errorPasswordNoRep").removeClass("error").addClass("error_show");
+                checkForm = false;
+            } else {
+                $("#errorPasswordNoRep").removeClass("error_show").addClass("error");
+            }
+        }
         if (checkForm === false) {
             event.preventDefault();
         }
-
     })
-
 });

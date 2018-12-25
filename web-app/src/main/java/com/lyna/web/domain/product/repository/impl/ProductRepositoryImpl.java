@@ -38,11 +38,11 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
 
     @Override
     public Product findOneByCode(String code) {
-        return entityManager
+        List products = entityManager
                 .createQuery("SELECT p FROM Product p WHERE p.code=:code", Product.class)
                 .setParameter("code", code)
-                .getSingleResult();
-
+                .getResultList();
+        return (products != null && products.size() > 0) ? (Product) products.get(0) : null;
     }
 
 

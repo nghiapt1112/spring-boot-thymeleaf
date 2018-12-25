@@ -39,9 +39,9 @@ $(function () {
         var formData = new FormData(form);
 
         value = $("#quizID").val();
-        var url = "/upload/file";
+        var url = "/upload/file/order";
         if (value == 2)
-            url = "/upload/fileDelivery";
+            url = "/upload/file/delivery";
 
         // Ajax call for file uploaling
         var ajaxReq = $.ajax({
