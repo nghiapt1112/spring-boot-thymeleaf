@@ -1,5 +1,6 @@
 package com.lyna.commons;
 
+import com.lyna.commons.infrustructure.exception.ResourceException;
 import com.lyna.commons.utils.HttpUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -13,19 +14,18 @@ public class HttpUtilsTest {
 
     @Before
     public void init() {
-        httpGet = "http://nghia.lyna.com/user/test";
-        httpsGet = "https://www.adayroi.com/";
+        httpGet = "http://localhost:8080";
+        httpsGet = "https://www.google.com/";
     }
 
-    @Test
+    @Test(expected = ResourceException.class)
     public void testHttpGet() {
-        String body = HttpUtils.httpGet(httpGet, String.class);
-        Assert.assertEquals("s", body);
+        HttpUtils.httpGet(httpGet, String.class);
     }
 
     @Test
     public void testHttpsGet() {
-        String body = HttpUtils.httpsGet(httpGet, null);
+        String body = HttpUtils.httpsGet(httpsGet, null);
         Assert.assertNotNull(body);
     }
 
