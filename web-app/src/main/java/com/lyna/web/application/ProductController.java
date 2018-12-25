@@ -59,7 +59,7 @@ public class ProductController extends AbstractCustomController {
         }
         try {
             if (!Objects.isNull(productService.findOneByCode(product.getCode()))) {
-                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_REGISTER_PAGE;
             }
@@ -84,7 +84,7 @@ public class ProductController extends AbstractCustomController {
         Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(),product.getTenantId());
         try {
             if (!product.getCode().equals(productExisted.getCode()) && !Objects.isNull(productService.findOneByCode(product.getCode()))) {
-                model.addAttribute("errorCodeShow", "このコードは既に存在します。");
+                model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
             }

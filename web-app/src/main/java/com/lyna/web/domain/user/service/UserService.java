@@ -14,6 +14,8 @@ import java.util.List;
 public interface UserService {
     User findByEmail(String userEmail);
 
+    User findByEmailAndTenantId(String email, int tenantId);
+
     User registerUser(User currentUser, UserAggregate userRegisterAggregate);
 
     User createUser(User user);

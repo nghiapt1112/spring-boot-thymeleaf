@@ -12,6 +12,8 @@ import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +38,14 @@ public class UserController extends AbstractCustomController {
 
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
 
+    private static  final String USER_REGISTER_PAGE = "user/user-create";
+
+    private static  final String USER_UPDATE_PAGE = "user/user-update";
+
+    private static  final String USER_PROFILE_PAGE = "user/profile";
+
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -53,8 +63,21 @@ public class UserController extends AbstractCustomController {
 
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
-    public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal) {
+    public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal,
+    Model model) {
         User currentUser = (User) principal.getPrincipal();
+
+        try {
+            if (!Objects.isNull(this.userService.findByEmail(userRegisterAggregate.getEmail()))) {
+                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("userRegisterAggregate", userRegisterAggregate);
+                model.addAttribute("userPerRoles", userRegisterAggregate.getRolePerStore());
+                return USER_REGISTER_PAGE;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         this.userService.registerUser(currentUser, userRegisterAggregate);
         return REDIRECT_TO_USER_LIST_PAGE;
     }
@@ -70,7 +93,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("userPerRoles", userRegisterAggregate.getRolePerStore());
         model.addAttribute("userRegisterAggregate", userRegisterAggregate);
 
-        return "user/user-create";
+        return USER_REGISTER_PAGE;
     }
 
     @GetMapping(value = {"/update/{userId}"})
@@ -80,7 +103,7 @@ public class UserController extends AbstractCustomController {
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findById(currentUser.getTenantId(), userId));
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
-        return "user/user-update";
+        return USER_UPDATE_PAGE;
     }
 
 
@@ -91,13 +114,25 @@ public class UserController extends AbstractCustomController {
 
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
-        return "user/profile";
+        return USER_PROFILE_PAGE;
     }
 
-
     @PostMapping(value = {"/profile"})
-    public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate) {
+    public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
+
+        User userExisted = this.userService.findByEmailAndTenantId(aggregate.getEmail(), currentUser.getTenantId());
+        try {
+            if (!currentUser.getEmail().equals(userExisted.getEmail()) && !Objects.isNull(this.userService.findByEmail(userExisted.getEmail()))) {
+                aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
+                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("aggregate", aggregate);
+                return USER_PROFILE_PAGE;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         this.userService.update(currentUser, aggregate);
         return "redirect:/mainScreen";
     }
@@ -105,8 +140,21 @@ public class UserController extends AbstractCustomController {
 
     @PostMapping(value = {"/update", "/update/"})
     @IsAdmin
-    public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate) {
+    public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
+
+        User userExisted = this.userService.findByEmailAndTenantId(aggregate.getEmail(), currentUser.getTenantId());
+        try {
+            if (!currentUser.getEmail().equals(userExisted.getEmail()) && !Objects.isNull(this.userService.findByEmail(userExisted.getEmail()))) {
+                aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
+                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("aggregate", aggregate);
+                return USER_UPDATE_PAGE;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         userService.update(currentUser, aggregate);
         return REDIRECT_TO_USER_LIST_PAGE;
     }

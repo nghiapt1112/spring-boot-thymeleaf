@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl extends BaseService implements UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -57,6 +55,11 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    public User findByEmailAndTenantId(String email, int tenantId) {
+        return userRepository.findByEmailAndTenantId(email, tenantId);
+    }
+
+    @Override
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -66,8 +69,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User registerUser(User currentUser, UserAggregate aggregate) {
         User user = aggregate.toUser();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        this.throwIfExisted(user.getEmail());
 
         try {
             User createdUser = this.createUser(user.withDefaultFields(currentUser));

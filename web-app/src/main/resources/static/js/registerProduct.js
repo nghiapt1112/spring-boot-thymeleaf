@@ -5,9 +5,11 @@ $(document).ready(function () {
         var code = $("#code").val();
         if (isEmpty(code)) {
             $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error_show").addClass("error");
         }
 
@@ -21,6 +23,7 @@ $(document).ready(function () {
 
         var price = $("#price").val();
         if (isEmpty(price)) {
+
             $("#errorFormatPrice").removeClass("error_show").addClass("error");
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;

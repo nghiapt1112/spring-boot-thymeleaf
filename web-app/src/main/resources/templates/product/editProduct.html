@@ -37,10 +37,9 @@
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
                                             <em id="errorCode" class="error">商品コードは必須です。</em>
-                                            <em style="color: red" id="error_show" th:utext="${errorCodeShow}"></em>
+                                            <em id="error_exitsted" class="error_show" th:utext="${errorProductExitsted}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
-
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

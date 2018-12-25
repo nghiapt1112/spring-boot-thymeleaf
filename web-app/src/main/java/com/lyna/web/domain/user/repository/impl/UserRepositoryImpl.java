@@ -20,8 +20,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserRepositoryImpl extends BaseRepository<User, String> implements UserRepository, PagingRepository {
 
-    private final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
-
     public UserRepositoryImpl(EntityManager em) {
         super(User.class, em);
     }
@@ -39,6 +37,16 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
         List<User> users = entityManager.createQuery(query, User.class)
                 .setParameter("tenantId", tenantId)
                 .setParameter("id", userId)
+                .getResultList();
+        return CollectionUtils.isEmpty(users) ? null : users.get(0);
+    }
+
+    @Override
+        public User findByEmailAndTenantId(String email, int tenantId) {
+        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.email = :email AND u.tenantId = :tenantId";
+        List<User> users = entityManager.createQuery(query, User.class)
+                .setParameter("email", email)
+                .setParameter("tenantId", tenantId)
                 .getResultList();
         return CollectionUtils.isEmpty(users) ? null : users.get(0);
     }

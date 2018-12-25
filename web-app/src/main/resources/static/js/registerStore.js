@@ -92,9 +92,11 @@ $(document).ready(function () {
         let checkForm = true;
         var code = $("#code").val();
         if (isEmpty(code)) {
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
+            $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error_show").addClass("error");
         }
 
