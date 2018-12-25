@@ -31,10 +31,9 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー権限</span>
                                         <div class="form-group col-md-6" style="">
-                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
-                                                    th:disabled="${role == 0}">
-                                                <option value="1">管理者</option>
-                                                <option value="0">一般ユーザー</option>
+                                            <select class="form-control" th:field="*{role}">
+                                                <option th:value="1">管理者</option>
+                                                <option th:value="0">一般ユーザー</option>
                                             </select>
                                         </div>
                                         <div class="col-md-1"></div>
