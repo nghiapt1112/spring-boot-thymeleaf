@@ -17,6 +17,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderView extends AbstractObject {
     @Id
+    @Column(name = "order_detail_id")
+    private String id;
+
     @Column
     private String orderId;
 
