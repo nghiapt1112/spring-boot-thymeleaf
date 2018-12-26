@@ -1,6 +1,7 @@
 package com.lyna.web.domain.user.service.impl;
 
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.user.UserStoreAuthority;
 import com.lyna.web.domain.user.exception.UserException;
 import com.lyna.web.domain.user.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.DataInput;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class UserStoreAuthorityServiceImpl extends BaseService implements UserSt
         try {
             userStoreAuthorityRepository.deleteUserStoreAuthorityByUserIds(userIds, tenantId);
             userRepository.deleteByUserIds(userIds, tenantId);
+            //ToDo: cho 2 to class const
+            DataUtils.putMapData(2, userIds.toString());
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());

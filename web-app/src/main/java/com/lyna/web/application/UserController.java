@@ -2,6 +2,7 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.commons.infrustructure.object.RequestPage;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -79,6 +80,8 @@ public class UserController extends AbstractCustomController {
         }
 
         this.userService.registerUser(currentUser, userRegisterAggregate);
+        //ToDo: set 1 to file contans!
+        DataUtils.putMapData(1, currentUser.getId());
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
@@ -135,6 +138,8 @@ public class UserController extends AbstractCustomController {
 
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
+        //ToDo: Set 3 to file const
+        DataUtils.putMapData(3, currentUser.getId());
         return "redirect:/mainScreen";
     }
 
@@ -157,6 +162,8 @@ public class UserController extends AbstractCustomController {
         }
 
         userService.update(currentUser, aggregate);
+        //ToDo: Set 3 to file const
+        DataUtils.putMapData(3, currentUser.getId());
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
@@ -173,7 +180,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("pageData", userPage);
         model.addAttribute("storeModel", storesInTenant);
         model.addAttribute("userId", user.getId());
-
+        model.addAttribute("message", DataUtils.getMapData());
         return "user/listUser";
     }
 
@@ -210,6 +217,7 @@ public class UserController extends AbstractCustomController {
     String deleteByUserIds(@RequestParam(value = "ojectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         return userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId()) + "";
+
     }
 
 }

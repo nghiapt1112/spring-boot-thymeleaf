@@ -3,6 +3,7 @@ package com.lyna.web.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
@@ -13,27 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/store")
@@ -78,6 +69,8 @@ public class StoreController extends AbstractCustomController {
             log.error(e.getMessage());
         }
         storeService.create(store, user);
+        //ToDo: set 1 to file contans!
+        DataUtils.putMapData(1, store.getStoreId());
         return REDIRECT_STORE_LIST_PAGE;
     }
 
@@ -100,6 +93,8 @@ public class StoreController extends AbstractCustomController {
             log.error(e.getMessage());
         }
         storeService.update(store, user);
+        //ToDo: Set 3 to file const
+        DataUtils.putMapData(3, store.getStoreId());
         return REDIRECT_STORE_LIST_PAGE;
 
     }
@@ -124,54 +119,8 @@ public class StoreController extends AbstractCustomController {
                 storeService.findPaginated(tenantId);
 
         model.addAttribute("storePage", storePage);
-
-        return STORE_LIST_PAGE;
-    }
-
-    @SuppressWarnings("unused")
-    @GetMapping(value = "/listtemp")
-    @IsAdmin
-    public String listStoretemp(
-            Model model,
-            UsernamePasswordAuthenticationToken principal,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam("searchText") Optional<String> searchText,
-            @RequestParam("columnsort") Optional<String> columnSort,
-            @RequestParam(defaultValue = "asc") Optional<String> typeSort
-    ) {
-        String search = "";
-        String sTextPage = "";
-        List<Integer> pageNumbers = null;
-        int tenantId = ((User) principal.getPrincipal()).getTenantId();
-        int prevPage, nextPage = page;
-
-        if (searchText.isPresent() && !searchText.get().isEmpty()) {
-            model.addAttribute("searchText", searchText.get());
-            search = searchText.get();
-        }
-
-        Page<Store> storePage =
-                storeService.findPaginated(PageRequest.of(page - 1, size), tenantId, search);
-
-        int totalPages = storePage.getTotalPages();
-        if (totalPages > 0) {
-            pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-
-            sTextPage = pageNumbers.size() + "件中 " + page + " ~ " + pageNumbers.size() + " 件を表示";
-            nextPage = page < pageNumbers.size() ? page + 1 : page;
-        }
-
-        prevPage = page > 1 ? page - 1 : page;
-        model.addAttribute("prevPage", prevPage);
-        model.addAttribute("nextPage", nextPage);
-        model.addAttribute("storePage", storePage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("spage", sTextPage);
-        model.addAttribute("pageNumbers", pageNumbers);
-
+        model.addAttribute("message", DataUtils.getMapData());
+        DataUtils.evicMapData();
         return STORE_LIST_PAGE;
     }
 
@@ -184,6 +133,8 @@ public class StoreController extends AbstractCustomController {
         try {
             boolean response = postCourseService.deleteByStoreIdsAndTenantId(storeIds, user.getTenantId());
             ajaxResponse = mapper.writeValueAsString(response);
+            //ToDo: cho 2 to class const
+            DataUtils.putMapData(2, storeIds.toString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
