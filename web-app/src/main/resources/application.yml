@@ -30,9 +30,12 @@ spring:
     hibernate:
       ddl-auto: validate
 
-lyna.web:
-  pageSize: 10, 20, 50, 100
-  limitItems: 10
+lyna:
+  web:
+    pageSize: 10, 20, 50, 100
+    limitItems: 10
+  ai:
+    url: https://jp6jra2fwj.execute-api.ap-northeast-1.amazonaws.com/test/test3
 ---
 #######################
 # Dev environment config
