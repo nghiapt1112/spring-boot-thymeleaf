@@ -2,6 +2,8 @@ package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.commons.infrustructure.object.RequestPage;
+import com.lyna.commons.utils.Constants;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
@@ -19,13 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -38,11 +34,11 @@ public class UserController extends AbstractCustomController {
 
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
 
-    private static  final String USER_REGISTER_PAGE = "user/user-create";
+    private static final String USER_REGISTER_PAGE = "user/user-create";
 
-    private static  final String USER_UPDATE_PAGE = "user/user-update";
+    private static final String USER_UPDATE_PAGE = "user/user-update";
 
-    private static  final String USER_PROFILE_PAGE = "user/profile";
+    private static final String USER_PROFILE_PAGE = "user/profile";
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -64,7 +60,7 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
     public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal,
-    Model model) {
+                               Model model) {
         User currentUser = (User) principal.getPrincipal();
 
         try {
@@ -79,6 +75,7 @@ public class UserController extends AbstractCustomController {
         }
 
         this.userService.registerUser(currentUser, userRegisterAggregate);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, currentUser.getId());
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
@@ -121,12 +118,13 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/profile"})
     public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
-        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
                 model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
                 model.addAttribute("aggregate", aggregate);
+                model.addAttribute("message", DataUtils.getMapData());
                 return USER_PROFILE_PAGE;
             }
         } catch (Exception e) {
@@ -135,6 +133,7 @@ public class UserController extends AbstractCustomController {
 
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
         return "redirect:/mainScreen";
     }
 
@@ -144,7 +143,7 @@ public class UserController extends AbstractCustomController {
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
-        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
@@ -157,6 +156,7 @@ public class UserController extends AbstractCustomController {
         }
 
         userService.update(currentUser, aggregate);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
@@ -173,7 +173,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("pageData", userPage);
         model.addAttribute("storeModel", storesInTenant);
         model.addAttribute("userId", user.getId());
-
+        model.addAttribute("message", DataUtils.getMapData());
         return "user/listUser";
     }
 
@@ -209,7 +209,8 @@ public class UserController extends AbstractCustomController {
     public @ResponseBody
     String deleteByUserIds(@RequestParam(value = "ojectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
-        return userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId()) + "";
+        userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, userIds.toString());
+        return "true";
     }
-
 }

@@ -1,6 +1,8 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.Constants;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
@@ -11,14 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -55,6 +50,7 @@ public class PackageController extends AbstractCustomController {
         }
 
         packageService.create(mpackage, user);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, mpackage.getPackageId());
         return REDIRECT_PACKAGE_LIST_PAGE;
     }
 
@@ -69,7 +65,7 @@ public class PackageController extends AbstractCustomController {
         }
 
         packageService.update(mpackage, user);
-
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, mpackage.getPackageId());
         return REDIRECT_PACKAGE_LIST_PAGE;
 
     }
@@ -78,6 +74,7 @@ public class PackageController extends AbstractCustomController {
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         model.addAttribute("packages", packageService.findByTenantId(user.getTenantId()));
+        model.addAttribute("message", DataUtils.getMapData());
         return PACKAGE_LIST_PAGE;
     }
 
@@ -85,7 +82,9 @@ public class PackageController extends AbstractCustomController {
     public @ResponseBody
     String deleteByPackageIds(@RequestParam(value = "ojectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
-        return deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId()) + "";
+        deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, packageIds.toString());
+        return "true";
     }
 
     @GetMapping(value = "/update/{packageId}/{tenantId}")
