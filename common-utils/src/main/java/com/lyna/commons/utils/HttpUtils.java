@@ -6,8 +6,10 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -29,7 +31,7 @@ import java.util.List;
 public final class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
-    private final static int DEFAULT_TIMEOUT = 15000; // millis
+    private final static int DEFAULT_TIMEOUT = 1; // millis
     public final static String APPLICATION_JSON_VALUE = "application/json";
     public final static String APPLICATION_JSON_UTF8_VALUE = APPLICATION_JSON_VALUE + ";charset=UTF-8";
 
@@ -82,16 +84,16 @@ public final class HttpUtils {
     }
 
     public static <T> T httpGet(String url, Class<T> typed) {
-        return executeGet(url, httpClient.build(), typed);
+        return executeRequest(RequestBuilder.get().setUri(url).build(), httpClient.build(), typed);
     }
 
     public static <T> T httpsGet(String url, Class<T> typed) {
-        return executeGet(url, httpsClient.build(), typed);
+        return executeRequest(RequestBuilder.get().setUri(url).build(), httpsClient.build(), typed);
     }
 
-    public static <T> T executeGet(String url, CloseableHttpClient httpClient, Class<T> typed) {
+    private static <T> T executeRequest(HttpUriRequest request, CloseableHttpClient httpClient, Class<T> typed) {
         try {
-            CloseableHttpResponse response = httpClient.execute(RequestBuilder.get().setUri(url).build());
+            CloseableHttpResponse response = httpClient.execute(request);
             if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value()) {
                 return null;
             }
@@ -101,9 +103,23 @@ public final class HttpUtils {
             }
             return JsonUtils.fromJson(jsonStr, typed);
         } catch (IOException e) {
-            LOGGER.error("An error occur when request URL:\t {}", url);
-            throw new ResourceException(DomainException.GENERAL_ERROR, "An error occur when request: " + url, e);
+            LOGGER.error("An error occur when request URL:\t {}", request.getURI());
+            throw new ResourceException(DomainException.GENERAL_ERROR, "An error occur when request: " + request.getURI(), e);
         }
     }
 
+    public static <T> T httpsPost(String url, Object requestObject, Class<T> typed) {
+        String jsonRequest;
+        if (requestObject instanceof String) {
+            jsonRequest = (String) requestObject;
+        } else {
+            jsonRequest = JsonUtils.toJson(requestObject);
+        }
+        HttpUriRequest post = RequestBuilder
+                .post()
+                .setUri(url)
+                .setEntity(new StringEntity(jsonRequest, StandardCharsets.UTF_8))
+                .build();
+        return executeRequest(post, httpsClient.build(), typed);
+    }
 }
