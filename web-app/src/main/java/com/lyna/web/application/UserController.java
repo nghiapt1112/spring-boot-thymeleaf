@@ -38,11 +38,11 @@ public class UserController extends AbstractCustomController {
 
     private static final String REDIRECT_TO_USER_LIST_PAGE = "redirect:/user/list";
 
-    private static  final String USER_REGISTER_PAGE = "user/user-create";
+    private static final String USER_REGISTER_PAGE = "user/user-create";
 
-    private static  final String USER_UPDATE_PAGE = "user/user-update";
+    private static final String USER_UPDATE_PAGE = "user/user-update";
 
-    private static  final String USER_PROFILE_PAGE = "user/profile";
+    private static final String USER_PROFILE_PAGE = "user/profile";
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -64,7 +64,7 @@ public class UserController extends AbstractCustomController {
     @PostMapping(value = {"/register", "/register/"})
     @IsAdmin
     public String registerUser(@ModelAttribute @Valid UserAggregate userRegisterAggregate, UsernamePasswordAuthenticationToken principal,
-    Model model) {
+                               Model model) {
         User currentUser = (User) principal.getPrincipal();
 
         try {
@@ -104,6 +104,8 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("createUser", currentUser.getId());
+        model.addAttribute("updateUser", currentUser.getId());
         return USER_UPDATE_PAGE;
     }
 
@@ -115,13 +117,15 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("createUser", currentUser.getCreateUser());
+        model.addAttribute("updateUser", currentUser.getUpdateUser());
         return USER_PROFILE_PAGE;
     }
 
     @PostMapping(value = {"/profile"})
     public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
-        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
@@ -144,7 +148,7 @@ public class UserController extends AbstractCustomController {
     public String updateUser(UsernamePasswordAuthenticationToken principal, @Valid UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
 
-        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(),aggregate.getUserId());
+        User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
