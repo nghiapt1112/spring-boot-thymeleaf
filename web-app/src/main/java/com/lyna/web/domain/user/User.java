@@ -146,7 +146,7 @@ public class User extends AbstractEntity implements UserDetails {
         this.email = userToUpdate.email;
         this.password = userToUpdate.password;
         this.role = userToUpdate.role;
-        this.createUser = userToUpdate.getId();
+//        this.createUser = userToUpdate.getId();
         this.updateUser = userToUpdate.getId();
         this.initDefaultFieldsUpdate();
     }
