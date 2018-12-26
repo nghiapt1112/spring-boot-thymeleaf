@@ -3,6 +3,7 @@ package com.lyna.web.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
@@ -69,8 +70,7 @@ public class StoreController extends AbstractCustomController {
             log.error(e.getMessage());
         }
         storeService.create(store, user);
-        //ToDo: set 1 to file contans!
-        DataUtils.putMapData(1, store.getStoreId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, store.getStoreId());
         return REDIRECT_STORE_LIST_PAGE;
     }
 
@@ -93,8 +93,7 @@ public class StoreController extends AbstractCustomController {
             log.error(e.getMessage());
         }
         storeService.update(store, user);
-        //ToDo: Set 3 to file const
-        DataUtils.putMapData(3, store.getStoreId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, store.getStoreId());
         return REDIRECT_STORE_LIST_PAGE;
 
     }
@@ -133,8 +132,7 @@ public class StoreController extends AbstractCustomController {
         try {
             boolean response = postCourseService.deleteByStoreIdsAndTenantId(storeIds, user.getTenantId());
             ajaxResponse = mapper.writeValueAsString(response);
-            //ToDo: cho 2 to class const
-            DataUtils.putMapData(2, storeIds.toString());
+            DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, storeIds.toString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

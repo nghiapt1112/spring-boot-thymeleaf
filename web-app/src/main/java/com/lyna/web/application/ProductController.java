@@ -1,6 +1,7 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.service.OrderDetailService;
 import com.lyna.web.domain.product.Product;
@@ -63,8 +64,7 @@ public class ProductController extends AbstractCustomController {
         }
 
         productService.create(product, user);
-        //ToDo: set 1 to file contans!
-        DataUtils.putMapData(1, product.getProductId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, product.getProductId());
         return REDIRECT_PRODUCT_LIST_PAGE;
     }
 
@@ -89,8 +89,7 @@ public class ProductController extends AbstractCustomController {
         }
 
         productService.update(product, user);
-        //ToDo: Set 3 to file const
-        DataUtils.putMapData(3, product.getProductId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, product.getProductId());
         model.addAttribute("message", "成功に新規作成した");
 
         return REDIRECT_PRODUCT_LIST_PAGE;
@@ -112,8 +111,7 @@ public class ProductController extends AbstractCustomController {
         User user = (User) principal.getPrincipal();
         if (!Objects.isNull(productIds) && !CollectionUtils.isEmpty(productIds)) {
             orderDetailService.deleteByProductIdsAndTenantId(productIds, user.getTenantId());
-            //ToDo: cho 2 to class const
-            DataUtils.putMapData(2, productIds.toString());
+            DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, productIds.toString());
             return "true";
         }
         return "false";

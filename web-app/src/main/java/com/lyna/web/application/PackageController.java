@@ -1,6 +1,7 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
 import com.lyna.web.domain.mpackage.Package;
@@ -49,8 +50,7 @@ public class PackageController extends AbstractCustomController {
         }
 
         packageService.create(mpackage, user);
-        //ToDo: set 1 to file contans!
-        DataUtils.putMapData(1, mpackage.getPackageId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, mpackage.getPackageId());
         return REDIRECT_PACKAGE_LIST_PAGE;
     }
 
@@ -65,8 +65,7 @@ public class PackageController extends AbstractCustomController {
         }
 
         packageService.update(mpackage, user);
-        //ToDo: Set 3 to file const
-        DataUtils.putMapData(3, mpackage.getPackageId());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, mpackage.getPackageId());
         return REDIRECT_PACKAGE_LIST_PAGE;
 
     }
@@ -84,8 +83,7 @@ public class PackageController extends AbstractCustomController {
     String deleteByPackageIds(@RequestParam(value = "ojectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId());
-        //ToDo: cho 2 to class const
-        DataUtils.putMapData(2, packageIds.toString());
+        DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, packageIds.toString());
         return "true";
     }
 
