@@ -1,6 +1,7 @@
 server:
   port: 20124
 
+
 spring:
   application:
     name: lyna-spring-boot-thymeleaf
