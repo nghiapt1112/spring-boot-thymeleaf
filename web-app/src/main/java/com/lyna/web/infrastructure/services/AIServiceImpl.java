@@ -30,17 +30,14 @@ public class AIServiceImpl extends BaseService {
     @Value("${lyna.ai.url}")
     private String AI_URL;
 
-    public void callTraining(Set<String> orderIds) {
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(1, orderIds);
+    public void callTraining(int tenantId, Set<String> orderIds) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(tenantId, orderIds);
         if (CollectionUtils.isEmpty(orderDetails)) {
             return;
         }
 
         Map<String, List<OrderDetail>> orderDetailsByOrderId = orderDetails.stream()
                 .collect(Collectors.groupingBy(OrderDetail::getOrderId, Collectors.mapping(el -> el, Collectors.toList())));
-
-        List<Product> productInTenants = productRepository.findByTenantId(1);
-
 
         // Map: orderId -> Map{productId - amount}
         Map<String, Map<String, BigDecimal>> productAmountByProductId = new HashMap<>();
@@ -50,24 +47,35 @@ public class AIServiceImpl extends BaseService {
                     .collect(Collectors.toMap(OrderDetail::getProductId, OrderDetail::getAmount, (o1, o2) -> o1)))
         );
 
+        List<Product> productInTenants = productRepository.findByTenantId(tenantId);
 
-        List<List<Integer>> dataAI = productAmountByProductId
-                .entrySet()
-                .stream()
-                .map(entry -> productInTenants
+        Map<String, List<Integer>> unknowDatasAI = new HashMap<>();
+        productAmountByProductId.forEach((orderId, amountByProductId) -> {
+            List<Integer> parsedVal = this.fillPackageAmountToEachOrder(productInTenants, amountByProductId);
+            unknowDatasAI.put(orderId, parsedVal);
+
+        });
+
+
+        AIData data = new AIData();
+        data.parse(unknowDatasAI);
+
+        Object response = HttpUtils.httpsPost(AI_URL, data, null);
+
+        // TODO: parse data save to logistic_detail, logistic
+    }
+
+    private List<Integer> fillPackageAmountToEachOrder(List<Product> productInTenants, Map<String, BigDecimal> amountByProductId) {
+        return productInTenants
                         .stream()
                         .map(product -> {
-                            BigDecimal amount = entry.getValue().get(product.getProductId());
+                            BigDecimal amount = amountByProductId.get(product.getProductId());
                             if (Objects.isNull(amount)) {
                                 return 0;
                             }
                             return amount.intValue();
                         })
-                        .collect(Collectors.toList())
-                )
-                .collect(Collectors.toList());
-
-        HttpUtils.httpsPost(AI_URL, dataAI, null);
+                        .collect(Collectors.toList());
     }
 
 }
