@@ -12,4 +12,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, String
 
     List<OrderDetail> findByTenantIdAndProductId(int tenantId, String productId);
 
+    List<OrderDetail> findByOrderIdAndProductIdAndTenantId(String orderId, String productId, int tenantId);
+
+
 }
