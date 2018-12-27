@@ -4,7 +4,7 @@ import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.impl.DeliveryDetailRepositoryImpl;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
-import com.lyna.web.domain.logicstics.repository.LogiticDetailRepository;
+import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
 import com.lyna.web.domain.mpackage.exception.PackageException;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
     private DeliveryDetailRepository deliveryDetailRepository;
 
     @Autowired
-    private LogiticDetailRepository LogiticDetailRepository;
+    private LogisticDetailRepository logisticDetailRepository;
 
     @Autowired
     private PackageRepository packageRepository;
@@ -34,7 +34,7 @@ public class DeliveryDetailServiceImpl extends BaseService implements DeliveryDe
     public boolean deleteDeliveryDetailByPackageIdsAndTenantId(List<String> packageIds, int tenantId) {
         try {
             deliveryDetailRepository.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, tenantId);
-            LogiticDetailRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
+            logisticDetailRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             packageRepository.deleteByPackageIdsAndTenantId(packageIds, tenantId);
             return true;
         } catch (Exception e) {

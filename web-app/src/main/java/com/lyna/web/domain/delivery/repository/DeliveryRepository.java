@@ -11,4 +11,5 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     String checkExistByOrderIdAndOrderDate(String orderId, String orderDate);
 
     Iterator<CsvDelivery> getMapDelivery(Reader reader);
+
 }

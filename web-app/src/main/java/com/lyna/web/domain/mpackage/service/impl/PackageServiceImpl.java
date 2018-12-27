@@ -1,6 +1,10 @@
 package com.lyna.web.domain.mpackage.service.impl;
 
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.delivery.DeliveryDetail;
+import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
+import com.lyna.web.domain.logicstics.LogiticsDetail;
+import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.exception.PackageException;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
@@ -13,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PackageServiceImpl extends BaseService implements PackageService {
@@ -23,12 +29,29 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     @Autowired
     private PackageRepository packageRepository;
 
+    @Autowired
+    private DeliveryDetailRepository deliveryDetailRepository;
+
+    @Autowired
+    private LogisticDetailRepository logisticDetailRepository;
+
     @Override
     @Transactional
     public void update(Package mpackage, User user) {
         Date date = new Date();
         mpackage.setUpdateDate(date);
         mpackage.setUpdateUser(user.getId());
+
+        List<DeliveryDetail> deliveryDetails = deliveryDetailRepository.findByTenantIdAndPackageId(user.getTenantId(), mpackage.getPackageId());
+        if (!Objects.isNull(deliveryDetails)) {
+            mpackage.setDeliveryDetails(new HashSet<DeliveryDetail>(deliveryDetails));
+        }
+
+        List<LogiticsDetail> logiticsDetails = logisticDetailRepository.findByTenantIdAndPackageId(user.getTenantId(), mpackage.getPackageId());
+        if (!Objects.isNull(logiticsDetails)) {
+            mpackage.setLogiticsDetails(new HashSet<LogiticsDetail>(logiticsDetails));
+        }
+
         try {
             packageRepository.save(mpackage);
         } catch (Exception e) {
