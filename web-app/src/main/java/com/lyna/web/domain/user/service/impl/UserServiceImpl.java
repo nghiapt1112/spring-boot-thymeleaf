@@ -120,7 +120,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User findByUserIdAndTenantId(int tenantId, String userId) {
+    public User findByUserIdAndTenantId(int tenantId, String userId ) {
         User user = this.userRepository.findByUserIdAndTenantId(tenantId, userId);
         if (Objects.isNull(user)) {
             throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
@@ -134,7 +134,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User oldUser = this.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
         userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
-        oldUser.updateInfo(userToUpdate);
+        oldUser.updateInfo(userToUpdate, currentUser);
         try {
             this.userRepository.save(oldUser);
 

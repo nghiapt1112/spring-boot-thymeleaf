@@ -128,8 +128,6 @@ public class User extends AbstractEntity implements UserDetails {
         this.tenantId = currentUser.getTenantId();
         this.initDefaultFieldsCreate();
         this.createUser = currentUser.getId();
-        this.initDefaultFieldsUpdate();
-        this.updateUser = currentUser.getId();
         return this;
     }
 
@@ -141,13 +139,13 @@ public class User extends AbstractEntity implements UserDetails {
         return this.stores.stream();
     }
 
-    public void updateInfo(User userToUpdate) {
+    public void updateInfo(User userToUpdate , User currentUser) {
         this.name = userToUpdate.name;
         this.email = userToUpdate.email;
         this.password = userToUpdate.password;
         this.role = userToUpdate.role;
-//        this.createUser = userToUpdate.getId();
-        this.updateUser = userToUpdate.getId();
+        this.updateUser = currentUser.getId();
         this.initDefaultFieldsUpdate();
+
     }
 }

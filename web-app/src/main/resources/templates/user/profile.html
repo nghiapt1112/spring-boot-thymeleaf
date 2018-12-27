@@ -33,8 +33,8 @@
                                         <div class="form-group col-md-6" style="">
                                             <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
                                                     th:disabled="${role == 0}">
-                                                <option value="1">管理者</option>
-                                                <option value="0">一般ユーザー</option>
+                                                <option th:value="1">管理者</option>
+                                                <option th:value="0">一般ユーザー</option>
                                             </select>
                                         </div>
                                         <div class="col-md-1"></div>
@@ -45,7 +45,8 @@
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
-                                            <em id="error_exitsted" class="error_show" th:utext="${errorEmailShow}"></em>
+                                            <em id="error_exitsted" class="error_show"
+                                                th:utext="${errorEmailShow}"></em>
                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>
