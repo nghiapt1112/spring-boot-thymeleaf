@@ -34,10 +34,10 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー権限</span>
                                         <div class="form-group col-md-6" style="">
-                                            <select class="form-control" id="role" th:disabled="${role == 0}" th:field="*{role}"
-                                                    th:value="${role}">
-                                                <option value="1">管理者</option>
-                                                <option value="0">一般ユーザー</option>
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
+                                                <option th:value="1">管理者</option>
+                                                <option th:value="0">一般ユーザー</option>
                                             </select>
                                         </div>
                                         <div class="col-md-1"></div>
@@ -45,7 +45,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
-                                            <input class="form-control" id="email" th:errorclass="field-error" th:field="*{email}"
+                                            <input class="form-control" id="email" th:errorclass="field-error"
+                                                   th:field="*{email}"
                                                    type="text">
                                             <em class="error" id="errorEmail">メールアドレスは必須です。</em>
                                             <em class="error_show" id="error_exitsted"
@@ -59,7 +60,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
-                                            <input class="form-control" id="userName" th:errorclass="field-error" th:field="*{userName}"
+                                            <input class="form-control" id="userName" th:errorclass="field-error"
+                                                   th:field="*{userName}"
                                                    type="text">
                                             <em class="error" id="errorUserName">ユーザー名は必須です。</em>
                                             <em class="error_show" th:errors="*{userName}"
@@ -108,12 +110,14 @@
 
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
-                                                <input th:checked="${aggregate.rolePerStore[__${el.index}__].canView}" th:disabled="${role==0}"
+                                                <input th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
+                                                       th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        type="checkbox">
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanedit">
-                                                <input th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}" th:disabled="${role==0}"
+                                                <input th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
+                                                       th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        type="checkbox">
                                             </div>

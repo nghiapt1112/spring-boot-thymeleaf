@@ -101,6 +101,7 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
+
         return USER_UPDATE_PAGE;
     }
 
@@ -112,6 +113,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
+
         return USER_PROFILE_PAGE;
     }
 

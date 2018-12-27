@@ -139,10 +139,13 @@ public class User extends AbstractEntity implements UserDetails {
         return this.stores.stream();
     }
 
-    public void updateInfo(User userToUpdate) {
+    public void updateInfo(User userToUpdate , User currentUser) {
         this.name = userToUpdate.name;
         this.email = userToUpdate.email;
         this.password = userToUpdate.password;
         this.role = userToUpdate.role;
+        this.updateUser = currentUser.getId();
+        this.initDefaultFieldsUpdate();
+
     }
 }

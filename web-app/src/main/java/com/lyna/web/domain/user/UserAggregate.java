@@ -55,6 +55,8 @@ public class UserAggregate extends AbstractObject {
         this.email = user.getEmail();
         this.userName = user.getName();
         this.userId = user.getId();
+        this.password = user.getPassword();
+        this.role = user.getRole();
 
         Map<String, String> storeNameById = user.getStoresAsStream()
                 .collect(Collectors.toMap(Store::getStoreId, store -> store.getName(), (o1, o2) -> o1));
