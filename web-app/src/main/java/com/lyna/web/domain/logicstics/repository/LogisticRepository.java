@@ -7,5 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LogisticRepository extends JpaRepository<Logistics, String>, PagingRepository {
-    List<Logistics> findByTenantIdAndOrderId(int tenantId, String orderId);
+    List<String> findByTenantIdAndOrderId(int tenantId, String orderId);
+
+    List<String> findByTenantIdAndOrderIds(int tenantId, List<String> orderIds);
+
+    void deleteByLogisticsIdsAndTenantId(List<String> logisticsIds, int tenantId);
 }

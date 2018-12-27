@@ -12,4 +12,7 @@ public interface PostCourseRepository extends JpaRepository<PostCourse, String> 
 
     boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
+    void deleteByPostCourseIdsAndTenantId(List<String> postCourseIds, int tenantId);
+
+    List<String> findAllByStoreIdAndTenantId(int tenantId, List<String> storeIds);
 }

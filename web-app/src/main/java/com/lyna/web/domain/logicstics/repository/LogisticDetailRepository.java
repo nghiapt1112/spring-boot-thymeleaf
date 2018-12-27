@@ -1,6 +1,5 @@
 package com.lyna.web.domain.logicstics.repository;
 
-import com.lyna.web.domain.logicstics.Logistics;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
 import com.lyna.web.infrastructure.repository.PagingRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +15,8 @@ public interface LogisticDetailRepository extends JpaRepository<LogiticsDetail, 
     List<LogiticsDetail> findByTenantIdAndLogisticsId(int tenantId, String logisticsId);
 
     boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId);
+
+    boolean deleteByLogisticsIdAndTenantId(List<String> logisticsIds, int tenantId);
 
     List<LogiticsDetail> findByTenantIdAndPackageId(int tenantId, String packageId);
 
