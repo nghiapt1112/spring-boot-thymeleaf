@@ -1,14 +1,12 @@
 package com.lyna.commons.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DataUtils {
 
-    private static final String DATE_FORMAT = "yyyy/MM/dd";
-    private static final String DATE_FORMAT_VI = "yyyy-MM-dd";
+    private static Map<Integer, String> mapStore = new HashMap<>();
 
     public static boolean isNumeric(String str) {
         try {
@@ -17,5 +15,31 @@ public class DataUtils {
             return false;
         }
         return true;
+    }
+
+    public static void putMapData(int type, String id) {
+        mapStore.clear();
+        mapStore.put(type, id);
+    }
+
+    public static void evicMapData() {
+        mapStore.clear();
+    }
+
+    public static String getMapData() {
+        AtomicReference<String> result = new AtomicReference<>("");
+        mapStore.forEach((type, id) -> {
+            if (type == 1) {
+                result.set("成功に新規作成した");
+            }
+            if (type == 2) {
+                result.set("成功に削除した ");
+            }
+            if (type == 3) {
+                result.set("成功に更新した");
+            }
+        });
+        mapStore.clear();
+        return result.get().isEmpty() ? null : result.get();
     }
 }

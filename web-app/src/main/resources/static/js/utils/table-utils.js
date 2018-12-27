@@ -21,7 +21,7 @@ function deleteTable(apiName, tableId) {
             var ojectIds = [];
             $(tableId + " > tbody input:checked").each(function () {
                 ojectIds.push($(this).val());
-            })
+            });
             $.ajax({
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
@@ -38,10 +38,10 @@ function deleteTable(apiName, tableId) {
                 success: function (data) {
                     if (data == true) {
                         window.location.href = "/" + apiName + "/list";
+                        //alert("成功に削除した ");
                     } else {
                         alert("削除しました。");
                     }
-
                 },
                 error: function (e) {
                     alert("削除しました。");
@@ -50,6 +50,7 @@ function deleteTable(apiName, tableId) {
         }
     })
 }
+
 function dataTable(tableId) {
     $(tableId).DataTable({
         'paging': true,

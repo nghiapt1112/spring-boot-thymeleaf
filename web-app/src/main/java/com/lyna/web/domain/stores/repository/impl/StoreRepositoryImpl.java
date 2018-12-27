@@ -28,7 +28,6 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
     @Override
     public List<Store> getAll(int tenantId) {
 
-        //ToDo: LinhNM: test if tenantId is null => has get info ?
         TypedQuery<Store> query =
                 entityManager.createNamedQuery("Store.getAll", Store.class)
                         .setParameter("tenantId", tenantId);

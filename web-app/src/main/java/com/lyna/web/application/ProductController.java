@@ -1,6 +1,8 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.Constants;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.order.service.OrderDetailService;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.service.ProductService;
@@ -14,13 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -67,8 +63,8 @@ public class ProductController extends AbstractCustomController {
             log.error(e.getMessage());
         }
 
-
         productService.create(product, user);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, product.getProductId());
         return REDIRECT_PRODUCT_LIST_PAGE;
     }
 
@@ -81,7 +77,7 @@ public class ProductController extends AbstractCustomController {
             model.addAttribute("product", product);
             return PRODUCT_EDIT_PAGE;
         }
-        Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(),product.getTenantId());
+        Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(), product.getTenantId());
         try {
             if (!product.getCode().equals(productExisted.getCode()) && !Objects.isNull(productService.findOneByCode(product.getCode()))) {
                 model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
@@ -93,6 +89,8 @@ public class ProductController extends AbstractCustomController {
         }
 
         productService.update(product, user);
+        DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, product.getProductId());
+        model.addAttribute("message", "成功に新規作成した");
 
         return REDIRECT_PRODUCT_LIST_PAGE;
 
@@ -100,8 +98,10 @@ public class ProductController extends AbstractCustomController {
 
     @GetMapping(value = "/list")
     public String listPackage(Model model, UsernamePasswordAuthenticationToken principal) {
+
         User user = (User) principal.getPrincipal();
         model.addAttribute("products", productService.findByTenantIdAndTenantId(user.getTenantId()));
+        model.addAttribute("message", DataUtils.getMapData());
         return PRODUCT_LIST_PAGE;
     }
 
@@ -110,7 +110,8 @@ public class ProductController extends AbstractCustomController {
     String deleteByProductIds(@RequestParam(value = "ojectIds[]") List<String> productIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         if (!Objects.isNull(productIds) && !CollectionUtils.isEmpty(productIds)) {
-            orderDetailService.deleteByProductIdsAndTenantId(productIds,user.getTenantId());
+            orderDetailService.deleteByProductIdsAndTenantId(productIds, user.getTenantId());
+            DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, productIds.toString());
             return "true";
         }
         return "false";
