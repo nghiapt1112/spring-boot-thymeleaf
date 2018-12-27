@@ -2,6 +2,8 @@ package com.lyna.web.domain.product.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.order.OrderDetail;
+import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.exeption.ProductException;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -14,14 +16,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService {
 
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
     @Transactional
@@ -29,6 +37,11 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         Date date = new Date();
         product.setUpdateDate(date);
         product.setUpdateUser(user.getId());
+
+        List<OrderDetail> orderDetails = orderDetailRepository.findByTenantIdAndProductId(user.getTenantId(), product.getProductId());
+        if(!Objects.isNull(orderDetails)){
+            product.setOrderDetails(new HashSet<OrderDetail>(orderDetails));
+        }
         try {
             productRepository.save(product);
         } catch (Exception e) {

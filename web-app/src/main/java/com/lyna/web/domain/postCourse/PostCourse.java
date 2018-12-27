@@ -6,6 +6,7 @@ import com.lyna.web.domain.order.Order;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Id;

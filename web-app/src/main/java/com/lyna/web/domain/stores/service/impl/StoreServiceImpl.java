@@ -2,6 +2,18 @@ package com.lyna.web.domain.stores.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.delivery.Delivery;
+import com.lyna.web.domain.delivery.DeliveryDetail;
+import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
+import com.lyna.web.domain.delivery.repository.DeliveryRepository;
+import com.lyna.web.domain.logicstics.Logistics;
+import com.lyna.web.domain.logicstics.LogiticsDetail;
+import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
+import com.lyna.web.domain.logicstics.repository.LogisticRepository;
+import com.lyna.web.domain.order.Order;
+import com.lyna.web.domain.order.OrderDetail;
+import com.lyna.web.domain.order.repository.OrderDetailRepository;
+import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
@@ -22,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,6 +52,9 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 
     @Autowired
     private UserStoreAuthorityRepository userStoreAuthorityRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     public List<Store> findByTenantId(int tenantId) {
         return this.storeRepository.findByTenantId(tenantId);
@@ -143,6 +159,10 @@ public class StoreServiceImpl extends BaseService implements StoreService {
                 } else {
                     for (int i = 0; i < postCourses.size(); i++) {
                         if (postCourse.getPostCourseId().equals(postCourses.get(i).getPostCourseId())) {
+                            List<Order> orders = orderRepository.findByTenantIdAndPostCourseId(user.getTenantId(), postCourse.getPostCourseId());
+                            if (!Objects.isNull(orders)) {
+                                postCourse.setOrders(new HashSet<Order>(orders));
+                            }
                             postCourse.setUpdateDate(date);
                             postCourse.setUpdateUser(user.getId());
                             postCourses.set(i, postCourse);

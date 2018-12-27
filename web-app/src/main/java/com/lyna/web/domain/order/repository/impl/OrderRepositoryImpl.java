@@ -84,6 +84,14 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
+    public List<Order> findByTenantIdAndPostCourseId(int tenantId, String postCourseId) {
+        return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId AND o.postCourseId = :postCourseId")
+                .setParameter("tenantId", tenantId)
+                .setParameter("postCourseId", postCourseId)
+                .getResultList();
+    }
+
+    @Override
     public List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage) {
         TypedQuery<OrderView> tQuery = entityManager.createQuery(
                 orderRequestPage.getSelect()

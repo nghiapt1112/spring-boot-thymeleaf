@@ -2,6 +2,8 @@ package com.lyna.web.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.web.domain.delivery.Delivery;
+import com.lyna.web.domain.logicstics.Logistics;
 import lombok.Data;
 
 import javax.persistence.NamedQueries;
@@ -38,6 +40,16 @@ public class Order extends AbstractEntity {
     @OneToMany
     @JoinColumn(name = "order_id")
     private Set<OrderDetail> orderDetails;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private Set<Logistics> logistics;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private Set<Delivery> deliveries;
 
     public Order() {
         this.orderId = UUID.randomUUID().toString();

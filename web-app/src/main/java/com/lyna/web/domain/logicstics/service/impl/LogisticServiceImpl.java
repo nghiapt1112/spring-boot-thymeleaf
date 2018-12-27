@@ -52,7 +52,7 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         // show original delivery.
         List<LogisticAggregate> deliveryOriginalView = deliveryView.stream()
                 .filter(el -> !logisticPackagesByOrderId.entrySet().contains(el.getOrderId()))
-                .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName ,deliveryPackagesByOrderId))
+                .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName, deliveryPackagesByOrderId))
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -67,16 +67,16 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
     private Map<String, List<PackageAggregate>> groupDPackagesByOrderId(List<DeliveryView> deliveryView) {
         return deliveryView.stream()
-                    .parallel()
-                    .map(PackageAggregate::fromDeliveryView) // to PackageAggregate
-                    .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
+                .parallel()
+                .map(PackageAggregate::fromDeliveryView) // to PackageAggregate
+                .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
     }
 
     private Map<String, List<PackageAggregate>> groupLPackagesByOrderId(List<LogisticView> logisticView) {
         return logisticView.stream()
-                    .parallel()
-                    .map(PackageAggregate::fromLogisticView) // to PackageAggregate
-                    .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
+                .parallel()
+                .map(PackageAggregate::fromLogisticView) // to PackageAggregate
+                .collect(Collectors.groupingBy(PackageAggregate::getOrderId));
     }
 
 }

@@ -25,4 +25,13 @@ public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Strin
         return true;
     }
 
+
+    @Override
+    public List<OrderDetail> findByTenantIdAndProductId(int tenantId, String productId) {
+        return entityManager.createQuery("SELECT o FROM OrderDetail o WHERE o.tenantId = :tenantId AND o.productId = :productId")
+                .setParameter("tenantId", tenantId)
+                .setParameter("productId", productId)
+                .getResultList();
+    }
+
 }
