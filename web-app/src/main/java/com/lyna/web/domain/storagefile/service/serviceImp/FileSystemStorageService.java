@@ -106,6 +106,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         if (file.isEmpty()) {
             mapError.put(500, "空のファイルを保存出来ない。" + filename);
         }
+
         if (filename.contains("..")) {
             mapError.put(500, "現在のディレクトリの外に相対パスを持つファイルを保存できません");
         }
@@ -511,37 +512,54 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 String orderId = "";
                 String key = postCourseId + "_" + csvOrder.getOrderDate().trim();
 
-                if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(key)) {
-                    orderId = mapKeyOrderId.get(key);
+                orderId = orderRepository.checkExists(postCourseId, csvOrder.getOrderDate().trim(), tenantId);
+
+                if (orderId != null) {
+                    List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIdAndProductIdAndTenantId(orderId, productId, tenantId);
+                    if (orderDetails != null) {
+                        orderDetails.forEach(orderDetail -> {
+                            orderDetail.setUpdateDate(new Date());
+                            orderDetail.setCreateUser(userId);
+                            orderDetail.setAmount(new BigDecimal(csvOrder.getQuantity()));
+                            ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
+                        });
+                    } else
+                        setOrderDetailIterable(orderId, productId, csvOrder, tenantId, userId);
                 } else {
-                    Order order = new Order();
-                    orderId = order.getOrderId();
-                    mapKeyOrderId.put(key, orderId);
-                    Date date = converStringToDate(csvOrder.getOrderDate());
-                    if (date == null)
-                        date = new Date();
+                    if (mapKeyOrderId != null && !mapKeyOrderId.isEmpty() && mapKeyOrderId.containsKey(key)) {
+                        orderId = mapKeyOrderId.get(key);
+                    } else {
+                        Order order = new Order();
+                        orderId = order.getOrderId();
+                        mapKeyOrderId.put(key, orderId);
+                        Date date = converStringToDate(csvOrder.getOrderDate());
+                        if (date == null)
+                            date = new Date();
 
-                    order.setOrderDate(date);
-                    order.setCreateDate(date);
-                    order.setCreateUser(userId);
+                        order.setOrderDate(date);
+                        order.setCreateDate(date);
+                        order.setCreateUser(userId);
 
-                    order.setPostCourseId(postCourseId);
-                    order.setTenantId(tenantId);
-                    ((HashSet<Order>) orderIterable).add(order);
+                        order.setPostCourseId(postCourseId);
+                        order.setTenantId(tenantId);
+                        ((HashSet<Order>) orderIterable).add(order);
+                    }
+                    setOrderDetailIterable(orderId, productId, csvOrder, tenantId, userId);
                 }
-
-                OrderDetail orderDetail = new OrderDetail();
-                orderDetail.setOrderId(orderId);
-                orderDetail.setProductId(productId);
-                BigDecimal quantity = new BigDecimal(csvOrder.getQuantity());
-                orderDetail.setAmount(quantity);
-                orderDetail.setTenantId(tenantId);
-                orderDetail.setCreateDate(new Date());
-                orderDetail.setCreateUser(userId);
-                ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
-
             });
         }
+    }
+
+    private void setOrderDetailIterable(String orderId, String productId, CsvOrder csvOrder, int tenantId, String userId) {
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(orderId);
+        orderDetail.setProductId(productId);
+        BigDecimal quantity = new BigDecimal(csvOrder.getQuantity());
+        orderDetail.setAmount(quantity);
+        orderDetail.setTenantId(tenantId);
+        orderDetail.setCreateDate(new Date());
+        orderDetail.setCreateUser(userId);
+        ((HashSet<OrderDetail>) orderDetailIterable).add(orderDetail);
     }
 
     private void saveDataMaster() throws DomainException {
