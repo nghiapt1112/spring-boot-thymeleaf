@@ -84,7 +84,7 @@ public class StoreController extends AbstractCustomController {
         }
         Store storeExisted = storeService.findByCodeAndTenantId(store.getCode(), user.getTenantId());
         try {
-            if (!Objects.isNull(storeExisted)) {
+            if (!Objects.isNull(storeExisted) && !storeExisted.getCode().equals(store.getCode())) {
                 model.addAttribute("errorStoreExitsted", "このコードは既に存在します。");
                 model.addAttribute("store", store);
                 return STORE_EDIT_PAGE;
