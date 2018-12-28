@@ -112,54 +112,41 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     public String deleteStoreAndTenantId(List<String> storeIds, int tenantId) {
         boolean isDeletedStore = false;
 
-        //ToDo: Delete StoreAuthority
         userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(storeIds);
 
-        //ToDo: Get all postCourseId
         List<String> postCoursesIds = postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeIds);
 
         if (postCoursesIds != null && postCoursesIds.size() > 0) {
-            //ToDo: Get all t_order by postCourseId
             List<String> orderIds = orderRepository.findByTenantIdAndPostCourseId(tenantId, postCoursesIds);
 
             if (orderIds != null && orderIds.size() > 0) {
-                //ToDo: Get All t_delivery by OrderID
                 List<String> deliveryIds = deliveryRepository.findByTenantIdAndOrderId(tenantId, orderIds);
 
-                //ToDo: Get All t_logicstic by OrderId
                 List<String> logisticIds = logisticRepository.findByTenantIdAndOrderIds(tenantId, orderIds);
 
-                //ToDo Delete All t_logistic_detail by logisticsId
                 if (logisticIds != null && logisticIds.size() > 0)
                     logisticDetailRepository.deleteByLogisticsIdAndTenantId(logisticIds, tenantId);
 
-                //ToDo: Delete All t_delivery_detail by deliveryIds
                 if (deliveryIds != null && deliveryIds.size() > 0)
                     deliveryDetailRepository.deleteDeliveryDetailByDeliveryIdsAndTenantId(deliveryIds, tenantId);
 
-                //ToDo: Delete All t_OrderDetail by OrderIds
                 if (orderIds != null && orderIds.size() > 0)
                     orderDetailRepository.deleteByOrderIdsAndTenantId(orderIds, tenantId);
 
-                //ToDo: Delete All t_delivery
                 if (deliveryIds != null && deliveryIds.size() > 0)
                     deliveryRepository.deleteByTenantIdAndDeliveryIds(tenantId, deliveryIds);
 
-                //ToDo: Delete All t_logistic
                 if (logisticIds != null && logisticIds.size() > 0)
                     logisticRepository.deleteByLogisticsIdsAndTenantId(logisticIds, tenantId);
 
-                //ToDo: Delete All t_order
                 if (orderIds != null && orderIds.size() > 0)
                     orderRepository.deleteByTenantIdAndOrderId(tenantId, orderIds);
             }
 
-            //ToDo: Delete Postcourse
             if (postCoursesIds != null && postCoursesIds.size() > 0)
                 postCourseRepository.deleteByPostCourseIdsAndTenantId(postCoursesIds, tenantId);
         }
-        
-        //toDo: Delete m_store by storeIDs
+
         if (storeIds != null && storeIds.size() > 0)
             isDeletedStore = storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
 
