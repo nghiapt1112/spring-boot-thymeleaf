@@ -8,27 +8,6 @@ $(document).ready(function () {
 
 });
 
-
-$(function () {
-    $(document).ready(function () {
-        var table = $('#table-order').DataTable();
-        $('#search').click(function () {
-            table.draw();
-        });
-        var table = $('#table-logicstic').DataTable();
-        $('#search').click(function () {
-            table.draw();
-        });
-        $("#min").datepicker({
-            format: 'yyyy/mm/dd'
-        });
-        $("#max").datepicker({
-            format: 'yyyy/mm/dd'
-        });
-    });
-});
-
-
 $(function () {
     $('button[type=submit]').click(function (e) {
 
