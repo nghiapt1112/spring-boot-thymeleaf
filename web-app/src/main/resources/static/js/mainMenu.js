@@ -78,7 +78,7 @@ $(function () {
 
             // Called on success of file upload
             ajaxReq.done(function (msg) {
-                $('#alertMsg').text(msg);
+                //$('#alertMsg').text(msg);
                 $('input[type=file]').val('');
                 $('button[type=submit]').prop('disabled', false);
                 window.location.href = "/mainScreen";
