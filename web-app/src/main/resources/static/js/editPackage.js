@@ -70,7 +70,7 @@ $(document).ready(function () {
                 $("#errorFormatFullLoadCapacity").removeClass("error_show").addClass("error");
             }
         }
-        checkForm = false;
+
         if (checkForm === false) {
             event.preventDefault();
         }

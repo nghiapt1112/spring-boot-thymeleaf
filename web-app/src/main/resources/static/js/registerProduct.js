@@ -23,7 +23,6 @@ $(document).ready(function () {
 
         var price = $("#price").val();
         if (isEmpty(price) || isBlank(price)) {
-
             $("#errorFormatPrice").removeClass("error_show").addClass("error");
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;
