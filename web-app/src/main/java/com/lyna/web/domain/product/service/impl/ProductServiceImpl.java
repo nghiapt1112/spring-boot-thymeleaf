@@ -87,9 +87,9 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public Product findOneByCode(String code) {
+    public Product findOneByCodeAndTenantId(String code, int tenantId) {
         try {
-            return productRepository.findOneByCode(code);
+            return productRepository.findOneByCodeAAndTenantId(code,tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));

@@ -109,12 +109,12 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
     }
 
     @Override
-    public Store findOneByCode(String code) {
-        return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.code=:code", Store.class)
+    public Store findByCodeAndTenantId(String code, int tenantId) {
+        List stores = entityManager
+                .createQuery("SELECT s FROM Store s WHERE s.code=:code and s.tenantId= :tenantId", Store.class)
                 .setParameter("code", code)
-                .getSingleResult();
-
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+        return (stores != null && stores.size() > 0) ? (Store) stores.get(0) : null;
     }
-
 }
