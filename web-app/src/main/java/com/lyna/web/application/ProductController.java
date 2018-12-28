@@ -16,7 +16,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -77,15 +83,13 @@ public class ProductController extends AbstractCustomController {
             model.addAttribute("product", product);
             return PRODUCT_EDIT_PAGE;
         }
-        Product productExisted = productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId());
-        try {
-            if (!Objects.isNull(productExisted) && !productExisted.getCode().equals(product.getCode())) {
+        Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(), user.getTenantId());
+        if (!productExisted.getCode().equals(product.getCode())) {
+            if (productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId()) != null) {
                 model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
         }
 
         productService.update(product, user);
