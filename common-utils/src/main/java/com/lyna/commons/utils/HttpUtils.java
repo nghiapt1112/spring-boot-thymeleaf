@@ -2,6 +2,7 @@ package com.lyna.commons.utils;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.exception.ResourceException;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.config.RequestConfig;
@@ -27,11 +28,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
-    private final static int DEFAULT_TIMEOUT = 1; // millis
+    private final static int DEFAULT_TIMEOUT = 100000; // millis
     public final static String APPLICATION_JSON_VALUE = "application/json";
     public final static String APPLICATION_JSON_UTF8_VALUE = APPLICATION_JSON_VALUE + ";charset=UTF-8";
 
@@ -108,18 +110,21 @@ public final class HttpUtils {
         }
     }
 
-    public static <T> T httpsPost(String url, Object requestObject, Class<T> typed) {
+    public static <T> T post(String url, Map<String, String> headers, Object requestObject, Class<T> typed) {
         String jsonRequest;
         if (requestObject instanceof String) {
             jsonRequest = (String) requestObject;
         } else {
             jsonRequest = JsonUtils.toJson(requestObject);
         }
-        HttpUriRequest post = RequestBuilder
+        RequestBuilder postBuilder = RequestBuilder
                 .post()
                 .setUri(url)
-                .setEntity(new StringEntity(jsonRequest, StandardCharsets.UTF_8))
-                .build();
-        return executeRequest(post, httpsClient.build(), typed);
+                .setEntity(new StringEntity(jsonRequest, StandardCharsets.UTF_8));
+
+        if (MapUtils.isNotEmpty(headers)) {
+            headers.forEach((k,v) -> postBuilder.addHeader(k,v));
+        }
+        return executeRequest(postBuilder.build(), httpsClient.build(), typed);
     }
 }

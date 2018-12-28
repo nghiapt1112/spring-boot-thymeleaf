@@ -84,4 +84,7 @@ public final class DateTimeUtils {
         return new Date(val);
     }
 
+    public static Date getCurrentDateTime() {
+        return new Date();
+    }
 }

@@ -2,6 +2,8 @@ package com.lyna.web.domain.logicstics;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lyna.commons.infrustructure.object.AbstractEntity;
+import com.lyna.commons.utils.DateTimeUtils;
+import com.lyna.web.domain.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "t_logistics")
@@ -35,4 +38,11 @@ public class Logistics extends AbstractEntity {
     @JoinColumn(name = "logistics_id")
     private Set<LogiticsDetail> logiticsDetails;
 
+    public Logistics(User currentUser, String orderId) {
+        this.logisticsId = UUID.randomUUID().toString();
+        this.orderId = orderId;
+        this.createDate = DateTimeUtils.getCurrentDateTime();
+        this.createUser = currentUser.getId();
+        this.tenantId = currentUser.getTenantId();
+    }
 }
