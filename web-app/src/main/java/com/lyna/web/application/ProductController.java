@@ -77,7 +77,7 @@ public class ProductController extends AbstractCustomController {
             model.addAttribute("product", product);
             return PRODUCT_EDIT_PAGE;
         }
-        Product productExisted = productService.findOneByCodeAndTenantId(product.getCode(), product.getTenantId());
+        Product productExisted = productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId());
         try {
             if (!Objects.isNull(productExisted)) {
                 model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
