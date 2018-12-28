@@ -4,7 +4,7 @@ $(document).ready(function () {
         var checkForm = true;
 
         var code = $("#code").val();
-        if (isEmpty(code)) {
+        if (isEmpty(code) || isBlank(code)) {
             $(this).closest("body").find(".button-submit").find("button").removeAttr("data-toggle").removeAttr("data-target");
             $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error").addClass("error_show");
@@ -15,7 +15,7 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (isEmpty(name)) {
+        if (isEmpty(name) || isBlank(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
 
         var price = $("#price").val();
-        if (isEmpty(price)) {
+        if (isEmpty(price) || isBlank(price)) {
             $("#errorFormatPrice").removeClass("error_show").addClass("error");
             $("#errorPrice").removeClass("error").addClass("error_show");
             checkForm = false;

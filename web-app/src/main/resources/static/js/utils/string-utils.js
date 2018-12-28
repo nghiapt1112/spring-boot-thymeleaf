@@ -23,6 +23,6 @@ function isNotExistedSpaceWhite(input){
 function isExistedString(input1, input2){
     return input1.includes(input2);
 }
-function isNotExistedString(input1, input2){
+        function isNotExistedString(input1, input2){
     return !isExistedString(input1, input2);
 }

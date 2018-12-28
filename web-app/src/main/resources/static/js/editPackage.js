@@ -4,7 +4,7 @@ $(document).ready(function () {
         var checkForm = true;
 
         var name = $("#name").val();
-        if (isEmpty(name)) {
+        if (isEmpty(name) || isBlank(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         }
         var emptyWeight = $("#emptyWeight").val();
-        if (isEmpty(emptyWeight)) {
+        if (isEmpty(emptyWeight) || isBlank(emptyWeight)) {
             $("#errorFormatEmptyWeight").removeClass("error_show").addClass("error");
             $("#errorEmptyWeight").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
 
         var fullLoadWeight = $("#fullLoadWeight").val();
-        if (isEmpty(fullLoadWeight)) {
+        if (isEmpty(fullLoadWeight) || isBlank(fullLoadWeight)) {
             $("#errorFormatFullLoadWeight").removeClass("error_show").addClass("error");
             $("#errorFullLoadWeight").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -42,7 +42,7 @@ $(document).ready(function () {
         }
 
         var emptyCapacity = $("#emptyCapacity").val();
-        if (isEmpty(emptyCapacity)) {
+        if (isEmpty(emptyCapacity) || isBlank(emptyCapacity)) {
             $("#errorFormatEmptyCapacity").removeClass("error_show").addClass("error");
             $("#errorEmptyCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -57,7 +57,7 @@ $(document).ready(function () {
         }
 
         var fullLoadCapacity = $("#fullLoadCapacity").val();
-        if (isEmpty(fullLoadCapacity)) {
+        if (isEmpty(fullLoadCapacity) || isBlank(fullLoadCapacity)) {
             $("#errorFormatFullLoadCapacity").removeClass("error_show").addClass("error");
             $("#errorFullLoadCapacity").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -70,7 +70,7 @@ $(document).ready(function () {
                 $("#errorFormatFullLoadCapacity").removeClass("error_show").addClass("error");
             }
         }
-
+        checkForm = false;
         if (checkForm === false) {
             event.preventDefault();
         }

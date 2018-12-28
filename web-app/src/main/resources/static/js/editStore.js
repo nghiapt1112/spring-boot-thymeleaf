@@ -108,7 +108,7 @@ $(document).ready(function () {
 
         let checkForm = true;
         var code = $("#code").val();
-        if (isEmpty(code)) {
+        if (isEmpty(code) || isBlank(code)) {
             $("#error_exitsted").removeClass("error_show").addClass("error");
             $("#errorCode").removeClass("error").addClass("error_show");
             checkForm = false;
@@ -118,11 +118,20 @@ $(document).ready(function () {
         }
 
         var name = $("#name").val();
-        if (isEmpty(name)) {
+        if (isEmpty(name) || isBlank(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
             $("#errorName").removeClass("error_show").addClass("error");
+        }
+
+        var REGEX_PHONENUMBER = /^\d+$/;
+        var phoneNumber = $("#phoneNumber").val();
+        if (!REGEX_PHONENUMBER.test(phoneNumber)) {
+            $("#errorFormat").removeClass("error").addClass("error_show");
+            checkForm = false;
+        }else {
+            $("#errorFormat").removeClass("error_show").addClass("error");
         }
 
         $("#postCourseList").closest("body").find(".item").each(function (index1) {
@@ -131,7 +140,7 @@ $(document).ready(function () {
                 if (0 === index) {
                     let postIndex = '#post' + index1;
                     let postvalue = $(this).closest("div").find(postIndex).val();
-                    if (isEmpty(postvalue)) {
+                    if (isEmpty(postvalue) || isBlank(postvalue)) {
                         $(this).closest("div").find("em").removeClass("error").addClass("error_show");
                         checkForm = false;
                     } else {
