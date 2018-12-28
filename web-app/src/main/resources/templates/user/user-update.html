@@ -70,6 +70,7 @@
                                                    th:field="*{password}"
                                                    th:errorclass="field-error">
                                             <em id="errorPassword" class="error">パスワードは必須です。</em>
+                                            <em id="errorPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('password')}"
                                                 th:errors="*{password}"></em>
                                         </div>
@@ -78,8 +79,9 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
-                                            <input id="confirm_password" class="form-control" type="password">
+                                            <input id="repPassword" class="form-control" type="password">
                                             <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
+                                            <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
                                         </div>
                                         <div class="col-md-1"></div>
