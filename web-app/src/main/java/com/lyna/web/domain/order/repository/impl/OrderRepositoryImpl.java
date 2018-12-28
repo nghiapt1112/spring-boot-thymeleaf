@@ -92,6 +92,14 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
+    public List<String> findByTenantIdAndPostCourseId(int tenantId, List<String> postCourseIds) {
+        return entityManager.createQuery("SELECT o.orderId FROM Order o WHERE o.tenantId = :tenantId AND o.postCourseId in (:postCourseIds)")
+                .setParameter("tenantId", tenantId)
+                .setParameter("postCourseIds", postCourseIds)
+                .getResultList();
+    }
+
+    @Override
     public List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage) {
         TypedQuery<OrderView> tQuery = entityManager.createQuery(
                 orderRequestPage.getSelect()
@@ -123,4 +131,14 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         }
         return null;
     }
+
+    @Override
+    public void deleteByTenantIdAndOrderId(int tenantId, List<String> OrderIds) {
+        String query = "DELETE FROM Order l WHERE l.orderId in (:OrderIds) AND l.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("OrderIds", OrderIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+    }
+
 }

@@ -25,6 +25,16 @@ public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Strin
         return true;
     }
 
+    @Override
+    public boolean deleteByOrderIdsAndTenantId(List<String> orderIds, int tenantId) {
+        String query = "DELETE FROM OrderDetail o WHERE o.orderId in (:orderIds) AND o.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("orderIds", orderIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
+    }
+
 
     @Override
     public List<OrderDetail> findByTenantIdAndProductId(int tenantId, String productId) {
@@ -32,6 +42,20 @@ public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Strin
                 .setParameter("tenantId", tenantId)
                 .setParameter("productId", productId)
                 .getResultList();
+    }
+
+    @Override
+    public List<OrderDetail> findByOrderIdAndProductIdAndTenantId(String orderId, String productId, int tenantId) {
+        String query = "SELECT d FROM OrderDetail d JOIN Order t ON t.orderId = d.orderId WHERE t.tenantId = :tenantId AND t.orderId = :orderId " +
+                "and d.productId = :productId";
+        List list = entityManager.createQuery(query, OrderDetail.class)
+                .setParameter("productId", productId)
+                .setParameter("tenantId", tenantId)
+                .setParameter("orderId", orderId).getResultList();
+        if (list != null && list.size() > 0)
+            return list;
+        else
+            return null;
     }
 
 }

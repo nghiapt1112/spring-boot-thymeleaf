@@ -28,5 +28,4 @@ public interface StoreRepository extends JpaRepository<Store, String>, PagingRep
 
     boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
-
 }

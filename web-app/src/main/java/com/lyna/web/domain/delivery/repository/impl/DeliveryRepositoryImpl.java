@@ -41,4 +41,21 @@ public class DeliveryRepositoryImpl extends BaseRepository<Delivery, Long> imple
         Iterator<CsvDelivery> csvUserIterator = csvToBean.iterator();
         return csvUserIterator;
     }
+
+    @Override
+    public List<String> findByTenantIdAndOrderId(int tenantId, List<String> orderIds) {
+        return entityManager.createQuery("SELECT o.deliveryId FROM Delivery o WHERE o.tenantId = :tenantId AND o.orderId in (:orderIds)")
+                .setParameter("tenantId", tenantId)
+                .setParameter("orderIds", orderIds)
+                .getResultList();
+    }
+
+    @Override
+    public void deleteByTenantIdAndDeliveryIds(int tenantId, List<String> deliveryIds) {
+        String query = "DELETE FROM Delivery l WHERE l.deliveryId in (:deliveryIds) AND l.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("deliveryIds", deliveryIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+    }
 }

@@ -47,4 +47,23 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
         return true;
 
     }
+
+    @Override
+    public void deleteByPostCourseIdsAndTenantId(List<String> postCourseIds, int tenantId) {
+        String query = "DELETE FROM PostCourse p WHERE p.postCourseId in (:postCourseIds) AND p.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("postCourseIds", postCourseIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+    }
+
+    @Override
+    public List<String> findAllByStoreIdAndTenantId(int tenantId, List<String> storeIds) {
+        List list = entityManager
+                .createQuery("SELECT p.postCourseId FROM PostCourse p WHERE p.storeId in (:storeIds) AND p.tenantId = :tenantId")
+                .setParameter("storeIds", storeIds)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+        return list;
+    }
 }
