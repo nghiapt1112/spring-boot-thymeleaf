@@ -37,10 +37,11 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
     }
 
     @Override
-    public Product findOneByCode(String code) {
+    public Product findOneByCodeAAndTenantId(String code, int tenantId) {
         List products = entityManager
-                .createQuery("SELECT p FROM Product p WHERE p.code=:code", Product.class)
+                .createQuery("SELECT p FROM Product p WHERE p.code=:code And p.tenantId = :tenantId", Product.class)
                 .setParameter("code", code)
+                .setParameter("tenantId", tenantId)
                 .getResultList();
         return (products != null && products.size() > 0) ? (Product) products.get(0) : null;
     }

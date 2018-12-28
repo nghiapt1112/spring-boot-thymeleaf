@@ -24,7 +24,7 @@ public interface StoreRepository extends JpaRepository<Store, String>, PagingRep
 
     Store findOneByStoreIdAndTenantId(String storeId, int tenantId);
 
-    Store findOneByCode(String code);
+    Store findByCodeAndTenantId(String code, int tenantId);
 
     boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 

@@ -1,6 +1,5 @@
 package com.lyna.web.domain.product.service.impl;
 
-import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
@@ -39,7 +38,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         product.setUpdateUser(user.getId());
 
         List<OrderDetail> orderDetails = orderDetailRepository.findByTenantIdAndProductId(user.getTenantId(), product.getProductId());
-        if(!Objects.isNull(orderDetails)){
+        if (!Objects.isNull(orderDetails)) {
             product.setOrderDetails(new HashSet<OrderDetail>(orderDetails));
         }
         try {
@@ -87,9 +86,9 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public Product findOneByCode(String code) {
+    public Product findOneByCodeAndTenantId(String code, int tenantId) {
         try {
-            return productRepository.findOneByCode(code);
+            return productRepository.findOneByCodeAAndTenantId(code, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException(toInteger("err.product.notFound.code"), toStr("err.product.notFound.msg"));

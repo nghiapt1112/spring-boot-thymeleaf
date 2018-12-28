@@ -242,14 +242,12 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     }
 
     @Override
-    public Store findOneByCode(String code) {
+    public Store findByCodeAndTenantId(String code, int tenantId) {
         try {
-            return storeRepository.findOneByCode(code);
+            return storeRepository.findByCodeAndTenantId(code, tenantId);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
         }
-
     }
-
 }

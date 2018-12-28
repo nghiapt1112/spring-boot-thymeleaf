@@ -10,7 +10,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     boolean deleteByProductIdsAndTenantId(List<String> productIds, int tenantId);
 
-    Product findOneByCode(String code);
+    Product findOneByCodeAAndTenantId(String code, int tenantId);
 
     List<Product> findByTenantId(int tenantId);
 

@@ -30,7 +30,7 @@ public interface StoreService {
 
     Store findOneByStoreIdAndTenantId(String code, int tenantId);
 
-    Store findOneByCode(String code);
+    Store findByCodeAndTenantId(String code, int tenantId);
 
 
 }
