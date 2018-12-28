@@ -31,60 +31,67 @@ $(function () {
 
 $(function () {
     $('button[type=submit]').click(function (e) {
-        e.preventDefault();
-        //Disable submit button
-        $(this).prop('disabled', true);
 
-        var form = document.forms[0];
-        var formData = new FormData(form);
+        if(document.getElementById("files").files.length == 0 ){
+            e.preventDefault();
+            $("#alertMsg").text("ファイルを選択してください。")
+        }else {
+            e.preventDefault();
+            //Disable submit button
+            $(this).prop('disabled', true);
 
-        value = $("#quizID").val();
-        var url = "/upload/file/order";
-        if (value == 2)
-            url = "/upload/file/delivery";
+            var form = document.forms[0];
+            var formData = new FormData(form);
 
-        // Ajax call for file uploaling
-        var ajaxReq = $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            xhr: function () {
-                //Get XmlHttpRequest object
-                var xhr = $.ajaxSettings.xhr();
+            value = $("#quizID").val();
+            var url = "/upload/file/order";
+            if (value == 2)
+                url = "/upload/file/delivery";
 
-                //Set onprogress event handler
-                xhr.upload.onprogress = function (event) {
-                    var perc = Math.round((event.loaded / event.total) * 100);
-                    $('#progressBar').text(perc + '%');
-                    $('#progressBar').css('width', perc + '%');
-                };
-                return xhr;
-            },
-            beforeSend: function (xhr) {
-                //Reset alert message and progress bar
-                $('#alertMsg').text('');
-                $('#progressBar').text('');
-                $('#progressBar').css('width', '0%');
-            }
-        });
+            // Ajax call for file uploaling
+            var ajaxReq = $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                xhr: function () {
+                    //Get XmlHttpRequest object
+                    var xhr = $.ajaxSettings.xhr();
 
-        // Called on success of file upload
-        ajaxReq.done(function (msg) {
-            $('#alertMsg').text(msg);
-            $('input[type=file]').val('');
-            $('button[type=submit]').prop('disabled', false);
-            window.location.href = "/mainScreen";
-        });
+                    //Set onprogress event handler
+                    xhr.upload.onprogress = function (event) {
+                        var perc = Math.round((event.loaded / event.total) * 100);
+                        $('#progressBar').text(perc + '%');
+                        $('#progressBar').css('width', perc + '%');
+                    };
+                    return xhr;
+                },
+                beforeSend: function (xhr) {
+                    //Reset alert message and progress bar
+                    $('#alertMsg').text('');
+                    $('#progressBar').text('');
+                    $('#progressBar').css('width', '0%');
+                }
+            });
 
-        // Called on failure of file upload
-        ajaxReq.fail(function (jqXHR) {
-            $('#alertMsg').text(jqXHR.responseText.replace
-            ('[', '').replace(']', '').replace('"', '').replace('"', ""));
-            $('button[type=submit]').prop('disabled', false);
-        });
+            // Called on success of file upload
+            ajaxReq.done(function (msg) {
+                $('#alertMsg').text(msg);
+                $('input[type=file]').val('');
+                $('button[type=submit]').prop('disabled', false);
+                window.location.href = "/mainScreen";
+            });
+
+            // Called on failure of file upload
+            ajaxReq.fail(function (jqXHR) {
+                $('#alertMsg').text(jqXHR.responseText.replace
+                ('[', '').replace(']', '').replace('"', '').replace('"', ""));
+                $('button[type=submit]').prop('disabled', false);
+            });
+        }
+
     });
 });
 
@@ -138,7 +145,7 @@ function searchMainMenu() {
 
     
 
-    // window.location.replace(logisticAPI)
+    window.location.replace(logisticAPI)
 }
 
  
