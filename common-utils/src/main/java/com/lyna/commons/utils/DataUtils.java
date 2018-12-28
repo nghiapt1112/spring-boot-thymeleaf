@@ -28,7 +28,7 @@ public class DataUtils {
 
     public static String getMapData() {
         AtomicReference<String> result = new AtomicReference<>("");
-        mapStore.forEach((type, id) -> {
+        mapStore.forEach((type, value) -> {
             if (type == 1) {
                 result.set("成功に新規作成した");
             }
@@ -37,6 +37,9 @@ public class DataUtils {
             }
             if (type == 3) {
                 result.set("成功に更新した");
+            }
+            if (type == 4) {
+                result.set(value);
             }
         });
         mapStore.clear();

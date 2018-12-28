@@ -1,5 +1,7 @@
 package com.lyna.web.application;
 
+import com.lyna.commons.utils.Constants;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.User;
@@ -16,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -56,14 +56,14 @@ public class FileUploadController {
                                                    UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         Map<Integer, String> mapError = storageService.store(user, file, 1);
-        List<String> results = new ArrayList<>();
-        results.add("ファイルは成功にアップロードされた");
+        String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
             return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
 
-        return new ResponseEntity<>(results, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/file/delivery")
@@ -71,14 +71,14 @@ public class FileUploadController {
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
         Map<Integer, String> mapError = storageService.store(user, file, 2);
-        List<String> results = new ArrayList<>();
-        results.add("ファイルは成功にアップロードされた");
+        String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
             return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
 
-        return new ResponseEntity<>(results, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

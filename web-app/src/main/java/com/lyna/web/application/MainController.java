@@ -1,6 +1,7 @@
 package com.lyna.web.application;
 
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
+import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.logicstics.LogisticRequestPage;
 import com.lyna.web.domain.logicstics.service.LogisticService;
 import com.lyna.web.domain.order.OrderRequestPage;
@@ -72,6 +73,7 @@ public class MainController extends AbstractCustomController {
         model.addAttribute("dateStart", convertDateToString(startDay));
         model.addAttribute("dateEnd", convertDateToString(endDay));
         model.addAttribute("postName", searchPostName);
+        model.addAttribute("message", DataUtils.getMapData());
         return "main/mainMenu";
     }
 
