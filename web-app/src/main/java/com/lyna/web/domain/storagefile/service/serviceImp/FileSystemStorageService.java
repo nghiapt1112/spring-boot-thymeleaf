@@ -2,6 +2,7 @@ package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.AI.AIServiceImpl;
 import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
@@ -61,12 +62,13 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Map<String, CsvOrder> mapProductOrderCsv;
     Map<String, Object> mapStorePostCode;
     Map<String, Object> mapStore;
+    //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
     Iterable<Product> productIterable;
     Iterable<Store> storeIterable;
     Iterable<PostCourse> postCoursesIterable;
     Iterable<Delivery> deliveryIterable;
     Iterable<DeliveryDetail> deliveryDetailIterable;
-    Iterable<Order> orderIterable;
+    Set<Order> orderIterable;
     Iterable<OrderDetail> orderDetailIterable;
 
     Map<Object, String> mapCsvPostCourseId;
@@ -90,6 +92,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private DeliveryDetailRepository deliveryDetailRepository;
     @Autowired
     private PackageRepository packageRepository;
+
+    @Autowired
+    private AIServiceImpl aiService;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -122,6 +127,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
                 saveDataMaster();
                 saveDataOrder();
+                aiService.calculateLogisticsWithAI(user, orderIterable.stream().map(Order::getOrderId).collect(Collectors.toSet()));
             } else {
                 innitDataDelivery();
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
@@ -563,5 +569,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         productRepository.saveAll(productIterable);
         orderRepository.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
+
     }
 }

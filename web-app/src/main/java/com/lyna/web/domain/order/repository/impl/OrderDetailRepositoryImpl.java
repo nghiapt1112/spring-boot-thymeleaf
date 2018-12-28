@@ -1,11 +1,12 @@
 package com.lyna.web.domain.order.repository.impl;
 
-import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
+import com.lyna.web.infrastructure.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -25,4 +26,12 @@ public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Strin
         return true;
     }
 
+    @Override
+    public List<OrderDetail> findByOrderIds(int tenantId, Collection<String> orderIds) {
+        String query = "SELECT o FROM OrderDetail o WHERE o.tenantId=:tenantId AND o.orderId in (:orderIds)";
+        return entityManager.createQuery(query)
+                .setParameter("tenantId", tenantId)
+                .setParameter("orderIds", orderIds)
+                .getResultList();
+    }
 }

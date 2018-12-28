@@ -9,10 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.lyna.commons", "com.lyna.web"})
 @EnableConfigurationProperties(StorageProperties.class)
+@EnableAsync
 public class LynaApplication {
 
     public static void main(String[] args) {
