@@ -42,7 +42,7 @@
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input name="email" id="email" class="form-control" type="text"
-                                                   th:field="*{email}" required th:errorclass="field-error"/>
+                                                   th:field="*{email}" th:errorclass="field-error"/>
                                             <em id="error_exitsted" class="error_show" th:utext="${errorEmailShow}"></em>
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
@@ -54,7 +54,7 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{userName}"
+                                            <input id="userName" class="form-control" type="text" th:field="*{userName}"
                                                    th:errorclass="field-error"/>
                                             <em id="errorUserName" class="error">ユーザー名は必須です。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('userName')}"
@@ -68,6 +68,7 @@
                                             <input class="form-control" type="password" name="password" id="password"
                                                    th:field="*{password}" th:errorclass="field-error"/>
                                             <em id="errorPassword" class="error">パスワードは必須です。</em>
+                                            <em id="errorPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('password')}"
                                                 th:errors="*{password}"></em>
                                         </div>
@@ -79,6 +80,7 @@
                                             <input class="form-control" type="password" name="confirm_password"
                                                    id="repPassword"/></p>
                                             <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
+                                            <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
                                         </div>
                                         <div class="col-md-1"></div>

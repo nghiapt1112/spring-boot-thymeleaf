@@ -61,7 +61,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">電話番号</span>
                                         <div class=" form-group col-md-6" style="">
-                                            <input class="form-control" type="text" th:field="*{phoneNumber}">
+                                            <input id="phoneNumber" class="form-control" type="text" th:field="*{phoneNumber}">
+                                            <em id="errorFormat" class="error">電話番号を正しく入力してください。</em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
