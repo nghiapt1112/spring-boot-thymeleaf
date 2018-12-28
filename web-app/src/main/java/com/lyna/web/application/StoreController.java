@@ -19,7 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -82,16 +88,14 @@ public class StoreController extends AbstractCustomController {
             model.addAttribute("store", store);
             return STORE_EDIT_PAGE;
         }
-        Store storeExisted = storeService.findByCodeAndTenantId(store.getCode(), user.getTenantId());
-        try {
-            if (!Objects.isNull(storeExisted)) {
-                model.addAttribute("errorStoreExitsted", "このコードは既に存在します。");
-                model.addAttribute("store", store);
-                return STORE_EDIT_PAGE;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        Store storeExisted = storeService.findOneByStoreIdAndTenantId(store.getStoreId(), user.getTenantId());
+
+        if (!store.getCode().equals(storeExisted.getCode()) && !Objects.isNull(storeService.findByCodeAndTenantId(store.getCode(), user.getTenantId()))) {
+            model.addAttribute("errorStoreExitsted", "このコードは既に存在します。");
+            model.addAttribute("store", store);
+            return STORE_EDIT_PAGE;
         }
+
         storeService.update(store, user);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, store.getStoreId());
         return REDIRECT_STORE_LIST_PAGE;

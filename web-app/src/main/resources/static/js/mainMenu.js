@@ -10,14 +10,15 @@ $(document).ready(function () {
 
 $(function () {
     $('button[type=submit]').click(function (e) {
-        if(document.getElementById("files").files.length == 0){
+
+        if(document.getElementById("files").files.length == 0 ){
             e.preventDefault();
-            $("#alertMsg").text("ファイルを選択してください");
-        }else{
-            $("#alertMsg").text("");
+            $("#alertMsg").text("ファイルを選択してください。")
+        }else {
             e.preventDefault();
             //Disable submit button
             $(this).prop('disabled', true);
+
             var form = document.forms[0];
             var formData = new FormData(form);
 
@@ -70,7 +71,6 @@ $(function () {
             });
         }
 
-
     });
 });
 
@@ -121,6 +121,8 @@ function searchMainMenu() {
     if (postName) {
         logisticAPI += '&postName=' + postName
     }
+
+    
 
     window.location.replace(logisticAPI)
 }
