@@ -25,6 +25,16 @@ public class OrderDetailRepositoryImpl extends BaseRepository<OrderDetail, Strin
         return true;
     }
 
+    @Override
+    public boolean deleteByOrderIdsAndTenantId(List<String> orderIds, int tenantId) {
+        String query = "DELETE FROM OrderDetail o WHERE o.orderId in (:orderIds) AND o.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("orderIds", orderIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
+    }
+
 
     @Override
     public List<OrderDetail> findByTenantIdAndProductId(int tenantId, String productId) {

@@ -2,19 +2,15 @@ package com.lyna.web.domain.stores.service.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.delivery.Delivery;
-import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
-import com.lyna.web.domain.logicstics.Logistics;
-import com.lyna.web.domain.logicstics.LogiticsDetail;
 import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
 import com.lyna.web.domain.logicstics.repository.LogisticRepository;
 import com.lyna.web.domain.order.Order;
-import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.postCourse.PostCourse;
+import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.exception.StoreException;
@@ -32,11 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,16 +37,28 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     private final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
 
     @Autowired
-    private StoreRepository storeRepository;
-
-    @Autowired
     private PostCourseService postCourseService;
-
+    @Autowired
+    private StoreRepository storeRepository;
+    @Autowired
+    private PostCourseRepository postCourseRepository;
     @Autowired
     private UserStoreAuthorityRepository userStoreAuthorityRepository;
-
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private DeliveryRepository deliveryRepository;
+    @Autowired
+    private LogisticRepository logisticRepository;
+    @Autowired
+    private DeliveryDetailRepository deliveryDetailRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private LogisticDetailRepository logisticDetailRepository;
+
 
     public List<Store> findByTenantId(int tenantId) {
         return this.storeRepository.findByTenantId(tenantId);
@@ -104,11 +108,47 @@ public class StoreServiceImpl extends BaseService implements StoreService {
     }
 
     @Override
+    @Transactional
     public String deleteStoreAndTenantId(List<String> storeIds, int tenantId) {
-        boolean isDeletedStore;
+        boolean isDeletedStore = false;
 
         userStoreAuthorityRepository.deleteStoreAuthorityByStoreId(storeIds);
-        isDeletedStore = storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
+
+        List<String> postCoursesIds = postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeIds);
+
+        if (postCoursesIds != null && postCoursesIds.size() > 0) {
+            List<String> orderIds = orderRepository.findByTenantIdAndPostCourseId(tenantId, postCoursesIds);
+
+            if (orderIds != null && orderIds.size() > 0) {
+                List<String> deliveryIds = deliveryRepository.findByTenantIdAndOrderId(tenantId, orderIds);
+
+                List<String> logisticIds = logisticRepository.findByTenantIdAndOrderIds(tenantId, orderIds);
+
+                if (logisticIds != null && logisticIds.size() > 0)
+                    logisticDetailRepository.deleteByLogisticsIdAndTenantId(logisticIds, tenantId);
+
+                if (deliveryIds != null && deliveryIds.size() > 0)
+                    deliveryDetailRepository.deleteDeliveryDetailByDeliveryIdsAndTenantId(deliveryIds, tenantId);
+
+                if (orderIds != null && orderIds.size() > 0)
+                    orderDetailRepository.deleteByOrderIdsAndTenantId(orderIds, tenantId);
+
+                if (deliveryIds != null && deliveryIds.size() > 0)
+                    deliveryRepository.deleteByTenantIdAndDeliveryIds(tenantId, deliveryIds);
+
+                if (logisticIds != null && logisticIds.size() > 0)
+                    logisticRepository.deleteByLogisticsIdsAndTenantId(logisticIds, tenantId);
+
+                if (orderIds != null && orderIds.size() > 0)
+                    orderRepository.deleteByTenantIdAndOrderId(tenantId, orderIds);
+            }
+
+            if (postCoursesIds != null && postCoursesIds.size() > 0)
+                postCourseRepository.deleteByPostCourseIdsAndTenantId(postCoursesIds, tenantId);
+        }
+
+        if (storeIds != null && storeIds.size() > 0)
+            isDeletedStore = storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
 
         if (isDeletedStore)
             return toStr("delete.msg.success.code");

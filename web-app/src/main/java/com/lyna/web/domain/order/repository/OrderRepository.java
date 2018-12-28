@@ -23,7 +23,11 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<Order> findByTenantIdAndPostCourseId(int tenantId, String postCourseId);
 
+    List<String> findByTenantIdAndPostCourseId(int tenantId, List<String> postCourseIds);
+
     List<OrderView> findOverViews(int tenantId, RequestPage orderRequestPage);
 
     String checkExists(String postcourseId, String orderDate, int tenantId);
+
+    void deleteByTenantIdAndOrderId(int tenantId, List<String> OrderIds);
 }

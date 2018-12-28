@@ -13,6 +13,8 @@ public interface DeliveryDetailRepository extends JpaRepository<DeliveryDetail, 
 
     boolean deleteDeliveryDetailByPackageIdsAndTenantId(List<String> packageIds, int tenantId);
 
+    boolean deleteDeliveryDetailByDeliveryIdsAndTenantId(List<String> deliveryIds, int tenantId);
+
     String checkExistByDeliveryId(String deliveryId, String packageId, int tenantId);
 
     List<DeliveryDetail> findByTenantIdAndPackageId(int tenantId, String packageId);

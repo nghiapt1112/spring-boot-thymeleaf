@@ -10,6 +10,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, String
 
     boolean deleteByProductIdsAndTenantId(List<String> productIds, int tenantId);
 
+    boolean deleteByOrderIdsAndTenantId(List<String> orderIds, int tenantId);
+
     List<OrderDetail> findByTenantIdAndProductId(int tenantId, String productId);
 
     List<OrderDetail> findByOrderIdAndProductIdAndTenantId(String orderId, String productId, int tenantId);

@@ -46,6 +46,16 @@ public class DeliveryDetailRepositoryImpl extends BaseRepository<DeliveryDetail,
 
     }
 
+    @Override
+    public boolean deleteDeliveryDetailByDeliveryIdsAndTenantId(List<String> deliveryIds, int tenantId) {
+        String query = "DELETE FROM DeliveryDetail d WHERE d.deliveryId in (:deliveryIds) AND d.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("deliveryIds", deliveryIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
+    }
+
     public String checkExistByDeliveryId(String deliveryId, String packageId, int tenantId) {
         List list = entityManager
                 .createQuery("SELECT deliveryDetailId from  DeliveryDetail d  WHERE d.deliveryId = :deliveryId and d.tenantId = :tenantId  and d.packageId =  :packageId")

@@ -58,4 +58,14 @@ public class LogisticDetailRepositoryImpl extends BaseRepository<LogiticsDetail,
                 .executeUpdate();
         return true;
     }
+
+    @Override
+    public boolean deleteByLogisticsIdAndTenantId(List<String> logisticsIds, int tenantId) {
+        String query = "DELETE FROM LogiticsDetail l WHERE l.logisticsId in (:logisticsIds) AND l.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("logisticsIds", logisticsIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
+    }
 }
