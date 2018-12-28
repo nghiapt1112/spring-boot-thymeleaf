@@ -14,6 +14,9 @@
                 メインメニュー
             </h1>
         </section>
+
+        <div th:replace="fragments/alert/alert :: alert (message= ${message})"></div>
+
         <section class="content content-right">
             <div class="row">
                 <div class="col-md-12 button_top">
@@ -42,7 +45,7 @@
                                 <div class="col-md-5 button-top-order">
                                 </div>
                                 <div class="col-md-2 button-top-delivery">
-                                    <button id="submitFile" class="btn btn-primary" type="submit">OK</button>
+                                    <button class="btn btn-primary" id="submitFile" type="submit">OK</button>
                                 </div>
                                 <div class="col-md-5">
                                 </div>
