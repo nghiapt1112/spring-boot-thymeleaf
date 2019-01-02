@@ -45,7 +45,8 @@
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
-                                            <em id="error_exitsted" class="error_show" th:utext="${errorEmailShow}"></em>
+                                            <em id="error_exitsted" class="error_show"
+                                                th:utext="${errorEmailShow}"></em>
                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>
@@ -104,15 +105,14 @@
                                                    th:field="${aggregate.rolePerStore[__${el.index}__].storeId}"/>
                                             <div class=" form-group  col-md-4">
                                                 <span th:text="${item.name}"> </span>
-
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
-                                                <input type="checkbox" th:disabled="${role==0}"
+                                                <input type="checkbox"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canView}">
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanedit">
-                                                <input type="checkbox" th:disabled="${role==0}"
+                                                <input type="checkbox"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}">
                                             </div>

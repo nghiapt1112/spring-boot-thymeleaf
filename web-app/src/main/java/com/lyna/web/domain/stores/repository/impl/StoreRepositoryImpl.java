@@ -39,7 +39,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
     @Override
     public List<Store> findByTenantId(int tenantId) {
         return entityManager
-                .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.code,s.name", Store.class)
+                .createQuery("SELECT s FROM Store s WHERE s.tenantId=:tenantId order by s.createDate ", Store.class)
                 .setParameter("tenantId", tenantId)
                 .getResultList();
     }
