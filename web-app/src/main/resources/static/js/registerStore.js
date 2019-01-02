@@ -100,15 +100,6 @@ $(document).ready(function () {
             $("#errorCode").removeClass("error_show").addClass("error");
         }
 
-        var REGEX_PHONENUMBER = /^\d+$/;
-        var phoneNumber = $("#phoneNumber").val();
-        if (!REGEX_PHONENUMBER.test(phoneNumber)) {
-            $("#errorFormat").removeClass("error").addClass("error_show");
-            checkForm = false;
-        }else {
-            $("#errorFormat").removeClass("error_show").addClass("error");
-        }
-
         var name = $("#name").val();
         if (isEmpty(name) || isBlank(name)) {
             $("#errorName").removeClass("error").addClass("error_show");
