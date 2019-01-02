@@ -56,4 +56,9 @@ public class LogiticsDetail extends AbstractEntity {
         this.amount = new BigDecimal(amount);
     }
 
+    public void updateInfo(User currentUser, Integer amount) {
+        this.updateAmount(amount);
+        this.updateDate = DateTimeUtils.getCurrentDateTime();
+        this.updateUser = currentUser.getId();
+    }
 }

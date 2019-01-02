@@ -1,6 +1,7 @@
 package com.lyna.web.domain.AI;
 
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.commons.utils.HttpUtils;
 import com.lyna.web.domain.logicstics.Logistics;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
 import com.lyna.web.domain.logicstics.repository.LogisticDetailRepository;
@@ -15,8 +16,10 @@ import com.lyna.web.domain.user.User;
 import com.lyna.web.infrastructure.property.AIProperty;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +55,7 @@ public class AIServiceImpl extends BaseService {
     @Autowired
     private PackageRepository packageRepository;
 
-    //    @Async
+    @Async
     public void calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds) {
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(currentUser.getTenantId(), csvOrderIds);
         if (CollectionUtils.isEmpty(orderDetails)) {
@@ -76,90 +82,101 @@ public class AIServiceImpl extends BaseService {
                 unknowAIDatas.put(orderId, this.fillPackageAmountToEachOrder(productInTenants, amountByProductId))
         );
 
-//        AIDataAggregate response = post(aiProperty.getUrl(), aiProperty.getHeaders(), new AIDataAggregate(unknowAIDatas), AIDataAggregate.class);
-//
-//        this.updateDatToDB(currentUser, orderIds, response.getResultDatas());
-        System.out.println();
+        AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), new AIDataAggregate(unknowAIDatas), AIDataAggregate.class);
+
+        this.updateDataToDB(currentUser, response.getResultDatas());
+        return;
     }
 
     @Transactional
-    public void updateDatToDB(User currentUser, List<UnknownData> resultDatas) {
-        Set<String> orderIds = resultDatas.stream().map(el -> el.getOrderId()).collect(Collectors.toSet());
-        List<Logistics> existedLogs = this.logisticRepository.findByOrderIds(currentUser.getTenantId(), orderIds);
+    public void updateDataToDB(User currentUser, List<UnknownData> resultDatas) {
+        Set<String> responseAIOrderIds = resultDatas.stream().map(el -> el.getOrderId()).collect(Collectors.toSet());
+        List<Logistics> existedLogst = this.logisticRepository.findByOrderIds(currentUser.getTenantId(), responseAIOrderIds);
 
-        Set<String> uniqueExistedOrderIds = new HashSet<>();
-        Set<String> uniqueExistedLogisticIds = new HashSet<>();
-        for (Logistics el : existedLogs) {
-            uniqueExistedOrderIds.add(el.getOrderId());
-            uniqueExistedLogisticIds.add(el.getLogisticsId());
-        }
-
-        List<Logistics> newLogst = new ArrayList<>();
-        this.createLogistics(currentUser, orderIds, uniqueExistedOrderIds, newLogst);
-
-
+        List<Logistics> newLogst = this.createLogistics(currentUser, responseAIOrderIds, existedLogst);
 
         //  orderId <-> {packageId-amount}
         Map<String, Map<String, Integer>> dataByOrderId = this.getPackageAmountByOrderId(currentUser.getTenantId(), resultDatas);
 
-        //  TODO: update t_logsitc_detail: update packageId and amount
-        List<LogiticsDetail> existedLogisticDetails = this.logisticDetailRepository.findByLogisticIds(currentUser.getTenantId(), uniqueExistedLogisticIds);
-        if (uniqueExistedLogisticIds.size() != existedLogisticDetails.size()) {
-            throw new AIException(toInteger("err.ai.dataInvalid.code"), toStr("err.ai.dataInvalid.msg"));
-        }
+        this.updateLogisticDetails(currentUser, dataByOrderId, existedLogst);
 
-        for (Logistics existedLog : existedLogs) {
-
-            Map<String, Integer> amountByPackageId = dataByOrderId.get(existedLog.getOrderId());
-            for (LogiticsDetail logiticsDetail : existedLog.getLogiticsDetails()) {
-                Integer existedDetail = amountByPackageId.get(logiticsDetail.getPackageId());
-            }
-            // delete theo orderIds.
-            // insert theo orderIds. nhung field la update.
-        }
-
-        //  TODO: create t_logsitc_detail
         this.createLogisticDetails(currentUser, dataByOrderId, newLogst);
+    }
 
+    private void func(Map<String, Map<String, Integer>> dataByOrderId, List<Logistics> logsts, BiConsumer<Logistics, Map<String, Integer>> c) {
+        for (Logistics el : logsts) {
+            Map<String, Integer> amountByPackageId = dataByOrderId.get(el.getOrderId());
+            c.accept(el, amountByPackageId);
+        }
+    }
+
+    private void updateLogisticDetails(User currentUser, Map<String, Map<String, Integer>> dataByOrderId, List<Logistics> existedLogst) {
+        List<LogiticsDetail> existedLogsDetails = new ArrayList<>();
+//        for (Logistics el : existedLogst) {
+//            Map<String, Integer> amountByPackageId = dataByOrderId.get(el.getOrderId());
+//            for (LogiticsDetail logiticsDetail : el.getLogiticsDetails()) {
+//                logiticsDetail.updateInfo(currentUser, amountByPackageId.get(logiticsDetail.getPackageId()));
+//            }
+//            existedLogsDetails.addAll(el.getLogiticsDetails());
+//        }
+
+        this.func(dataByOrderId, existedLogst, (el, amountByPackageId) -> {
+            for (LogiticsDetail logiticsDetail : el.getLogiticsDetails()) {
+                logiticsDetail.updateInfo(currentUser, amountByPackageId.get(logiticsDetail.getPackageId()));
+            }
+            existedLogsDetails.addAll(el.getLogiticsDetails());
+        });
+
+        this.logisticDetailRepository.saveAll(existedLogsDetails);
     }
 
     /**
      * create logistic_detail
      */
     private void createLogisticDetails(User currentUser, Map<String, Map<String, Integer>> dataByOrderId, List<Logistics> newLogst) {
-        List<LogiticsDetail> newLogDetails = new ArrayList<>();
-        for (Logistics el : newLogst) {
-            //  packageId <-> amount
-            Map<String, Integer> amountByPackageId = dataByOrderId.get(el.getOrderId());
+        List<LogiticsDetail> newLogsDetails = new ArrayList<>();
+//        for (Logistics el : newLogst) {
+//            Map<String, Integer> amountByPackageId = dataByOrderId.get(el.getOrderId());
+//            if (Objects.isNull(amountByPackageId)) {
+//                throw new AIException(toInteger("err.ai.dataInvalid.code"), toStr("err.ai.dataInvalid.msg"));
+//            }
+//            amountByPackageId.forEach((packageId, amount) ->
+//                    newLogsDetails.add(new LogiticsDetail(currentUser, amount, packageId, el.getLogisticsId()))
+//            );
+//        }
+
+        this.func(dataByOrderId, newLogst, (el, amountByPackageId) -> {
             if (Objects.isNull(amountByPackageId)) {
                 throw new AIException(toInteger("err.ai.dataInvalid.code"), toStr("err.ai.dataInvalid.msg"));
             }
             amountByPackageId.forEach((packageId, amount) ->
-                    newLogDetails.add(new LogiticsDetail(currentUser, amount, packageId, el.getLogisticsId()))
+                    newLogsDetails.add(new LogiticsDetail(currentUser, amount, packageId, el.getLogisticsId()))
             );
-        }
-        this.logisticDetailRepository.saveAll(newLogDetails);
+        });
+        this.logisticDetailRepository.saveAll(newLogsDetails);
     }
 
     /**
      * create t_logsitc: repository.save(newLogst)
      */
-    private void createLogistics(User currentUser, Set<String> orderIds, Set<String> uniqueExistedOrderIds, List<Logistics> newLogst) {
-        for (String orderId : orderIds) {
-            if (!uniqueExistedOrderIds.contains(orderId)) {
+    private List<Logistics> createLogistics(User currentUser, Set<String> responseAIOrderIds, List<Logistics> existedLogs) {
+        Set<String> existedOrderIds = existedLogs.stream().map(Logistics::getOrderId).collect(Collectors.toSet());
+
+        List<Logistics> newLogst = new ArrayList<>();
+        for (String orderId : responseAIOrderIds) {
+            if (!existedOrderIds.contains(orderId)) {
                 newLogst.add(new Logistics(currentUser, orderId));
-            } else {
-                // nhung cai da existed thi khong can update vi bang t_logistics thi cha co gi can de update ca.
-                // TODO: sau khi nghi lai thi phai update update_user, update_date
             }
         }
-        this.logisticRepository.saveAll(newLogst);
+        List<Logistics> res = this.logisticRepository.saveAll(newLogst);
+        newLogst.clear();
+        return res;
     }
 
     /**
-     *  create a map:  orderId <-> {packageId-amount}
-     *
-     *  data return will contain of both existed logistic_detail and new logistic_detail.
+     * create a map:  orderId <-> {packageId-amount}
+     * <p>
+     * data return will contain of both existed logistic_detail and new logistic_detail.
      */
     private Map<String, Map<String, Integer>> getPackageAmountByOrderId(int tenantId, List<UnknownData> resultDatas) {
         Map<String, Map<String, Integer>> res = new HashMap<>();
