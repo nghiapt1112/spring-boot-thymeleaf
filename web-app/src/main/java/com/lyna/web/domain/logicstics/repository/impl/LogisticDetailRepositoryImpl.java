@@ -68,4 +68,11 @@ public class LogisticDetailRepositoryImpl extends BaseRepository<LogiticsDetail,
                 .executeUpdate();
         return true;
     }
+
+    @Override
+    public List<LogiticsDetail> findByTenantId(int tenantId) {
+        return super.entityManager.createQuery("SELECT l FROM LogiticsDetail l WHERE l.tenantId = :tenantId")
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+    }
 }
