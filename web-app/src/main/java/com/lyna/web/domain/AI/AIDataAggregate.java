@@ -1,9 +1,7 @@
 package com.lyna.web.domain.AI;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lyna.commons.infrustructure.object.AbstractObject;
-import com.lyna.commons.utils.JsonUtils;
 
 import java.util.List;
 import java.util.Map;

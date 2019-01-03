@@ -2,7 +2,7 @@ package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.AI.AIServiceImpl;
+import com.lyna.web.domain.AI.AIService;
 import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
@@ -94,7 +94,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private PackageRepository packageRepository;
 
     @Autowired
-    private AIServiceImpl aiService;
+    private AIService aiService;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
