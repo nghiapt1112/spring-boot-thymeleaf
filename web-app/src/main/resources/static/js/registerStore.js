@@ -108,6 +108,23 @@ $(document).ready(function () {
             $("#errorName").removeClass("error_show").addClass("error");
         }
 
+        var REGEX_PHONENUMBER = /^\d+$/;
+        var phoneNumber = $("#phoneNumber").val();
+        if (isNotEmpty(phoneNumber)) {
+            if(isNotBlank(phoneNumber)){
+                if (!REGEX_PHONENUMBER.test(phoneNumber.trim())) {
+                    $("#errorFormat").removeClass("error").addClass("error_show");
+                    checkForm = false;
+                }else{
+                    $("#errorFormat").removeClass("error_show").addClass("error");
+                }
+            }else{
+                $("#errorFormat").removeClass("error_show").addClass("error");
+            }
+        }else{
+            $("#errorFormat").removeClass("error_show").addClass("error");
+        }
+
         $("#postCourseList").find(".item").each(function (index1) {
             $(this).find("input").each(function (index) {
                 if (0 === index) {
