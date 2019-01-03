@@ -82,7 +82,6 @@ public class AIServiceImpl extends BaseService implements AIService {
     }
 
     @Override
-    @Transactional
     public void updateDataToDB(User currentUser, List<UnknownData> resultDatas) {
         Set<String> responseAIOrderIds = resultDatas.stream().map(UnknownData::getOrderId).collect(Collectors.toSet());
         List<Logistics> existedLogst = this.logisticRepository.findByOrderIds(currentUser.getTenantId(), responseAIOrderIds);
