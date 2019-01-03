@@ -22,7 +22,7 @@ spring:
     dbcp2:
       driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: 1234
+    password: root
     url: jdbc:mysql://localhost:3306/lyna_dev?createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8&useSSL=false
   jpa:
     show-sql: true
