@@ -96,8 +96,8 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 };
-dataTable("#table-order");
-dataTable("#table-logicstic");
+dataTable("#table-order", 1);
+dataTable("#table-logicstic", 1);
 
 // call search API
 

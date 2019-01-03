@@ -51,7 +51,7 @@ function deleteTable(apiName, tableId) {
     })
 }
 
-function dataTable(tableId) {
+function dataTable(tableId, sortDefaultColumn) {
     $(tableId).DataTable({
         'paging': true,
         'lengthChange': true,
@@ -59,7 +59,7 @@ function dataTable(tableId) {
         'ordering': true,
         'info': true,
         'autoWidth': true,
-        'order': [],
+        'order': [sortDefaultColumn, 'asc'],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",
