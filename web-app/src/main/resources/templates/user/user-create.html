@@ -43,7 +43,8 @@
                                         <div class="form-group col-md-6" style="">
                                             <input name="email" id="email" class="form-control" type="text"
                                                    th:field="*{email}" th:errorclass="field-error"/>
-                                            <em id="error_exitsted" class="error_show" th:utext="${errorEmailShow}"></em>
+                                            <em id="error_exitsted" class="error_show"
+                                                th:utext="${errorEmailShow}"></em>
                                             <em id="errorEmail" class="error">メールアドレスは必須です。</em>
                                             <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
@@ -94,18 +95,18 @@
                                     </th:block>
                                     <th:block th:unless="${#lists.isEmpty(userPerRoles)}">
                                         <div class="col-md-12 roleStore" th:each="item,el : ${userPerRoles}">
-                                            <div class=" form-group  col-md-4">
-                                                <label th:text="${item.name}"> </label>
-                                            </div>
                                             <input hidden
                                                    th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].name}"/>
                                             <input hidden
                                                    th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].storeId}"/>
-                                            <div class=" form-group  col-md-4 inputCanview">
+                                            <div class=" form-group  col-md-4">
+                                                <span th:text="${item.name}"> </span>
+                                            </div>
+                                            <div class=" form-group  col-md-4 inputCanView">
                                                 <input type="checkbox"
                                                        th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canView}">
                                             </div>
-                                            <div class=" form-group  col-md-4 inputCanview">
+                                            <div class=" form-group  col-md-4 inputCanEdit">
                                                 <input type="checkbox"
                                                        th:field="${userRegisterAggregate.rolePerStore[__${el.index}__].canEdit}">
                                             </div>
