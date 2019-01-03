@@ -19,24 +19,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
-public class AIServiceImpl extends BaseService {
+public class AIServiceImpl extends BaseService implements AIService {
     @Autowired
     private AIProperty aiProperty;
 
@@ -55,16 +51,15 @@ public class AIServiceImpl extends BaseService {
     @Autowired
     private PackageRepository packageRepository;
 
+    @Override
     @Async
+    @Transactional
     public void calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds) {
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(currentUser.getTenantId(), csvOrderIds);
         if (CollectionUtils.isEmpty(orderDetails)) {
             return;
         }
-        Set<String> orderIds = new HashSet<>();
-        // Map: orderId -> Map{productId - amount}
         Map<String, Map<String, BigDecimal>> amountByOrderId = new HashMap<>();
-
         for (OrderDetail orderDetail : orderDetails) {
             Map<String, BigDecimal> v = amountByOrderId.get(orderDetail.getOrderId());
             if (Objects.isNull(v)) {
@@ -72,7 +67,6 @@ public class AIServiceImpl extends BaseService {
             }
             v.put(orderDetail.getProductId(), orderDetail.getAmount());
             amountByOrderId.put(orderDetail.getOrderId(), v);
-            orderIds.add(orderDetail.getOrderId());
         }
 
         List<Product> productInTenants = productRepository.findByTenantId(currentUser.getTenantId());
@@ -84,17 +78,17 @@ public class AIServiceImpl extends BaseService {
 
         AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), new AIDataAggregate(unknowAIDatas), AIDataAggregate.class);
 
-        this.updateDataToDB(currentUser, response.getResultDatas());
+        updateDataToDB(currentUser, response.getResultDatas());
     }
 
+    @Override
     @Transactional
     public void updateDataToDB(User currentUser, List<UnknownData> resultDatas) {
-        Set<String> responseAIOrderIds = resultDatas.stream().map(el -> el.getOrderId()).collect(Collectors.toSet());
+        Set<String> responseAIOrderIds = resultDatas.stream().map(UnknownData::getOrderId).collect(Collectors.toSet());
         List<Logistics> existedLogst = this.logisticRepository.findByOrderIds(currentUser.getTenantId(), responseAIOrderIds);
 
         List<Logistics> newLogst = this.createLogistics(currentUser, responseAIOrderIds, existedLogst);
 
-        //  orderId <-> {packageId-amount}
         Map<String, Map<String, Integer>> dataByOrderId = this.getPackageAmountByOrderId(currentUser.getTenantId(), resultDatas);
 
         this.updateLogisticDetails(currentUser, dataByOrderId, existedLogst);
