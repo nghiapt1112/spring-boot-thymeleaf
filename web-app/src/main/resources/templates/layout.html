@@ -5,13 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title th:text="${content}">Layout</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}">
-    <link rel="stylesheet" href="/css/ionicons.min.css" th:href="@{/css/ionicons.min.css}">
-    <link rel="stylesheet" href="/css/dataTables.bootstrap.min.css" th:href="@{/css/dataTables.bootstrap.min.css}">
-    <link rel="stylesheet" href="/css/AdminLTE.min.css" th:href="@{/css/AdminLTE.min.css}">
-    <link rel="stylesheet" href="/css/_all-skins.min.css" th:href="@{/css/_all-skins.min.css}">
-    <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css" th:href="@{/css/bootstrap-datepicker.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/ionicons.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dataTables.bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fixedColumns.dataTables.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fixedColumns.bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fixedColumns.bootstrap4.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/AdminLTE.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/_all-skins.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datepicker.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -31,12 +34,13 @@
     </div>
 </div>
 <footer th:fragment="footer">
-    <script src="/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-    <script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-    <script src="/js/adminlte.min.js" th:src="@{/js/adminlte.min.js}"></script>
-    <script src="/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
-    <script src="/js/dataTables.bootstrap.min.js" th:src="@{/js/dataTables.bootstrap.min.js}"></script>
-    <script src="/js/bootstrap-datepicker.min.js" th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/adminlte.min.js}"></script>
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/dataTables.fixedColumns.min.js}"></script>
+    <script th:src="@{/js/dataTables.bootstrap.min.js}"></script>
+    <script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
 </footer>
 <script>
     $.widget.bridge('uibutton', $.ui.button);
