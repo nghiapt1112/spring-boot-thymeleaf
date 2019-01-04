@@ -7,7 +7,7 @@ $(document).ready(function () {
     });
 });
 
-myFunction();
+onLogistics();
 
 $(function () {
     $('button[type=submit]').click(function (e) {
@@ -129,15 +129,12 @@ function searchMainMenu() {
 
 exportDataToExcel();
 
-function myFunction() {
-    document.getElementById('export-file').innerHTML = '';
-    exportDataToExcel('#table-logicstic', '#export-file');
+function onLogistics() {
+    exportDataToExcel('#table-logicstic');
 }
 
-function myFunction2(){
-    document.getElementById('export-file').innerHTML = '';
-    exportDataToExcel('#table-order', '#export-file');
-
+function onOrderDetails(){
+    exportDataToExcel('#table-order');
 }
 
 

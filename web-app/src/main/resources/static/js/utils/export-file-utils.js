@@ -1,4 +1,4 @@
-function exportDataToExcel(t1 , t2) {
+function exportDataToExcel(t1) {
     var table = $(t1).DataTable({
         destroy: true,
         'scrollX':        false,
@@ -6,6 +6,10 @@ function exportDataToExcel(t1 , t2) {
         'fixedColumns':   {
             'leftColumns': 3,
         },
+        'dom': 'lBfrtip',
+        'buttons': [
+            'excel'
+        ],
         'paging': true,
         'lengthChange': true,
         'searching': true,
@@ -27,11 +31,6 @@ function exportDataToExcel(t1 , t2) {
             }
         }
     });
-    var buttons = new $.fn.dataTable.Buttons(table, {
-        buttons: [
-            'excelHtml5'
-        ]
-    }).container().appendTo($(t2));
     $("body").find(".buttons-excel").find("span").text("優れる");
 
 }

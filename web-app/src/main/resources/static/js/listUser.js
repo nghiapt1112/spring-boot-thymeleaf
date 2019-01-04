@@ -1,4 +1,4 @@
 $(document).ready(function () {
-    deleteTable("user","#listUser");
+    deleteTable("user","#table-user");
 });
-dataTable("#listUser");
+exportDataToExcel('#table-user');

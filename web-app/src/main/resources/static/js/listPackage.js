@@ -1,6 +1,6 @@
 $(document).ready(function () {
     deleteTable("package","#table-package");
 });
-exportDataToExcel('#table-package', '#export-file');
+exportDataToExcel('#table-package');
 
 

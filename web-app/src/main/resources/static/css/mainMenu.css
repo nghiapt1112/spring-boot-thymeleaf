@@ -149,4 +149,9 @@ button {
     cursor: pointer;
 }
 
+.dataTables_length{
+    float: left ! important;
+    margin-right: 75% ! important;
+}
+
 
