@@ -29,36 +29,6 @@ public class HttpUtilsTest {
         Assert.assertNotNull(body);
     }
 
-    @Test
-    public void testPost() {
-        String json = "{  \n" +
-                "   \"trainingDatas\":[  \n" +
-                "      {  \n" +
-                "         \"inputItemNums\":[  \n" +
-                "            2,\n" +
-                "            2\n" +
-                "         ],\n" +
-                "         \"outputItemNums\":[  \n" +
-                "            3,\n" +
-                "            3\n" +
-                "         ]\n" +
-                "      }\n" +
-                "   ],\n" +
-                "   \"unknownDatas\":[  \n" +
-                "      {  \n" +
-                "         \"inputItemNums\":[  \n" +
-                "            2,\n" +
-                "            2\n" +
-                "         ]\n" +
-                "      }\n" +
-                "   ]\n" +
-                "}";
-        System.out.println(json);
-        String url = "https://jp6jra2fwj.execute-api.ap-northeast-1.amazonaws.com/test/test3";
-        Object res = HttpUtils.httpsPost(url, json, null);
-        System.out.println(res);
-    }
-
     @After
     public void release() {
         this.httpGet = null;
