@@ -53,7 +53,6 @@ public class AIServiceImpl extends BaseService implements AIService {
     private PackageRepository packageRepository;
 
     @Override
-    @Async
     @Transactional
     public void calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds) {
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(currentUser.getTenantId(), csvOrderIds);

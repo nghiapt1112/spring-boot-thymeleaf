@@ -69,7 +69,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Iterable<Delivery> deliveryIterable;
     Iterable<DeliveryDetail> deliveryDetailIterable;
     Set<Order> orderIterable;
-    Iterable<OrderDetail> orderDetailIterable;
+    Set<OrderDetail> orderDetailIterable;
 
     Map<Object, String> mapCsvPostCourseId;
     Map<String, Object> mapDeliveryIdCsv;
@@ -128,7 +128,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
                 saveDataMaster();
                 saveDataOrder();
-                aiService.calculateLogisticsWithAI(user, orderIterable.stream().map(Order::getOrderId).collect(Collectors.toSet()));
+                aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
             } else {
                 innitDataDelivery();
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
