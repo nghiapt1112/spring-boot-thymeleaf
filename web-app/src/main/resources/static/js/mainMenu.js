@@ -98,6 +98,8 @@ window.onclick = function (event) {
     }
 };
 
+// dataTable("#table-order", 1);
+// dataTable("#table-logicstic", 1);
 
 // call search API
 

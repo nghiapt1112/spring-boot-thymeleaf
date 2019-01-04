@@ -51,15 +51,19 @@ function deleteTable(apiName, tableId) {
     })
 }
 
-function dataTable(tableId) {
+function dataTable(tableId, sortDefaultColumn) {
     $(tableId).DataTable({
+        'dom': 'lBfrtip',
+        'buttons': [
+            'excel'
+        ],
         'paging': true,
         'lengthChange': true,
         'searching': true,
         'ordering': true,
         'info': true,
         'autoWidth': true,
-        'order': [],
+        'order': [sortDefaultColumn, 'asc'],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",

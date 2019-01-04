@@ -2,7 +2,7 @@ package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
-import com.lyna.web.domain.AI.AIServiceImpl;
+import com.lyna.web.domain.AI.AIService;
 import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
 import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
@@ -69,7 +69,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Iterable<Delivery> deliveryIterable;
     Iterable<DeliveryDetail> deliveryDetailIterable;
     Set<Order> orderIterable;
-    Iterable<OrderDetail> orderDetailIterable;
+    Set<OrderDetail> orderDetailIterable;
 
     Map<Object, String> mapCsvPostCourseId;
     Map<String, Object> mapDeliveryIdCsv;
@@ -94,7 +94,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private PackageRepository packageRepository;
 
     @Autowired
-    private AIServiceImpl aiService;
+    private AIService aiService;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -128,7 +128,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
                 saveDataMaster();
                 saveDataOrder();
-                aiService.calculateLogisticsWithAI(user, orderIterable.stream().map(Order::getOrderId).collect(Collectors.toSet()));
+                aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
             } else {
                 innitDataDelivery();
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);

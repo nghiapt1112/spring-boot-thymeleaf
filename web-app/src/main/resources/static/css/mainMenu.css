@@ -62,6 +62,15 @@ button {
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
     background-color: #4a9fe9;
 }
+.dataTables_length{
+    float: left ! important;
+    margin-right: 3% ! important;
+}
+
+.text-center-search{
+    padding: 0;
+    padding-top: 0.4%
+}
 
 .button_top {
     margin-bottom: 3%;

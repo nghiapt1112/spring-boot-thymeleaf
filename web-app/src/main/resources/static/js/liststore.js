@@ -79,6 +79,7 @@ function deleteViaAjax() {
 function changeSizeStore() {
     updateLink();
 }
+dataTable("#listStore", 2);
 
 
 

@@ -127,10 +127,18 @@ $(document).ready(function () {
 
         var REGEX_PHONENUMBER = /^\d+$/;
         var phoneNumber = $("#phoneNumber").val();
-        if (!REGEX_PHONENUMBER.test(phoneNumber)) {
-            $("#errorFormat").removeClass("error").addClass("error_show");
-            checkForm = false;
-        }else {
+        if (isNotEmpty(phoneNumber)) {
+            if(isNotBlank(phoneNumber)){
+                if (!REGEX_PHONENUMBER.test(phoneNumber.trim())) {
+                    $("#errorFormat").removeClass("error").addClass("error_show");
+                    checkForm = false;
+                }else{
+                    $("#errorFormat").removeClass("error_show").addClass("error");
+                }
+            }else{
+                $("#errorFormat").removeClass("error_show").addClass("error");
+            }
+        }else{
             $("#errorFormat").removeClass("error_show").addClass("error");
         }
 

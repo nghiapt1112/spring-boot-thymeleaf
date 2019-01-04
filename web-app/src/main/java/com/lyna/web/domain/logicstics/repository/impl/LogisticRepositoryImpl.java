@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public class LogisticRepositoryImpl extends BaseRepository<Logistics, String> implements LogisticRepository {

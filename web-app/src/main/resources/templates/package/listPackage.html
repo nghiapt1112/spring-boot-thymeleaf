@@ -35,65 +35,45 @@
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="box-body">
                             <th:block th:if="${#lists.isEmpty(packages)}">
-                                <table id="table-package" class="table table-bordered table-hover">
-                                    <thead style="background: #337ab7">
-                                    <tr>
-                                        <th style="text-align: center;">
-                                            <input type="checkbox" id="checkBoxAll">
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1"
-                                            colspan="1"
-                                            aria-label="Store code: activate to sort column ascending"> 荷姿名
-                                        </th>
-                                        <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
-                                        <th>空の重量</th>       <!--&lt;!&ndash;Empty Weight&ndash;&gt;-->
-                                        <th>満載の重量</th>   <!-- &lt;!&ndash;Full Load Weight&ndash;&gt;-->
-                                        <th>空の才数</th>      <!--&lt;!&ndash;Empty Capacity&ndash;&gt;-->
-                                        <th>満載の才数</th>     <!-- &lt;!&ndash;Full Load Capacity&ndash;&gt;-->
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </th:block>
-                            <th:block th:unless="${#lists.isEmpty(packages)}">
-                                <table id="table-package" class="table table-bordered table-hover">
-                                    <thead style="background: #337ab7">
-                                    <tr>
-                                        <th style="text-align: center;">
-                                            <input type="checkbox" id="checkBoxAll">
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1"
-                                            colspan="1"
-                                            aria-label="Store code: activate to sort column ascending"> 荷姿名
-                                        </th>
-                                        <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
-                                        <th>空の重量</th>       <!--&lt;!&ndash;Empty Weight&ndash;&gt;-->
-                                        <th>満載の重量</th>   <!-- &lt;!&ndash;Full Load Weight&ndash;&gt;-->
-                                        <th>空の才数</th>      <!--&lt;!&ndash;Empty Capacity&ndash;&gt;-->
-                                        <th>満載の才数</th>     <!-- &lt;!&ndash;Full Load Capacity&ndash;&gt;-->
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="package,iterStat : ${packages}">
-                                        <td style="text-align: center;">
-                                            <input type="checkbox" th:value="${package.packageId}"
-                                                   class="chkCheckBoxId"
-                                                   name="packageId">
-                                        </td>
-                                        <td>
-                                            <a th:href="@{/package/update/{packageId}/{tenantId}/
-                                               (packageId=${package.packageId},tenantId=${package.tenantId})}"
-                                               class="" th:text="${package.name}"></a>
-                                        </td>
-                                        <td th:text="${package.unit}"></td>
-                                        <td th:text="${package.emptyWeight}"></td>
-                                        <td th:text="${package.fullLoadWeight}"></td>
-                                        <td th:text="${package.emptyCapacity}"></td>
-                                        <td th:text="${package.fullLoadCapacity}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </th:block>
 
+                            </th:block>
+                            <table id="table-package" class="table table-bordered table-hover">
+                                <thead style="background: #337ab7">
+                                <tr>
+                                    <th style="text-align: center;">
+                                        <input type="checkbox" id="checkBoxAll">
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="listStore" rowspan="1"
+                                        colspan="1"
+                                        aria-label="Store code: activate to sort column ascending"> 荷姿名
+                                    </th>
+                                    <th>単位</th>       <!--&lt;!&ndash;unit&ndash;&gt;-->
+                                    <th>空の重量</th>       <!--&lt;!&ndash;Empty Weight&ndash;&gt;-->
+                                    <th>満載の重量</th>   <!-- &lt;!&ndash;Full Load Weight&ndash;&gt;-->
+                                    <th>空の才数</th>      <!--&lt;!&ndash;Empty Capacity&ndash;&gt;-->
+                                    <th>満載の才数</th>     <!-- &lt;!&ndash;Full Load Capacity&ndash;&gt;-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="package,iterStat : ${packages}">
+                                    <td style="text-align: center;">
+                                        <input type="checkbox" th:value="${package.packageId}"
+                                               class="chkCheckBoxId"
+                                               name="packageId">
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/package/update/{packageId}/{tenantId}/
+                                               (packageId=${package.packageId},tenantId=${package.tenantId})}"
+                                           class="" th:text="${package.name}"></a>
+                                    </td>
+                                    <td th:text="${package.unit}"></td>
+                                    <td th:text="${package.emptyWeight}"></td>
+                                    <td th:text="${package.fullLoadWeight}"></td>
+                                    <td th:text="${package.emptyCapacity}"></td>
+                                    <td th:text="${package.fullLoadCapacity}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
