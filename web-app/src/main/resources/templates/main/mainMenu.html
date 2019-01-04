@@ -28,7 +28,8 @@
                     <div class="col-md-2 button-top-delivery">
                         <button class="btn btn-primary " id="deliveryBtn">実績・物量データ取り込み</button>
                     </div>
-                    <div class="col-md-8">
+                    <div id="export-file" class="col-md-2 button-export-file"></div>
+                    <div class="col-md-6">
                         <input id="quizID" type="hidden"/>
                     </div>
                 </div>
@@ -116,7 +117,7 @@
                                 <li class="active"><a data-toggle="tab" href="#tab1primary" th:href="@{/#tab1primary}" onclick="myFunction()" id="t1">物量</a>
                                 </li>
                                 <li><a data-toggle="tab" href="#tab2primary" th:href="@{/#tab2primary}" onclick="myFunction2()" id="t2" >発注データ明細</a></li>
-                                <li id="export-file"></li>
+                                <!--<li id="export-file"></li>-->
                             </ul>
                         </div>
                         <div class="panel-body">
