@@ -35,62 +35,44 @@
                     <div style="border-top: 3px solid #337ab7;" class="box">
                         <div class="box-body">
                             <th:block th:if="${#lists.isEmpty(products)}">
-                                <table id="table-product" class="table table-bordered table-hover table-dataTable">
-                                    <thead style="background: #337ab7">
-                                    <tr>
-                                        <th style="text-align: center;">
-                                            <input type="checkbox" id="checkBoxAll">
-                                        </th>
-                                        <th> 商品コード</th><!--&lt;!&ndash;Product Code&ndash;&gt;-->
-                                        <th>商品名</th>       <!--&lt;!&ndash;name&ndash;&gt;-->
-                                        <th>単位</th>       <!--&lt;!&ndash;unit;&gt;-->
-                                        <th>単価</th>   <!-- &lt;!&ndash;price;&gt;-->
-                                        <th>大分類</th>      <!--&lt;!&ndash;Category 1;-->
-                                        <th>中分類</th>     <!--&lt;!&ndash;Category 2;-->
-                                        <th>小分類</th>     <!--&lt;!&ndash;Category 3;-->
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </th:block>
-                            <th:block th:unless="${#lists.isEmpty(products)}">
-                                <table id="table-product" class="table table-bordered table-hover">
-                                    <thead style="background: #337ab7">
-                                    <tr>
-                                        <th style="text-align: center;">
-                                            <input type="checkbox" id="checkBoxAll">
-                                        </th>
-                                        <th> 商品コード</th><!--&lt;!&ndash;Product Code&ndash;&gt;-->
-                                        <th>商品名</th>       <!--&lt;!&ndash;name&ndash;&gt;-->
-                                        <th>単位</th>       <!--&lt;!&ndash;unit;&gt;-->
-                                        <th>単価</th>   <!-- &lt;!&ndash;price;&gt;-->
-                                        <th>大分類</th>      <!--&lt;!&ndash;Category 1;-->
-                                        <th>中分類</th>     <!--&lt;!&ndash;Category 2;-->
-                                        <th>小分類</th>     <!--&lt;!&ndash;Category 3;-->
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="product,iterStat : ${products}">
-                                        <td style="text-align: center;">
-                                            <input type="checkbox" th:value="${product.productId}"
-                                                   class="chkCheckBoxId"
-                                                   name="productId">
-                                        </td>
-                                        <td th:text="${product.code}"></td>
-                                        <td>
-                                            <a th:href="@{/product/update/{productId}/{tenantId}/
-                                               (productId=${product.productId},tenantId=${product.tenantId})}"
-                                               class="" th:text="${product.name}"></a>
-                                        </td>
-                                        <td th:text="${product.unit}"></td>
-                                        <td th:text="${product.price}"></td>
-                                        <td th:text="${product.category1}"></td>
-                                        <td th:text="${product.category2}"></td>
-                                        <td th:text="${product.category3}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </th:block>
 
+                            </th:block>
+                            <table id="table-product" class="table table-bordered table-hover">
+                                <thead style="background: #337ab7">
+                                <tr>
+                                    <th style="text-align: center;">
+                                        <input type="checkbox" id="checkBoxAll">
+                                    </th>
+                                    <th> 商品コード</th><!--&lt;!&ndash;Product Code&ndash;&gt;-->
+                                    <th>商品名</th>       <!--&lt;!&ndash;name&ndash;&gt;-->
+                                    <th>単位</th>       <!--&lt;!&ndash;unit;&gt;-->
+                                    <th>単価</th>   <!-- &lt;!&ndash;price;&gt;-->
+                                    <th>大分類</th>      <!--&lt;!&ndash;Category 1;-->
+                                    <th>中分類</th>     <!--&lt;!&ndash;Category 2;-->
+                                    <th>小分類</th>     <!--&lt;!&ndash;Category 3;-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="product,iterStat : ${products}">
+                                    <td style="text-align: center;">
+                                        <input type="checkbox" th:value="${product.productId}"
+                                               class="chkCheckBoxId"
+                                               name="productId">
+                                    </td>
+                                    <td th:text="${product.code}"></td>
+                                    <td>
+                                        <a th:href="@{/product/update/{productId}/{tenantId}/
+                                               (productId=${product.productId},tenantId=${product.tenantId})}"
+                                           class="" th:text="${product.name}"></a>
+                                    </td>
+                                    <td th:text="${product.unit}"></td>
+                                    <td th:text="${product.price}"></td>
+                                    <td th:text="${product.category1}"></td>
+                                    <td th:text="${product.category2}"></td>
+                                    <td th:text="${product.category3}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

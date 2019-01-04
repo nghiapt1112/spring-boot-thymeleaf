@@ -53,6 +53,10 @@ function deleteTable(apiName, tableId) {
 
 function dataTable(tableId, sortDefaultColumn) {
     $(tableId).DataTable({
+        'dom': 'lBfrtip',
+        'buttons': [
+            'excel'
+        ],
         'paging': true,
         'lengthChange': true,
         'searching': true,
@@ -74,4 +78,7 @@ function dataTable(tableId, sortDefaultColumn) {
             }
         }
     });
+
+    $("body").find(".buttons-excel").find("span").text("優れる");
+
 }
