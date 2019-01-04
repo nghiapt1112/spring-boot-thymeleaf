@@ -6,6 +6,10 @@ $(document).ready(function () {
         'fixedColumns':   {
             'leftColumns': 3,
         },
+        'dom': 'lBfrtip',
+        'buttons': [
+            'excel'
+        ],
         'paging': true,
         'lengthChange': true,
         'searching': true,
