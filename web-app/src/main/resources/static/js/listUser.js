@@ -1,6 +1,6 @@
 $(document).ready(function () {
     deleteTable("user","#table-user");
-    var table = $("#table-user").DataTable({
+    $("#table-user").DataTable({
         'scrollX':        true,
         'scrollCollapse': true,
         'fixedColumns':   {
