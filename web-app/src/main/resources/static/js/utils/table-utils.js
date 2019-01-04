@@ -74,4 +74,6 @@ function dataTable(tableId) {
             }
         }
     });
+    $("body").find(".buttons-excel").find("span").text("優れる");
+
 }

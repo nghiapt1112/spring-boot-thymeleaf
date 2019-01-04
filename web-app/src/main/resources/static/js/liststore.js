@@ -9,8 +9,9 @@ $(document).ready(function () {
     $("#inputSearch").on('change keydown paste input', function () {
         updateLink();
     });
-
 });
+
+exportDataToExcel('#table-store', '#export-file');
 
 function updateLink() {
     textInput = document.getElementById("inputSearch").value.replace(/\s+/g, '').toLowerCase();
@@ -78,7 +79,6 @@ function deleteViaAjax() {
 function changeSizeStore() {
     updateLink();
 }
-dataTable("#listStore");
 
 
 

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     deleteTable("product","#table-product");
 });
-dataTable("#table-product");
+exportDataToExcel('#table-product', '#export-file');
 
 
 
