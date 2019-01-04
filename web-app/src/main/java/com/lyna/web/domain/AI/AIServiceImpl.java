@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -76,9 +77,15 @@ public class AIServiceImpl extends BaseService implements AIService {
                 unknowAIDatas.put(orderId, this.fillPackageAmountToEachOrder(productInTenants, amountByProductId))
         );
 
-        AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), new AIDataAggregate(unknowAIDatas), AIDataAggregate.class);
+        AIDataAggregate aggregateRequest = new AIDataAggregate(unknowAIDatas, Arrays.asList(TrainingData.defaultTrainingData()));
+        try {
+            AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), aggregateRequest, AIDataAggregate.class);
+            updateDataToDB(currentUser, response.getResultDatas());
+        } catch (Exception e) {
+            throw new AIException(toInteger("err.ai.dataInvalid.code"), toStr("err.ai.dataInvalid.msg"));
+        }
 
-        updateDataToDB(currentUser, response.getResultDatas());
+
     }
 
     @Override
