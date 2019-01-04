@@ -1,19 +1,18 @@
 $(document).ready(function () {
     deleteTable("user","#listUser");
-
     var table = $("#listUser").DataTable({
-        'paging': true,
-        'scrollX': true,
+        'scrollX':        true,
         'scrollCollapse': true,
         'fixedColumns':   {
-            'leftColumns': 3
+            'leftColumns': 3,
         },
+        'paging': true,
         'lengthChange': true,
         'searching': true,
         'ordering': true,
         'info': true,
         'autoWidth': true,
-        'order': [2 , 'asc'],
+        'order': [1, 'asc'],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",

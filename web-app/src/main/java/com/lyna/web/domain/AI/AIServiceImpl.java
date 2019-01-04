@@ -82,7 +82,6 @@ public class AIServiceImpl extends BaseService implements AIService {
     }
 
     @Override
-    @Transactional
     public void updateDataToDB(User currentUser, List<UnknownData> resultDatas) {
         Set<String> responseAIOrderIds = resultDatas.stream().map(UnknownData::getOrderId).collect(Collectors.toSet());
         List<Logistics> existedLogst = this.logisticRepository.findByOrderIds(currentUser.getTenantId(), responseAIOrderIds);
@@ -104,15 +103,9 @@ public class AIServiceImpl extends BaseService implements AIService {
     }
 
     private void updateLogisticDetails(User currentUser, Map<String, Map<String, Integer>> dataByOrderId, List<Logistics> existedLogst) {
-        if (CollectionUtils.isEmpty(existedLogst)) {
-            return;
-        }
         List<LogiticsDetail> existedLogsDetails = new ArrayList<>();
 
         this.func(dataByOrderId, existedLogst, (el, amountByPackageId) -> {
-            if (CollectionUtils.isEmpty(el.getLogiticsDetails())) {
-                return;
-            }
             for (LogiticsDetail logiticsDetail : el.getLogiticsDetails()) {
                 logiticsDetail.updateInfo(currentUser, amountByPackageId.get(logiticsDetail.getPackageId()));
             }

@@ -15,7 +15,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,19 +44,5 @@ public class Logistics extends AbstractEntity {
         this.createDate = DateTimeUtils.getCurrentDateTime();
         this.createUser = currentUser.getId();
         this.tenantId = currentUser.getTenantId();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Logistics logistics = (Logistics) o;
-        return Objects.equals(logisticsId, logistics.logisticsId) &&
-                Objects.equals(orderId, logistics.orderId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(logisticsId, orderId);
     }
 }

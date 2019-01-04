@@ -17,9 +17,9 @@ public class AIDataAggregate extends AbstractObject {
 
     // parse request
     public AIDataAggregate(Map<String, List<Integer>> productAmountsByOrderId) {
-        productAmountsByOrderId.forEach((orderId, v) ->
-            this.unknownDatas.add(new UnknownData(orderId, v))
-        );
+        productAmountsByOrderId.forEach((orderId, v) -> {
+            this.unknownDatas.add(new UnknownData(orderId, v));
+        });
     }
 
 }
