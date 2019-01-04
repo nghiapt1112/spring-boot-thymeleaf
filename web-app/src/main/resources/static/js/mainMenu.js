@@ -132,11 +132,11 @@ function searchMainMenu() {
 exportDataToExcel();
 
 function onLogistics() {
-    exportDataToExcel('#table-logicstic');
+    exportDataToExcel('#table-logicstic',1);
 }
 
 function onOrderDetails(){
-    exportDataToExcel('#table-order');
+    exportDataToExcel('#table-order',1);
 }
 
 

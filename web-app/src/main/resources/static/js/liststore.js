@@ -11,8 +11,6 @@ $(document).ready(function () {
     });
 });
 
-exportDataToExcel('#table-store', '#export-file');
-
 function updateLink() {
     textInput = document.getElementById("inputSearch").value.replace(/\s+/g, '').toLowerCase();
     var links = document.getElementsByTagName('a');
@@ -79,8 +77,8 @@ function deleteViaAjax() {
 function changeSizeStore() {
     updateLink();
 }
-dataTable("#listStore", 2);
 
+exportDataToExcel('#table-store',1);
 
 
 

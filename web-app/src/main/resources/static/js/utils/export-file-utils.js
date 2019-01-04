@@ -1,11 +1,6 @@
-function exportDataToExcel(t1) {
-    var table = $(t1).DataTable({
+function exportDataToExcel(tableId, sortDefaultColumn) {
+    $(tableId).DataTable({
         destroy: true,
-        'scrollX':        false,
-        'scrollCollapse': false,
-        'fixedColumns':   {
-            'leftColumns': 3,
-        },
         'dom': 'lBfrtip',
         'buttons': [
             'excel'
@@ -16,7 +11,7 @@ function exportDataToExcel(t1) {
         'ordering': true,
         'info': true,
         'autoWidth': true,
-        'order': [2, 'asc'],
+        'order': [sortDefaultColumn, 'asc'],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",
