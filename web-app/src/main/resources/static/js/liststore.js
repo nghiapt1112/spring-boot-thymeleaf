@@ -78,7 +78,7 @@ function changeSizeStore() {
     updateLink();
 }
 
-exportDataToExcel('#table-store',1);
+exportDataToExcel('#table-store',1, 店舗一覧);
 
 
 
