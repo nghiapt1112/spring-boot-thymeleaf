@@ -1,11 +1,6 @@
-$(document).ready(function () {
-    deleteTable("user","#table-user");
-    $("#table-user").DataTable({
-        'scrollX':        true,
-        'scrollCollapse': true,
-        'fixedColumns':   {
-            'leftColumns': 3,
-        },
+function exportDataToExcel(tableId, sortDefaultColumn) {
+    $(tableId).DataTable({
+        destroy: true,
         'dom': 'lBfrtip',
         'buttons': [
             'excel'
@@ -16,7 +11,7 @@ $(document).ready(function () {
         'ordering': true,
         'info': true,
         'autoWidth': true,
-        'order': [1, 'asc'],
+        'order': [sortDefaultColumn, 'asc'],
         "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",
@@ -30,6 +25,7 @@ $(document).ready(function () {
                 "next": "  次へ "
             }
         }
-
     });
-});
+    $("body").find(".buttons-excel").find("span").text("優れる");
+
+}

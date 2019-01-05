@@ -9,7 +9,6 @@ $(document).ready(function () {
     $("#inputSearch").on('change keydown paste input', function () {
         updateLink();
     });
-
 });
 
 function updateLink() {
@@ -78,8 +77,8 @@ function deleteViaAjax() {
 function changeSizeStore() {
     updateLink();
 }
-dataTable("#listStore", 2);
 
+exportDataToExcel('#table-store',1);
 
 
 

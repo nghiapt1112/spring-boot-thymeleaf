@@ -5,8 +5,9 @@ $(document).ready(function () {
     $("#max").datepicker({
         format: 'yyyy/mm/dd'
     });
-
 });
+
+onLogistics();
 
 $(function () {
     $('button[type=submit]').click(function (e) {
@@ -96,8 +97,9 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 };
-dataTable("#table-order", 1);
-dataTable("#table-logicstic", 1);
+
+// dataTable("#table-order", 1);
+// dataTable("#table-logicstic", 1);
 
 // call search API
 
@@ -122,10 +124,20 @@ function searchMainMenu() {
         logisticAPI += '&postName=' + postName
     }
 
-    
+
 
     window.location.replace(logisticAPI)
 }
 
- 
+exportDataToExcel();
+
+function onLogistics() {
+    exportDataToExcel('#table-logicstic',1);
+}
+
+function onOrderDetails(){
+    exportDataToExcel('#table-order',1);
+}
+
+
 

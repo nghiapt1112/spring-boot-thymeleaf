@@ -39,7 +39,7 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table class="table table-bordered table-hover" id="listUser" style="width:100%">
+                                    <table class="table table-bordered table-hover" id="table-user"  style="width:100%">
                                         <thead style="background: #337ab7">
                                         <tr>
                                             <th style="background: #337ab7">
@@ -89,12 +89,13 @@
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script th:src="@{/js/utils/table-utils.js}" type="text/javascript"></script>
+<script th:src="@{/js/utils/export-file-utils.js}" type="text/javascript"></script>
 <script th:src="@{/js/listUser.js}" type="text/javascript"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("body").find(".buttons-excel").find("span").text("優れる");
-    })
+<!--<script type="text/javascript">-->
+    <!--$(document).ready(function () {-->
+        <!--$("body").find(".buttons-excel").find("span").text("優れる");-->
+    <!--})-->
 
-</script>
+<!--</script>-->
 </body>
 </html>

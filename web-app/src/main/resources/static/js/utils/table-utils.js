@@ -78,7 +78,6 @@ function dataTable(tableId, sortDefaultColumn) {
             }
         }
     });
-
     $("body").find(".buttons-excel").find("span").text("優れる");
 
 }
