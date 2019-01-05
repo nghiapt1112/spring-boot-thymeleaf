@@ -8,7 +8,10 @@ $(document).ready(function () {
         },
         'dom': 'lBfrtip',
         'buttons': [
-            'excel'
+            {
+                extend : 'excel',
+                filename: 'ユーザー一覧'
+            }
         ],
         'paging': true,
         'lengthChange': true,

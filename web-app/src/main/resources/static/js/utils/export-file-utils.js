@@ -1,9 +1,12 @@
-function exportDataToExcel(tableId, sortDefaultColumn) {
+function exportDataToExcel(tableId, sortDefaultColumn , fileName) {
     $(tableId).DataTable({
         destroy: true,
         'dom': 'lBfrtip',
         'buttons': [
-            'excel'
+            {
+                extend: 'excel',
+                filename : fileName
+            }
         ],
         'paging': true,
         'lengthChange': true,
@@ -26,6 +29,6 @@ function exportDataToExcel(tableId, sortDefaultColumn) {
             }
         }
     });
-    $("body").find(".buttons-excel").find("span").text("優れる");
+    $("body").find(".buttons-excel").find("span").text("EXCEL出力");
 
 }

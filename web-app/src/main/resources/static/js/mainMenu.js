@@ -132,11 +132,11 @@ function searchMainMenu() {
 exportDataToExcel();
 
 function onLogistics() {
-    exportDataToExcel('#table-logicstic',1);
+    exportDataToExcel('#table-logicstic',1, '物量');
 }
 
 function onOrderDetails(){
-    exportDataToExcel('#table-order',1);
+    exportDataToExcel('#table-order',1, '発注データ明細');
 }
 
 
