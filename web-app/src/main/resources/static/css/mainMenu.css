@@ -63,8 +63,8 @@ button {
     background-color: #4a9fe9;
 }
 .dataTables_length{
-    float: left ! important;
-    margin-right: 3% ! important;
+    float: right ! important;
+    margin-right: 75% ! important;
 }
 
 .text-center-search{
@@ -160,7 +160,7 @@ button {
 
 .dataTables_length{
     float: left ! important;
-    margin-right: 75% ! important;
+    margin-right: 1% ! important;
 }
 
 
