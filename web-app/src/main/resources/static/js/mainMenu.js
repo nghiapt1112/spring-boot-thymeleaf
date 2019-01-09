@@ -98,11 +98,7 @@ window.onclick = function (event) {
     }
 };
 
-// dataTable("#table-order", 1);
-// dataTable("#table-logicstic", 1);
-
 // call search API
-
 function searchMainMenu() {
     let logisticAPI = '/mainScreen';
     var startDate = document.getElementById("min").value;

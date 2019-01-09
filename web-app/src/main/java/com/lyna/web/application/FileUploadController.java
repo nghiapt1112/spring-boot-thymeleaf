@@ -81,6 +81,51 @@ public class FileUploadController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/file/store")
+    public ResponseEntity<Object> handleFileUploadStore(Model model, @RequestParam MultipartFile file,
+                                                        UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = storageService.store(user, file, 3);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/product")
+    public ResponseEntity<Object> handleFileUploadProduct(Model model, @RequestParam MultipartFile file,
+                                                          UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = storageService.store(user, file, 4);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/package")
+    public ResponseEntity<Object> handleFileUploadPackage(Model model, @RequestParam MultipartFile file,
+                                                          UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = storageService.store(user, file, 5);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();

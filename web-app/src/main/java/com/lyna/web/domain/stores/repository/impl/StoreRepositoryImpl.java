@@ -1,9 +1,13 @@
 package com.lyna.web.domain.stores.repository.impl;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
+import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
+import com.lyna.web.domain.view.CsvStore;
 import com.lyna.web.infrastructure.repository.BaseRepository;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -12,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -23,6 +29,16 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
 
     public StoreRepositoryImpl(EntityManager em) {
         super(Store.class, em);
+    }
+
+    @Override
+    public Iterator<CsvStore> getMapStore(Reader targetReader) {
+        CsvToBean<CsvStore> csvToBean = new CsvToBeanBuilder(targetReader)
+                .withType(CsvStore.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<CsvStore> csvStoreIterator = csvToBean.iterator();
+        return csvStoreIterator;
     }
 
     @Override
@@ -88,7 +104,7 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
             throw e;
         }
     }
-
+    
     @Override
     public boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId) {
         String query = "DELETE FROM Store u WHERE u.storeId in (:storeIds) AND u.tenantId=:tenantId";
@@ -98,6 +114,23 @@ public class StoreRepositoryImpl extends BaseRepository<Store, String> implement
                 .executeUpdate();
         return true;
     }
+
+//    @Override
+//    public List<Store> getAllByStoreCodesAndTenantId(List<String> storeCodes, int tenantId) {
+//        try {
+//            String query = "SELECT s FROM Store s Where s.storeCode in (:storeCodes) And s.tenantId = :tenantId";
+//            List listStore = entityManager.createQuery(query)
+//                    .setParameter("storeCodes", storeCodes)
+//                    .setParameter("tenantId", tenantId)
+//                    .getResultList();
+//            if (listStore != null && listStore.size() > 0)
+//                return listStore;
+//        } catch (Exception ex) {
+//            log.error(ex.getMessage());
+//            throw new StorageException("CSVのデータが不正。");
+//        }
+//        return null;
+//    }
 
     @Override
     public Store findOneByStoreIdAndTenantId(String storeId, int tenantId) {

@@ -30,7 +30,7 @@ import static com.lyna.web.domain.logicstics.service.LogisticService.PKG_TYPE;
 @Controller
 public class MainController extends AbstractCustomController {
 
-    private static final String REDIRECT_TO_MAIN_PAGE = "";
+//    private static final String REDIRECT_PACKAGE_LIST_PAGE = "redirect:/package/list";
 
 
     @Autowired
@@ -77,13 +77,18 @@ public class MainController extends AbstractCustomController {
         return "main/mainMenu";
     }
 
-    @GetMapping("/upload")
-    public String upload() {
-        return "layout";
-    }
+//    @GetMapping("/upload")
+//    public String upload() {
+//        return "layout";
+//    }
+//
+//    @PostMapping(value = {"/upload/"})
+//    public String uploadOrder() {
+//        return REDIRECT_TO_MAIN_PAGE;
+//    }
 
-    @PostMapping(value = {"/upload/"})
-    public String uploadOrder() {
-        return REDIRECT_TO_MAIN_PAGE;
-    }
+    //    @PostMapping(value = {"/upload/file/package"})
+    //    public String uploadPackage() {
+    //        return REDIRECT_PACKAGE_LIST_PAGE;
+    //    }
 }
