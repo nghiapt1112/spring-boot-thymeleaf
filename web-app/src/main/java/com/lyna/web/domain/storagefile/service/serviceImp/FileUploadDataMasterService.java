@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class FileUploadDataMasterDataService extends BaseService implements UploadDataService {
+public class FileUploadDataMasterService extends BaseService implements UploadDataService {
 
     private final Path rootLocation;
 
@@ -55,7 +55,7 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
     private PackageRepository packageRepository;
 
     @Autowired
-    public FileUploadDataMasterDataService(StorageProperties properties) {
+    public FileUploadDataMasterService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
@@ -84,9 +84,10 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             Reader reader = new InputStreamReader(inputStream);
             mapData = new HashMap<>();
             mapError = new HashMap<>();
+
             if (type == 3) {
                 innitDataStore();
-                Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
+                    Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
                 processUploadStore(storeIterator);
                 if (mapError.size() == 0) {
                     setDataStore(user);
@@ -128,7 +129,7 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             }
         }
         for (Package p : packagesInDb) {
-            CsvPackage csvPackage = (CsvPackage) mapData.get(p.getName().toLowerCase());
+            CsvPackage csvPackage = (CsvPackage) mapData.get(p.getName().toLowerCase().trim());
             if (csvPackage != null) {
                 p.setName(csvPackage.getPackageName());
                 p.setUnit(csvPackage.getUnit());
@@ -161,13 +162,12 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             }
         }
         for (Product product : productsInDb) {
-            CsvProduct csvProduct = (CsvProduct) mapData.get(product.getCode().toLowerCase());
+            CsvProduct csvProduct = (CsvProduct) mapData.get(product.getCode().toLowerCase().trim());
             if (csvProduct != null) {
                 product.setCode(csvProduct.getProductCode());
                 product.setName(csvProduct.getProductName());
                 product.setUnit(csvProduct.getUnit());
                 product.setPrice(csvProduct.getUnitPrice());
-                product.setOrderDetails(product.getOrderDetails());
                 product.setCategory1(csvProduct.getCategory1());
                 product.setCategory2(csvProduct.getCategory2());
                 product.setCategory3(csvProduct.getCategory3());
@@ -196,38 +196,33 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             }
         }
         for (Store store : storesInDb) {
-            CsvStore csvStore = (CsvStore) mapData.get(store.getCode());
+            CsvStore csvStore = (CsvStore) mapData.get(store.getCode().toLowerCase().trim());
             if (csvStore != null) {
                 store.setName(csvStore.getStoreName());
                 store.setArea(csvStore.getArea());
                 store.setMajorArea(csvStore.getMajorArea());
                 store.setPhoneNumber(csvStore.getPhoneNumber());
                 store.setPersonCharge(csvStore.getPersonInCharge());
-                store.setPostCourses(store.getPostCourses());
                 store.setTenantId(currentUser.getTenantId());
                 store.setUpdateUser(currentUser.getId());
                 store.setUpdateDate(new Date());
                 storeIterable.add(store);
             }
         }
-
         storeRepository.saveAll(stores);
     }
 
     void innitDataStore() {
-
         storeIterable = new HashSet<>();
         listStoreCode = new ArrayList<>();
     }
 
     void innitDataProduct() {
-
         productIterable = new HashSet<>();
         listProductCode = new ArrayList<>();
     }
 
     void innitDataPackage() {
-
         packageIterable = new HashSet<>();
         listPackageName = new ArrayList<>();
     }
@@ -291,15 +286,17 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             int row = 1;
             if (csvStore.getPost() == null
                     || csvStore.getPost().isEmpty()
-                    || csvStore.getStoreName().isEmpty()
                     || csvStore.getStoreName() == null
-                    || csvStore.getPersonInCharge().isEmpty()
+                    || csvStore.getStoreName().isEmpty()
                     || csvStore.getPersonInCharge() == null
+                    || csvStore.getPersonInCharge().isEmpty()
                     || csvStore.getPhoneNumber() == null
                     || csvStore.getPhoneNumber().isEmpty()
                     || csvStore.getAddress() == null
                     || csvStore.getAddress().isEmpty()
                     || csvStore.getArea() == null
+                    || csvStore.getArea().isEmpty()
+                    || csvStore.getMajorArea() == null
                     || csvStore.getMajorArea().isEmpty()
                     || csvStore.getStoreCode() == null
                     || csvStore.getStoreCode().isEmpty()

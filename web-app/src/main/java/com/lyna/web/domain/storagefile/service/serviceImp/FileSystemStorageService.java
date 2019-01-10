@@ -218,24 +218,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         deliveryDetailIterable = new HashSet<>();
     }
 
-//    void innitDataStore() {
-//        mapData = new HashMap<>();
-//        storeIterable = new HashSet<>();
-//        listStoreCode = new ArrayList<>();
-//    }
-//
-//    void innitDataProduct() {
-//        mapData = new HashMap<>();
-//        productIterable = new HashSet<>();
-//        listProductCode = new ArrayList<>();
-//    }
-//
-//    void innitDataPackage() {
-//        mapData = new HashMap<>();
-//        packageIterable = new HashSet<>();
-//        listPackageName = new ArrayList<>();
-//    }
-
     private String getProductIdForKey(String productIdOrderDate) {
         String[] sProductIdOrderDate = productIdOrderDate.split("_");
         return sProductIdOrderDate[0];

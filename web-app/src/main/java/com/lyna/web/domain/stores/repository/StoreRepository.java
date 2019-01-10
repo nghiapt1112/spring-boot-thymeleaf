@@ -18,7 +18,6 @@ public interface StoreRepository extends JpaRepository<Store, String>, PagingRep
 
     default List<Store> findAll(int tenantId) {
         return this.findByTenantId(tenantId);
-
     }
 
     List<String> getAllByCodesAndTenantId(int tenantId, List<String> storeCodes);
@@ -33,5 +32,4 @@ public interface StoreRepository extends JpaRepository<Store, String>, PagingRep
 
     boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
-//    List<Store> getAllByStoreCodesAndTenantId(List<String> storeCodes, int tenantId);
 }
