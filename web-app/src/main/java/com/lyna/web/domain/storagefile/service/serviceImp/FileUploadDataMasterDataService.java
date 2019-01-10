@@ -196,7 +196,7 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             }
         }
         for (Store store : storesInDb) {
-            CsvStore csvStore = (CsvStore) mapData.get(store.getCode());
+            CsvStore csvStore = (CsvStore) mapData.get(store.getCode().toLowerCase());
             if (csvStore != null) {
                 store.setName(csvStore.getStoreName());
                 store.setArea(csvStore.getArea());
@@ -291,10 +291,10 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             int row = 1;
             if (csvStore.getPost() == null
                     || csvStore.getPost().isEmpty()
-                    || csvStore.getStoreName().isEmpty()
                     || csvStore.getStoreName() == null
-                    || csvStore.getPersonInCharge().isEmpty()
+                    || csvStore.getStoreName().isEmpty()
                     || csvStore.getPersonInCharge() == null
+                    || csvStore.getPersonInCharge().isEmpty()
                     || csvStore.getPhoneNumber() == null
                     || csvStore.getPhoneNumber().isEmpty()
                     || csvStore.getAddress() == null
@@ -310,7 +310,7 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             row++;
 
             mapData.put(csvStore.getStoreCode().toLowerCase().trim(), csvStore);
-            listStoreCode.add(csvStore.getStoreCode());
+            listStoreCode.add(csvStore.getStoreCode().toLowerCase().trim());
 
         }
     }
