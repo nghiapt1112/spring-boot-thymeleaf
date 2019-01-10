@@ -24,7 +24,7 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
 
 
     @Override
-    public Iterator<CsvProduct> getMapStore(Reader targetReader) {
+    public Iterator<CsvProduct> getMapProduct(Reader targetReader) {
         CsvToBean<CsvProduct> csvToBean = new CsvToBeanBuilder(targetReader)
                 .withType(CsvProduct.class)
                 .withIgnoreLeadingWhiteSpace(true)

@@ -279,8 +279,8 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             }
             row++;
 
-            mapData.put(csvProduct.getProductCode().trim(), csvProduct);
-            listProductCode.add(csvProduct.getProductCode());
+            mapData.put(csvProduct.getProductCode().toLowerCase().trim(), csvProduct);
+            listProductCode.add(csvProduct.getProductCode().toLowerCase().trim());
 
         }
     }
@@ -310,7 +310,7 @@ public class FileUploadDataMasterDataService extends BaseService implements Uplo
             row++;
 
             mapData.put(csvStore.getStoreCode().toLowerCase().trim(), csvStore);
-            listStoreCode.add(csvStore.getStoreCode());
+            listStoreCode.add(csvStore.getStoreCode().toLowerCase().trim());
 
         }
     }
