@@ -3,10 +3,16 @@ package com.lyna.web.domain.product.repository.impl;
 import com.lyna.commons.infrustructure.repository.BaseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
+import com.lyna.web.domain.view.CsvProduct;
+import com.lyna.web.domain.view.CsvStore;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -16,6 +22,16 @@ public class ProductRepositoryImpl extends BaseRepository<Product, String> imple
         super(Product.class, em);
     }
 
+
+    @Override
+    public Iterator<CsvProduct> getMapProduct(Reader targetReader) {
+        CsvToBean<CsvProduct> csvToBean = new CsvToBeanBuilder(targetReader)
+                .withType(CsvProduct.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<CsvProduct> csvProductIterator = csvToBean.iterator();
+        return csvProductIterator;
+    }
 
     @Transactional
     public Product findOneByProductIdAndTenantId(String productId, int tenantId) {
