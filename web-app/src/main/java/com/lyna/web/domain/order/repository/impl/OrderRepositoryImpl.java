@@ -1,6 +1,7 @@
 package com.lyna.web.domain.order.repository.impl;
 
 import com.lyna.commons.infrustructure.object.RequestPage;
+import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
@@ -44,37 +45,26 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             CsvOrder csvOrder = new CsvOrder();
 
             mapHeader.forEach((index, key) -> {
-                switch (key) {
-                    case "日付":
-                        csvOrder.setOrderDate(csvRecord.get(index));
-                        break;
-                    case "店舗":
-                        csvOrder.setStoreName(csvRecord.get(index));
-                        break;
-                    case "店舗コード":
-                        csvOrder.setStoreCode(csvRecord.get(index));
-                        break;
-                    case "便":
-                        csvOrder.setPost(csvRecord.get(index));
-                        break;
-                    case "商品コード":
-                        csvOrder.setProductCode(csvRecord.get(index));
-                        break;
-                    case "商品":
-                        csvOrder.setProductName(csvRecord.get(index));
-                        break;
-                    case "個数":
-                        csvOrder.setQuantity(csvRecord.get(index));
-                        break;
-                    case "大分類":
-                        csvOrder.setCategory1(csvRecord.get(index));
-                        break;
-                    case "中分類":
-                        csvOrder.setCategory2(csvRecord.get(index));
-                        break;
-                    case "小分類":
-                        csvOrder.setCategory3(csvRecord.get(index));
-                        break;
+                if ("日付".equals(key)) {
+                    csvOrder.setOrderDate(csvRecord.get(index));
+                } else if ("店舗".equals(key)) {
+                    csvOrder.setStoreName(csvRecord.get(index));
+                } else if ("店舗コード".equals(key)) {
+                    csvOrder.setStoreCode(csvRecord.get(index));
+                } else if ("便".equals(key)) {
+                    csvOrder.setPost(csvRecord.get(index));
+                } else if ("商品コード".equals(key)) {
+                    csvOrder.setProductCode(csvRecord.get(index));
+                } else if ("商品".equals(key)) {
+                    csvOrder.setProductName(csvRecord.get(index));
+                } else if ("個数".equals(key)) {
+                    csvOrder.setQuantity(csvRecord.get(index));
+                } else if ("大分類".equals(key)) {
+                    csvOrder.setCategory1(csvRecord.get(index));
+                } else if ("中分類".equals(key)) {
+                    csvOrder.setCategory2(csvRecord.get(index));
+                } else if ("小分類".equals(key)) {
+                    csvOrder.setCategory3(csvRecord.get(index));
                 }
             });
 
@@ -91,7 +81,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader().withIgnoreHeaderCase().withTrim());
         } catch (IOException ex) {
             log.error(ex.getMessage());
-            throw new StorageException("CSVのデータが不正。");
+            throw new StorageException(Constants.PARSE_CSV_FAILED);
 
         }
         Map<String, Integer> hashMap = csvParser.getHeaderMap().entrySet().stream().
@@ -109,7 +99,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             return csvParser.getRecords();
         } catch (IOException ex) {
             log.error(ex.getMessage());
-            throw new StorageException("CSVのデータが不正。");
+            throw new StorageException(Constants.PARSE_CSV_FAILED);
         }
     }
 
@@ -134,7 +124,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             BigDecimal amount = new BigDecimal(quantity);
             String query = "SELECT a FROM Order a inner join OrderDetail b on a.orderId = b.orderId WHERE a.postCourseId = :postCourseId AND b.productId = :productId And b.amount = :amount";
             List list = entityManager.createQuery(query)
-                    .setParameter("postCourseId", postCourseId)
+                    .setParameter(Constants.POST_COURSE_ID, postCourseId)
                     .setParameter("productId", productId)
                     .setParameter("amount", amount)
                     .getResultList();
@@ -142,7 +132,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
                 return true;
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new StorageException("CSVのデータが不正。");
+            throw new StorageException(Constants.PARSE_CSV_FAILED);
         }
         return false;
     }
@@ -150,22 +140,22 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     @Override
     public List<Order> findByTenantId(int tenantId) {
         return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId")
-                .setParameter("tenantId", tenantId)
+                .setParameter(Constants.TENANT_ID, tenantId)
                 .getResultList();
     }
 
     @Override
     public List<Order> findByTenantIdAndPostCourseId(int tenantId, String postCourseId) {
         return entityManager.createQuery("SELECT o FROM Order o WHERE o.tenantId = :tenantId AND o.postCourseId = :postCourseId")
-                .setParameter("tenantId", tenantId)
-                .setParameter("postCourseId", postCourseId)
+                .setParameter(Constants.TENANT_ID, tenantId)
+                .setParameter(Constants.POST_COURSE_ID, postCourseId)
                 .getResultList();
     }
 
     @Override
     public List<String> findByTenantIdAndPostCourseId(int tenantId, List<String> postCourseIds) {
         return entityManager.createQuery("SELECT o.orderId FROM Order o WHERE o.tenantId = :tenantId AND o.postCourseId in (:postCourseIds)")
-                .setParameter("tenantId", tenantId)
+                .setParameter(Constants.TENANT_ID, tenantId)
                 .setParameter("postCourseIds", postCourseIds)
                 .getResultList();
     }
@@ -189,7 +179,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
                 String query = "SELECT a.orderId FROM Order a " +
                         "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate and a.tenantId = :tenantId";
                 List list = entityManager.createQuery(query)
-                        .setParameter("postCourseId", postCourseId)
+                        .setParameter(Constants.POST_COURSE_ID, postCourseId)
                         .setParameter("orderDate", date)
                         .setParameter("tenantId", tenantId)
                         .getResultList();
@@ -198,7 +188,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             }
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new StorageException("CSVのデータが不正。");
+            throw new StorageException(Constants.PARSE_CSV_FAILED);
         }
         return null;
     }

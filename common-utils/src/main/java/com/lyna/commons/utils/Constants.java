@@ -2,6 +2,9 @@ package com.lyna.commons.utils;
 
 public final class Constants {
     public static final String HEADER_FILE_ORDER = "header.csv";
+    public static final String PARSE_CSV_FAILED = "CSVのデータが不正。";
+    public static final String TENANT_ID = "tenantId";
+    public static final String POST_COURSE_ID = "postCourseId";
 
     public static final class ENTITY_STATUS {
         public static final Integer CREATED = 1;

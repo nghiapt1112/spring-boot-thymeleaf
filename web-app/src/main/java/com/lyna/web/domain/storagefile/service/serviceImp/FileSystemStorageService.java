@@ -59,28 +59,49 @@ import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 public class FileSystemStorageService extends BaseService implements StorageService {
 
     private final Path rootLocation;
+//head
+//    List<String> listStoreCode;
+//    List<String> listProductCode;
+//    List<String> ListPost;
+//    Map<String, CsvOrder> mapProduct;
+//    Map<String, CsvOrder> mapProductOrderCsv;
+//    Map<String, Object> mapStorePostCode;
+//    Map<String, Object> mapStore;
+//    Set<Product> productIterable;
+//    Set<Store> storeIterable;
+//    Set<PostCourse> postCoursesIterable;
+//    Set<Delivery> deliveryIterable;
+//    Set<DeliveryDetail> deliveryDetailIterable;
+//    //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
+//
+//    Set<Order> orderIterable;
+//    Set<OrderDetail> orderDetailIterable;
+//
+//    Map<Object, String> mapCsvPostCourseId;
+//    Map<String, Object> mapDeliveryIdCsv;
+//    Map<String, CsvOrder> mapProductIdCsvOrder;
+//    Map<Integer, String> mapError;
 
-    List<String> listStoreCode;
-    List<String> listProductCode;
-    List<String> ListPost;
-    Map<String, CsvOrder> mapProduct;
-    Map<String, CsvOrder> mapProductOrderCsv;
-    Map<String, Object> mapStorePostCode;
-    Map<String, Object> mapStore;
-    Set<Product> productIterable;
-    Set<Store> storeIterable;
-    Set<PostCourse> postCoursesIterable;
-    Set<Delivery> deliveryIterable;
-    Set<DeliveryDetail> deliveryDetailIterable;
-    //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
+    private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
+    private List<String> listStoreCode;
+    private List<String> listProductCode;
+    private List<String> ListPost;
+    private Map<String, CsvOrder> mapProduct;
+    private Map<String, CsvOrder> mapProductOrderCsv;
+    private Map<String, Object> mapStorePostCode;
+    private Map<String, Object> mapStore;
+    private Set<Product> productIterable;
+    private Set<Store> storeIterable;
+    private Set<PostCourse> postCoursesIterable;
+    private Set<Delivery> deliveryIterable;
+    private Set<DeliveryDetail> deliveryDetailIterable;
+    private Set<Order> orderIterable;
+    private Set<OrderDetail> orderDetailIterable;
 
-    Set<Order> orderIterable;
-    Set<OrderDetail> orderDetailIterable;
-
-    Map<Object, String> mapCsvPostCourseId;
-    Map<String, Object> mapDeliveryIdCsv;
-    Map<String, CsvOrder> mapProductIdCsvOrder;
-    Map<Integer, String> mapError;
+    private Map<Object, String> mapCsvPostCourseId;
+    private Map<String, Object> mapDeliveryIdCsv;
+    private Map<String, CsvOrder> mapProductIdCsvOrder;
+    private Map<Integer, String> mapError;
 
     @Autowired
     private OrderService orderService;
@@ -111,7 +132,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     public String store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename()).replaceAll("[\\\\/:*?\"<>|]", "");
+        String filename = StringUtils.cleanPath(file.getOriginalFilename()).replaceAll("[\\\\/:*?\"<>|]", "").trim();
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
@@ -123,9 +144,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                                 + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename.trim()),
+                Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
-                return filename.trim();
+                return filename;
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
@@ -162,11 +183,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         String userId = user.getId();
         initData();
         if (file.isEmpty()) {
-            mapError.put(500, "空のファイルを保存出来ない。" + filename);
+            mapError.put(500, toStr("err.csv.fileEmpty.msg") + filename);
         }
 
         if (filename.contains("..")) {
-            mapError.put(500, "現在のディレクトリの外に相対パスを持つファイルを保存できません");
+            mapError.put(500, toStr("err.csv.seeOtherPath.msg"));
         }
 
         try (InputStream inputStream = file.getInputStream()) {
@@ -180,7 +201,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 saveDataDelivery();
             }
         } catch (Exception ex) {
-            mapError.put(500, "ファイル保存に失敗しました。");
+            mapError.put(500, toStr(READ_FILE_FAILED));
         }
         return mapError;
     }
@@ -223,7 +244,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 throw new StorageException("Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StorageException("保存されたファイルの読み込みは失敗した " + filename, e);
+            throw new StorageException(toStr(READ_FILE_FAILED) + filename, e);
         }
     }
 
@@ -239,31 +260,31 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Map<String, Integer> headerOrder = orderService.getHeaderOrder(reader);
             return headerOrder;
         } catch (Exception ex) {
-            mapError.put(500, "ファイル保存に失敗しました。");
+            mapError.put(toInteger("err.csv.saveFileFailed.code"), toStr("err.csv.saveFileFailed.msg"));
         }
         return null;
     }
 
     @Override
     public List<CSVRecord> getMapData(MultipartFile file) {
+        List<CSVRecord> recordList = null;
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
-            List<CSVRecord> recordList = orderService.getDataOrder(reader);
+            recordList = orderService.getDataOrder(reader);
             return recordList;
         } catch (Exception ex) {
-            mapError.put(500, "ファイル保存に失敗しました。");
+            mapError.put(500, toStr(READ_FILE_FAILED));
         }
-        return null;
+        return recordList;
     }
 
     @Override
     public Map<Integer, String> getMapHeader() {
         final Resource resource = loadAsFileResource(Constants.HEADER_FILE_ORDER);
         try {
-            Map<Integer, String> mapHeader = fileRepository.readFileHeader(resource.getInputStream());
-            return mapHeader;
+            return fileRepository.readFileHeader(resource.getInputStream());
         } catch (IOException e) {
-            throw new StorageException("保存されたファイルの読み込みは失敗した ");
+            throw new StorageException(toStr(READ_FILE_FAILED));
         }
     }
 
@@ -591,7 +612,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapProductIdCsvOrder.put(productId + "_" + csvOrder.getOrderDate(), csvOrder);
             });
         } catch (Exception ex) {
-            mapError.put(500, "ファイル保存に失敗しました。");
+            mapError.put(500, toStr("err.csv.saveFileFailed.msg"));
         }
     }
 
@@ -670,9 +691,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private void saveDataOrder() throws DomainException {
         //Save all productCode
         productRepository.saveAll(productIterable);
-        productRepository.flush();
         orderService.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
         orderDetailRepository.flush();
+
     }
 }
