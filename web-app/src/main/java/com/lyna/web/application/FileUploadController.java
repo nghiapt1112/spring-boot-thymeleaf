@@ -4,6 +4,7 @@ import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageService;
+import com.lyna.web.domain.storagefile.service.UploadDataService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.apache.commons.csv.CSVRecord;
@@ -28,11 +29,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/upload")
 public class FileUploadController {
     private static final String MATCHING_ORDER = "matching/order";
+
     private final StorageService storageService;
+    private final UploadDataService uploadDataService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileUploadController(StorageService storageService, UploadDataService uploadDataService) {
         this.storageService = storageService;
+        this.uploadDataService = uploadDataService;
     }
 
     @GetMapping("/")
@@ -99,6 +103,51 @@ public class FileUploadController {
         User user = (User) principal.getPrincipal();
         Map<Integer, String> mapHeader = new HashMap<>();
         Map<Integer, String> mapError = storageService.store(user, file);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/store")
+    public ResponseEntity<Object> handleFileUploadStore(Model model, @RequestParam MultipartFile file,
+                                                        UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 3);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/product")
+    public ResponseEntity<Object> handleFileUploadProduct(Model model, @RequestParam MultipartFile file,
+                                                          UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 4);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/package")
+    public ResponseEntity<Object> handleFileUploadPackage(Model model, @RequestParam MultipartFile file,
+                                                          UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 5);
         String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);

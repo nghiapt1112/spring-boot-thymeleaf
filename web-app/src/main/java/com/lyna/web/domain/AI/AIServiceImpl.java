@@ -81,7 +81,7 @@ public class AIServiceImpl extends BaseService implements AIService {
             AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), aggregateRequest, AIDataAggregate.class);
             updateDataToDB(currentUser, response.getResultDatas());
         } catch (Exception e) {
-            throw new AIException(toInteger("err.ai.dataInvalid.code"), toStr("err.ai.dataInvalid.msg"));
+            System.out.println("\n\n\n\n Cannot call to AI services, process failed.!!!");
         }
 
 

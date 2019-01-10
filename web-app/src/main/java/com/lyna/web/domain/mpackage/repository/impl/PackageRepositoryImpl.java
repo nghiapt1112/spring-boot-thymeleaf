@@ -2,12 +2,18 @@ package com.lyna.web.domain.mpackage.repository.impl;
 
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
+import com.lyna.web.domain.view.CsvPackage;
+import com.lyna.web.domain.view.CsvProduct;
 import com.lyna.web.infrastructure.repository.BaseRepository;
 import com.lyna.web.infrastructure.repository.PagingRepository;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -18,10 +24,29 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
     }
 
     @Override
+    public Iterator<CsvPackage> getMapStore(Reader targetReader) {
+        CsvToBean<CsvPackage> csvToBean = new CsvToBeanBuilder(targetReader)
+                .withType(CsvPackage.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+        Iterator<CsvPackage> csvPackageIterator = csvToBean.iterator();
+        return csvPackageIterator;
+    }
+
+    @Override
     public List<Package> findByIds(int tenantId, Collection<String> ids) {
         return super.entityManager
                 .createQuery("SELECT p FROM Package p WHERE p.tenantId = :tenantId AND p.pakageId IN (:ids)", Package.class)
                 .setParameter("tenantId", tenantId).setParameter("ids", ids)
+                .getResultList();
+    }
+
+    @Override
+    public List<Package> getAllByNameAndTenantId(List<String> packageNames,int tenantId) {
+        return entityManager
+                .createQuery("SELECT p FROM Package p WHERE p.name in (:packageNames) AND  p.tenantId=:tenantId")
+                .setParameter("tenantId", tenantId)
+                .setParameter("packageNames", packageNames)
                 .getResultList();
     }
 

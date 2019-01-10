@@ -61,6 +61,14 @@ public class Store extends AbstractEntity {
     @JoinColumn(name = "store_id")
     private List<PostCourse> postCourses;
 
+//    public List<PostCourse> getPostCourses() {
+//        return postCourses;
+//    }
+//
+//    public void setPostCourses(List<PostCourse> postCourses) {
+//        this.postCourses = postCourses;
+//    }
+
     public Store() {
         this.storeId = UUID.randomUUID().toString();
     }

@@ -72,6 +72,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     Set<PostCourse> postCoursesIterable;
     Set<Delivery> deliveryIterable;
     Set<DeliveryDetail> deliveryDetailIterable;
+    //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
+
     Set<Order> orderIterable;
     Set<OrderDetail> orderDetailIterable;
 
@@ -284,6 +286,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapCsvPostCourseId = new HashMap<>();
         mapError = new HashMap<>();
     }
+
 
     void innitDataOrder() {
         listProductCode = new ArrayList<>();
@@ -671,6 +674,5 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         orderService.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
         orderDetailRepository.flush();
-
     }
 }

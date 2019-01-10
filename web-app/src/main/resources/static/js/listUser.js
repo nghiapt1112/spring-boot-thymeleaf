@@ -35,4 +35,5 @@ $(document).ready(function () {
         }
 
     });
+    $("body").find(".buttons-excel").find("span").text("EXCEL出力");
 });

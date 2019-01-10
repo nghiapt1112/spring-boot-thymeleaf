@@ -6,25 +6,28 @@ import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.delivery.service.DeliveryDetailService;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
+import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/package")
@@ -34,11 +37,56 @@ public class PackageController extends AbstractCustomController {
     private static final String PACKAGE_EDIT_PAGE = "package/editPackage";
     private static final String REDIRECT_PACKAGE_LIST_PAGE = "redirect:/package/list";
     private static final String PACKAGE_REGISTER_PAGE = "package/registerPackage";
+    private final StorageService storageService;
+
     @Autowired
     private PackageService packageService;
     @Autowired
     private DeliveryDetailService deliveryDetailService;
+    @Autowired
+    public PackageController(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
+    @GetMapping("/")
+    public String listUploadedFiles(Model model) throws IOException {
+
+        model.addAttribute("files", storageService.loadAll().map(
+                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                        "serveFile", path.getFileName().toString()).build().toString())
+                .collect(Collectors.toList()));
+
+        return "uploadForm";
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+
+        Resource file = storageService.loadAsResource(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @PostMapping("/file/package")
+    public ResponseEntity<Object> handleFileUploadPackage(Model model, @RequestParam MultipartFile file,
+                                                          UsernamePasswordAuthenticationToken principal) throws IOException {
+        User user = (User) principal.getPrincipal();
+        Map<Integer, String> mapError = storageService.store(user, file, 5);
+        String result = "ファイルは成功にアップロードされた";
+        if (mapError.size() > 0) {
+            model.addAttribute("messageError", mapError);
+            return new ResponseEntity<>(mapError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else
+            DataUtils.putMapData(Constants.ENTITY_STATUS.IMPORT, result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+//    @ExceptionHandler(StorageFileNotFoundException.class)
+//    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+//        return ResponseEntity.notFound().build();
+//    }
     @GetMapping(value = "/create")
     public String createPackage(Model model) {
         Package mpackage = new Package();
