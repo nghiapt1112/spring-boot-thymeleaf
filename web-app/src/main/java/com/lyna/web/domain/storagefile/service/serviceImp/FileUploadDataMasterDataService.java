@@ -7,7 +7,7 @@ import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
 import com.lyna.web.domain.storagefile.StorageProperties;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
-import com.lyna.web.domain.storagefile.service.StorageService;
+import com.lyna.web.domain.storagefile.service.UploadDataService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.user.User;
@@ -15,11 +15,8 @@ import com.lyna.web.domain.view.CsvPackage;
 import com.lyna.web.domain.view.CsvProduct;
 import com.lyna.web.domain.view.CsvStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,17 +24,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
-public class FileUploadDataMasterService extends BaseService implements StorageService {
+public class FileUploadDataMasterDataService extends BaseService implements UploadDataService {
 
     private final Path rootLocation;
 
@@ -60,7 +55,7 @@ public class FileUploadDataMasterService extends BaseService implements StorageS
     private PackageRepository packageRepository;
 
     @Autowired
-    public FileUploadDataMasterService(StorageProperties properties) {
+    public FileUploadDataMasterDataService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
@@ -88,28 +83,29 @@ public class FileUploadDataMasterService extends BaseService implements StorageS
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
             mapData = new HashMap<>();
-
+            mapError = new HashMap<>();
             if (type == 3) {
                 innitDataStore();
+                Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
+                processUploadStore(storeIterator);
                 if (mapError.size() == 0) {
-                    Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
-                    processUploadStore(storeIterator);
+                    setDataStore(user);
                 }
-                setDataStore(user);
             } else if (type == 4) {
                 innitDataProduct();
+                Iterator<CsvProduct> productIterator = productRepository.getMapProduct(reader);
+                processUploadProduct(productIterator);
                 if (mapError.size() == 0) {
-                    Iterator<CsvProduct> productIterator = productRepository.getMapStore(reader);
-                    processUploadProduct(productIterator);
+                    setDataProduct(user);
                 }
-                setDataProduct(user);
+
             } else if (type == 5) {
                 innitDataPackage();
+                Iterator<CsvPackage> packageIterator = packageRepository.getMapPackage(reader);
+                processUploadPackage(packageIterator);
                 if (mapError.size() == 0) {
-                    Iterator<CsvPackage> packageIterator = packageRepository.getMapStore(reader);
-                    processUploadPackage(packageIterator);
+                    setDataPackage(user);
                 }
-                setDataPackage(user);
             }
         } catch (Exception ex) {
             mapError.put(500, "ファイル保存に失敗しました。");
@@ -317,42 +313,5 @@ public class FileUploadDataMasterService extends BaseService implements StorageS
             listStoreCode.add(csvStore.getStoreCode());
 
         }
-    }
-
-
-    @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
-        } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-    }
-
-    @Override
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
-    }
-
-    @Override
-    public Resource loadAsResource(String filename) {
-        try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new StorageException("Could not read file: " + filename);
-            }
-        } catch (MalformedURLException e) {
-            throw new StorageException("保存されたファイルの読み込みは失敗した " + filename, e);
-        }
-    }
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 }

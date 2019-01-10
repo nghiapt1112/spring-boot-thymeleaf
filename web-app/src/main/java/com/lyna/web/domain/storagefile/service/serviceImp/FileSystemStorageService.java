@@ -23,7 +23,8 @@ import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.view.*;
+import com.lyna.web.domain.view.CsvDelivery;
+import com.lyna.web.domain.view.CsvOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -56,7 +57,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     List<String> listStoreCode;
     List<String> listProductCode;
-    List<String> listPackageName;
     List<String> ListPost;
     Map<String, CsvOrder> mapProduct;
     Map<String, CsvOrder> mapProductOrderCsv;
@@ -65,7 +65,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
     Set<Product> productIterable;
     Set<Store> storeIterable;
-    Set<Package> packageIterable;
     Iterable<PostCourse> postCoursesIterable;
     Iterable<Delivery> deliveryIterable;
     Iterable<DeliveryDetail> deliveryDetailIterable;
@@ -130,30 +129,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 saveDataMaster();
                 saveDataOrder();
                 aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
-            }
-//            else if (type == 3) {
-//                innitDataStore();
-//                if (mapError.size() == 0) {
-//                    Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
-//                    processUploadStore(storeIterator);
-//                }
-//                setDataStore(user);
-//            } else if (type == 4) {
-//                innitDataProduct();
-//                if (mapError.size() == 0) {
-//                    Iterator<CsvProduct> productIterator = productRepository.getMapStore(reader);
-//                    processUploadProduct(productIterator);
-//                }
-//                setDataProduct(user);
-//            } else if (type == 5) {
-//                innitDataPackage();
-//                if (mapError.size() == 0) {
-//                    Iterator<CsvPackage> packageIterator = packageRepository.getMapStore(reader);
-//                    processUploadPackage(packageIterator);
-//                }
-//                setDataPackage(user);
-//            }
-            else {
+            } else {
                 innitDataDelivery();
                 Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
                 processUploadDelivery(deliveryIterator);
@@ -264,89 +240,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         String[] sProductIdOrderDate = productIdOrderDate.split("_");
         return sProductIdOrderDate[0];
     }
-
-//    private void processUploadPackage(Iterator<CsvPackage> packageIterator) {
-//        while (packageIterator.hasNext()) {
-//            CsvPackage csvPackage = packageIterator.next();
-//            int row = 1;
-//            if (csvPackage.getPackageName() == null
-//                    || csvPackage.getPackageName().isEmpty()
-//                    || csvPackage.getUnit() == null
-//                    || csvPackage.getUnit().isEmpty()
-//                    || csvPackage.getEmptyWeight() == null
-//                    || csvPackage.getFullLoadWeight() == null
-//                    || csvPackage.getEmptyCapacity() == null
-//                    || csvPackage.getFullLoadCapacity() == null
-//
-//            ) {
-//                mapError.put(500, "行目 " + row + " にデータが不正");
-//            }
-//            row++;
-//
-//            mapData.put(csvPackage.getPackageName().toLowerCase().trim(), csvPackage);
-//            listPackageName.add(csvPackage.getPackageName().toLowerCase().trim());
-//
-//        }
-//    }
-//
-//    private void processUploadProduct(Iterator<CsvProduct> productIterator) {
-//        while (productIterator.hasNext()) {
-//            CsvProduct csvProduct = productIterator.next();
-//            int row = 1;
-//            if (csvProduct.getProductCode() == null
-//                    || csvProduct.getProductCode().isEmpty()
-//                    || csvProduct.getProductName() == null
-//                    || csvProduct.getProductName().isEmpty()
-//                    || csvProduct.getUnit() == null
-//                    || csvProduct.getUnit().isEmpty()
-//                    || csvProduct.getUnitPrice() == null
-//                    || csvProduct.getCategory1() == null
-//                    || csvProduct.getCategory1().isEmpty()
-//                    || csvProduct.getCategory2() == null
-//                    || csvProduct.getCategory2().isEmpty()
-//                    || csvProduct.getCategory3() == null
-//                    || csvProduct.getCategory3().isEmpty()
-//
-//            ) {
-//                mapError.put(500, "行目 " + row + " にデータが不正");
-//            }
-//            row++;
-//
-//            mapData.put(csvProduct.getProductCode().trim(), csvProduct);
-//            listProductCode.add(csvProduct.getProductCode());
-//
-//        }
-//    }
-//
-//    private void processUploadStore(Iterator<CsvStore> storeIterator) {
-//        while (storeIterator.hasNext()) {
-//            CsvStore csvStore = storeIterator.next();
-//            int row = 1;
-//            if (csvStore.getPost() == null
-//                    || csvStore.getPost().isEmpty()
-//                    || csvStore.getStoreName().isEmpty()
-//                    || csvStore.getStoreName() == null
-//                    || csvStore.getPersonInCharge().isEmpty()
-//                    || csvStore.getPersonInCharge() == null
-//                    || csvStore.getPhoneNumber() == null
-//                    || csvStore.getPhoneNumber().isEmpty()
-//                    || csvStore.getAddress() == null
-//                    || csvStore.getAddress().isEmpty()
-//                    || csvStore.getArea() == null
-//                    || csvStore.getMajorArea().isEmpty()
-//                    || csvStore.getStoreCode() == null
-//                    || csvStore.getStoreCode().isEmpty()
-//
-//            ) {
-//                mapError.put(500, "行目 " + row + " にデータが不正");
-//            }
-//            row++;
-//
-//            mapData.put(csvStore.getStoreCode().toLowerCase().trim(), csvStore);
-//            listStoreCode.add(csvStore.getStoreCode());
-//
-//        }
-//    }
 
     private void processUpload(Iterator<CsvOrder> orderIterator) {
         HashSet<String> setOrder = new HashSet<>();
@@ -693,107 +586,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         orderDetail.setCreateUser(userId);
         orderDetailIterable.add(orderDetail);
     }
-
-//    private void setDataPackage(User currentUser) {
-//        listPackageName = listPackageName.stream().distinct().collect(Collectors.toList());
-//
-//        List<Package> packagesInDb = packageRepository.getAllByNameAndTenantId(listPackageName, currentUser.getTenantId());
-//
-//        List<String> existedPackageNames = packagesInDb.stream().map(t -> t.getName().toLowerCase()).collect(Collectors.toList());
-//
-//        List<Package> packages = new ArrayList<>();
-//        for (String packageName : listPackageName) {
-//            if (!existedPackageNames.contains(packageName)) {
-//                CsvPackage csvPackage = (CsvPackage) mapData.get(packageName);
-//                packages.add(csvPackage.createPackage(currentUser));
-//            }
-//        }
-//        for (Package p : packagesInDb) {
-//            CsvPackage csvPackage = (CsvPackage) mapData.get(p.getName().toLowerCase());
-//            if (csvPackage != null) {
-//                p.setName(csvPackage.getPackageName());
-//                p.setUnit(csvPackage.getUnit());
-//                p.setEmptyWeight(csvPackage.getEmptyWeight());
-//                p.setFullLoadWeight(csvPackage.getFullLoadWeight());
-//                p.setEmptyCapacity(csvPackage.getEmptyCapacity());
-//                p.setFullLoadCapacity(csvPackage.getFullLoadCapacity());
-//                p.setTenantId(currentUser.getTenantId());
-//                p.setUpdateUser(currentUser.getId());
-//                p.setUpdateDate(new Date());
-//                packageIterable.add(p);
-//            }
-//        }
-//        packageRepository.saveAll(packages);
-//    }
-//
-//
-//    private void setDataProduct(User currentUser) {
-//        listProductCode = listProductCode.stream().distinct().collect(Collectors.toList());
-//
-//        List<Product> productsInDb = productRepository.getProductsByProductCode(currentUser.getTenantId(), listProductCode);
-//
-//        List<String> existedProductCodes = productsInDb.stream().map(t -> t.getCode()).collect(Collectors.toList());
-//
-//        List<Product> products = new ArrayList<>();
-//        for (String productCode : listProductCode) {
-//            if (!existedProductCodes.contains(productCode)) {
-//                CsvProduct csvProduct = (CsvProduct) mapData.get(productCode);
-//                products.add(csvProduct.createProduct(currentUser));
-//            }
-//        }
-//        for (Product product : productsInDb) {
-//            CsvProduct csvProduct = (CsvProduct) mapData.get(product.getCode().toLowerCase());
-//            if (csvProduct != null) {
-//                product.setCode(csvProduct.getProductCode());
-//                product.setName(csvProduct.getProductName());
-//                product.setUnit(csvProduct.getUnit());
-//                product.setPrice(csvProduct.getUnitPrice());
-//                product.setOrderDetails(product.getOrderDetails());
-//                product.setCategory1(csvProduct.getCategory1());
-//                product.setCategory2(csvProduct.getCategory2());
-//                product.setCategory3(csvProduct.getCategory3());
-//                product.setTenantId(currentUser.getTenantId());
-//                product.setUpdateUser(currentUser.getId());
-//                product.setUpdateDate(new Date());
-//                productIterable.add(product);
-//            }
-//        }
-//        productRepository.saveAll(products);
-//    }
-//
-//
-//    private void setDataStore(User currentUser) {
-//        listStoreCode = listStoreCode.stream().distinct().collect(Collectors.toList());
-//
-//        List<Store> storesInDb = storeRepository.getAll(currentUser.getTenantId(), listStoreCode);
-//
-//        List<String> existedStoreCodes = storesInDb.stream().map(t -> t.getCode()).collect(Collectors.toList());
-//
-//        List<Store> stores = new ArrayList<>();
-//        for (String storeCode : listStoreCode) {
-//            if (!existedStoreCodes.contains(storeCode)) {
-//                CsvStore csvStore = (CsvStore) mapData.get(storeCode);
-//                stores.add(csvStore.createStore(currentUser));
-//            }
-//        }
-//        for (Store store : storesInDb) {
-//            CsvStore csvStore = (CsvStore) mapData.get(store.getCode());
-//            if (csvStore != null) {
-//                store.setName(csvStore.getStoreName());
-//                store.setArea(csvStore.getArea());
-//                store.setMajorArea(csvStore.getMajorArea());
-//                store.setPhoneNumber(csvStore.getPhoneNumber());
-//                store.setPersonCharge(csvStore.getPersonInCharge());
-//                store.setPostCourses(store.getPostCourses());
-//                store.setTenantId(currentUser.getTenantId());
-//                store.setUpdateUser(currentUser.getId());
-//                store.setUpdateDate(new Date());
-//                storeIterable.add(store);
-//            }
-//        }
-//
-//        storeRepository.saveAll(stores);
-//    }
 
     private void saveDataMaster() throws DomainException {
         //save all storeCode

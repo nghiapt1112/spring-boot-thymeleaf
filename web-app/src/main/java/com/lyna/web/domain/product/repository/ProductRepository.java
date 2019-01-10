@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
-    Iterator<CsvProduct> getMapStore(Reader targetReader);
+    Iterator<CsvProduct> getMapProduct(Reader targetReader);
 
     Product findOneByProductIdAndTenantId(String productId, int tenantId);
 

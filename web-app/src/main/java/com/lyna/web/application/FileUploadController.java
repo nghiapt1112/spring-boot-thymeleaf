@@ -4,6 +4,7 @@ import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageService;
+import com.lyna.web.domain.storagefile.service.UploadDataService;
 import com.lyna.web.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -26,10 +27,12 @@ import java.util.stream.Collectors;
 public class FileUploadController {
 
     private final StorageService storageService;
+    private final UploadDataService uploadDataService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileUploadController(StorageService storageService, UploadDataService uploadDataService) {
         this.storageService = storageService;
+        this.uploadDataService = uploadDataService;
     }
 
     @GetMapping("/")
@@ -86,7 +89,7 @@ public class FileUploadController {
     public ResponseEntity<Object> handleFileUploadStore(Model model, @RequestParam MultipartFile file,
                                                         UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        Map<Integer, String> mapError = storageService.store(user, file, 3);
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 3);
         String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
@@ -101,7 +104,7 @@ public class FileUploadController {
     public ResponseEntity<Object> handleFileUploadProduct(Model model, @RequestParam MultipartFile file,
                                                           UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        Map<Integer, String> mapError = storageService.store(user, file, 4);
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 4);
         String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);
@@ -116,7 +119,7 @@ public class FileUploadController {
     public ResponseEntity<Object> handleFileUploadPackage(Model model, @RequestParam MultipartFile file,
                                                           UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        Map<Integer, String> mapError = storageService.store(user, file, 5);
+        Map<Integer, String> mapError = uploadDataService.store(user, file, 5);
         String result = "ファイルは成功にアップロードされた";
         if (mapError.size() > 0) {
             model.addAttribute("messageError", mapError);

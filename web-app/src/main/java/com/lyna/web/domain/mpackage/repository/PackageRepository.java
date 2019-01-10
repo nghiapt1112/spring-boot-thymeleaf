@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface PackageRepository extends JpaRepository<Package, String> {
-    Iterator<CsvPackage> getMapStore(Reader targetReader);
+    Iterator<CsvPackage> getMapPackage(Reader targetReader);
 
     List<Package> findByIds(int tenantId, Collection<String> ids);
 
