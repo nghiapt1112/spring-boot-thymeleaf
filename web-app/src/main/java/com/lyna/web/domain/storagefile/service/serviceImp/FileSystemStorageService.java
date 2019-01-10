@@ -59,28 +59,6 @@ import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 public class FileSystemStorageService extends BaseService implements StorageService {
 
     private final Path rootLocation;
-//head
-//    List<String> listStoreCode;
-//    List<String> listProductCode;
-//    List<String> ListPost;
-//    Map<String, CsvOrder> mapProduct;
-//    Map<String, CsvOrder> mapProductOrderCsv;
-//    Map<String, Object> mapStorePostCode;
-//    Map<String, Object> mapStore;
-//    Set<Product> productIterable;
-//    Set<Store> storeIterable;
-//    Set<PostCourse> postCoursesIterable;
-//    Set<Delivery> deliveryIterable;
-//    Set<DeliveryDetail> deliveryDetailIterable;
-//    //TODO: change Iterable to closest type of these collection. Ex: Collection, Map, Set, List.
-//
-//    Set<Order> orderIterable;
-//    Set<OrderDetail> orderDetailIterable;
-//
-//    Map<Object, String> mapCsvPostCourseId;
-//    Map<String, Object> mapDeliveryIdCsv;
-//    Map<String, CsvOrder> mapProductIdCsvOrder;
-//    Map<Integer, String> mapError;
 
     private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     private List<String> listStoreCode;
