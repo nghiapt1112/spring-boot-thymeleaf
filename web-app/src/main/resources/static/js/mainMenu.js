@@ -11,67 +11,62 @@ onLogistics();
 
 $(function () {
     $('button[type=submit]').click(function (e) {
-
-        if(document.getElementById("files").files.length == 0 ){
+        if (document.getElementById("files").files.length == 0) {
             e.preventDefault();
             $("#alertMsg").text("ファイルを選択してください。")
-        }else {
-            e.preventDefault();
-            //Disable submit button
-            $(this).prop('disabled', true);
-
+        } else {
             var form = document.forms[0];
             var formData = new FormData(form);
-
             value = $("#quizID").val();
-            var url = "/upload/file/order";
-            if (value == 2)
-                url = "/upload/file/delivery";
+            var url = "/upload/file/delivery";
+            if (value == 2) {
+                //Disable submit button
+                $(this).prop('disabled', true);
+                // Ajax call for file uploaling
+                var ajaxReq = $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    xhr: function () {
+                        //Get XmlHttpRequest object
+                        var xhr = $.ajaxSettings.xhr();
 
-            // Ajax call for file uploaling
-            var ajaxReq = $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                xhr: function () {
-                    //Get XmlHttpRequest object
-                    var xhr = $.ajaxSettings.xhr();
+                        //Set onprogress event handler
+                        xhr.upload.onprogress = function (event) {
+                            var perc = Math.round((event.loaded / event.total) * 100);
+                            $('#progressBar').text(perc + '%');
+                            $('#progressBar').css('width', perc + '%');
+                        };
+                        return xhr;
+                    },
+                    beforeSend: function (xhr) {
+                        //Reset alert message and progress bar
+                        $('#alertMsg').text('');
+                        $('#progressBar').text('');
+                        $('#progressBar').css('width', '0%');
+                    }
+                });
 
-                    //Set onprogress event handler
-                    xhr.upload.onprogress = function (event) {
-                        var perc = Math.round((event.loaded / event.total) * 100);
-                        $('#progressBar').text(perc + '%');
-                        $('#progressBar').css('width', perc + '%');
-                    };
-                    return xhr;
-                },
-                beforeSend: function (xhr) {
-                    //Reset alert message and progress bar
-                    $('#alertMsg').text('');
-                    $('#progressBar').text('');
-                    $('#progressBar').css('width', '0%');
-                }
-            });
+                // Called on success of file upload
+                ajaxReq.done(function (msg) {
+                    $('input[type=file]').val('');
+                    $('button[type=submit]').prop('disabled', false);
+                    modal.style.display = "none";
+                    window.location.replace(logisticAPI)
+                });
 
-            // Called on success of file upload
-            ajaxReq.done(function (msg) {
-                //$('#alertMsg').text(msg);
-                $('input[type=file]').val('');
-                $('button[type=submit]').prop('disabled', false);
-                window.location.href = "/mainScreen";
-            });
+                // Called on failure of file upload
+                ajaxReq.fail(function (jqXHR) {
+                    $('#alertMsg').text(jqXHR.responseText.replace
+                    ('[', '').replace(']', '').replace('"', '').replace('"', ""));
+                    $('button[type=submit]').prop('disabled', false);
+                });
+            }
 
-            // Called on failure of file upload
-            ajaxReq.fail(function (jqXHR) {
-                $('#alertMsg').text(jqXHR.responseText.replace
-                ('[', '').replace(']', '').replace('"', '').replace('"', ""));
-                $('button[type=submit]').prop('disabled', false);
-            });
         }
-
     });
 });
 
@@ -84,27 +79,25 @@ btn.onclick = function () {
     document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
 };
+
 btndelivery.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "2";
     $('#alertMsg').text('');
 };
+
 span.onclick = function () {
     modal.style.display = "none";
 };
+
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
 };
 
-// dataTable("#table-order", 1);
-// dataTable("#table-logicstic", 1);
-
-// call search API
-
 function searchMainMenu() {
-    let logisticAPI = '/mainScreen';
+    var logisticAPI = '/mainScreen';
     var startDate = document.getElementById("min").value;
     var endDate = document.getElementById("max").value;
     var postName = document.getElementById("post").value;
@@ -123,8 +116,6 @@ function searchMainMenu() {
     if (postName) {
         logisticAPI += '&postName=' + postName
     }
-
-
 
     window.location.replace(logisticAPI)
 }
