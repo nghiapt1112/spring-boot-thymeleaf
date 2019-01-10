@@ -9,19 +9,20 @@ import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.view.CsvOrder;
 import com.lyna.web.infrastructure.repository.BaseRepository;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepositoryImpl extends BaseRepository<Order, String> implements OrderRepository {
@@ -33,13 +34,83 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
     }
 
     @Override
-    public Iterator<CsvOrder> getMapOrder(Reader targetReader) {
-        CsvToBean<CsvOrder> csvToBean = new CsvToBeanBuilder(targetReader)
-                .withType(CsvOrder.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();
-        Iterator<CsvOrder> csvUserIterator = csvToBean.iterator();
-        return csvUserIterator;
+    public Iterator<CsvOrder> getMapOrder(Reader targetReader, Map<Integer, String> mapHeader) {
+
+        List<CSVRecord> dataOrder = getDataOrder(targetReader);
+        List<CsvOrder> csvOrders = new ArrayList<>();
+
+        int[] dx = {0};
+        dataOrder.forEach(csvRecord -> {
+            CsvOrder csvOrder = new CsvOrder();
+
+            mapHeader.forEach((index, key) -> {
+                switch (key) {
+                    case "日付":
+                        csvOrder.setOrderDate(csvRecord.get(index));
+                        break;
+                    case "店舗":
+                        csvOrder.setStoreName(csvRecord.get(index));
+                        break;
+                    case "店舗コード":
+                        csvOrder.setStoreCode(csvRecord.get(index));
+                        break;
+                    case "便":
+                        csvOrder.setPost(csvRecord.get(index));
+                        break;
+                    case "商品コード":
+                        csvOrder.setProductCode(csvRecord.get(index));
+                        break;
+                    case "商品":
+                        csvOrder.setProductName(csvRecord.get(index));
+                        break;
+                    case "個数":
+                        csvOrder.setQuantity(csvRecord.get(index));
+                        break;
+                    case "大分類":
+                        csvOrder.setCategory1(csvRecord.get(index));
+                        break;
+                    case "中分類":
+                        csvOrder.setCategory2(csvRecord.get(index));
+                        break;
+                    case "小分類":
+                        csvOrder.setCategory3(csvRecord.get(index));
+                        break;
+                }
+            });
+
+            csvOrders.add(csvOrder);
+        });
+
+        return csvOrders.iterator();
+    }
+
+    @Override
+    public Map<String, Integer> getHeaderOrder(Reader reader) {
+        CSVParser csvParser = null;
+        try {
+            csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader().withIgnoreHeaderCase().withTrim());
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+            throw new StorageException("CSVのデータが不正。");
+
+        }
+        Map<String, Integer> hashMap = csvParser.getHeaderMap().entrySet().stream().
+                sorted(Comparator.comparing(Map.Entry::getValue))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        return hashMap;
+    }
+
+    @Override
+    public List<CSVRecord> getDataOrder(Reader reader) {
+        CSVParser csvParser = null;
+        try {
+            csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+            return csvParser.getRecords();
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+            throw new StorageException("CSVのデータが不正。");
+        }
     }
 
     @Override
@@ -54,7 +125,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
-        return null;
+        return order;
     }
 
     @Override

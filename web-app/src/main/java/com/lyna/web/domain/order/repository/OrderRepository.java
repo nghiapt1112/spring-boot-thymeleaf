@@ -4,16 +4,18 @@ import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.view.CsvOrder;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public interface OrderRepository extends JpaRepository<Order, String> {
 
-    Iterator<CsvOrder> getMapOrder(Reader targetReader);
+    Iterator<CsvOrder> getMapOrder(Reader targetReader, Map<Integer, String> mapHeader);
 
     Order save(Order order);
 
@@ -30,4 +32,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     String checkExists(String postcourseId, String orderDate, int tenantId);
 
     void deleteByTenantIdAndOrderId(int tenantId, List<String> OrderIds);
+
+    Map<String, Integer> getHeaderOrder(Reader reader);
+
+    List<CSVRecord> getDataOrder(Reader reader);
 }
