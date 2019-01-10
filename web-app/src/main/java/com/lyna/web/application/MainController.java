@@ -77,11 +77,6 @@ public class MainController extends AbstractCustomController {
         return "main/mainMenu";
     }
 
-    @GetMapping("/upload")
-    public String upload() {
-        return "layout";
-    }
-
     @PostMapping(value = {"/upload/"})
     public String uploadOrder() {
         return REDIRECT_TO_MAIN_PAGE;

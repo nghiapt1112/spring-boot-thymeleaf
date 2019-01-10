@@ -128,5 +128,4 @@ public class ProductController extends AbstractCustomController {
         return PRODUCT_EDIT_PAGE;
 
     }
-
 }

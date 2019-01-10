@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="layout :: head('かんたんデータ取り込み　　　取り込み項目設定')"></head>
+    <link rel="Stylesheet" th:href="@{/css/utils/list-utils.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}" type="text/css">
+    <style>
+        table th, td {
+            white-space: nowrap;
+            width: 10%;
+            word-wrap: break-word;
+        }
+
+        .select2-container--default {
+            width: 100% ! important;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="" style="height: auto;min-height: 100%; background: #222d32">
+    <div class="main-header" th:include="fragments/header/header.html :: header"></div>
+    <div class="main-sidebar" th:include="fragments/menu/menu.html :: menu"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                かんたんデータ取り込み　　　取り込み項目設定
+            </h1>
+        </section>
+
+        <section class="content content-right">
+            <div class="row">
+                <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/upload/file/order}">
+                    <div class="col-md-12" id="listOrder">
+                        <div class="box" style="border-top: 3px solid #337ab7;">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="    overflow-x: scroll; overflow-y: scroll;">
+                                        <table class="table table-bordered table-hover" id="t_order"
+                                               style="table-layout: fixed">
+                                            <thead id="thead_selectBox" style="background: #337ab7">
+                                            <tr>
+                                                <th style="background: #337ab7"
+                                                    th:each="item, iStat1 : ${headerData}">
+                                                    <span th:text="${item}"></span><br>
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span><br>
+                                                    <select class="js-example-basic-single" name="selectedHeader">
+                                                        <option th:each="item1, iStat2 : ${headerOrder}"
+                                                                th:selected="${iStat1.index==iStat2.index}"
+                                                                th:text="${item1.value}"
+                                                                th:value="${item1.value}"
+                                                        >
+                                                        </option>
+                                                    </select>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="tbody-a">
+                                            <tr th:each="item: ${mapData}">
+                                                <td class="text-center"
+                                                    style=" white-space: normal !important; word-wrap: break-word;"
+                                                    th:each="item: ${item}">
+                                                    <span th:text="${item}"></span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <input id="fileName" name="fileName" th:value="${fileName}" type="hidden"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <br/>
+                        <div class="progress">
+                            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="0"
+                                 class="progress-bar progress-bar-success" id="progressBar"
+                                 role="progressbar"
+                                 style="width: 0%">0%
+                            </div>
+                        </div>
+                        <div id="alertMsg" style="color: red;font-size: 18px;"></div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-2 button-top-order">
+                            <a class="btn btn-primary" id="backButton" th:href="@{'/mainMenu'}"
+                               style="border-radius: 0px;" type="button">戻る</a>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" id="submitFile" type="submit">次へ</button>
+                        </div>
+                        <div class="col-md-2 button-top-delivery">
+                            <a class="btn btn-primary" id="stopSubmitFile" style="border-radius: 0px;">キャンセル</a>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+<footer th:replace="layout :: footer"></footer>
+<script th:src="@{/js/select2.min.js}"></script>
+<script th:src="@{/js/order.js}"></script>
+</body>
+</html>
