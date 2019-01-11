@@ -39,11 +39,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
     List<String> listStoreCode;
     List<String> listProductCode;
     List<String> listPackageName;
-    Set<Product> productIterable;
     Map<String, Object> mapData;
-
-    Set<Store> storeIterable;
-    Set<Package> packageIterable;
     Map<Integer, String> mapError;
 
     @Autowired
@@ -86,14 +82,14 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
             mapError = new HashMap<>();
 
             if (type == 3) {
-                innitDataStore();
+                initDataStore();
                     Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
                 processUploadStore(storeIterator);
                 if (mapError.size() == 0) {
                     setDataStore(user);
                 }
             } else if (type == 4) {
-                innitDataProduct();
+                initDataProduct();
                 Iterator<CsvProduct> productIterator = productRepository.getMapProduct(reader);
                 processUploadProduct(productIterator);
                 if (mapError.size() == 0) {
@@ -101,7 +97,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                 }
 
             } else if (type == 5) {
-                innitDataPackage();
+                initDataPackage();
                 Iterator<CsvPackage> packageIterator = packageRepository.getMapPackage(reader);
                 processUploadPackage(packageIterator);
                 if (mapError.size() == 0) {
@@ -140,7 +136,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                 p.setTenantId(currentUser.getTenantId());
                 p.setUpdateUser(currentUser.getId());
                 p.setUpdateDate(new Date());
-                packageIterable.add(p);
+                packages.add(p);
             }
         }
         packageRepository.saveAll(packages);
@@ -174,7 +170,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                 product.setTenantId(currentUser.getTenantId());
                 product.setUpdateUser(currentUser.getId());
                 product.setUpdateDate(new Date());
-                productIterable.add(product);
+                products.add(product);
             }
         }
         productRepository.saveAll(products);
@@ -206,24 +202,21 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                 store.setTenantId(currentUser.getTenantId());
                 store.setUpdateUser(currentUser.getId());
                 store.setUpdateDate(new Date());
-                storeIterable.add(store);
+                stores.add(store);
             }
         }
         storeRepository.saveAll(stores);
     }
 
-    void innitDataStore() {
-        storeIterable = new HashSet<>();
+    void initDataStore() {
         listStoreCode = new ArrayList<>();
     }
 
-    void innitDataProduct() {
-        productIterable = new HashSet<>();
+    void initDataProduct() {
         listProductCode = new ArrayList<>();
     }
 
-    void innitDataPackage() {
-        packageIterable = new HashSet<>();
+    void initDataPackage() {
         listPackageName = new ArrayList<>();
     }
 

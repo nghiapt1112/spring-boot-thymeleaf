@@ -138,7 +138,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             int tenantId = user.getTenantId();
             String userId = user.getId();
             initData();
-            innitDataOrder();
+            initDataOrder();
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
             processUpload(orderIterator);
@@ -170,7 +170,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
-            innitDataDelivery();
+            initDataDelivery();
             Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
             processUploadDelivery(deliveryIterator);
             if (mapError.size() == 0) {
@@ -287,7 +287,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
 
-    void innitDataOrder() {
+    void initDataOrder() {
         listProductCode = new ArrayList<>();
         mapProduct = new HashMap<>();
         mapProductOrderCsv = new HashMap<>();
@@ -297,7 +297,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapProductIdCsvOrder = new HashMap<>();
     }
 
-    void innitDataDelivery() {
+    void initDataDelivery() {
         mapDeliveryIdCsv = new HashMap<>();
         deliveryIterable = new HashSet<>();
         deliveryDetailIterable = new HashSet<>();
