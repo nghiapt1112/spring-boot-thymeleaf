@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
@@ -38,6 +39,33 @@ public class MainController extends AbstractCustomController {
 
     @Autowired
     private OrderService orderService;
+
+    @RequestMapping("/login")
+    public String login() {
+        return "login/login";
+    }
+
+    @RequestMapping({"/index"})
+    public String index() {
+        return "index";
+    }
+
+
+    @RequestMapping({"/invalidSession"})
+    public String invalidSession() {
+        return "invalidSession";
+    }
+
+
+    @RequestMapping({"/layout"})
+    public String layout() {
+        return "layout";
+    }
+
+    @RequestMapping({"/mainMenu", "/"})
+    public String mainMenu() {
+        return "redirect:/mainScreen";
+    }
 
     @GetMapping("/mainScreen")
     public String mainScreen(UsernamePasswordAuthenticationToken principal, Model model,
