@@ -7,10 +7,12 @@ function deleteTable(apiName, tableId) {
     });
     $("body").on("click", "#delete", function () {
         var pickedOne = false;
+        var objectIds = [];
         var inputs = document.getElementsByClassName('chkCheckBoxId');
         for (var i = 0, l = inputs.length; i < l; ++i) {
             if (inputs[i].checked) {
                 pickedOne = true;
+                objectIds.push(inputs[i].value);
                 break;
             }
         }
@@ -18,16 +20,12 @@ function deleteTable(apiName, tableId) {
             alert('少なくともいずれか一つを選らんでください。');
             return false;
         } else if (confirm('削除してもよろしいですか？')) {
-            var ojectIds = [];
-            $(tableId + " > tbody input:checked").each(function () {
-                ojectIds.push($(this).val());
-            });
             $.ajax({
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 url: "/" + apiName + "/delete",
                 data: {
-                    ojectIds: ojectIds
+                    ojectIds: objectIds
                 },
                 dataType: 'json',
                 timeout: 100000,
@@ -38,7 +36,6 @@ function deleteTable(apiName, tableId) {
                 success: function (data) {
                     if (data == true) {
                         window.location.href = "/" + apiName + "/list";
-                        //alert("成功に削除した ");
                     } else {
                         alert("削除しました。");
                     }
@@ -79,5 +76,4 @@ function dataTable(tableId, sortDefaultColumn) {
         }
     });
     $("body").find(".buttons-excel").find("span").text("優れる");
-
 }
