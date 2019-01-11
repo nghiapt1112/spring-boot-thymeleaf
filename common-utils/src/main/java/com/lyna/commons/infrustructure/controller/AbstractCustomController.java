@@ -48,7 +48,7 @@ public class AbstractCustomController {
 
     @ExceptionHandler
     public ResponseEntity<String> handle(DomainException ex) {
-        CONTROLLER_LOGGER.info("exception: exCode {}, exMessage {}", ex.getCode(), ex.getErrorResponse());
+        CONTROLLER_LOGGER.error("\n\tException: \n\t\texCode: {}, \n\t\texMessage: {}", ex.getCode(), ex.getErrorResponse().getError_description());
         return ResponseEntity
                 .status(500)
                 .body(JsonUtils.toJson(ex.getErrorResponse()));

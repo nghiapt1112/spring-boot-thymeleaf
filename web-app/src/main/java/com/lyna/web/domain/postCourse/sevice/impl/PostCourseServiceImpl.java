@@ -1,11 +1,10 @@
 package com.lyna.web.domain.postCourse.sevice.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.postCourse.PostCourse;
-import com.lyna.web.domain.postCourse.exception.PostCourseException;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
-import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +30,7 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
         try {
             return postCourseRepository.findAllByStoreIdAndTenantId(tenantId, storeId);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new PostCourseException(toInteger("err.postCourse.notFound.code"), toStr("err.postCourse.notFound.msg"));
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
         }
 
     }
@@ -45,10 +43,8 @@ public class PostCourseServiceImpl extends BaseService implements PostCourseServ
             storeRepository.deleteByStoreIdsAndTenantId(storeIds, tenantId);
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.deleteFailed.code"), toStr("err.store.deleteFailed.msg"));
+            throw new DomainException(toInteger("err.general.deleteFailed.code"), toStr("err.general.deleteFailed.msg"));
         }
-
-
     }
+
 }

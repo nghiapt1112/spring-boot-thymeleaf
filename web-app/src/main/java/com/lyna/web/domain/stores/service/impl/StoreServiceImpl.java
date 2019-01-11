@@ -13,13 +13,10 @@ import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.postCourse.sevice.PostCourseService;
 import com.lyna.web.domain.stores.Store;
-import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.stores.service.StoreService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.user.repository.UserStoreAuthorityRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,8 +30,6 @@ import java.util.*;
 @Service
 @Transactional(readOnly = true)
 public class StoreServiceImpl extends BaseService implements StoreService {
-
-    private final Logger log = LoggerFactory.getLogger(StoreServiceImpl.class);
 
     @Autowired
     private PostCourseService postCourseService;
@@ -176,8 +171,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         try {
             storeRepository.save(store);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.createFailed.code"), toStr("err.store.createFailed.msg"));
+            throw new DomainException(toInteger("err.general.createFailed.code"), toStr("err.general.createFailed.msg"));
         }
 
     }
@@ -224,8 +218,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         try {
             storeRepository.save(store);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.updateFailed.code"), toStr("err.store.updateFailed.msg"));
+            throw new DomainException(toInteger("err.general.updateFailed.code"), toStr("err.general.updateFailed.msg"));
         }
 
     }
@@ -235,8 +228,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         try {
             return storeRepository.findOneByStoreIdAndTenantId(storeId, tenantId);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
         }
 
     }
@@ -246,8 +238,7 @@ public class StoreServiceImpl extends BaseService implements StoreService {
         try {
             return storeRepository.findByCodeAndTenantId(code, tenantId);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new StoreException(toInteger("err.store.notFound.code"), toStr("err.store.notFound.msg"));
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
         }
     }
 }

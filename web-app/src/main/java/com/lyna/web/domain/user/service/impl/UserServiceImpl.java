@@ -1,5 +1,6 @@
 package com.lyna.web.domain.user.service.impl;
 
+import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.web.domain.stores.Store;
@@ -74,7 +75,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                             .collect(Collectors.toList()));
             return createdUser;
         } catch (RuntimeException e) {
-            throw new UserException(toInteger("err.user.createFailed.code"), toStr("err.user.createFailed.msg"));
+            throw new DomainException(toInteger("err.general.createFailed.code"), toStr("err.general.createFailed.msg"));
         }
     }
 
@@ -123,7 +124,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User findByUserIdAndTenantId(int tenantId, String userId ) {
         User user = this.userRepository.findByUserIdAndTenantId(tenantId, userId);
         if (Objects.isNull(user)) {
-            throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
         }
         return user;
     }
@@ -166,7 +167,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                             .collect(Collectors.toList())
             );
         } catch (RuntimeException e) {
-            throw new UserException(toInteger("err.user.updateFailed.code"), toStr("err.user.updateFailed.msg"));
+            throw new DomainException(toInteger("err.general.updateFailed.code"), toStr("err.general.updateFailed.msg"));
         }
     }
 
@@ -184,7 +185,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public int getCountUser(int tenantId) {
         List<User> userList = this.userRepository.findAllByTenantId(tenantId);
         if (Objects.isNull(userList)) {
-            throw new UserException(toInteger("err.user.notFound.code"), toStr("err.user.notFound.msg"));
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
         }
         return userList.size();
     }
