@@ -59,6 +59,7 @@ import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 public class FileSystemStorageService extends BaseService implements StorageService {
 
     private final Path rootLocation;
+
     private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     private List<String> listStoreCode;
     private List<String> listProductCode;
@@ -670,5 +671,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         productRepository.saveAll(productIterable);
         orderService.saveAll(orderIterable);
         orderDetailRepository.saveAll(orderDetailIterable);
+        orderDetailRepository.flush();
+
     }
 }

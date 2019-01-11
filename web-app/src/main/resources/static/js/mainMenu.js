@@ -96,6 +96,7 @@ window.onclick = function (event) {
     }
 };
 
+// call search API
 function searchMainMenu() {
     var logisticAPI = '/mainScreen';
     var startDate = document.getElementById("min").value;
