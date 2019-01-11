@@ -26,13 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
-    /**
-     * TODO: => Nghia.Pham create note for: Why we are using SessionLocale insteadOF CookieLocale
-     */
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.ENGLISH);
+        slr.setDefaultLocale(Locale.JAPAN);
         return slr;
     }
 
