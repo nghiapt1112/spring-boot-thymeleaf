@@ -185,6 +185,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         List<String> existedStoreCodes = storesInDb.stream().map(t -> t.getCode()).collect(Collectors.toList());
 
         List<Store> stores = new ArrayList<>();
+
         for (String storeCode : listStoreCode) {
             if (!existedStoreCodes.contains(storeCode)) {
                 CsvStore csvStore = (CsvStore) mapData.get(storeCode);

@@ -34,7 +34,7 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">商品コード<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
-                                            <input id="code" class="form-control" type="text" th:field="*{code}"
+                                            <input disabled="true" id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
                                             <em id="errorCode" class="error">商品コードは必須です。</em>
                                             <em id="error_exitsted" class="error_show" th:utext="${errorProductExitsted}"></em>
