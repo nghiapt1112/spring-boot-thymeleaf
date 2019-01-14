@@ -83,6 +83,15 @@ public class PackageServiceImpl extends BaseService implements PackageService {
     }
 
     @Override
+    public Package findOneByNameAndTenantId(String name, int tenantId) {
+        try {
+            return packageRepository.findOneByNameAndTenantId(name, tenantId);
+        } catch (Exception e) {
+            throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
+        }
+    }
+
+    @Override
     public List<Package> findByTenantId(int tenantId) {
         try {
             return packageRepository.findByTenantId(tenantId);

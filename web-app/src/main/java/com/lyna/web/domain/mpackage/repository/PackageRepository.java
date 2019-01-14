@@ -19,6 +19,8 @@ public interface PackageRepository extends JpaRepository<Package, String> {
 
     Package findOneByPackageIdAndTenantId(String packageId, int tenantId);
 
+    Package findOneByNameAndTenantId(String name, int tenantId);
+
     boolean deleteByPackageIdsAndTenantId(List<String> packageIds, int tenantId);
 
     List<Package> findByTenantId(int tenantId);

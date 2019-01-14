@@ -5,10 +5,12 @@ $(document).ready(function () {
 
         var name = $("#name").val();
         if (isEmpty(name) || isBlank(name)) {
+            $("#error_name_exitsted").removeClass("error_show").addClass("error");
             $("#errorName").removeClass("error").addClass("error_show");
             checkForm = false;
         } else {
             $("#errorName").removeClass("error_show").addClass("error");
+            $("#error_name_exitsted").removeClass("error_show").addClass("error")
 
         }
         var emptyWeight = $("#emptyWeight").val();
