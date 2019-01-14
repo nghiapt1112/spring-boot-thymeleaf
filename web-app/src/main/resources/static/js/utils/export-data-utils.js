@@ -1,11 +1,15 @@
-function exportDataToExcel(tableId, sortDefaultColumn , fileName) {
+function exportDataToExcel(tableId, sortDefaultColumn , fileName, item1 ,item2 , item3, item4, item5, item6, item7 , item8) {
     $(tableId).DataTable({
         destroy: true,
         'dom': 'lBfrtip',
         'buttons': [
             {
                 extend: 'excel',
-                filename : fileName
+                filename : fileName,
+                title : null,
+                exportOptions: {
+                    columns: [ item1, item2, item3, item4, item5, item6, item7, item8 ]
+                }
             }
         ],
         'paging': true,
