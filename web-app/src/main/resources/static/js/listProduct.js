@@ -84,7 +84,7 @@ window.onclick = function (event) {
     }
 };
 
-exportDataToExcel('#table-product',2,'商品一覧',1,2,3,4,5,6,'','');
+exportDataToExcel('#table-product',2,'商品一覧',1,2,3,4,5,6,7,'');
 
 
 
