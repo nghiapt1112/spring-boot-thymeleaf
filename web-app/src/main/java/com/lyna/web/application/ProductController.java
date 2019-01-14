@@ -61,7 +61,7 @@ public class ProductController extends AbstractCustomController {
         }
         try {
             if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId()))) {
-                model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
+                model.addAttribute("errorProductExitsted", toStr("product.codeExisted.msg"));
                 model.addAttribute("product", product);
                 return PRODUCT_REGISTER_PAGE;
             }
@@ -86,7 +86,7 @@ public class ProductController extends AbstractCustomController {
         Product productExisted = productService.findOneByProductIdAndTenantId(product.getProductId(), user.getTenantId());
         if (!productExisted.getCode().equals(product.getCode())) {
             if (productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId()) != null) {
-                model.addAttribute("errorProductExitsted", "このコードは既に存在します。");
+                model.addAttribute("errorProductExitsted", toStr("product.codeExisted.msg"));
                 model.addAttribute("product", product);
                 return PRODUCT_EDIT_PAGE;
             }
@@ -94,7 +94,7 @@ public class ProductController extends AbstractCustomController {
 
         productService.update(product, user);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, product.getProductId());
-        model.addAttribute("message", "成功に新規作成した");
+        model.addAttribute("message", toStr("product.createSuccess.msg"));
 
         return REDIRECT_PRODUCT_LIST_PAGE;
 
