@@ -1,5 +1,9 @@
 $(document).ready(function () {
     deleteTable("user","#table-user");
+    var arrayStoreNumber = [1,2];
+    $("body").find(".storeModel").each(function (item) {
+        arrayStoreNumber.push(item + 3);
+    })
     $("#table-user").DataTable({
         'scrollX':        true,
         'scrollCollapse': true,
@@ -10,7 +14,11 @@ $(document).ready(function () {
         'buttons': [
             {
                 extend : 'excel',
-                filename: 'ユーザー一覧'
+                filename: 'ユーザー一覧',
+                title : null,
+                exportOptions: {
+                    columns: arrayStoreNumber
+                }
             }
         ],
         'paging': true,
