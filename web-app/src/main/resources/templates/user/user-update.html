@@ -29,17 +29,6 @@
                                 <form th:action="@{/user/update}" method="POST" th:object="${aggregate}">
                                     <input type="hidden" th:field="*{userId}"/>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー権限</span>
-                                        <div class="form-group col-md-6" style="">
-                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
-                                                    th:disabled="${role == 0}">
-                                                <option th:value="1">管理者</option>
-                                                <option th:value="0">一般ユーザー</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
@@ -84,6 +73,17 @@
                                             <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
+                                                <option th:value="1">管理者</option>
+                                                <option th:value="0">一般ユーザー</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
