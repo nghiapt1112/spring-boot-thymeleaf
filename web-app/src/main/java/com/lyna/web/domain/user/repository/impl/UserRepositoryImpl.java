@@ -51,6 +51,8 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
             return true;
     }
 
+
+
     @Override
     public List<User> findAllByTenantId(int tenantId) {
         TypedQuery<User> query =
@@ -62,6 +64,19 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
         return findWithPaging(userRequestPage, UserResponsePage.class);
+    }
+
+    @Override
+    public boolean updateProfileWithoutPassword(User user) {
+        String query = "UPDATE User u SET u.role =:role, u.email=:email, u.name=:name WHERE u.id=:id AND u.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("role", user.getRole())
+                .setParameter("email", user.getEmail())
+                .setParameter("name", user.getName())
+                .setParameter("id", user.getId())
+                .setParameter("tenantId", user.getTenantId())
+                .executeUpdate();
+        return true;
     }
 
 }

@@ -121,7 +121,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User findByUserIdAndTenantId(int tenantId, String userId ) {
+    public User findByUserIdAndTenantId(int tenantId, String userId) {
         User user = this.userRepository.findByUserIdAndTenantId(tenantId, userId);
         if (Objects.isNull(user)) {
             throw new DomainException(toInteger("err.general.notFound.code"), toStr("err.general.notFound.msg"));
@@ -130,12 +130,21 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    public boolean updateUserWothoutPassword(User user) {
+        return userRepository.updateProfileWithoutPassword(user);
+    }
+
+    @Override
     @Transactional
     public void update(User currentUser, UserAggregate aggregate) {
         User oldUser = this.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
-        User userToUpdate = aggregate.toUser();
-        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
-        oldUser.updateInfo(userToUpdate, currentUser);
+        if (aggregate.getPassword().isEmpty()) {
+            userRepository.updateProfileWithoutPassword(oldUser);
+        } else {
+            User userToUpdate = aggregate.toUser();
+            userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+            oldUser.updateInfo(userToUpdate, currentUser);
+        }
         try {
             this.userRepository.save(oldUser);
 

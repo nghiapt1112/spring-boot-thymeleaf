@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -106,6 +107,7 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
+//        model.addAttribute("password", currentUser.getPassword());
 
         return USER_UPDATE_PAGE;
     }
@@ -118,6 +120,7 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
+//        model.addAttribute("password", currentUser.getPassword());
 
         return USER_PROFILE_PAGE;
     }
