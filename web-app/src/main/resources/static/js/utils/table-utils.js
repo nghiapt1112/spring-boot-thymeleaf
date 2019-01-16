@@ -13,7 +13,6 @@ function deleteTable(apiName, tableId) {
             if (inputs[i].checked) {
                 pickedOne = true;
                 objectIds.push(inputs[i].value);
-                break;
             }
         }
         if (!pickedOne) {
@@ -25,7 +24,7 @@ function deleteTable(apiName, tableId) {
                 contentType: 'application/json; charset=utf-8',
                 url: "/" + apiName + "/delete",
                 data: {
-                    ojectIds: objectIds
+                    objectIds: objectIds
                 },
                 dataType: 'json',
                 timeout: 100000,
