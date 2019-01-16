@@ -7,8 +7,6 @@ import com.lyna.web.domain.user.repository.UserRepository;
 import com.lyna.web.infrastructure.repository.BaseRepository;
 import com.lyna.web.infrastructure.repository.PagingRepository;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,14 +41,13 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public Boolean deleteByUserIds(List<String> userIds, int tenantId) {
-            String query = "DELETE FROM User u WHERE u.id in (:userIds) AND u.tenantId=:tenantId";
-            entityManager.createQuery(query)
-                    .setParameter("userIds", userIds)
-                    .setParameter("tenantId", tenantId)
-                    .executeUpdate();
-            return true;
+        String query = "DELETE FROM User u WHERE u.id in (:userIds) AND u.tenantId=:tenantId";
+        entityManager.createQuery(query)
+                .setParameter("userIds", userIds)
+                .setParameter("tenantId", tenantId)
+                .executeUpdate();
+        return true;
     }
-
 
 
     @Override
@@ -64,19 +61,6 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
     @Override
     public UserResponsePage findUsersWithPaging(RequestPage userRequestPage) {
         return findWithPaging(userRequestPage, UserResponsePage.class);
-    }
-
-    @Override
-    public boolean updateProfileWithoutPassword(User user) {
-        String query = "UPDATE User u SET u.role =:role, u.email=:email, u.name=:name WHERE u.id=:id AND u.tenantId=:tenantId";
-        entityManager.createQuery(query)
-                .setParameter("role", user.getRole())
-                .setParameter("email", user.getEmail())
-                .setParameter("name", user.getName())
-                .setParameter("id", user.getId())
-                .setParameter("tenantId", user.getTenantId())
-                .executeUpdate();
-        return true;
     }
 
 }

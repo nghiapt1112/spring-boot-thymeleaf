@@ -25,9 +25,6 @@ public interface UserService {
 
     User findByUserIdAndTenantId(int tenantId, String userId);
 
-    boolean updateUserWothoutPassword(User user);
-
-
     void update(User currentUser, UserAggregate aggregate);
 
     UserResponsePage findUsersWithPaging(RequestPage userRequestPage);

@@ -22,12 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -130,26 +125,19 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public boolean updateUserWothoutPassword(User user) {
-        return userRepository.updateProfileWithoutPassword(user);
-    }
-
-    @Override
     @Transactional
     public void update(User currentUser, UserAggregate aggregate) {
         User oldUser = this.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
+        User userToUpdate = aggregate.toUser();
         if (aggregate.getPassword().isEmpty()) {
-            userRepository.updateProfileWithoutPassword(oldUser);
+            userToUpdate.setPassword(currentUser.getPassword());
         } else {
-            User userToUpdate = aggregate.toUser();
             userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
-            oldUser.updateInfo(userToUpdate, currentUser);
         }
+        oldUser.updateInfo(userToUpdate, currentUser);
         try {
             this.userRepository.save(oldUser);
-
             List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
-
             Map<String, Short> authorityById = newUserStoreAuthority.stream()
                     .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
 
@@ -187,7 +175,6 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new UserException(toInteger("err.user.pageError.code"), toStr("err.user.pageError.msg"));
         }
         return userResponPage;
-
     }
 
     @Override

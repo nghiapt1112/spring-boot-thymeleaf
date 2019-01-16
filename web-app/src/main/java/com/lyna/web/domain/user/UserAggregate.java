@@ -169,5 +169,4 @@ class UserStoreRole extends AbstractObject {
         }
         return "NO Permission";
     }
-
 }

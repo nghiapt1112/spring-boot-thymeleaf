@@ -10,24 +10,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -139,10 +125,12 @@ public class User extends AbstractEntity implements UserDetails {
         return this.stores.stream();
     }
 
-    public void updateInfo(User userToUpdate , User currentUser) {
+    public void updateInfo(User userToUpdate, User currentUser) {
         this.name = userToUpdate.name;
         this.email = userToUpdate.email;
-        this.password = userToUpdate.password;
+        if (this.password != null || !this.password.isEmpty()) {
+            this.password = userToUpdate.password;
+        }
         this.role = userToUpdate.role;
         this.updateUser = currentUser.getId();
         this.initDefaultFieldsUpdate();
