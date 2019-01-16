@@ -49,10 +49,9 @@
                                             <th style="background: #337ab7">ユーザー名</th>
                                             <th:block th:if="${#lists.isEmpty(storeModel)}">
                                             </th:block>
-                                            <th th:each="item: ${storeModel}">
+                                            <th class="storeModel"  th:each="item: ${storeModel}">
                                                 <span th:text="${item.getName()}"></span>
                                             </th>
-
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -85,7 +84,6 @@
             </div>
         </section>
     </div>
-
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script th:src="@{/js/utils/table-utils.js}" type="text/javascript"></script>
