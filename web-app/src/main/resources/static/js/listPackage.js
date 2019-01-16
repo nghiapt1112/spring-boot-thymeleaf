@@ -82,7 +82,7 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 };
-exportDataToExcel('#table-package', 1, '荷姿一覧');
+exportDataToExcel('#table-package', 1, '荷姿一覧',1,2,3,4,5,6,'','');
 
 
 

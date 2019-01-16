@@ -4,6 +4,7 @@ import com.lyna.commons.config.BaseValidator;
 import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.object.AbstractObject;
 import com.lyna.commons.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 
 @ControllerAdvice(annotations = {RestController.class, Controller.class})
@@ -48,9 +51,19 @@ public class AbstractCustomController {
 
     @ExceptionHandler
     public ResponseEntity<String> handle(DomainException ex) {
-        CONTROLLER_LOGGER.info("exception: exCode {}, exMessage {}", ex.getCode(), ex.getErrorResponse());
+        CONTROLLER_LOGGER.error("\n\tException: \n\t\texCode: {}, \n\t\texMessage: {}", ex.getCode(), ex.getErrorResponse().getError_description());
         return ResponseEntity
                 .status(500)
                 .body(JsonUtils.toJson(ex.getErrorResponse()));
+    }
+
+    protected String toStr(String p) {
+        String val = env.getProperty(p);
+        return StringUtils.isEmpty(val) ? p : val;
+    }
+
+    protected Integer toInteger(String p) {
+        Integer val = env.getProperty(p, Integer.class);
+        return Objects.isNull(val) ? -1 : val;
     }
 }

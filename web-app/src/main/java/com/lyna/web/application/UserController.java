@@ -68,9 +68,10 @@ public class UserController extends AbstractCustomController {
                                Model model) {
         User currentUser = (User) principal.getPrincipal();
 
+        // TODO: => Hieu. Should you try-finally instead of try-catch(no thing)
         try {
             if (!Objects.isNull(this.userService.findByEmail(userRegisterAggregate.getEmail()))) {
-                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("errorEmailShow", toStr("user.emailExisted.msg"));
                 model.addAttribute("userRegisterAggregate", userRegisterAggregate);
                 model.addAttribute("userPerRoles", userRegisterAggregate.getRolePerStore());
                 return USER_REGISTER_PAGE;
@@ -129,7 +130,7 @@ public class UserController extends AbstractCustomController {
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
-                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("errorEmailShow", toStr("user.emailExisted.msg"));
                 model.addAttribute("aggregate", aggregate);
                 model.addAttribute("message", DataUtils.getMapData());
                 return USER_PROFILE_PAGE;
@@ -154,7 +155,7 @@ public class UserController extends AbstractCustomController {
         try {
             if (!userExisted.getEmail().equals(aggregate.getEmail()) && !Objects.isNull(this.userService.findByEmail(aggregate.getEmail()))) {
                 aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
-                model.addAttribute("errorEmailShow", "メールアドレスは既に存在します。");
+                model.addAttribute("errorEmailShow", toStr("user.emailExisted.msg"));
                 model.addAttribute("aggregate", aggregate);
                 return USER_UPDATE_PAGE;
             }
