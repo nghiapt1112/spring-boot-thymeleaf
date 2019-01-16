@@ -62,7 +62,6 @@ public class PackageController extends AbstractCustomController {
             if (!Objects.isNull(packageService.findOneByNameAndTenantId(mpackage.getName(), user.getTenantId()))) {
                 model.addAttribute("errorNameExisted", messageSource.getMessage("err.package.nameExisted.msg", null, new Locale("ja")));
                 model.addAttribute("package", mpackage);
-                /*result.rejectValue("errorNameExisted", "package.nameExisted.msg");*/
                 return PACKAGE_REGISTER_PAGE;
             }
         } catch (Exception e) {
