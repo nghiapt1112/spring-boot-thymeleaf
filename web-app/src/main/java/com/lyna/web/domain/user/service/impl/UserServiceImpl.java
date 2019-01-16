@@ -22,7 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -38,7 +43,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
     private UserStoreAuthorityService userStoreAuthorityService;
-
 
     @Autowired
     private UserStoreAuthorityRepositoryImpl userStoreAuthority;
@@ -103,11 +107,9 @@ public class UserServiceImpl extends BaseService implements UserService {
                     map.put(store.getStoreId(), -1);
                 }
             }
-
             userList.setMapStore(map);
             listResults.add(userList);
         }
-
         Page<UserList> userPage =
                 new PageImpl<>(listResults, PageRequest.of(1, limit), listResults.size());
 
@@ -129,12 +131,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     public void update(User currentUser, UserAggregate aggregate) {
         User oldUser = this.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         User userToUpdate = aggregate.toUser();
-        if (aggregate.getPassword().isEmpty()) {
-            userToUpdate.setPassword(currentUser.getPassword());
+        if (aggregate.getPassword().isEmpty() && !oldUser.getPassword().isEmpty()) {
+            userToUpdate.setPassword(oldUser.getPassword());
         } else {
             userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
         }
         oldUser.updateInfo(userToUpdate, currentUser);
+
         try {
             this.userRepository.save(oldUser);
             List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());

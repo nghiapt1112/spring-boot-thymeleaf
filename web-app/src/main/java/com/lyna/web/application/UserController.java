@@ -21,13 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -107,7 +101,6 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
-//        model.addAttribute("password", currentUser.getPassword());
 
         return USER_UPDATE_PAGE;
     }
@@ -120,7 +113,6 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
-//        model.addAttribute("password", currentUser.getPassword());
 
         return USER_PROFILE_PAGE;
     }
