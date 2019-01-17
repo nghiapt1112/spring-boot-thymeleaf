@@ -4,7 +4,7 @@
 <div class="col-md-12" style="padding-top:10px;" th:fragment="alert (message)" th:if="${message}">
     <div class="alert alert-success alert-dismissable">
         <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button>
-        <strong th:text="${message}">成功に新規作成した!</strong>
+        <strong th:utext="#{file.uploadSuccess}">成功に新規作成した!</strong>
     </div>
 </div>
 </html>
