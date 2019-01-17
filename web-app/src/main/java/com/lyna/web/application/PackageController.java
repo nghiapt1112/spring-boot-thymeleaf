@@ -60,7 +60,7 @@ public class PackageController extends AbstractCustomController {
 
         try {
             if (!Objects.isNull(packageService.findOneByNameAndTenantId(mpackage.getName(), user.getTenantId()))) {
-                model.addAttribute("errorNameExisted", messageSource.getMessage("err.package.nameExisted.msg", null, new Locale("ja")));
+                model.addAttribute("errorNameExisted", true);
                 model.addAttribute("package", mpackage);
                 return PACKAGE_REGISTER_PAGE;
             }
@@ -86,7 +86,7 @@ public class PackageController extends AbstractCustomController {
         Package packageExisted = packageService.findOneByPakageIdAndTenantId(mpackage.getPackageId(), user.getTenantId());
         if (!packageExisted.getName().equals(mpackage.getName())) {
             if (packageService.findOneByNameAndTenantId(mpackage.getName(), user.getTenantId()) != null) {
-                model.addAttribute("errorNameExisted", messageSource.getMessage("err.package.nameExisted.msg", null, new Locale("ja")));
+                model.addAttribute("errorNameExisted", true);
                 model.addAttribute("package", mpackage);
                 return PACKAGE_REGISTER_PAGE;
             }
