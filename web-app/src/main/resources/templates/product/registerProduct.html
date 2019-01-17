@@ -35,7 +35,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
-                                            <em id="errorCode" class="error">商品コードは必須です。</em>
+                                            <em id="errorCode" class="error" th:utext="#{err.product.codeEmpty.msg}"></em>
                                             <em id="error_exitsted" class="error_show" th:if="${errorProductExitsted} == true" th:utext="#{err.product.codeExisted.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
@@ -48,7 +48,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                            <em id="errorName" class="error">商品名は必須です。</em>
+                                            <em id="errorName" class="error" th:utext="#{err.product.nameEmpty.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
 
@@ -68,8 +68,8 @@
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{price}" id="price"
                                                    th:errorclass="field-error">
-                                            <em id="errorPrice" class="error">単価は必須です。</em>
-                                            <em id="errorFormatPrice" class="error">単価は半角英数字で入力してください。</em>
+                                            <em id="errorPrice" class="error" th:utext="#{err.product.priceEmpty.msg}"></em>
+                                            <em id="errorFormatPrice" class="error" th:utext="#{err.product.priceFormat.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('price')}"
                                                 th:errors="*{price}"></em>
                                         </div>
