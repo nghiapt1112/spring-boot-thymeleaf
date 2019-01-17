@@ -8,6 +8,7 @@ import com.lyna.web.infrastructure.repository.BaseRepository;
 import com.lyna.web.infrastructure.repository.PagingRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -57,6 +58,16 @@ public class PackageRepositoryImpl extends BaseRepository<Package, String> imple
                 .setParameter("packageId", packageId)
                 .setParameter("tenantId", tenantId)
                 .getSingleResult();
+    }
+
+    @Override
+    public Package findOneByNameAndTenantId(String name, int tenantId) {
+        String query = "SELECT p FROM Package p WHERE p.name=:name AND p.tenantId=:tenantId";
+        List<Package> packages = entityManager.createQuery(query, Package.class)
+                .setParameter("name", name)
+                .setParameter("tenantId", tenantId)
+                .getResultList();
+        return CollectionUtils.isEmpty(packages) ? null : packages.get(0);
     }
 
     @Override
