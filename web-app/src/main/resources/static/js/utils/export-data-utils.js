@@ -8,7 +8,7 @@ function exportDataToExcel(tableId, sortDefaultColumn , fileName, item1 ,item2 ,
                 filename : fileName,
                 title : null,
                 exportOptions: {
-                    columns: [ item1, item2, item3, item4, item5, item6, item7, item8 ]
+                    columns: [item1, item2, item3, item4, item5, item6, item7, item8 ]
                 }
             }
         ],

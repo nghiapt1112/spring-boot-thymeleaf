@@ -76,7 +76,7 @@
                                                    th:field="*{password}"
                                                    type="password">
                                             <em class="error" id="errorPassword">パスワードは必須です。</em>
-                                            <em id="errorPasswordSpaceWhite" class="error">password không được ký tự trắng</em>
+                                            <em id="errorPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em class="error_show" th:errors="*{password}"
                                                 th:if="${#fields.hasErrors('password')}"></em>
                                         </div>
