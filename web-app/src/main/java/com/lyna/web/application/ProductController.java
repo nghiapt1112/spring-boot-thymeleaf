@@ -61,7 +61,7 @@ public class ProductController extends AbstractCustomController {
         }
         try {
             if (!Objects.isNull(productService.findOneByCodeAndTenantId(product.getCode(), user.getTenantId()))) {
-                model.addAttribute("errorProductExitsted", toStr("product.codeExisted.msg"));
+                model.addAttribute("errorProductExitsted", true);
                 model.addAttribute("product", product);
                 return PRODUCT_REGISTER_PAGE;
             }
