@@ -32,7 +32,8 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                            <em id="errorName" class="error" th:utext="#{err.package.nameEmpty.msg}">荷姿名は必須です。</em>
+                                            <em id="errorName" class="error" th:utext="#{err.package.nameEmpty.msg}"></em>
+                                            <em id="error_name_exitsted" class="error_show" th:if="${errorNameExisted} == true" th:utext="#{err.package.nameExisted.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
 

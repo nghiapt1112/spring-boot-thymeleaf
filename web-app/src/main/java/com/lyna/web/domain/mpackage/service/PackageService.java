@@ -11,6 +11,8 @@ public interface PackageService {
 
     Package findOneByPakageIdAndTenantId(String pakageId, int tenantId);
 
+    Package findOneByNameAndTenantId(String name, int tenantId);
+
     List<Package> findByTenantId(int tenantId);
 
     void create(Package mpackage, User user);

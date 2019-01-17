@@ -21,13 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -215,7 +210,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String deleteByUserIds(@RequestParam(value = "ojectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByUserIds(@RequestParam(value = "objectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId());
         DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, userIds.toString());

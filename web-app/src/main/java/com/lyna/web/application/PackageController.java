@@ -8,7 +8,10 @@ import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.service.PackageService;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.security.authorities.IsAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Controller
@@ -27,6 +31,7 @@ public class PackageController extends AbstractCustomController {
     private static final String PACKAGE_EDIT_PAGE = "package/editPackage";
     private static final String REDIRECT_PACKAGE_LIST_PAGE = "redirect:/package/list";
     private static final String PACKAGE_REGISTER_PAGE = "package/registerPackage";
+    private final Logger log = LoggerFactory.getLogger(PackageController.class);
 
     @Autowired
     private PackageService packageService;
@@ -50,6 +55,16 @@ public class PackageController extends AbstractCustomController {
             return PACKAGE_REGISTER_PAGE;
         }
 
+        try {
+            if (!Objects.isNull(packageService.findOneByNameAndTenantId(mpackage.getName(), user.getTenantId()))) {
+                model.addAttribute("errorNameExisted", true);
+                model.addAttribute("package", mpackage);
+                return PACKAGE_REGISTER_PAGE;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         packageService.create(mpackage, user);
         DataUtils.putMapData(Constants.ENTITY_STATUS.CREATED, mpackage.getPackageId());
         return REDIRECT_PACKAGE_LIST_PAGE;
@@ -63,6 +78,15 @@ public class PackageController extends AbstractCustomController {
         if (Objects.isNull(mpackage) || result.hasErrors()) {
             model.addAttribute("package", mpackage);
             return PACKAGE_EDIT_PAGE;
+        }
+
+        Package packageExisted = packageService.findOneByPakageIdAndTenantId(mpackage.getPackageId(), user.getTenantId());
+        if (!packageExisted.getName().equals(mpackage.getName())) {
+            if (packageService.findOneByNameAndTenantId(mpackage.getName(), user.getTenantId()) != null) {
+                model.addAttribute("errorNameExisted", true);
+                model.addAttribute("package", mpackage);
+                return PACKAGE_REGISTER_PAGE;
+            }
         }
 
         packageService.update(mpackage, user);
@@ -81,7 +105,7 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByPackageIds(@RequestParam(value = "ojectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByPackageIds(@RequestParam(value = "objectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId());
         DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, packageIds.toString());

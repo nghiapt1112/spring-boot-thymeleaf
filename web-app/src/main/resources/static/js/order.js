@@ -4,9 +4,6 @@ $(function () {
         'paging': true,
         'scrollX': false,
         'scrollCollapse': false,
-        'fixedColumns': {
-            'leftColumns': 0
-        },
         'lengthChange': false,
         'searching': false,
         'ordering': false,
