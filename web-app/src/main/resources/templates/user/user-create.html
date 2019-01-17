@@ -29,16 +29,6 @@
                                 <form name="register-form" th:action="@{/user/register/}"
                                       th:object="${userRegisterAggregate}" method="POST">
                                     <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー権限</span>
-                                        <div id="role" class="form-group col-md-6" style="">
-                                            <select class="form-control" th:field="*{role}">
-                                                <option value="1">管理者</option>
-                                                <option value="0">一般ユーザー</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input name="email" id="email" class="form-control" type="text"
@@ -83,6 +73,16 @@
                                             <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
                                             <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
                                             <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div id="role" class="form-group col-md-6" style="">
+                                            <select class="form-control" th:field="*{role}">
+                                                <option value="1">管理者</option>
+                                                <option value="0">一般ユーザー</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

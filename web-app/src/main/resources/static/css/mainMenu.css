@@ -162,5 +162,10 @@ button {
     float: left ! important;
     margin-right: 1% ! important;
 }
-
+.tables{
+    border-top: 3px solid #337ab7;
+    border-bottom: 1px solid #337ab7;
+    border-right: 1px solid #337ab7;
+    border-left: 1px solid #337ab7;
+}
 
