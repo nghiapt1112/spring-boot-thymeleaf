@@ -36,7 +36,9 @@ $(document).ready(function () {
                 $("#errorFormatPrice").removeClass("error_show").addClass("error");
             }
         }
-
+        if(checkForm === true){
+            $("#code").attr("disabled", false);
+        }
         if (checkForm === false) {
             event.preventDefault();
         }
