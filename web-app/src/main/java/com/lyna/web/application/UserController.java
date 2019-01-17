@@ -210,7 +210,7 @@ public class UserController extends AbstractCustomController {
 
     @GetMapping(value = {"/delete"})
     public @ResponseBody
-    String deleteByUserIds(@RequestParam(value = "ojectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByUserIds(@RequestParam(value = "objectIds[]") List<String> userIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         userStoreAuthorityService.deleteUserStoreAuthorityByUserIds(userIds, user.getTenantId());
         DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, userIds.toString());

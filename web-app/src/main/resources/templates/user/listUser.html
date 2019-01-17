@@ -43,7 +43,7 @@
                                         <thead style="background: #337ab7">
                                         <tr>
                                             <th style="background: #337ab7">
-                                                <input id="checkBoxAll" type="checkbox">
+                                                <input class="checkBoxAll" type="checkbox">
                                             </th>
                                             <th style="background: #337ab7">メールアドレス</th>
                                             <th style="background: #337ab7">ユーザー名</th>
@@ -86,8 +86,6 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
-<script th:src="@{/js/utils/table-utils.js}" type="text/javascript"></script>
-<script th:src="@{/js/utils/export-data-utils.js}" type="text/javascript"></script>
 <script th:src="@{/js/listUser.js}" type="text/javascript"></script>
 </body>
 </html>
