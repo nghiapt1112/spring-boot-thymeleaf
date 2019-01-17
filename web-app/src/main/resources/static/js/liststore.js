@@ -161,7 +161,7 @@ function changeSizeStore() {
     updateLink();
 }
 
-exportDataToExcel('#table-store',1, '店舗一覧',1,2,3,4,5,6,7,'');
+exportDataToExcel('#table-store',1, '店舗一覧',1,2,3,4,5,6,7, '');
 
 
 
