@@ -111,7 +111,7 @@ public class ProductController extends AbstractCustomController {
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByProductIds(@RequestParam(value = "ojectIds[]") List<String> productIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByProductIds(@RequestParam(value = "objectIds[]") List<String> productIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         if (!Objects.isNull(productIds) && !CollectionUtils.isEmpty(productIds)) {
             orderDetailService.deleteByProductIdsAndTenantId(productIds, user.getTenantId());

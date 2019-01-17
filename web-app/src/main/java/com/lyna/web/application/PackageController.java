@@ -81,7 +81,7 @@ public class PackageController extends AbstractCustomController {
 
     @GetMapping("/delete")
     public @ResponseBody
-    String deleteByPackageIds(@RequestParam(value = "ojectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
+    String deleteByPackageIds(@RequestParam(value = "objectIds[]") List<String> packageIds, UsernamePasswordAuthenticationToken principal) {
         User user = (User) principal.getPrincipal();
         deliveryDetailService.deleteDeliveryDetailByPackageIdsAndTenantId(packageIds, user.getTenantId());
         DataUtils.putMapData(Constants.ENTITY_STATUS.DELETED, packageIds.toString());
