@@ -34,9 +34,6 @@ public class PackageController extends AbstractCustomController {
     private final Logger log = LoggerFactory.getLogger(PackageController.class);
 
     @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
     private PackageService packageService;
     @Autowired
     private DeliveryDetailService deliveryDetailService;
