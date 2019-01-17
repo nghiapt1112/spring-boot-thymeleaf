@@ -124,11 +124,11 @@ function searchMainMenu() {
 exportDataToExcel();
 
 function onLogistics() {
-    exportDataToExcel('#table-logicstic',1, '物量');
+    exportDataToExcel('#table-logicstic',1, '物量', 0,1,2,3,4,5,6,7);
 }
 
 function onOrderDetails(){
-    exportDataToExcel('#table-order',1, '発注データ明細');
+    exportDataToExcel('#table-order',1, '発注データ明細', 0,1, 2,3,4,5,6,7);
 }
 
 
