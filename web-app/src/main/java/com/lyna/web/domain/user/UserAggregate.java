@@ -27,7 +27,6 @@ public class UserAggregate extends AbstractObject {
     @NotEmpty
     private String userName;
 
-    @NotEmpty
     private String password;
 
     private List<UserStoreRole> rolePerStore;
@@ -170,5 +169,4 @@ class UserStoreRole extends AbstractObject {
         }
         return "NO Permission";
     }
-
 }
