@@ -148,6 +148,11 @@ $(document).ready(function () {
             })
 
         })
+
+        if(checkForm === true){
+            $("#code").attr("disabled", false);
+        }
+
         if (checkForm === false) {
             event.preventDefault();
         }
