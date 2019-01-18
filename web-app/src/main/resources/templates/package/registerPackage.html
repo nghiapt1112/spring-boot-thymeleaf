@@ -32,7 +32,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                            <em id="errorName" class="error">荷姿名は必須です。</em>
+                                            <em id="errorName" class="error" th:utext="#{err.package.nameEmpty.msg}"></em>
                                             <em id="error_name_exitsted" class="error_show" th:if="${errorNameExisted} == true" th:utext="#{err.package.nameExisted.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
@@ -52,8 +52,8 @@
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{emptyWeight}"
                                                    id="emptyWeight">
-                                            <em id="errorEmptyWeight" class="error">空の重量は必須です。</em>
-                                            <em id="errorFormatEmptyWeight" class="error">空の重量は半角英数字で入力してください。</em>
+                                            <em id="errorEmptyWeight" class="error" th:utext="#{err.package.emptyWeightEmpty.msg}"></em>
+                                            <em id="errorFormatEmptyWeight" class="error" th:utext="#{err.package.emptyWeightFormat.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -62,8 +62,8 @@
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{fullLoadWeight}"
                                                    id="fullLoadWeight">
-                                            <em id="errorFullLoadWeight" class="error">満載の重量は必須です。</em>
-                                            <em id="errorFormatFullLoadWeight" class="error">満載の重量は半角英数字で入力してください。</em>
+                                            <em id="errorFullLoadWeight" class="error" th:utext="#{err.package.fullLoadWeightEmpty.msg}"></em>
+                                            <em id="errorFormatFullLoadWeight" class="error" th:utext="#{err.package.fullLoadWeightFormat.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -72,8 +72,8 @@
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{emptyCapacity}"
                                                    id="emptyCapacity">
-                                            <em id="errorEmptyCapacity" class="error">空の才数は必須です。</em>
-                                            <em id="errorFormatEmptyCapacity" class="error">空の才数は半角英数字で入力してください。</em>
+                                            <em id="errorEmptyCapacity" class="error" th:utext="#{err.package.emptyCapacityEmpty.msg}"></em>
+                                            <em id="errorFormatEmptyCapacity" class="error" th:utext="#{err.package.emptyCapacityFormat.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
@@ -82,8 +82,8 @@
                                         <div class=" form-group col-md-6" style="">
                                             <input class="form-control" type="text" th:field="*{fullLoadCapacity}"
                                                    id="fullLoadCapacity">
-                                            <em id="errorFullLoadCapacity" class="error">満載の才数は必須です。</em>
-                                            <em id="errorFormatFullLoadCapacity" class="error">満載の才数は半角英数字で入力してください。</em>
+                                            <em id="errorFullLoadCapacity" class="error" th:utext="#{err.package.fullLoadCapacityEmpty.msg}"></em>
+                                                <em id="errorFormatFullLoadCapacity" class="error" th:utext="#{err.package.fullLoadCapacityFormat.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

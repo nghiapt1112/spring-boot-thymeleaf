@@ -32,26 +32,15 @@
                                 <form th:action="@{/user/profile}" th:method="post" th:object="${aggregate}">
                                     <input th:field="*{userId}" type="hidden"/>
                                     <div class="col-md-12">
-                                        <span class="col-md-5">ユーザー権限</span>
-                                        <div class="form-group col-md-6" style="">
-                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
-                                                    th:disabled="${role == 0}">
-                                                <option th:value="1">管理者</option>
-                                                <option th:value="0">一般ユーザー</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input class="form-control" id="email" th:errorclass="field-error"
                                                    th:field="*{email}"
                                                    type="text">
-                                            <em class="error" id="errorEmail">メールアドレスは必須です。</em>
+                                            <em class="error" id="errorEmail" th:utext="#{err.user.emailEmpty.msg}"></em>
                                             <em class="error_show" id="error_exitsted"
-                                                th:utext="${errorEmailShow}"></em>
-                                            <em class="error" id="errorFormat">メールアドレスを正しく入力してください。</em>
+                                                th:if="${errorEmailShow} == true" th:utext="#{err.user.emailExisted.msg}"></em>
+                                            <em class="error" id="errorFormat" th:utext="#{err.user.emailFormat.msg}"></em>
                                             <em class="error_show" th:errors="*{email}"
                                                 th:if="${#fields.hasErrors('email')}"></em>
                                         </div>
@@ -63,7 +52,7 @@
                                             <input class="form-control" id="userName" th:errorclass="field-error"
                                                    th:field="*{userName}"
                                                    type="text">
-                                            <em class="error" id="errorUserName">ユーザー名は必須です。</em>
+                                            <em class="error" id="errorUserName" th:utext="#{err.user.nameEmpty.msg}"></em>
                                             <em class="error_show" th:errors="*{userName}"
                                                 th:if="${#fields.hasErrors('userName')}"></em>
                                         </div>
@@ -75,8 +64,8 @@
                                             <input class="form-control" id="password" th:errorclass="field-error"
                                                    th:field="*{password}"
                                                    type="password">
-                                            <em class="error" id="errorPassword">パスワードは必須です。</em>
-                                            <em id="errorPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
+                                            <em class="error" id="errorPassword" th:utext="#{err.user.passwordEmpty.msg}"></em>
+                                            <em id="errorPasswordSpaceWhite" class="error" th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
                                             <em class="error_show" th:errors="*{password}"
                                                 th:if="${#fields.hasErrors('password')}"></em>
                                         </div>
@@ -86,9 +75,20 @@
                                         <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input class="form-control" id="repPassword" type="password">
-                                            <em class="error" id="errorPasswordNoRep">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
-                                            <em class="error" id="errorRepPassword">パスワード(確認用)は必須です。</em>
-                                            <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
+                                            <em class="error" id="errorPasswordNoRep" th:utext="#{err.user.passwordNotEquals.msg}"></em>
+                                            <em class="error" id="errorRepPassword" th:utext="#{err.user.repPasswordEmpty.msg}"></em>
+                                            <em id="errorRepPasswordSpaceWhite" class="error" th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="col-md-5">ユーザー権限</span>
+                                        <div class="form-group col-md-6" style="">
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
+                                                <option th:value="1">管理者</option>
+                                                <option th:value="0">一般ユーザー</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>

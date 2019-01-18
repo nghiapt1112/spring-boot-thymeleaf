@@ -12,6 +12,9 @@ let addRow = function () {
         rowSpanPost.classList.add('col-md-5', 'title-input-post');
         let spanPost = document.createElement('span');
         spanPost.textContent = "便";
+        let spanPost_child = document.createElement('span');
+        spanPost_child.textContent = "*";
+        spanPost_child.classList.add('input_require');
         let rowInputPost = document.createElement('div');
         rowInputPost.classList.add('col-md-7', 'edit-checkbox', 'title-input-post');
         let inputPost = document.createElement('input');
@@ -22,7 +25,9 @@ let addRow = function () {
 
         let emPost = document.createElement('em');
         emPost.classList.add('error');
-        emPost.textContent = '店舗コードは必須です。';
+        emPost.textContent = '便は必須です。';
+
+        spanPost.appendChild(spanPost_child);
 
         rowSpanPost.appendChild(spanPost);
         rowInputPost.appendChild(inputPost);
@@ -106,23 +111,6 @@ $(document).ready(function () {
             checkForm = false;
         } else {
             $("#errorName").removeClass("error_show").addClass("error");
-        }
-
-        var REGEX_PHONENUMBER = /^\d+$/;
-        var phoneNumber = $("#phoneNumber").val();
-        if (isNotEmpty(phoneNumber)) {
-            if(isNotBlank(phoneNumber)){
-                if (!REGEX_PHONENUMBER.test(phoneNumber.trim())) {
-                    $("#errorFormat").removeClass("error").addClass("error_show");
-                    checkForm = false;
-                }else{
-                    $("#errorFormat").removeClass("error_show").addClass("error");
-                }
-            }else{
-                $("#errorFormat").removeClass("error_show").addClass("error");
-            }
-        }else{
-            $("#errorFormat").removeClass("error_show").addClass("error");
         }
 
         $("#postCourseList").find(".item").each(function (index1) {

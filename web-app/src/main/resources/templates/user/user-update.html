@@ -33,10 +33,10 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="email" class="form-control" type="text" th:field="*{email}"
                                                    th:errorclass="field-error">
-                                            <em id="errorEmail" class="error">メールアドレスは必須です。</em>
+                                            <em id="errorEmail" class="error" th:utext="#{err.user.emailEmpty.msg}"></em>
                                             <em id="error_exitsted" class="error_show"
-                                                th:utext="${errorEmailShow}"></em>
-                                            <em id="errorFormat" class="error">メールアドレスを正しく入力してください。</em>
+                                                th:if="${errorEmailShow} == true" th:utext="#{err.user.emailExisted.msg}"></em>
+                                            <em id="errorFormat" class="error" th:utext="#{err.user.emailFormat.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('email')}"
                                                 th:errors="*{email}"></em>
                                         </div>
@@ -47,7 +47,7 @@
                                         <div class="form-group col-md-6" style="">
                                             <input id="userName" class="form-control" type="text" th:field="*{userName}"
                                                    th:errorclass="field-error">
-                                            <em id="errorUserName" class="error">ユーザー名は必須です。</em>
+                                            <em id="errorUserName" class="error" th:utext="#{err.user.nameEmpty.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('userName')}"
                                                 th:errors="*{userName}"></em>
                                         </div>
@@ -59,8 +59,8 @@
                                             <input id="password" class="form-control" type="password"
                                                    th:field="*{password}"
                                                    th:errorclass="field-error">
-                                            <em id="errorPassword" class="error">パスワードは必須です。</em>
-                                            <em id="errorPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
+                                            <em id="errorPassword" class="error" th:utext="#{err.user.passwordEmpty.msg}"></em>
+                                            <em id="errorPasswordSpaceWhite" class="error" th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('password')}"
                                                 th:errors="*{password}"></em>
                                         </div>
@@ -70,9 +70,9 @@
                                         <span class="col-md-5">パスワード(確認用)<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
                                             <input id="repPassword" class="form-control" type="password">
-                                            <em id="errorPasswordNoRep" class="error">パスワード ”と”パスワード(確認用)”が一致しません。!</em>
-                                            <em id="errorRepPasswordSpaceWhite" class="error">パスワードに｢スペース｣を含めている。</em>
-                                            <em id="errorRepPassword" class="error">パスワード(確認用)は必須です。</em>
+                                            <em id="errorPasswordNoRep" class="error" th:utext="#{err.user.passwordNotEquals.msg}"></em>
+                                            <em id="errorRepPasswordSpaceWhite" class="error" th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
+                                            <em id="errorRepPassword" class="error" th:utext="#{err.user.repPasswordEmpty.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
