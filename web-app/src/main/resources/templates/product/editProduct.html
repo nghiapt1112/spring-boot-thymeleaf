@@ -48,7 +48,7 @@
                                         <div class=" form-group col-md-6 has-feedback">
                                             <input id="name" class="form-control" type="text" th:field="*{name}"
                                                    th:errorclass="field-error">
-                                            <em id="errorName" class="error" th:utext="#{err.product.nameEmpty.msg}">商品名は必須です。</em>
+                                            <em id="errorName" class="error" th:utext="#{err.product.nameEmpty.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('name')}"
                                                 th:errors="*{name}"></em>
 
