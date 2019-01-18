@@ -38,7 +38,7 @@
                                             <input id="code" class="form-control" type="text" th:field="*{code}"
                                                    th:errorclass="field-error">
                                             <em id="errorCode" class="error" th:utext="#{err.store.codeEmpty.msg}"></em>
-                                            <em id="error_exitsted" class="error_show" th:utext="${errorStoreExitsted}"></em>
+                                            <em id="error_exitsted" class="error_show" th:if="${errorStoreExitsted} == true" th:utext="#{err.product.codeExisted.msg}"></em>
                                             <em class="error_show" th:if="${#fields.hasErrors('code')}"
                                                 th:errors="*{code}"></em>
 
