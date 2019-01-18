@@ -113,13 +113,19 @@
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
                                                 <input th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
-                                                       th:disabled="${role==0}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
-                                                       type="checkbox">
+                                                       type="checkbox" checked="checked" disabled="disabled">
+                                                <input hidden
+                                                    th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
+                                                    th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
+                                                    type="checkbox">
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanedit">
                                                 <input th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
-                                                       th:disabled="${role==0}"
+                                                       th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
+                                                       type="checkbox" checked="checked" disabled="disabled">
+                                                <input hidden
+                                                       th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        type="checkbox">
                                             </div>
