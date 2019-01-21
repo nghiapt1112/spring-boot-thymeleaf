@@ -114,7 +114,7 @@
                                             <div class=" form-group  col-md-4 inputCanview">
                                                 <input th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
-                                                       type="checkbox" checked="checked" disabled="disabled">
+                                                       type="checkbox" checked="checked" th:disabled="${role == 0}">
                                                 <input hidden
                                                     th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                     th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
@@ -123,7 +123,7 @@
                                             <div class=" form-group  col-md-4 inputCanedit">
                                                 <input th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
-                                                       type="checkbox" checked="checked" disabled="disabled">
+                                                       type="checkbox" checked="checked" th:disabled="${role == 0}">
                                                 <input hidden
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
