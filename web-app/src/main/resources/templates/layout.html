@@ -24,6 +24,16 @@
 <div class="wrapper">
     <div th:include="fragments/header/header.html :: header" class="main-header"></div>
     <div th:include="fragments/menu/menu.html :: menu" class="main-sidebar"></div>
+    <div  th:fragment="radioUploadFile">
+        既に登録済みのデータが存在します。
+        登録済みのデータに対し、どのように処理するが洗濯してください
+        <div class="radio">
+            <label><input type="radio" name="optradio" checked>ないデータは追加し、登録済のデータは無視する</label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="optradio">ないデータは追加し、登録済のデータは上書き更新する</label>
+        </div>
+    </div>
     <div class="content-wrapper">
         <section class="content-header">
             <div th:if="${message} != null">
