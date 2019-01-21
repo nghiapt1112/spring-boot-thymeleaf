@@ -39,7 +39,7 @@ public class DataUtils {
                 result.set("成功に更新した");
             }
             if (type == 4) {
-                result.set(value);
+                result.set("ファイルは成功にアップロードされた。");
             }
         });
         mapStore.clear();
