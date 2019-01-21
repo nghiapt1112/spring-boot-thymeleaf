@@ -142,11 +142,14 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
             processUpload(orderIterator);
-            setMapData(tenantId, userId);
-            setDataOrder(tenantId, userId);
-            saveDataMaster();
-            saveDataOrder();
-            aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
+
+            if (mapError.isEmpty()) {
+                setMapData(tenantId, userId);
+                setDataOrder(tenantId, userId);
+                saveDataMaster();
+                saveDataOrder();
+                aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
+            }
         } catch (Exception ex) {
             mapError.put(500, "Error IO:" + ex.getMessage());
         }
