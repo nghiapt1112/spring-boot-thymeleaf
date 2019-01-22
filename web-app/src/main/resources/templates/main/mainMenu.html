@@ -26,9 +26,7 @@
                     <div class="col-md-2 button-top-delivery">
                         <button class="btn btn-primary " id="deliveryBtn">実績・物量データ取り込み</button>
                     </div>
-
                     <div class="col-md-8">
-
                     </div>
                 </div>
                 <div class="modal" id="myModal">
@@ -50,6 +48,9 @@
                                 <div class="col-md-5">
                                 </div>
                             </div>
+
+                            <div th:replace="fragments/upload/uploadData :: radioUploadFile"/>
+
                             <input id="quizID" name="typeUpload" type="hidden"/>
                         </form>
                         <br/>
