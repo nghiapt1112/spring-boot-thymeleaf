@@ -12,6 +12,33 @@ function exportDataToExcel(tableId, sortDefaultColumn , fileName, item1 ,item2 ,
                 }
             }
         ],
+        "footerCallback": function ( row, data, start, end, display ) {
+            if(tableId === "#table-logicstic"){
+                var api = this.api();
+                var array = [3,4,5,6,7];
+                for (i = 0; i < array.length; i++) {
+                    var colNo = array[i];
+                    total = api
+                        .column( colNo )
+                        .data()
+                        .reduce( function (a, b) {
+                            return Number(a) + Number(b);
+                        }, 0 );
+
+                    pageTotal = api
+                        .column( colNo, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return Number(a) + Number(b);
+                        }, 0 );
+
+                    $( api.column( colNo ).footer() ).html(
+                        total.toFixed(2) +' / '+ pageTotal.toFixed(2)
+                    );
+                }
+
+            }
+        },
         'paging': true,
         'lengthChange': true,
         'searching': true,
