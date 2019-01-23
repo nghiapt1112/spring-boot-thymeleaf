@@ -168,4 +168,7 @@ button {
     border-right: 1px solid #337ab7;
     border-left: 1px solid #337ab7;
 }
-
+.with-nav-tabs th{
+    color: #333 ! important;
+    text-align: left ! important;
+}
