@@ -8,5 +8,5 @@ import java.util.Map;
 public interface UploadDataService {
     void init();
 
-    Map<Integer, String> store(User tenantId, MultipartFile file, int type);
+    Map<Integer, String> store(User tenantId, MultipartFile file, int type, String typeUploadFile);
 }
