@@ -66,7 +66,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
 
     @Override
     @Transactional
-    public Map<Integer, String> store(User user, MultipartFile file, int type) {
+    public Map<Integer, String> store(User user, MultipartFile file, int type, String typeUploadFile) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         if (file.isEmpty()) {
             mapError.put(500, "空のファイルを保存出来ない。" + filename);

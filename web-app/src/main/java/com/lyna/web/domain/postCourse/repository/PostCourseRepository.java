@@ -8,7 +8,7 @@ import java.util.List;
 public interface PostCourseRepository extends JpaRepository<PostCourse, String> {
     List<PostCourse> findAllByStoreIdAndTenantId(int tenantId, String storeId);
 
-    String checkByStoreIdAndPost(String storeId, String post);
+    String findByStoreIdAndPost(String storeId, String post);
 
     boolean deleteByStoreIdsAndTenantId(List<String> storeIds, int tenantId);
 
