@@ -25,7 +25,7 @@ public class PostCourseRepositoryImpl extends BaseRepository<PostCourse, String>
     }
 
     @Override
-    public String checkByStoreIdAndPost(String storeId, String post) {
+    public String findByStoreIdAndPost(String storeId, String post) {
         List list = entityManager
                 .createQuery("SELECT p.postCourseId FROM PostCourse p WHERE p.storeId = :storeId and p.post = :post")
                 .setParameter("storeId", storeId)

@@ -18,9 +18,9 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
-    Map<Integer, String> store(User tenantId, MultipartFile file);
+    Map<Integer, String> store(User tenantId, MultipartFile file, String typeUploadFile);
 
-    Map<Integer, String> store(User user, String fileName, InputStream inputStream, Map<Integer, String> mapHeader);
+    Map<Integer, String> store(User user, String fileName, InputStream inputStream, String typeUploadFile, Map<Integer, String> mapHeader);
 
     Stream<Path> loadAll();
 

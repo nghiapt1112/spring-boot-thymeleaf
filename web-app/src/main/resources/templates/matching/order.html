@@ -67,6 +67,9 @@
                                         </table>
                                     </div>
                                     <input id="fileName" name="fileName" th:value="${fileName}" type="hidden"/>
+                                    <input id="typeUploadFile" name="typeUploadFile" th:value="${typeUpload}"
+                                           type="hidden"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -85,8 +88,8 @@
 
                     <div class="col-md-12">
                         <div class="col-md-2 button-top-order">
-                            <a class="btn btn-primary" id="backButton" th:href="@{'/mainMenu'}"
-                               style="border-radius: 0px;" type="button">戻る</a>
+                            <a class="btn btn-primary" id="backButton" style="border-radius: 0px;"
+                               th:href="@{'/mainMenu'}" type="button">戻る</a>
                         </div>
                         <div class="col-md-2">
                             <button class="btn btn-primary" id="submitFile" type="submit">次へ</button>
