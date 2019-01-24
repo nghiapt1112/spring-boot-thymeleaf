@@ -131,7 +131,7 @@ public class UserController extends AbstractCustomController {
     }
 
     @PostMapping(value = {"/profile"})
-    public String updateProfile(HttpServletRequest request, UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
+    public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
         User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
