@@ -201,7 +201,6 @@ public class UserController extends AbstractCustomController {
         int tenantId = user.getTenantId();
         RequestPage userRequestPage = new UserRequestPage();
         userRequestPage.setCurrentPage(cp);
-
         userRequestPage.setNoOfRowInPage(limit);
         userRequestPage.addSearchField("search", search).addSearchField("start", start).addSearchField("end", end);
 
