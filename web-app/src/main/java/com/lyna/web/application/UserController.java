@@ -151,7 +151,6 @@ public class UserController extends AbstractCustomController {
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
 
         currentUser.setName(aggregate.getName());
-//        currentUser.setName("AAAA");
         return "redirect:/mainScreen";
     }
 
