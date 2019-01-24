@@ -134,15 +134,15 @@
                                                     <th>日付</th>
                                                     <th>店舗</th>
                                                     <th>便</th>
-                                                    <th>発注個数</th>
-                                                    <th>金額</th>
+                                                    <th class="columnSum">発注個数</th>
+                                                    <th class="columnSum">金額</th>
                                                     <!--<th>ばんじゅう</th>
                                                     <th>箱</th>
                                                     <th>ケース</th>-->
-                                                    <th th:each="item: ${packageTypes}"
+                                                    <th class="columnSum" th:each="item: ${packageTypes}"
                                                         th:text="${item.getName()}"></th>
-                                                    <th>総重量</th>
-                                                    <th>総才数</th>
+                                                    <th class="columnSum">総重量</th>
+                                                    <th class="columnSum">総才数</th>
                                                     <th>コース</th>
                                                 </tr>
                                                 </thead>
@@ -162,18 +162,21 @@
                                                     <td th:text="${logistic.getCourseName()}"></td>
                                                 </tr>
                                                 </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>合計</th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                                </tfoot>
+                                                    <tfoot th:if="${not #lists.isEmpty(logisticData)}">
+                                                    <tr>
+                                                        <th style="color: black ! important; text-align: left ! important">合計</th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"
+                                                            th:each="item: ${packageTypes}"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                        <th style="color: black ! important; text-align: left ! important"></th>
+                                                    </tr>
+                                                    </tfoot>
+
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="tab2primary">
@@ -201,7 +204,6 @@
                                                     <td th:text="${order.getSecondCategory()}"></td>
                                                     <td th:text="${order.getThirdCategory()}"></td>
                                                 </tr>
-
                                                 </tbody>
                                             </table>
                                         </div>
