@@ -1,0 +1,28 @@
+{
+  "trainingDatas":[
+    {
+      "inputItemNums":[
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "outputItemNums":[
+        3
+      ]
+    }
+  ],
+  "unknownDatas":[
+    {
+      "key":"order_id_1",
+      "inputItemNums":[
+        0,
+        0,
+        0,
+        6,
+        101
+      ]
+    }
+  ]
+}

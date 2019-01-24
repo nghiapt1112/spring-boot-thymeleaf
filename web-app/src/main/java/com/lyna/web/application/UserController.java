@@ -18,11 +18,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +49,8 @@ public class UserController extends AbstractCustomController {
     private static final String USER_PROFILE_PAGE = "user/profile";
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
-
+    @Autowired
+    public AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService;
     @Autowired
@@ -99,7 +108,9 @@ public class UserController extends AbstractCustomController {
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findByUserIdAndTenantId(currentUser.getTenantId(), userId));
+
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
+
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
 
@@ -115,11 +126,12 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
 
+
         return USER_PROFILE_PAGE;
     }
 
     @PostMapping(value = {"/profile"})
-    public String updateProfile(UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
+    public String updateProfile(HttpServletRequest request, UsernamePasswordAuthenticationToken principal, UserAggregate aggregate, Model model) {
         User currentUser = (User) principal.getPrincipal();
         User userExisted = this.userService.findByUserIdAndTenantId(currentUser.getTenantId(), aggregate.getUserId());
         try {
@@ -137,6 +149,9 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
+
+        currentUser.setName(aggregate.getName());
+//        currentUser.setName("AAAA");
         return "redirect:/mainScreen";
     }
 
@@ -192,6 +207,7 @@ public class UserController extends AbstractCustomController {
         int tenantId = user.getTenantId();
         RequestPage userRequestPage = new UserRequestPage();
         userRequestPage.setCurrentPage(cp);
+
         userRequestPage.setNoOfRowInPage(limit);
         userRequestPage.addSearchField("search", search).addSearchField("start", start).addSearchField("end", end);
 
