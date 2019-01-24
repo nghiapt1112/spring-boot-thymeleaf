@@ -1,35 +1,50 @@
-function exportDataToExcel(tableId, sortDefaultColumn , fileName, item1 ,item2 , item3, item4, item5, item6, item7 , item8) {
+function exportDataToExcel(tableId, sortDefaultColumn, fileName, item1, item2, item3, item4, item5, item6, item7, item8) {
     $(tableId).DataTable({
         destroy: true,
         'dom': 'lBfrtip',
         'buttons': [
             {
                 extend: 'excel',
-                filename : fileName,
-                title : null,
+                filename: fileName,
+                title: null,
                 exportOptions: {
-                    columns: [item1, item2, item3, item4, item5, item6, item7, item8 ]
+                    columns: [item1, item2, item3, item4, item5, item6, item7, item8]
                 }
             }
         ],
-        "footerCallback": function ( row, data, start, end, display ) {
-            if(tableId === "#table-logicstic"){
+        "footerCallback": function (row, data, start, end, display) {
+            if (tableId === "#table-logicstic") {
                 var api = this.api();
-                var array = [3,4,5,6];
-                for (i = 0; i < array.length; i++) {
-                    var colNo = array[i];
-                    pageTotal = api
-                        .column( colNo, { page: 'current'} )
+                var columns = document.querySelectorAll(".columnSum");
+                for (i = 0; i < columns.length; i++) {
+                    var colNo = i + 3;
+                    var pageTotal = api
+                        .column(colNo, {page: 'current'})
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function (a, b) {
                             return Number(a) + Number(b);
-                        }, 0 );
+                        }, 0).toFixed(2);
+                    var index = pageTotal.indexOf(".");
 
-                    $( api.column( colNo ).footer() ).html(
-                        pageTotal.toFixed(2)
-                    );
+                    if ('0' != (pageTotal.substring(index + 2))) {
+                        $(api.column(colNo).footer()).html(
+                            pageTotal
+                        );
+                    } else {
+                        var resultNumber;
+                        if ('0' != (pageTotal.substring(index + 1, index + 2))) {
+                            resultNumber = pageTotal.substring(0, pageTotal.length - 1);
+                            $(api.column(colNo).footer()).html(
+                                resultNumber
+                            );
+                        } else {
+                            resultNumber = pageTotal.substring(0, pageTotal.length - 3);
+                            $(api.column(colNo).footer()).html(
+                                resultNumber
+                            );
+                        }
+                    }
                 }
-
             }
         },
         'paging': true,
