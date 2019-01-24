@@ -128,12 +128,12 @@ $(document).ready(function () {
     })
 });
 
-function checkButton(elementCheckbox, id, type) {
+function checkButton(elementCheckbox, index, type) {
     var elementHidden;
     if (type == 1)
-        elementHidden = document.getElementById("rolePerStore" + id + ".canView1");
+        elementHidden = document.getElementById("rolePerStore" + index + ".canView1");
     else if (type == 2)
-        elementHidden = document.getElementById("rolePerStore" + id + ".canEdit1");
+        elementHidden = document.getElementById("rolePerStore" + index + ".canEdit1");
     if (elementCheckbox.checked)
         elementHidden.checked = true;
     else
