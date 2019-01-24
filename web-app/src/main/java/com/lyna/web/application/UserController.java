@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -108,9 +107,7 @@ public class UserController extends AbstractCustomController {
     public String updateUserPage(Model model, UsernamePasswordAuthenticationToken principal, @PathVariable String userId) {
         User currentUser = (User) principal.getPrincipal();
         UserAggregate aggregate = new UserAggregate().fromUserEntity(userService.findByUserIdAndTenantId(currentUser.getTenantId(), userId));
-
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
-
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("role", currentUser.getRole());
 
@@ -125,7 +122,6 @@ public class UserController extends AbstractCustomController {
         model.addAttribute("aggregate", aggregate);
         model.addAttribute("userId", currentUser.getId());
         model.addAttribute("role", currentUser.getRole());
-
 
         return USER_PROFILE_PAGE;
     }
@@ -149,7 +145,6 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
-
         currentUser.setName(aggregate.getName());
         return "redirect:/mainScreen";
     }
