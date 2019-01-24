@@ -15,6 +15,9 @@
                 ユーザー編集
             </h1>
         </section>
+
+        <div th:replace="fragments/alert/alert :: alert (message= ${message})"></div>
+
         <section class="content content-right">
             <div class="row">
                 <div class="col-md-12">
@@ -26,12 +29,13 @@
                                 <p class="box-titles"></p>
                             </div>
                             <div class="box-body">
-                                <form method="POST" th:action="@{/user/profile}" th:object="${aggregate}">
+                                <form th:action="@{/user/profile}" th:method="post" th:object="${aggregate}">
                                     <input th:field="*{userId}" type="hidden"/>
                                     <div class="col-md-12">
                                         <span class="col-md-5">メールアドレス<span class="input_require">*</span></span>
                                         <div class=" form-group col-md-6 has-feedback">
-                                            <input class="form-control" id="email" th:errorclass="field-error" th:field="*{email}"
+                                            <input class="form-control" id="email" th:errorclass="field-error"
+                                                   th:field="*{email}"
                                                    type="text">
                                             <em class="error" id="errorEmail"
                                                 th:utext="#{err.user.emailEmpty.msg}"></em>
@@ -48,7 +52,8 @@
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー名<span class="input_require">*</span></span>
                                         <div class="form-group col-md-6" style="">
-                                            <input class="form-control" id="userName" th:errorclass="field-error" th:field="*{userName}"
+                                            <input class="form-control" id="userName" th:errorclass="field-error"
+                                                   th:field="*{userName}"
                                                    type="text">
                                             <em class="error" id="errorUserName"
                                                 th:utext="#{err.user.nameEmpty.msg}"></em>
@@ -65,7 +70,7 @@
                                                    type="password">
                                             <em class="error" id="errorPassword"
                                                 th:utext="#{err.user.passwordEmpty.msg}"></em>
-                                            <em class="error" id="errorPasswordSpaceWhite"
+                                            <em id="errorPasswordSpaceWhite" class="error"
                                                 th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
                                             <em class="error_show" th:errors="*{password}"
                                                 th:if="${#fields.hasErrors('password')}"></em>
@@ -78,18 +83,18 @@
                                             <input class="form-control" id="repPassword" type="password">
                                             <em class="error" id="errorPasswordNoRep"
                                                 th:utext="#{err.user.passwordNotEquals.msg}"></em>
-                                            <em class="error" id="errorRepPasswordSpaceWhite"
-                                                th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
                                             <em class="error" id="errorRepPassword"
                                                 th:utext="#{err.user.repPasswordEmpty.msg}"></em>
+                                            <em id="errorRepPasswordSpaceWhite" class="error"
+                                                th:utext="#{err.user.passwordContainSpaceWhite.msg}"></em>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
                                     <div class="col-md-12">
                                         <span class="col-md-5">ユーザー権限</span>
                                         <div class="form-group col-md-6" style="">
-                                            <select class="form-control" id="role" th:disabled="${role == 0}" th:field="*{role}"
-                                                    th:value="${role}">
+                                            <select class="form-control" id="role" th:value="${role}" th:field="*{role}"
+                                                    th:disabled="${role == 0}">
                                                 <option th:value="1">管理者</option>
                                                 <option th:value="0">一般ユーザー</option>
                                             </select>
@@ -102,7 +107,6 @@
                                         <div class="col-md-4">編集</div>
                                     </div>
                                     <th:block th:if="${#lists.isEmpty(aggregate.getRolePerStore())}">
-
                                     </th:block>
                                     <th:block th:unless="${#lists.isEmpty(aggregate.getRolePerStore())}">
                                         <div class="col-md-12 roleStore"
@@ -114,9 +118,11 @@
                                                    th:field="${aggregate.rolePerStore[__${el.index}__].storeId}"/>
                                             <div class=" form-group  col-md-4">
                                                 <span th:text="${item.name}"> </span>
+
                                             </div>
                                             <div class=" form-group  col-md-4 inputCanview">
                                                 <input onclick="checkButton(this, this.value, 1)"
+                                                       th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        th:disabled="${role == 0}" th:value="__${el.index}__"
                                                        type="checkbox">
@@ -125,11 +131,13 @@
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canView}"
                                                        type="checkbox">
                                             </div>
-                                            <div class=" form-group  col-md-4 inputCandit">
+                                            <div class=" form-group  col-md-4 inputCanedit">
                                                 <input onclick="checkButton(this, this.value, 2)"
-                                                       th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}" th:disabled="${role == 0}"
+                                                       th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
+                                                       th:disabled="${role == 0}"
                                                        th:value="__${el.index}__"
                                                        type="checkbox">
+
                                                 <input hidden
                                                        th:checked="${aggregate.rolePerStore[__${el.index}__].canEdit}"
                                                        th:field="${aggregate.rolePerStore[__${el.index}__].canEdit}"
@@ -138,8 +146,7 @@
                                         </div>
                                     </th:block>
                                     <div class="col-md-12  button-submit">
-                                        <button class="btn btn-primary" id="save" type="submit">
-                                            登録
+                                        <button class="btn btn-primary" id="save" type="submit">登録
                                         </button>
                                     </div>
                                 </form>
@@ -158,7 +165,3 @@
 <script th:src="@{/js/editUser.js}" type="text/javascript"></script>
 </body>
 </html>
-
-
-
-
