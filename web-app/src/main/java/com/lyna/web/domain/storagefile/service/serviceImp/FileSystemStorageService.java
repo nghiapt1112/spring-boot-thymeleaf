@@ -110,7 +110,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     public String store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename()).replaceAll("[\\\\/:*?\"<>|]", "").trim();
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);

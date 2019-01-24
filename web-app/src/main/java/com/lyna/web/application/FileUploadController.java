@@ -65,7 +65,7 @@ public class FileUploadController extends AbstractCustomController {
 
     @PostMapping("/file")
     @IsAdmin
-    public String handleFile(Model model, @RequestParam("file") MultipartFile file, @RequestParam("typeUploadFile") String typeUploadFile) throws IOException {
+    public String handleFile(Model model, @RequestParam("file") MultipartFile file, @RequestParam("typeUploadFile") String typeUploadFile) {
         Map<String, Integer> headerMap = storageService.getMapHeader(file);
         List<CSVRecord> mapData = storageService.getMapData(file);
         String fileName = storageService.store(file);
@@ -94,7 +94,6 @@ public class FileUploadController extends AbstractCustomController {
                         Collectors.toMap(s -> index.getAndIncrement(), s -> s, (oldV, newV) -> newV));
         Resource resource = storageService.loadAsResource(fileName);
         Map<Integer, String> mapError = storageService.store(user, fileName, resource.getInputStream(), typeUploadFile, mapHeader);
-        storageService.deleteAll();
         return getResponseMessage(model, mapError);
     }
 
