@@ -18,10 +18,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -41,7 +48,8 @@ public class UserController extends AbstractCustomController {
     private static final String USER_PROFILE_PAGE = "user/profile";
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
-
+    @Autowired
+    public AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService;
     @Autowired
@@ -137,6 +145,7 @@ public class UserController extends AbstractCustomController {
         aggregate.updateRolePerStore(storeService.findAll(currentUser.getTenantId()));
         this.userService.update(currentUser, aggregate);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
+        currentUser.setName(aggregate.getName());
         return "redirect:/mainScreen";
     }
 
