@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface AIService {
-    void calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds);
+    int calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds);
 
     void updateDataToDB(User currentUser, List<UnknownData> resultDatas);
 }

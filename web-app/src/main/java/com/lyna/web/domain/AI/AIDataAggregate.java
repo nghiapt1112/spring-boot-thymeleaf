@@ -17,6 +17,10 @@ public class AIDataAggregate extends AbstractObject {
     private List<UnknownData> unknownDatas;
     private List<UnknownData> resultDatas;
 
+    private int code;
+    private String message;
+
+
     public AIDataAggregate(Map<String, List<Integer>> productAmountsByOrderId, List<TrainingData> trainingDatas) {
         if (Objects.isNull(this.unknownDatas)) {
             this.unknownDatas = new ArrayList<>();

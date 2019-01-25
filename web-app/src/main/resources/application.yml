@@ -35,7 +35,7 @@ lyna:
     pageSize: 10, 20, 50, 100
     limitItems: 10
   ai:
-    url: https://jp6jra2fwj.execute-api.ap-northeast-1.amazonaws.com/test/test3
+    url: https://jp6jra2fwj.execute-api.ap-northeast-1.amazonaws.com/test/test5
     headers:
       x-api-key: euEcVSr9H0aA2mzwgH62e1N4PuIeUEU99eGodcLy
 

@@ -1,6 +1,7 @@
 package com.lyna.web.domain.AI;
 
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.HttpUtils;
 import com.lyna.web.domain.logicstics.Logistics;
 import com.lyna.web.domain.logicstics.LogiticsDetail;
@@ -16,7 +17,6 @@ import com.lyna.web.domain.user.User;
 import com.lyna.web.infrastructure.property.AIProperty;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,10 +54,10 @@ public class AIServiceImpl extends BaseService implements AIService {
 
     @Override
     @Transactional
-    public void calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds) {
+    public int calculateLogisticsWithAI(User currentUser, Collection<String> csvOrderIds) {
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderIds(currentUser.getTenantId(), csvOrderIds);
         if (CollectionUtils.isEmpty(orderDetails)) {
-            return;
+            return Constants.AI_STATUS.EMPTY;
         }
         Map<String, Map<String, BigDecimal>> amountByOrderId = new HashMap<>();
         for (OrderDetail orderDetail : orderDetails) {
@@ -79,12 +79,14 @@ public class AIServiceImpl extends BaseService implements AIService {
         AIDataAggregate aggregateRequest = new AIDataAggregate(unknowAIDatas, Arrays.asList(TrainingData.defaultTrainingData()));
         try {
             AIDataAggregate response = HttpUtils.post(aiProperty.getUrl(), aiProperty.getHeaders(), aggregateRequest, AIDataAggregate.class);
+            if (response.getCode() == 1) {
+                return response.getCode();
+            }
             updateDataToDB(currentUser, response.getResultDatas());
         } catch (Exception e) {
-            System.out.println("\n\n\n\n Cannot call to AI services, process failed.!!!");
+            return Constants.AI_STATUS.ERROR;
         }
-
-
+        return Constants.AI_STATUS.SUCCESS;
     }
 
     @Override
