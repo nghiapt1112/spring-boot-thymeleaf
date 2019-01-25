@@ -8,6 +8,13 @@ public final class Constants {
     public static final String NOT_UPDATE_DATA = "0";
     public static final String UPDATE_DATA = "1";
 
+    public static final class AI_STATUS {
+        public static final Integer EMPTY = 2;
+        public static final Integer ERROR = 1;
+        public static final Integer SUCCESS = 0;
+    }
+
+
     public static final class ENTITY_STATUS {
         public static final Integer CREATED = 1;
         public static final Integer DELETED = 2;

@@ -80,6 +80,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private Set<DeliveryDetail> deliveryDetailIterable;
     private Set<Order> orderIterable;
     private Set<OrderDetail> orderDetailIterable;
+    private List<String> orderIds;
 
     @Autowired
     private OrderService orderService;
@@ -132,7 +133,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-
     public Map<Integer, String> store(User user, String fileName, InputStream inputStream, String typeUploadFile, Map<Integer, String> mapHeader) {
         try {
             int tenantId = user.getTenantId();
@@ -142,6 +142,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
             processUpload(orderIterator);
+            int status = 0;
 
             if (mapError.isEmpty()) {
                 setMapData(tenantId, userId, typeUploadFile);
@@ -153,11 +154,15 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 if (!productIterable.isEmpty() || !orderIterable.isEmpty() || !orderDetailIterable.isEmpty())
                     saveDataOrder();
 
-                if (!orderDetailIterable.isEmpty() && mapError.size() == 0)
-                    aiService.calculateLogisticsWithAI(user, orderDetailIterable.stream().map(OrderDetail::getOrderId).collect(Collectors.toSet()));
+                if (mapError.size() == 0) {
+                    status = aiService.calculateLogisticsWithAI(user, orderIds);
+
+                    if (status == Constants.AI_STATUS.EMPTY || status == Constants.AI_STATUS.ERROR)
+                        mapError.put(500, "解析に失敗しました。");
+                }
             }
         } catch (Exception ex) {
-            mapError.put(500, "Error IO:" + ex.getMessage());
+            mapError.put(500, "Error :" + ex.getMessage());
         }
         return mapError;
     }
@@ -297,6 +302,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
 
     void initDataOrder() {
+        orderIds = new ArrayList<>();
         listProductCode = new ArrayList<>();
         mapProductCodeCsv = new HashMap<>();
         mapKeyCsv = new HashMap<>();
@@ -665,6 +671,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     }
                     setOrderDetailIterable(orderId, productId, csvOrder, tenantId, userId);
                 }
+
+                if (!orderIds.contains(orderId))
+                    orderIds.add(orderId);
             });
         }
     }
@@ -690,7 +699,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         if (!postCoursesIterable.isEmpty())
             postCourseRepository.saveAll(postCoursesIterable);
     }
-
 
     void saveDataDelivery() throws DomainException {
         //Save delivery
