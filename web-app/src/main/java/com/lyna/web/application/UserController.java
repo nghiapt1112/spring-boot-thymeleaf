@@ -166,7 +166,7 @@ public class UserController extends AbstractCustomController {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
+        currentUser.setName(aggregate.getName());
         userService.update(currentUser, aggregate);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
         return REDIRECT_TO_USER_LIST_PAGE;
