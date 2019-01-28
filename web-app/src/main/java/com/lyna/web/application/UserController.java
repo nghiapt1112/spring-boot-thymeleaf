@@ -166,11 +166,12 @@ public class UserController extends AbstractCustomController {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        if (currentUser.getEmail().equals(aggregate.getEmail())) {
-            currentUser.setName(aggregate.getName());
-        }
+
         userService.update(currentUser, aggregate);
         DataUtils.putMapData(Constants.ENTITY_STATUS.UPDATED, currentUser.getId());
+        if (currentUser.getId().equals(aggregate.getUserId())) {
+            currentUser.setName(aggregate.getName());
+        }
         return REDIRECT_TO_USER_LIST_PAGE;
     }
 
