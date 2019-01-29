@@ -160,7 +160,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                     newUserStoreAuthority.stream()
                             .filter(el -> !oldAuthorities.contains(el.getId()))
                             .peek(el -> {
-                                el.setUserId(currentUser.getId());
+                                el.setUserId(aggregate.getUserId());
                                 el.setTenantId(currentUser.getTenantId());
                                 el.initDefaultCreateFields(currentUser);
                             })
