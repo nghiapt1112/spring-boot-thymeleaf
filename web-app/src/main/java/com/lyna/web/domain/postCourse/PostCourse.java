@@ -5,14 +5,9 @@ import com.lyna.commons.infrustructure.object.AbstractEntity;
 import com.lyna.web.domain.order.Order;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +38,15 @@ public class PostCourse extends AbstractEntity {
         this.postCourseId = UUID.randomUUID().toString();
     }
 
+
+    public PostCourse(int tenantId, String storeId, String post, String userId) {
+        this.postCourseId = UUID.randomUUID().toString();
+        this.post = post;
+        this.storeId = storeId;
+        this.tenantId = tenantId;
+        this.createDate = new Date();
+        this.createUser = userId;
+    }
 
     @Override
     public boolean equals(Object o) {

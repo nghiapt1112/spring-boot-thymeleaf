@@ -17,9 +17,9 @@ $(function () {
         } else {
             var form = document.forms[0];
             var formData = new FormData(form);
-            value = $("#quizID").val();
+            var optionType = $("#quizID").val();
             var url = "/upload/file/delivery";
-            if (value == 2) {
+            if (optionType == 2) {
                 //Disable submit button
                 $(this).prop('disabled', true);
                 // Ajax call for file uploaling
@@ -52,6 +52,7 @@ $(function () {
 
                 // Called on success of file upload
                 ajaxReq.done(function (msg) {
+                    var logisticAPI = '/mainScreen';
                     $('input[type=file]').val('');
                     $('button[type=submit]').prop('disabled', false);
                     modal.style.display = "none";

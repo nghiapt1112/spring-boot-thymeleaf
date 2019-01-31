@@ -57,17 +57,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     public String getOrderIdByPostCourseIdAndTenantId(String postCourseId, String productId, int tenantId) {
-        return orderRepository.checkExists(postCourseId, productId, tenantId);
+        return orderRepository.getByPostCourseIdOrderDateTenantId(postCourseId, productId, tenantId);
     }
 
     @Override
     public void saveAll(Set<Order> orderIterable) {
         orderRepository.saveAll(orderIterable);
     }
-
-    @Override
-    public String getOrderIdByPostCodeIdAndOrderDateAndTenantId(String postCourseId, String orderDate, int tenantId) {
-        return orderRepository.checkExists(postCourseId, orderDate, tenantId);
-    }
-
 }
