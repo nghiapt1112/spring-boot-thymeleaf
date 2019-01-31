@@ -52,7 +52,7 @@ SELECT
    FROM t_order_detail tod
    WHERE tod.order_id = o.order_id) AS amount,
    
-    (SELECT sum(mp.price*tod.amount)
+    (SELECT sum(mp.price)
    FROM m_product mp
    JOIN t_order_detail tod ON mp.product_id = tod.product_id
    JOIN t_order to1 ON tod.order_id = to1.order_id
