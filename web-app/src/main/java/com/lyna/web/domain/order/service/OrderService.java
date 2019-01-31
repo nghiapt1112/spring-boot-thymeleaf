@@ -26,6 +26,4 @@ public interface OrderService {
     String getOrderIdByPostCourseIdAndTenantId(String postCourseId, String productId, int tenantId);
 
     void saveAll(Set<Order> orderIterable);
-
-    String getOrderIdByPostCodeIdAndOrderDateAndTenantId(String postCourseId, String orderDate, int tenantId);
 }

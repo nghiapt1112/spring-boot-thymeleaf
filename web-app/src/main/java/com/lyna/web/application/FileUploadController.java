@@ -4,6 +4,7 @@ import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
+import com.lyna.web.domain.storagefile.service.StorageDeliveryService;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.storagefile.service.UploadDataService;
 import com.lyna.web.domain.user.User;
@@ -17,13 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
@@ -42,11 +37,13 @@ public class FileUploadController extends AbstractCustomController {
 
     private final StorageService storageService;
     private final UploadDataService uploadDataService;
+    private final StorageDeliveryService storageDeliveryService;
 
     @Autowired
-    public FileUploadController(StorageService storageService, UploadDataService uploadDataService) {
+    public FileUploadController(StorageService storageService, UploadDataService uploadDataService, StorageDeliveryService storageDeliveryService) {
         this.storageService = storageService;
         this.uploadDataService = uploadDataService;
+        this.storageDeliveryService = storageDeliveryService;
     }
 
     @GetMapping("/")
@@ -109,7 +106,7 @@ public class FileUploadController extends AbstractCustomController {
                                                            @RequestParam("typeUploadFile") String typeUploadFile,
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        Map<Integer, String> mapError = storageService.store(user, file, typeUploadFile);
+        Map<Integer, String> mapError = storageDeliveryService.store(user, file, typeUploadFile);
         return getResponseMessage(model, mapError);
     }
 

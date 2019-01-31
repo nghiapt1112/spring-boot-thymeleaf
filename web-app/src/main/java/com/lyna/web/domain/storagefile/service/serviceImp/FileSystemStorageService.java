@@ -4,12 +4,6 @@ import com.lyna.commons.infrustructure.exception.DomainException;
 import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.AI.AIService;
-import com.lyna.web.domain.delivery.Delivery;
-import com.lyna.web.domain.delivery.DeliveryDetail;
-import com.lyna.web.domain.delivery.repository.DeliveryDetailRepository;
-import com.lyna.web.domain.delivery.repository.DeliveryRepository;
-import com.lyna.web.domain.mpackage.Package;
-import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
@@ -25,7 +19,6 @@ import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.stores.Store;
 import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.domain.view.CsvDelivery;
 import com.lyna.web.domain.view.CsvOrder;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +59,18 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private List<String> ListPost;
     private Map<String, CsvOrder> mapProductCodeCsv;
     private Map<String, CsvOrder> mapKeyCsv;
-    private Map<String, Object> mapKeyDelivery;
+
     private Map<String, Object> mapStoreCodeCsv;
     private Map<Object, String> mapCsvPostCourseId;
-    private Map<String, Object> mapDeliveryIdCsv;
+
     private Map<String, CsvOrder> mapProductIdCsvOrder;
     private Map<Integer, String> mapError;
 
     private Set<Product> productIterable;
     private Set<Store> storeIterable;
     private Set<PostCourse> postCoursesIterable;
-    private Set<Delivery> deliveryIterable;
-    private Set<DeliveryDetail> deliveryDetailIterable;
+
+
     private Set<Order> orderIterable;
     private Set<OrderDetail> orderDetailIterable;
     private List<String> orderIds;
@@ -92,12 +85,8 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     private ProductRepository productRepository;
     @Autowired
     private PostCourseRepository postCourseRepository;
-    @Autowired
-    private DeliveryRepository deliveryRepository;
-    @Autowired
-    private DeliveryDetailRepository deliveryDetailRepository;
-    @Autowired
-    private PackageRepository packageRepository;
+
+
     @Autowired
     private FileRepository fileRepository;
 
@@ -137,7 +126,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         try {
             int tenantId = user.getTenantId();
             String userId = user.getId();
-            initData();
             initDataOrder();
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
@@ -147,9 +135,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             if (mapError.isEmpty()) {
                 setMapData(tenantId, userId, typeUploadFile);
                 setDataOrder(tenantId, userId, typeUploadFile);
-
-                if (!storeIterable.isEmpty() || !postCoursesIterable.isEmpty())
-                    saveDataMaster();
 
                 if (!productIterable.isEmpty() || !orderIterable.isEmpty() || !orderDetailIterable.isEmpty())
                     saveDataOrder();
@@ -162,41 +147,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 }
             }
         } catch (Exception ex) {
-            mapError.put(500, "Error :" + ex.getMessage());
+            mapError.put(500, "Error :" + ex.getCause() + ", " + ex.getMessage() + ", " + ex.getStackTrace());
         }
         return mapError;
     }
 
-    @Override
-    @Transactional
-    public Map<Integer, String> store(User user, MultipartFile file, String typeUploadFile) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        int tenantId = user.getTenantId();
-        String userId = user.getId();
-        initData();
-        if (file.isEmpty()) {
-            mapError.put(500, toStr("err.csv.fileEmpty.msg") + filename);
-        }
-
-        if (filename.contains("..")) {
-            mapError.put(500, toStr("err.csv.seeOtherPath.msg"));
-        }
-
-        try (InputStream inputStream = file.getInputStream()) {
-            Reader reader = new InputStreamReader(inputStream);
-            initDataDelivery();
-            Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
-            processUploadDelivery(deliveryIterator);
-            if (mapError.size() == 0) {
-                setMapDataDelivery(tenantId, userId, typeUploadFile);
-                saveDataMaster();
-                saveDataDelivery();
-            }
-        } catch (Exception ex) {
-            mapError.put(500, toStr(READ_FILE_FAILED));
-        }
-        return mapError;
-    }
 
     @Override
     public Stream<Path> loadAll() {
@@ -289,7 +244,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    void initData() {
+    void initDataOrder() {
         listStoreCode = new ArrayList<>();
         ListPost = new ArrayList<>();
         mapStoreCodeCsv = new HashMap<>();
@@ -298,10 +253,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapCsvPostCourseId = new HashMap<>();
         mapError = new HashMap<>();
         setStoreCodePost = new HashMap<>();
-    }
-
-
-    void initDataOrder() {
         orderIds = new ArrayList<>();
         listProductCode = new ArrayList<>();
         mapProductCodeCsv = new HashMap<>();
@@ -312,12 +263,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         mapProductIdCsvOrder = new HashMap<>();
     }
 
-    void initDataDelivery() {
-        mapKeyDelivery = new HashMap<>();
-        mapDeliveryIdCsv = new HashMap<>();
-        deliveryIterable = new HashSet<>();
-        deliveryDetailIterable = new HashSet<>();
-    }
 
     private String getByProductIdForKey(String dataSplit) {
         String[] sProductIdOrderDate = dataSplit.split("#");
@@ -365,148 +310,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-    private void processUploadDelivery(Iterator<CsvDelivery> deliveryIterator) {
-        HashSet<String> setDelivery = new HashSet<>();
-
-        while (deliveryIterator.hasNext()) {
-            CsvDelivery csvDelivery = deliveryIterator.next();
-            int row = 1;
-            if (csvDelivery.getPost() == null
-                    || csvDelivery.getPost().isEmpty()
-                    || csvDelivery.getStoreCode() == null
-                    || csvDelivery.getStoreCode().isEmpty()
-                    || csvDelivery.getStoreName() == null
-                    || csvDelivery.getStoreName().isEmpty()
-                    || csvDelivery.getBox() == null
-                    || !isNumeric(csvDelivery.getBox())
-                    || csvDelivery.getCaseP() == null
-                    || !isNumeric(csvDelivery.getCaseP())
-                    || csvDelivery.getTray() == null
-                    || !isNumeric(csvDelivery.getTray())) {
-                mapError.put(500, "行目 " + row + " にデータが不正");
-            }
-            row += 1;
-            String keyOrder = csvDelivery.getStoreCode() + "#" + csvDelivery.getPost() + "#" + csvDelivery.getOrderDate();
-            String skeyCheck = keyOrder.trim().toLowerCase() + "#" + csvDelivery.getOrderDate().trim().toLowerCase();
-            if (!setDelivery.contains(skeyCheck)) {
-                setDelivery.add(skeyCheck);
-                mapStoreCodeCsv.put(csvDelivery.getStoreCode().toLowerCase().trim(), csvDelivery);
-                mapKeyDelivery.put(skeyCheck, csvDelivery);
-                listStoreCode.add(csvDelivery.getStoreCode().trim().toLowerCase());
-                ListPost.add(csvDelivery.getPost().trim().toLowerCase());
-            }
-        }
-    }
-
-    private void setMapDataDelivery(int tenantId, String userId, String typeUploadFile) throws StorageException {
-        List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
-        List<Store> storesInDb = storeRepository.getAll(tenantId, listStoreCode);
-        Map<String, String> mapStoreCodeStoreId = new HashMap<>();
-
-        List<String> stores = result.stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
-
-        listStoreCode.removeIf(x -> stores.contains(x.trim().toLowerCase()));
-        storesInDb.forEach(store -> {
-            mapStoreCodeStoreId.put(store.getCode(), store.getStoreId());
-        });
-
-        listStoreCode.forEach(code -> {
-            CsvDelivery csvDelivery = (CsvDelivery) mapStoreCodeCsv.get(code);
-            Store store = new Store();
-            store.setCode(code);
-            if (csvDelivery.getStoreName() != null) {
-                store.setName(csvDelivery.getStoreName());
-            } else
-                store.setName(csvDelivery.getStoreCode());
-            store.setTenantId(tenantId);
-            store.setCreateUser(userId);
-            store.setCreateDate(new Date());
-            storeIterable.add(store);
-
-            mapStoreCodeStoreId.put(store.getCode().trim(), store.getStoreId());
-        });
-
-        mapKeyDelivery.forEach((storeCodeOrderDate, csvDelivery) -> {
-            String storeCode = ((CsvDelivery) csvDelivery).getStoreCode();
-            String post = ((CsvDelivery) csvDelivery).getPost();
-            String skey = storeCode + "#" + post;
-            if (!setStoreCodePost.containsKey(skey)) {
-                String storeId = mapStoreCodeStoreId.get(storeCode.trim());
-                setMapStorePostCourse(tenantId, csvDelivery, post, skey, storeId, userId);
-            } else {
-                mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(skey));
-            }
-        });
-
-        mapCsvPostCourseId.forEach((csv, postCourseId) -> {
-            String orderId = orderService.getOrderIdByPostCodeIdAndOrderDateAndTenantId(postCourseId, ((CsvDelivery) csv).getOrderDate(), tenantId);
-            if (orderId != null) {
-                String deliveryId = deliveryRepository.checkExistByOrderIdAndOrderDate(orderId, ((CsvDelivery) csv).getOrderDate());
-                if (deliveryId != null)
-                    mapDeliveryIdCsv.put(deliveryId, csv);
-                else {
-                    Delivery delivery = new Delivery();
-                    delivery.setOrderId(orderId);
-                    delivery.setTenantId(tenantId);
-                    delivery.setCreateDate(new Date());
-                    delivery.setCreateUser(userId);
-                    mapDeliveryIdCsv.put(delivery.getDeliveryId(), csv);
-                    deliveryIterable.add(delivery);
-                }
-            } else {
-                mapError.put(500, "発注データが存在しない。");
-            }
-        });
-
-        List<Package> mapPackage = packageRepository.findByTenantId(tenantId);
-
-        mapDeliveryIdCsv.forEach((deliveryId, csv) -> {
-            String trayAmount = ((CsvDelivery) csv).getTray();
-            String trayCase = ((CsvDelivery) csv).getCaseP();
-            String trayBox = ((CsvDelivery) csv).getBox();
-
-            mapPackage.forEach(aPackage -> {
-                String packageName = aPackage.getName();
-                String packageId = aPackage.getPackageId();
-
-                DeliveryDetail deliveryDetailDb = deliveryDetailRepository.checkExistByDeliveryId(deliveryId, packageId, tenantId);
-                if (deliveryDetailDb == null) {
-                    BigDecimal amount = getAmountPackage(trayAmount, trayCase, trayBox, packageName);
-
-                    if (amount.compareTo(BigDecimal.ZERO) > 0) {
-                        DeliveryDetail deliveryDetail = new DeliveryDetail();
-                        deliveryDetail.setDeliveryId(deliveryId);
-                        deliveryDetail.setTenantId(tenantId);
-                        deliveryDetail.setPackageId(packageId);
-                        deliveryDetail.setAmount(amount);
-                        deliveryDetail.setCreateDate(new Date());
-                        deliveryDetail.setCreateUser(userId);
-                        deliveryDetailIterable.add(deliveryDetail);
-                    }
-                } else {
-                    if (typeUploadFile.equals(Constants.UPDATE_DATA)) {
-                        BigDecimal amount = getAmountPackage(trayAmount, trayCase, trayBox, packageName);
-                        deliveryDetailDb.setAmount(amount);
-                        deliveryDetailIterable.add(deliveryDetailDb);
-                    }
-                }
-            });
-        });
-    }
-
-    private BigDecimal getAmountPackage(String trayAmount, String trayCase, String trayBox, String packageName) {
-        BigDecimal amount = new BigDecimal(0);
-        if (packageName.equals("ばんじゅう")) {
-            amount = new BigDecimal(trayAmount);
-        } else if (packageName.equals("箱")) {
-            amount = new BigDecimal(trayBox);
-        } else if (packageName.equals("ケース"))
-            amount = new BigDecimal(trayCase);
-
-        return amount;
-    }
 
     private void setMapStorePostCourse(int tenantId, Object csvData, String post, String skey, String storeId, String userId) {
         String postCourseId = postCourseRepository.findByStoreIdAndPost(storeId, post);
@@ -517,15 +320,9 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     private String getPostCourseId(int tenantId, String storeId, String post, String postCourseId, String userId) {
-        PostCourse postCourse = new PostCourse();
-        postCourse.setPost(post);
-        postCourse.setStoreId(storeId);
-        postCourse.setTenantId(tenantId);
-        postCourse.setCreateDate(new Date());
-        postCourse.setCreateUser(userId);
-        postCourseId = postCourse.getPostCourseId();
+        PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
         postCoursesIterable.add(postCourse);
-        return postCourseId;
+        return postCourse.getPostCourseId();
     }
 
     private void setMapData(int tenantId, String userId, String typeUploadFile) throws StorageException {
@@ -690,7 +487,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         orderDetailIterable.add(orderDetail);
     }
 
-    @Transactional
+
     void saveDataMaster() throws DomainException {
         //save all storeCode
         if (!storeIterable.isEmpty())
@@ -700,17 +497,11 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             postCourseRepository.saveAll(postCoursesIterable);
     }
 
-    void saveDataDelivery() throws DomainException {
-        //Save delivery
-        if (!deliveryIterable.isEmpty())
-            deliveryRepository.saveAll(deliveryIterable);
-        //save delivery detail
-        if (!deliveryDetailIterable.isEmpty())
-            deliveryDetailRepository.saveAll(deliveryDetailIterable);
-    }
 
     @Transactional
     void saveDataOrder() throws DomainException {
+        if (!storeIterable.isEmpty() || !postCoursesIterable.isEmpty())
+            saveDataMaster();
         //Save all productCode
         if (!productIterable.isEmpty())
             productRepository.saveAll(productIterable);

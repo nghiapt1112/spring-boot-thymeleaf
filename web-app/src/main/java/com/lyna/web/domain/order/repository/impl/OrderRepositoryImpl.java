@@ -4,6 +4,7 @@ import com.lyna.commons.infrustructure.object.RequestPage;
 import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DateTimeUtils;
 import com.lyna.web.domain.order.Order;
+import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.OrderView;
 import com.lyna.web.domain.order.repository.OrderRepository;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
@@ -171,8 +172,9 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         return tQuery.getResultList();
     }
 
+
     @Override
-    public String checkExists(String postCourseId, String orderDate, int tenantId) throws StorageException {
+    public String getByPostCourseIdOrderDateTenantId(String postCourseId, String orderDate, int tenantId) throws StorageException {
         try {
             Date date = DateTimeUtils.converStringToDate(orderDate);
             if (date != null) {
@@ -185,6 +187,30 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
                         .getResultList();
                 if (list != null && list.size() > 0)
                     return (String) list.get(0);
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new StorageException(Constants.PARSE_CSV_FAILED);
+        }
+        return null;
+    }
+
+    @Override
+    public List<OrderDetail> getMapByPostCourseIdOrderDateTenantId(String postCourseId, String orderDate, int tenantId) throws StorageException {
+        try {
+            Date date = DateTimeUtils.converStringToDate(orderDate);
+            if (date != null) {
+                String query = "SELECT d FROM Order a JOIN OrderDetail d on a.orderId = d.orderId " +
+                        "WHERE a.postCourseId = :postCourseId and a.orderDate = :orderDate and a.tenantId = :tenantId";
+                List<OrderDetail> list = entityManager.createQuery(query, OrderDetail.class)
+                        .setParameter(Constants.POST_COURSE_ID, postCourseId)
+                        .setParameter("orderDate", date)
+                        .setParameter("tenantId", tenantId)
+                        .getResultList();
+                if (list != null && list.size() > 0) {
+                    return list;
+                }
+
             }
         } catch (Exception ex) {
             log.error(ex.getMessage());
