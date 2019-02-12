@@ -1,7 +1,6 @@
 var item = [0, 1, 2, 3, 4, 5, 6, 7];
 $('.columnSum').each(function (index) {
     item.push(index + 8);
-    console.log(item);
 });
 
 function exportDataMainmenu(tableId, sortDefaultColumn, fileName, item) {
