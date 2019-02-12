@@ -122,14 +122,14 @@ function searchMainMenu() {
     window.location.replace(logisticAPI)
 }
 
-exportDataToExcel();
+exportDataMainmenu();
 
 function onLogistics() {
-    exportDataToExcel('#table-logicstic',1, '物量', 0,1,2,3,4,5,6,7);
+    exportDataMainmenu('#table-logicstic',0, '物量');
 }
 
 function onOrderDetails(){
-    exportDataToExcel('#table-order',1, '発注データ明細', 0,1, 2,3,4,5,6,7);
+    exportDataMainmenu('#table-order',0, '発注データ明細');
 }
 
 
