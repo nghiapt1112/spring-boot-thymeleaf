@@ -16,3 +16,4 @@ bin/
 web-app/logs/spring-boot-logging.log
 *.tmp
 web-app/upload-dir/
+upload-dir/
