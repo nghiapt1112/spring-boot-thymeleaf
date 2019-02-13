@@ -67,7 +67,7 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file")
-    @IsAdmin
+   //@IsAdmin
     public String handleFile(Model model, @RequestParam("file") MultipartFile file, @RequestParam("typeUploadFile") String typeUploadFile) {
         Map<String, Integer> headerMap = storageService.getMapHeader(file);
         List<CSVRecord> mapData = storageService.getMapData(file);
@@ -85,7 +85,7 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file/order")
-    @IsAdmin
+    //@IsAdmin
     public ResponseEntity<Object> handleFileUpload(Model model, @RequestParam("fileName") String fileName,
                                                    @RequestParam("selectedHeader") List<String> headerOrders,
                                                    @RequestParam("typeUploadFile") String typeUploadFile,
@@ -101,7 +101,7 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file/delivery")
-    @IsAdmin
+    //@IsAdmin
     public ResponseEntity<Object> handleFileUploadDelivery(Model model, @RequestParam("file") MultipartFile file,
                                                            @RequestParam("typeUploadFile") String typeUploadFile,
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
