@@ -59,7 +59,6 @@ function exportDataMainmenu(tableId, sortDefaultColumn, fileName, item) {
         'info': true,
         'autoWidth': true,
         'order': [sortDefaultColumn, 'desc'],
-        "columnDefs": [{'orderable': false, 'targets': [0]}],
         "language": {
             "lengthMenu": "  _MENU_ 件を表示",
             "zeroRecords": "該当データが存在しません。",
