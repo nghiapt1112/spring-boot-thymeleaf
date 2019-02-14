@@ -14,6 +14,7 @@ import com.lyna.web.domain.user.repository.impl.UserStoreAuthorityRepositoryImpl
 import com.lyna.web.domain.user.service.UserService;
 import com.lyna.web.domain.user.service.UserStoreAuthorityService;
 import com.lyna.web.domain.view.UserList;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,13 +66,15 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         try {
             User createdUser = this.createUser(user.withDefaultFields(currentUser));
-            userStoreAuthorityService.assignUserToStore(
-                    aggregate.toUserStoreAuthorities()
-                            .peek(el -> {
-                                el.setUserId(createdUser.getId());
-                                el.initDefaultCreateFields(currentUser);
-                            })
-                            .collect(Collectors.toList()));
+            if(!aggregate.isRolePerStoreValid()){
+                userStoreAuthorityService.assignUserToStore(
+                        aggregate.toUserStoreAuthorities()
+                                .peek(el -> {
+                                    el.setUserId(createdUser.getId());
+                                    el.initDefaultCreateFields(currentUser);
+                                })
+                                .collect(Collectors.toList()));
+            }
             return createdUser;
         } catch (RuntimeException e) {
             throw new DomainException(toInteger("err.general.createFailed.code"), toStr("err.general.createFailed.msg"));
@@ -140,32 +143,36 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         try {
             this.userRepository.save(oldUser);
-            List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
-            Map<String, Short> authorityById = newUserStoreAuthority.stream()
-                    .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
+            if(aggregate.isRolePerStoreValid()){
+                return;
+            }
+                List<UserStoreAuthority> newUserStoreAuthority = aggregate.toUserStoreAuthorities().collect(Collectors.toList());
+                Map<String, Short> authorityById = newUserStoreAuthority.stream()
+                        .collect(Collectors.toMap(UserStoreAuthority::getId, o -> o.getAuthority(), (v1, v2) -> v1));
 
-            this.userStoreAuthorityService.assignUserToStore(
-                    oldUser.getStoreAuthoritiesAsStream()
-                            .filter(el -> authorityById.containsKey(el.getId()))
-                            .peek(el -> {
-                                el.setAuthority(authorityById.get(el.getId()));
-                                el.initDefaultUpdateFields(currentUser);
-                            })
-                            .collect(Collectors.toList())
-            );
-            Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
+                this.userStoreAuthorityService.assignUserToStore(
+                        oldUser.getStoreAuthoritiesAsStream()
+                                .filter(el -> authorityById.containsKey(el.getId()))
+                                .peek(el -> {
+                                    el.setAuthority(authorityById.get(el.getId()));
+                                    el.initDefaultUpdateFields(currentUser);
+                                })
+                                .collect(Collectors.toList())
+                );
+                Set<String> oldAuthorities = oldUser.getStoreAuthoritiesAsStream().map(UserStoreAuthority::getId).collect(Collectors.toSet());
 
 
-            this.userStoreAuthorityService.assignUserToStore(
-                    newUserStoreAuthority.stream()
-                            .filter(el -> !oldAuthorities.contains(el.getId()))
-                            .peek(el -> {
-                                el.setUserId(aggregate.getUserId());
-                                el.setTenantId(currentUser.getTenantId());
-                                el.initDefaultCreateFields(currentUser);
-                            })
-                            .collect(Collectors.toList())
-            );
+                this.userStoreAuthorityService.assignUserToStore(
+                        newUserStoreAuthority.stream()
+                                .filter(el -> !oldAuthorities.contains(el.getId()))
+                                .peek(el -> {
+                                    el.setUserId(aggregate.getUserId());
+                                    el.setTenantId(currentUser.getTenantId());
+                                    el.initDefaultCreateFields(currentUser);
+                                })
+                                .collect(Collectors.toList())
+                );
+
         } catch (RuntimeException e) {
             throw new DomainException(toInteger("err.general.updateFailed.code"), toStr("err.general.updateFailed.msg"));
         }

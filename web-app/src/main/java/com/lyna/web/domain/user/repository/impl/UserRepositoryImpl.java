@@ -31,7 +31,7 @@ public class UserRepositoryImpl extends BaseRepository<User, String> implements 
 
     @Override
     public User findByUserIdAndTenantId(int tenantId, String userId) {
-        String query = "SELECT u FROM User u inner join fetch u.userStoreAuthorities inner join fetch u.stores WHERE u.tenantId = :tenantId AND u.id = :id";
+        String query = "SELECT u FROM User u left join fetch u.userStoreAuthorities left join fetch u.stores WHERE u.tenantId = :tenantId AND u.id = :id";
         List<User> users = entityManager.createQuery(query, User.class)
                 .setParameter("tenantId", tenantId)
                 .setParameter("id", userId)
