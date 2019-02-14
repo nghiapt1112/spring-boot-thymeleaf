@@ -5,6 +5,7 @@ import com.lyna.web.domain.stores.Store;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -94,6 +95,10 @@ public class UserAggregate extends AbstractObject {
     public String getName() {
         return this.userName;
     }
+
+    public boolean isRolePerStoreValid(){
+        return CollectionUtils.isEmpty(this.rolePerStore);
+    }
 }
 
 
@@ -131,7 +136,7 @@ class UserStoreRole extends AbstractObject {
 
     public UserStoreAuthority toUserStoreAuthority() {
         UserStoreAuthority userStoreAuthority = new UserStoreAuthority();
-        if (Objects.nonNull(this.id)) {
+        if (!StringUtils.isEmpty(this.id)) {
             userStoreAuthority.setId(this.id);
         }
         userStoreAuthority.setStoreId(this.storeId);
