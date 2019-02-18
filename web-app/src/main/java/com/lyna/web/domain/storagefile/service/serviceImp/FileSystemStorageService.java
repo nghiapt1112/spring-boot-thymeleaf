@@ -1,7 +1,6 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.AI.AIService;
 import com.lyna.web.domain.order.Order;
@@ -49,28 +48,20 @@ import static com.lyna.commons.utils.DataUtils.isNumeric;
 import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 
 @Service
-public class FileSystemStorageService extends BaseService implements StorageService {
+public class FileSystemStorageService extends BaseStorageService implements StorageService {
 
     private final Path rootLocation;
-    Map<String, String> setStoreCodePost;
+    private Map<String, String> setStoreCodePost;
     private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     private List<String> listStoreCode;
     private List<String> listProductCode;
     private List<String> ListPost;
     private Map<String, CsvOrder> mapProductCodeCsv;
     private Map<String, CsvOrder> mapKeyCsv;
-
     private Map<String, Object> mapStoreCodeCsv;
-    private Map<Object, String> mapCsvPostCourseId;
-
     private Map<String, CsvOrder> mapProductIdCsvOrder;
-    private Map<Integer, String> mapError;
-
     private Set<Product> productIterable;
     private Set<Store> storeIterable;
-    private Set<PostCourse> postCoursesIterable;
-
-
     private Set<Order> orderIterable;
     private Set<OrderDetail> orderDetailIterable;
     private List<String> orderIds;
@@ -86,7 +77,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     @Autowired
     private PostCourseRepository postCourseRepository;
 
-
     @Autowired
     private FileRepository fileRepository;
 
@@ -100,7 +90,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
 
     @Override
     public String store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String filename = StringUtils.cleanPath(file.getOriginalFilename()) + "_" + System.currentTimeMillis();
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
@@ -122,36 +112,37 @@ public class FileSystemStorageService extends BaseService implements StorageServ
     }
 
     @Override
-    public Map<Integer, String> store(User user, String fileName, InputStream inputStream, String typeUploadFile, Map<Integer, String> mapHeader) {
+    public Map<Integer, String> checkDataAndCreateOrderWithGetDataAI(User user, String fileName, InputStream inputStream, String typeUploadFile, Map<Integer, String> mapHeader) {
         try {
             int tenantId = user.getTenantId();
             String userId = user.getId();
             initDataOrder();
+            innitDataGeneral();
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
             processUpload(orderIterator);
-            int status = 0;
+            int status;
 
-            if (mapError.isEmpty()) {
+            if (getMapError().isEmpty()) {
+
                 setMapData(tenantId, userId, typeUploadFile);
                 setDataOrder(tenantId, userId, typeUploadFile);
 
-                if (!productIterable.isEmpty() || !orderIterable.isEmpty() || !orderDetailIterable.isEmpty())
-                    saveDataOrder();
+                if (getMapError().size() == 0) {
+                    if (!productIterable.isEmpty() || !orderIterable.isEmpty() || !orderDetailIterable.isEmpty())
+                        saveDataOrder();
 
-                if (mapError.size() == 0) {
                     status = aiService.calculateLogisticsWithAI(user, orderIds);
 
                     if (status == Constants.AI_STATUS.EMPTY || status == Constants.AI_STATUS.ERROR)
-                        mapError.put(500, "解析に失敗しました。");
+                        getMapError().put(500, "解析に失敗しました。");
                 }
             }
         } catch (Exception ex) {
-            mapError.put(500, "Error :" + ex.getCause() + ", " + ex.getMessage() + ", " + ex.getStackTrace());
+            getMapError().put(501, "CSVファイルを読み取れない。");
         }
-        return mapError;
+        return getMapError();
     }
-
 
     @Override
     public Stream<Path> loadAll() {
@@ -207,7 +198,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             Map<String, Integer> headerOrder = orderService.getHeaderOrder(reader);
             return headerOrder;
         } catch (Exception ex) {
-            mapError.put(toInteger("err.csv.saveFileFailed.code"), toStr("err.csv.saveFileFailed.msg"));
+            setMapError(toInteger("err.csv.saveFileFailed.code"), toStr("err.csv.saveFileFailed.msg"));
         }
         return null;
     }
@@ -220,7 +211,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
             recordList = orderService.getDataOrder(reader);
             return recordList;
         } catch (Exception ex) {
-            mapError.put(500, toStr(READ_FILE_FAILED));
+            setMapError(502, toStr(READ_FILE_FAILED));
         }
         return recordList;
     }
@@ -249,9 +240,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         ListPost = new ArrayList<>();
         mapStoreCodeCsv = new HashMap<>();
         storeIterable = new HashSet<>();
-        postCoursesIterable = new HashSet<>();
-        mapCsvPostCourseId = new HashMap<>();
-        mapError = new HashMap<>();
         setStoreCodePost = new HashMap<>();
         orderIds = new ArrayList<>();
         listProductCode = new ArrayList<>();
@@ -262,7 +250,6 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         orderDetailIterable = new HashSet<>();
         mapProductIdCsvOrder = new HashMap<>();
     }
-
 
     private String getByProductIdForKey(String dataSplit) {
         String[] sProductIdOrderDate = dataSplit.split("#");
@@ -288,7 +275,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     || csvOrder.getProductCode().isEmpty()
                     || !isNumeric(csvOrder.getQuantity())
             ) {
-                mapError.put(500, "行目 " + row + " にデータが不正");
+                setMapError(401, "行目 " + row + " にデータが不正");
             }
 
             row++;
@@ -310,18 +297,17 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         }
     }
 
-
     private void setMapStorePostCourse(int tenantId, Object csvData, String post, String skey, String storeId, String userId) {
         String postCourseId = postCourseRepository.findByStoreIdAndPost(storeId, post);
         if (postCourseId == null)
             postCourseId = getPostCourseId(tenantId, storeId, post, postCourseId, userId);
         setStoreCodePost.put(skey, postCourseId);
-        mapCsvPostCourseId.put(csvData, postCourseId);
+        putMapCsvPostCourse(csvData, postCourseId);
     }
 
     private String getPostCourseId(int tenantId, String storeId, String post, String postCourseId, String userId) {
         PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
-        postCoursesIterable.add(postCourse);
+        putPostCoursesIterable(postCourse);
         return postCourse.getPostCourseId();
     }
 
@@ -375,7 +361,7 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                     String storeId = mapStoreCodeStoreId.get(storeCode);
                     setMapStorePostCourse(tenantId, csvOrder, post, keyStoreCodePost, storeId, userId);
                 } else {
-                    mapCsvPostCourseId.put(csvOrder, setStoreCodePost.get(keyStoreCodePost));
+                    putMapCsvPostCourse(csvOrder, setStoreCodePost.get(keyStoreCodePost));
                 }
             });
 
@@ -420,16 +406,16 @@ public class FileSystemStorageService extends BaseService implements StorageServ
                 mapProductIdCsvOrder.put(productId + "#" + csvOrder.getOrderDate() + "#" + csvOrder.getStoreCode().trim().toLowerCase() + "#" + csvOrder.getPost().trim().toLowerCase(), csvOrder);
             });
         } catch (Exception ex) {
-            mapError.put(500, toStr("err.csv.saveFileFailed.msg"));
+            setMapError(503, toStr("err.csv.saveFileFailed.msg"));
         }
     }
 
     private void setDataOrder(int tenantId, String userId, String typeUploadFile) {
-        if (mapError.size() == 0) {
+        if (getSizeMapError() == 0) {
             Map<String, String> mapKeyOrderId = new HashMap<>();
 
             mapProductIdCsvOrder.forEach((sProductIdOrderDate, csvOrder) -> {
-                String postCourseId = mapCsvPostCourseId.get(csvOrder);
+                String postCourseId = getMapCsvPostCourse(csvOrder);
                 String productId = getByProductIdForKey(sProductIdOrderDate);
                 String key = postCourseId + "#" + csvOrder.getOrderDate().trim();
                 String orderId = orderService.getOrderIdByPostCourseIdAndTenantId(postCourseId, csvOrder.getOrderDate().trim(), tenantId);
@@ -487,20 +473,18 @@ public class FileSystemStorageService extends BaseService implements StorageServ
         orderDetailIterable.add(orderDetail);
     }
 
-
     void saveDataMaster() throws DomainException {
         //save all storeCode
         if (!storeIterable.isEmpty())
             storeRepository.saveAll(storeIterable);
         //save all postcourse
-        if (!postCoursesIterable.isEmpty())
-            postCourseRepository.saveAll(postCoursesIterable);
+        if (!checkExistsPostCoursesIterable())
+            postCourseRepository.saveAll(getPostCoursesIterable());
     }
-
 
     @Transactional
     void saveDataOrder() throws DomainException {
-        if (!storeIterable.isEmpty() || !postCoursesIterable.isEmpty())
+        if (!storeIterable.isEmpty() || !checkExistsPostCoursesIterable())
             saveDataMaster();
         //Save all productCode
         if (!productIterable.isEmpty())

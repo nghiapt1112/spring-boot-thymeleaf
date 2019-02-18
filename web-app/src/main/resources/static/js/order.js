@@ -26,12 +26,10 @@ $(function () {
 
     });
 
-    $('button[type=submit]').click(function (e) {
+    $('#submitFile').click(function (e) {
         var form = document.forms[0];
         var formData = new FormData(form);
         var url = "/upload/file/order";
-        //Disable submit button
-        $(this).prop('disabled', true);
         // Ajax call for file uploaling
         var ajaxReq = $.ajax({
             url: url,
@@ -60,20 +58,41 @@ $(function () {
             }
         });
 
+
         // Called on success of file upload
         ajaxReq.done(function (msg) {
             $('input[type=file]').val('');
-            $('button[type=submit]').prop('disabled', false);
+            $(this).prop('disabled', true);
             var logisticAPI = '/mainScreen';
             window.location.replace(logisticAPI)
         });
 
         // Called on failure of file upload
-        ajaxReq.fail(function (jqXHR) {
-            $('#alertMsg').text(jqXHR.responseText.replace
-            ('[', '').replace(']', '').replace('"', '').replace('"', ""));
-            $('button[type=submit]').prop('disabled', false);
-        });
 
+
+        ajaxReq.fail(function (jqXHR) {
+            var messageError = jqXHR.responseText;
+            $("#messagePopup").trigger("click");
+            $("#messageErrors").empty();
+            messageError = messageError.substring(1, messageError.length - 1);
+            if (messageError.includes(",")) {
+                var messageErrorArray = messageError.split(",");
+                for (var i = 0; i < messageErrorArray.length; i++) {
+                    var indexCodeBegin = messageErrorArray[i].indexOf('"');
+                    var indexCodeEnd = messageErrorArray[i].indexOf('"', indexCodeBegin + 1);
+                    var errorCode = messageErrorArray[i].substring(indexCodeBegin + 1, indexCodeEnd);
+                    var indexContentBegin = messageErrorArray[i].indexOf('"', indexCodeEnd + 1);
+                    var indexContentEnd = messageErrorArray[i].indexOf('"', indexContentBegin + 2);
+                    var errorContent = messageErrorArray[i].substring(indexContentBegin + 1, indexContentEnd);
+                    $("#messageErrors").append('<tr><td>' + errorCode + '</td><td>' + errorContent + '</td></tr>')
+                }
+            }
+        });
+    });
+
+    $('.select2').on('click', function () {
+        $(this).closest("body").find(".select2-results").find("ul").children().eq(0).css({
+            "padding-bottom": "21%"
+        });
     });
 });
