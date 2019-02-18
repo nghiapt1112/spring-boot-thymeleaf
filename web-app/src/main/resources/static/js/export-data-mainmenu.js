@@ -18,32 +18,41 @@ function exportDataMainmenu(tableId, sortDefaultColumn, fileName, item) {
             }
         ],
         "footerCallback": function (row, data, start, end, display) {
-            if (tableId === "#table-logicstic") {
+            if (tableId === "#table-logistics") {
+                var arrayDisplay = [];
+                for(i = 0; i < display.length; i++){
+                    if(end <= i){
+                        break;
+                    }
+                    for(j = 0; j < data.length; j++){
+                        if(display[i] === j){
+                            arrayDisplay.push(data[j]);
+                        }
+                    }
+                }
                 var api = this.api();
                 var columns = document.querySelectorAll(".columnSum");
                 for (i = 0; i < columns.length; i++) {
+                    var sumColumn = 0;
                     var colNo = i + 3;
-                    var pageTotal = api
-                        .column(colNo, {page: 'current'})
-                        .data()
-                        .reduce(function (a, b) {
-                            return Number(a) + Number(b);
-                        }, 0).toFixed(2);
-                    var index = pageTotal.indexOf(".");
-
-                    if ('0' != (pageTotal.substring(index + 2))) {
+                    for(j = 0; j < arrayDisplay.length; j++){
+                        sumColumn = parseFloat(sumColumn) + parseFloat((arrayDisplay[j])[colNo]);
+                    }
+                    sumColumn = sumColumn.toFixed(2);
+                    var index = sumColumn.toString().indexOf(".");
+                    if ('0' != (sumColumn.toString().substring(index + 2))) {
                         $(api.column(colNo).footer()).html(
-                            pageTotal
+                            sumColumn
                         );
                     } else {
                         var resultNumber;
-                        if ('0' != (pageTotal.substring(index + 1, index + 2))) {
-                            resultNumber = pageTotal.substring(0, pageTotal.length - 1);
+                        if ('0' != (sumColumn.toString().substring(index + 1, index + 2))) {
+                            resultNumber = sumColumn.toString().substring(0, sumColumn.length - 1);
                             $(api.column(colNo).footer()).html(
                                 resultNumber
                             );
                         } else {
-                            resultNumber = pageTotal.substring(0, pageTotal.length - 3);
+                            resultNumber = sumColumn.toString().substring(0, sumColumn.length - 3);
                             $(api.column(colNo).footer()).html(
                                 resultNumber
                             );

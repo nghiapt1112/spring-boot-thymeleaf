@@ -125,7 +125,7 @@ function searchMainMenu() {
 exportDataMainmenu();
 
 function onLogistics() {
-    exportDataMainmenu('#table-logicstic',0, '物量');
+    exportDataMainmenu('#table-logistics',0, '物量');
 }
 
 function onOrderDetails(){
