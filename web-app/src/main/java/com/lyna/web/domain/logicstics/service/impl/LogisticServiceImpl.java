@@ -12,7 +12,10 @@ import com.lyna.web.domain.view.PackageName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +34,6 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
     public Map<String, Object> findLogisticsView(int tenantId, RequestPage logisticRequestPage) {
         List<LogisticView> logisticView = this.logisticViewRepository.findLogistics(tenantId, logisticRequestPage);
         List<DeliveryView> deliveryView = this.logisticViewRepository.findDeliveries(tenantId, logisticRequestPage);
-
         Set<PackageName> pkgName = new HashSet<>();
         logisticView.stream().filter(el -> el.isPackageNameNonNull()).distinct().parallel()
                 .forEach(el -> pkgName.add(new PackageName(el.getPackageName(), el.getPackageAmount())));
@@ -61,7 +63,10 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
         HashMap<String, Object> val = new HashMap<>();
         val.put(LOGISTIC_DATA, aggregates);
-        val.put(PKG_TYPE, new ArrayList<>(pkgName));
+        List<PackageName> orderByPkgName = pkgName.stream()
+                .sorted(Comparator.comparing(PackageName::getName))
+                .collect(Collectors.toList());
+        val.put(PKG_TYPE, orderByPkgName);
         return val;
     }
 

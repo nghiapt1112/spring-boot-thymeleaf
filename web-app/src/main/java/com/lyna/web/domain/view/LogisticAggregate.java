@@ -106,7 +106,7 @@ public class LogisticAggregate extends AbstractObject implements Comparable<Logi
                 aggregate.packageWithNames.add(new PackageName(pkgName.getName(), pkgName.getAmount()));
             }
         }
-        aggregate.packageWithNames.stream().sorted(Comparator.comparing(PackageName::getName));
+        aggregate.packageWithNames.sort(Comparator.comparing(PackageName::getName));
     }
 
     /**
