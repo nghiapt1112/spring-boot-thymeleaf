@@ -41,7 +41,6 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
         List<CSVRecord> dataOrder = getDataOrder(targetReader);
         List<CsvOrder> csvOrders = new ArrayList<>();
 
-        int[] dx = {0};
         dataOrder.forEach(csvRecord -> {
             CsvOrder csvOrder = new CsvOrder();
 
@@ -77,7 +76,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
 
     @Override
     public Map<String, Integer> getHeaderOrder(Reader reader) {
-        CSVParser csvParser = null;
+        CSVParser csvParser;
         try {
             csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader().withIgnoreHeaderCase().withTrim());
         } catch (IOException ex) {

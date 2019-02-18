@@ -10,10 +10,6 @@
             width: 10%;
             word-wrap: break-word;
         }
-
-        .select2-container--default {
-            width: 100% ! important;
-        }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -45,6 +41,7 @@
                                                     <span th:text="${item}"></span><br>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span><br>
                                                     <select class="js-example-basic-single" name="selectedHeader">
+                                                        <option></option>
                                                         <option th:each="item1, iStat2 : ${headerOrder}"
                                                                 th:selected="${iStat1.index==iStat2.index}"
                                                                 th:text="${item1.value}"
@@ -83,16 +80,41 @@
                                  style="width: 0%">0%
                             </div>
                         </div>
-                        <div id="alertMsg" style="color: red;font-size: 18px;"></div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="col-md-2 button-top-order">
                             <a class="btn btn-primary" id="backButton" style="border-radius: 0px;"
                                th:href="@{'/mainMenu'}" type="button">戻る</a>
                         </div>
                         <div class="col-md-2">
-                            <button class="btn btn-primary" id="submitFile" type="submit">次へ</button>
+                            <button class="btn btn-primary" id="submitFile" type="button">次へ</button>
+                            <!-- Modal -->
+                            <button style="display: none" class="btn btn-primary" id="messagePopup" type="button" data-toggle="modal" data-target="#exampleModalLong">次へ</button>
+                            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="border: none">
+                                            <h5 class="modal-title">エラーメッセージ</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="color: black;">
+                                            <table class="table table-bordered table-hover">
+                                                <thead style="background: #3c8dbc">
+                                                    <th> エラーコード</th>
+                                                    <th>内容</th>
+                                                </thead>
+                                                <tbody id = "messageErrors">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer" style="border-top-color:white;">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉める</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-2">
 
@@ -107,6 +129,7 @@
 </div>
 <footer th:replace="layout :: footer"></footer>
 <script th:src="@{/js/select2.min.js}"></script>
+<script th:src="@{/js/utils/string-utils.js}"></script>
 <script th:src="@{/js/order.js}"></script>
 </body>
 </html>

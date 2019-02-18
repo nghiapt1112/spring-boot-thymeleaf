@@ -1,7 +1,6 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.exception.DomainException;
-import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.delivery.Delivery;
 import com.lyna.web.domain.delivery.DeliveryDetail;
@@ -11,7 +10,6 @@ import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderRepository;
-import com.lyna.web.domain.order.service.OrderService;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
@@ -37,32 +35,30 @@ import java.util.stream.Collectors;
 import static com.lyna.commons.utils.DataUtils.isNumeric;
 
 @Service
-public class FileDeliveryStorageService extends BaseService implements StorageDeliveryService {
+public class FileDeliveryStorageService extends BaseStorageService implements StorageDeliveryService {
 
-    @Autowired
-    private DeliveryRepository deliveryRepository;
     private Map<String, Object> mapStoreCodeCsv;
     private Map<String, Object> mapKeyDelivery;
     private Map<String, Object> mapDeliveryIdCsv;
-    private Map<Object, String> mapCsvPostCourseId;
+
     private List<String> listStoreCode;
     private List<String> ListPost;
     private Set<Store> storeIterable;
-    private Set<PostCourse> postCoursesIterable;
+
     private Set<Delivery> deliveryIterable;
     private Set<DeliveryDetail> deliveryDetailIterable;
     private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
-    private Map<Integer, String> mapError;
+
     private Map<String, Map<String, BigDecimal>> mapOrderIdProductIdAmount;
     private Map<String, Map<String, BigDecimal>> mapOrderPackageIdAmount;
     private Map<String, String> setStoreCodePost;
 
     @Autowired
+    private DeliveryRepository deliveryRepository;
+    @Autowired
     private StoreRepository storeRepository;
     @Autowired
     private PackageRepository packageRepository;
-    @Autowired
-    private OrderService orderService;
     @Autowired
     private DeliveryDetailRepository deliveryDetailRepository;
     @Autowired
@@ -72,28 +68,28 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
     @Autowired
     private TrainingService trainingService;
 
-
     @Override
     public Map<Integer, String> store(User user, MultipartFile file, String typeUploadFile) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         int tenantId = user.getTenantId();
         String userId = user.getId();
         if (file.isEmpty()) {
-            mapError.put(500, toStr("err.csv.fileEmpty.msg") + filename);
+            setMapError(500, toStr("err.csv.fileEmpty.msg") + filename);
         }
 
         if (filename.contains("..")) {
-            mapError.put(500, toStr("err.csv.seeOtherPath.msg"));
+            setMapError(500, toStr("err.csv.seeOtherPath.msg"));
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
             initDataDelivery();
+            innitDataGeneral();
             Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
             processUploadDelivery(deliveryIterator);
-            if (mapError.size() == 0) {
+            if (getSizeMapError() == 0) {
                 setMapDataDelivery(tenantId, userId, typeUploadFile);
-                if (!storeIterable.isEmpty() || !postCoursesIterable.isEmpty() || !deliveryIterable.isEmpty() || !deliveryDetailIterable.isEmpty()) {
+                if (!storeIterable.isEmpty() || !checkExistsPostCoursesIterable() || !deliveryIterable.isEmpty() || !deliveryDetailIterable.isEmpty()) {
                     saveDataDelivery();
                 }
 
@@ -101,9 +97,9 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
                     trainingService.saveMap(mapOrderIdProductIdAmount, mapOrderPackageIdAmount, tenantId, userId);
             }
         } catch (Exception ex) {
-            mapError.put(500, toStr(READ_FILE_FAILED));
+            setMapError(500, toStr(READ_FILE_FAILED));
         }
-        return mapError;
+        return getMapError();
     }
 
     private void processUploadDelivery(Iterator<CsvDelivery> deliveryIterator) {
@@ -124,7 +120,7 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
                     || !isNumeric(csvDelivery.getCaseP())
                     || csvDelivery.getTray() == null
                     || !isNumeric(csvDelivery.getTray())) {
-                mapError.put(500, "行目 " + row + " にデータが不正");
+                setMapError(500, "行目 " + row + " にデータが不正");
             }
             row++;
             String keyOrder = csvDelivery.getStoreCode() + "#" + csvDelivery.getPost() + "#" + csvDelivery.getOrderDate();
@@ -139,22 +135,17 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
         }
     }
 
-    //ToDo: Can xem lai duplicate
     void initDataDelivery() {
-        listStoreCode = new ArrayList<>();
-        ListPost = new ArrayList<>();
-        mapStoreCodeCsv = new HashMap<>();
-        storeIterable = new HashSet<>();
-        postCoursesIterable = new HashSet<>();
-        mapCsvPostCourseId = new HashMap<>();
-        mapError = new HashMap<>();
         setStoreCodePost = new HashMap<>();
         mapKeyDelivery = new HashMap<>();
         mapDeliveryIdCsv = new HashMap<>();
         deliveryIterable = new HashSet<>();
         deliveryDetailIterable = new HashSet<>();
+        listStoreCode = new ArrayList<>();
+        ListPost = new ArrayList<>();
+        mapStoreCodeCsv = new HashMap<>();
+        storeIterable = new HashSet<>();
     }
-
 
     private void setMapDataDelivery(int tenantId, String userId, String typeUploadFile) throws StorageException {
         List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
@@ -197,11 +188,11 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
                 String storeId = mapStoreCodeStoreId.get(storeCode.trim());
                 setMapStorePostCourse(tenantId, csvDelivery, post, keyStoreCodePost, storeId, userId);
             } else {
-                mapCsvPostCourseId.put(csvDelivery, setStoreCodePost.get(keyStoreCodePost));
+                putMapCsvPostCourse(csvDelivery, setStoreCodePost.get(keyStoreCodePost));
             }
         });
 
-        mapCsvPostCourseId.forEach((csv, postCourseId) -> {
+        getMapCsvPostCourseId().forEach((csv, postCourseId) -> {
             List<OrderDetail> orderDetails = orderRepository.getMapByPostCourseIdOrderDateTenantId(postCourseId, ((CsvDelivery) csv).getOrderDate(), tenantId);
             if (orderDetails != null && orderDetails.size() > 0) {
                 Map<String, BigDecimal> mapProductAmount = orderDetails.stream().parallel().collect(Collectors.toMap(p -> p.productId, p -> p.getAmount()));
@@ -225,7 +216,7 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
         });
 
         if (mapOrderIdProductIdAmount == null || mapOrderIdProductIdAmount.size() == 0) {
-            mapError.put(500, "発注データが存在しない。");
+            setMapError(500, "発注データが存在しない。");
         }
 
         List<Package> mapPackage = packageRepository.findByTenantId(tenantId);
@@ -274,12 +265,12 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
         if (postCourseId == null)
             postCourseId = getPostCourseId(tenantId, storeId, post, userId);
         setStoreCodePost.put(skey, postCourseId);
-        mapCsvPostCourseId.put(csvData, postCourseId);
+        putMapCsvPostCourse(csvData, postCourseId);
     }
 
     private String getPostCourseId(int tenantId, String storeId, String post, String userId) {
         PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
-        postCoursesIterable.add(postCourse);
+        putPostCoursesIterable(postCourse);
         return postCourse.getPostCourseId();
     }
 
@@ -295,6 +286,13 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
         return amount;
     }
 
+    void saveDataMaster() throws DomainException {
+        //save all storeCode
+        storeRepository.saveAll(storeIterable);
+        //save all postcourse
+        postCourseRepository.saveAll(getPostCoursesIterable());
+    }
+
     @Transactional
     void saveDataDelivery() throws DomainException {
         saveDataMaster();
@@ -302,12 +300,5 @@ public class FileDeliveryStorageService extends BaseService implements StorageDe
         deliveryRepository.saveAll(deliveryIterable);
         //save delivery detail
         deliveryDetailRepository.saveAll(deliveryDetailIterable);
-    }
-
-    void saveDataMaster() throws DomainException {
-        //save all storeCode
-        storeRepository.saveAll(storeIterable);
-        //save all postcourse
-        postCourseRepository.saveAll(postCoursesIterable);
     }
 }

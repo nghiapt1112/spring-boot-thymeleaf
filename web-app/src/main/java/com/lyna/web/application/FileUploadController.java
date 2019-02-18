@@ -8,7 +8,6 @@ import com.lyna.web.domain.storagefile.service.StorageDeliveryService;
 import com.lyna.web.domain.storagefile.service.StorageService;
 import com.lyna.web.domain.storagefile.service.UploadDataService;
 import com.lyna.web.domain.user.User;
-import com.lyna.web.security.authorities.IsAdmin;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -67,7 +66,6 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file")
-   //@IsAdmin
     public String handleFile(Model model, @RequestParam("file") MultipartFile file, @RequestParam("typeUploadFile") String typeUploadFile) {
         Map<String, Integer> headerMap = storageService.getMapHeader(file);
         List<CSVRecord> mapData = storageService.getMapData(file);
@@ -85,7 +83,6 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file/order")
-    //@IsAdmin
     public ResponseEntity<Object> handleFileUpload(Model model, @RequestParam("fileName") String fileName,
                                                    @RequestParam("selectedHeader") List<String> headerOrders,
                                                    @RequestParam("typeUploadFile") String typeUploadFile,
@@ -96,7 +93,7 @@ public class FileUploadController extends AbstractCustomController {
                 headerOrders.stream().collect(
                         Collectors.toMap(s -> index.getAndIncrement(), s -> s, (oldV, newV) -> newV));
         Resource resource = storageService.loadAsResource(fileName);
-        Map<Integer, String> mapError = storageService.store(user, fileName, resource.getInputStream(), typeUploadFile, mapHeader);
+        Map<Integer, String> mapError = storageService.checkDataAndCreateOrderWithGetDataAI(user, fileName, resource.getInputStream(), typeUploadFile, mapHeader);
         return getResponseMessage(model, mapError);
     }
 
