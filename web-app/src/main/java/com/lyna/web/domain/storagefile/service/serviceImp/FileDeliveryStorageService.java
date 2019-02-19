@@ -187,7 +187,7 @@ public class FileDeliveryStorageService extends BaseStorageService implements St
                 String storeId = mapStoreCodeStoreId.get(storeCode.trim());
                 setMapStorePostCourse(tenantId, csvDelivery, post, keyStoreCodePost, storeId, userId);
             } else {
-                putMapCsvPostCourse(csvDelivery, setStoreCodePost.get(keyStoreCodePost));
+                setMapCsvPostCourse(csvDelivery, setStoreCodePost.get(keyStoreCodePost));
             }
         });
 

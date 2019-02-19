@@ -29,7 +29,7 @@ public abstract class BaseStorageService extends BaseService {
         return mapCsvPostCourseId.get(csvOrder);
     }
 
-    public void putMapCsvPostCourse(Object csvData, String postCourseId) {
+    public void setMapCsvPostCourse(Object csvData, String postCourseId) {
         mapCsvPostCourseId.put(csvData, postCourseId);
     }
 
@@ -58,7 +58,7 @@ public abstract class BaseStorageService extends BaseService {
     }
 
     public void setMapError(Integer errorCode, String strCode) {
-        mapError.put(toInteger("err.csv.saveFileFailed.code"), toStr("err.csv.saveFileFailed.msg"));
+        mapError.put(errorCode, strCode);
     }
 
     public void innitDataGeneral() {
@@ -73,7 +73,7 @@ public abstract class BaseStorageService extends BaseService {
         if (postCourseId == null)
             postCourseId = getPostCourseId(tenantId, storeId, post, userId);
         setStoreCodePost.put(skey, postCourseId);
-        putMapCsvPostCourse(csvData, postCourseId);
+        setMapCsvPostCourse(csvData, postCourseId);
     }
 
     private String getPostCourseId(int tenantId, String storeId, String post, String userId) {
