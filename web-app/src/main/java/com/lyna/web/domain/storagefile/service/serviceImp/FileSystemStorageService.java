@@ -7,7 +7,6 @@ import com.lyna.web.domain.order.Order;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderDetailRepository;
 import com.lyna.web.domain.order.service.OrderService;
-import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
@@ -51,7 +50,6 @@ import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 public class FileSystemStorageService extends BaseStorageService implements StorageService {
 
     private final Path rootLocation;
-    private Map<String, String> setStoreCodePost;
     private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     private List<String> listStoreCode;
     private List<String> listProductCode;
@@ -104,10 +102,10 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
-                return filename;
             }
+            return filename;
         } catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
+            throw new StorageException("ファイル" + filename + "を格納するのは失敗しました ", e);
         }
     }
 
@@ -116,19 +114,19 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         try {
             int tenantId = user.getTenantId();
             String userId = user.getId();
-            initDataOrder();
             innitDataGeneral();
+            initDataOrder();
             Reader reader = new InputStreamReader(inputStream);
             Iterator<CsvOrder> orderIterator = orderService.getMapOrder(reader, mapHeader);
             processUpload(orderIterator);
             int status;
 
-            if (getMapError().isEmpty()) {
+            if (checkExistsMapError()) {
 
                 setMapData(tenantId, userId, typeUploadFile);
                 setDataOrder(tenantId, userId, typeUploadFile);
 
-                if (getMapError().size() == 0) {
+                if (checkExistsMapError()) {
                     if (!productIterable.isEmpty() || !orderIterable.isEmpty() || !orderDetailIterable.isEmpty())
                         saveDataOrder();
 
@@ -240,7 +238,6 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         ListPost = new ArrayList<>();
         mapStoreCodeCsv = new HashMap<>();
         storeIterable = new HashSet<>();
-        setStoreCodePost = new HashMap<>();
         orderIds = new ArrayList<>();
         listProductCode = new ArrayList<>();
         mapProductCodeCsv = new HashMap<>();
@@ -297,20 +294,6 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         }
     }
 
-    private void setMapStorePostCourse(int tenantId, Object csvData, String post, String skey, String storeId, String userId) {
-        String postCourseId = postCourseRepository.findByStoreIdAndPost(storeId, post);
-        if (postCourseId == null)
-            postCourseId = getPostCourseId(tenantId, storeId, post, postCourseId, userId);
-        setStoreCodePost.put(skey, postCourseId);
-        putMapCsvPostCourse(csvData, postCourseId);
-    }
-
-    private String getPostCourseId(int tenantId, String storeId, String post, String postCourseId, String userId) {
-        PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
-        putPostCoursesIterable(postCourse);
-        return postCourse.getPostCourseId();
-    }
-
     private void setMapData(int tenantId, String userId, String typeUploadFile) throws StorageException {
         try {
             List<String> result = storeRepository.getAllByCodesAndTenantId(tenantId, listStoreCode);
@@ -357,11 +340,11 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
                 String post = (csvOrder).getPost();
                 String storeCode = (csvOrder).getStoreCode();
                 String keyStoreCodePost = storeCode + "#" + post;
-                if (!setStoreCodePost.containsKey(keyStoreCodePost)) {
+                if (!checkStoreCodeContainKey(keyStoreCodePost)) {
                     String storeId = mapStoreCodeStoreId.get(storeCode);
                     setMapStorePostCourse(tenantId, csvOrder, post, keyStoreCodePost, storeId, userId);
                 } else {
-                    putMapCsvPostCourse(csvOrder, setStoreCodePost.get(keyStoreCodePost));
+                    putMapCsvPostCourse(csvOrder, getStoreCodeWithPostByKey(keyStoreCodePost));
                 }
             });
 

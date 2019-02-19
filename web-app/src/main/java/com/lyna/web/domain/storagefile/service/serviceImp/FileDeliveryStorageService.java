@@ -10,7 +10,6 @@ import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.order.OrderDetail;
 import com.lyna.web.domain.order.repository.OrderRepository;
-import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.StorageDeliveryService;
@@ -83,8 +82,8 @@ public class FileDeliveryStorageService extends BaseStorageService implements St
 
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
-            initDataDelivery();
             innitDataGeneral();
+            initDataDelivery();
             Iterator<CsvDelivery> deliveryIterator = deliveryRepository.getMapDelivery(reader);
             processUploadDelivery(deliveryIterator);
             if (getSizeMapError() == 0) {
@@ -258,20 +257,6 @@ public class FileDeliveryStorageService extends BaseStorageService implements St
 
             mapOrderPackageIdAmount.put(orderId, setPackageIdAmount);
         });
-    }
-
-    private void setMapStorePostCourse(int tenantId, Object csvData, String post, String skey, String storeId, String userId) {
-        String postCourseId = postCourseRepository.findByStoreIdAndPost(storeId, post);
-        if (postCourseId == null)
-            postCourseId = getPostCourseId(tenantId, storeId, post, userId);
-        setStoreCodePost.put(skey, postCourseId);
-        putMapCsvPostCourse(csvData, postCourseId);
-    }
-
-    private String getPostCourseId(int tenantId, String storeId, String post, String userId) {
-        PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
-        putPostCoursesIterable(postCourse);
-        return postCourse.getPostCourseId();
     }
 
     private BigDecimal getAmountPackage(String trayAmount, String trayCase, String trayBox, String packageName) {
