@@ -133,11 +133,11 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
                     status = aiService.calculateLogisticsWithAI(user, orderIds);
 
                     if (status == Constants.AI_STATUS.EMPTY || status == Constants.AI_STATUS.ERROR)
-                        getMapError().put(500, "解析に失敗しました。");
+                        setMapError(500, "解析に失敗しました。");
                 }
             }
         } catch (Exception ex) {
-            getMapError().put(501, "CSVファイルを読み取れない。");
+            setMapError(501, "CSVファイルを読み取れない。");
         }
         return getMapError();
     }
@@ -258,41 +258,56 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         while (orderIterator.hasNext()) {
             CsvOrder csvOrder = orderIterator.next();
             int row = 1;
-
-            if (csvOrder.getPost() == null
-                    || csvOrder.getPost().isEmpty()
-                    || csvOrder.getOrderDate() == null
-                    || csvOrder.getOrderDate().isEmpty()
-                    || converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null
-                    || csvOrder.getQuantity() == null
-                    || csvOrder.getQuantity().isEmpty()
-                    || csvOrder.getStoreCode() == null
-                    || csvOrder.getStoreCode().isEmpty()
-                    || csvOrder.getProductCode() == null
-                    || csvOrder.getProductCode().isEmpty()
-                    || !isNumeric(csvOrder.getQuantity())
-            ) {
-                setMapError(401, "行目 " + row + " にデータが不正");
-            }
-
+            checkDataCsv(row, csvOrder);
             row++;
-
-            String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "#" + csvOrder.getPost().trim().toLowerCase() + "#" + csvOrder.getOrderDate();
-            String sKeyOrderCheck = keyOrder + "#" + csvOrder.getProductCode().trim().toLowerCase();
-            if (!setOrder.contains(sKeyOrderCheck)) {
-                setOrder.add(sKeyOrderCheck);
-                csvOrder.setPost(csvOrder.getPost().toLowerCase().trim());
-                csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
-                csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
-                mapStoreCodeCsv.put(csvOrder.getStoreCode().toLowerCase().trim(), csvOrder);
-                listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
-                listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
-                ListPost.add(csvOrder.getPost().trim().toLowerCase());
-                mapProductCodeCsv.put(csvOrder.getProductCode().trim().toLowerCase(), csvOrder);
-                mapKeyCsv.put(sKeyOrderCheck, csvOrder);
-            }
+            if (checkExistsMapError())
+                setOrder = setDataList(csvOrder, setOrder);
         }
     }
+
+    private void checkDataCsv(int row, CsvOrder csvOrder) {
+        if (csvOrder.getPost() == null
+                || csvOrder.getPost().isEmpty()
+                || csvOrder.getQuantity() == null
+                || csvOrder.getQuantity().isEmpty()
+                || csvOrder.getStoreCode() == null
+                || csvOrder.getStoreCode().isEmpty()
+                || !isNumeric(csvOrder.getQuantity())
+        ) {
+            setMapError(401, "行目 " + row + " にデータが不正");
+        }
+
+        if (csvOrder.getOrderDate() == null
+                || csvOrder.getOrderDate().isEmpty()
+                || converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null) {
+            setMapError(402, "行目 " + row + "に 注文日付 データが不正");
+        }
+
+        if (csvOrder.getProductCode() == null
+                || csvOrder.getProductCode().isEmpty()) {
+            setMapError(403, "行目 " + row + "に 商品コード データが不正");
+        }
+    }
+
+    private HashSet<String> setDataList(CsvOrder csvOrder, HashSet<String> setOrder) {
+        String keyOrder = csvOrder.getStoreCode().trim().toLowerCase() + "#" + csvOrder.getPost().trim().toLowerCase() + "#" + csvOrder.getOrderDate();
+        String sKeyOrderCheck = keyOrder + "#" + csvOrder.getProductCode().trim().toLowerCase();
+        if (!setOrder.contains(sKeyOrderCheck)) {
+            setOrder.add(sKeyOrderCheck);
+            csvOrder.setPost(csvOrder.getPost().toLowerCase().trim());
+            csvOrder.setProductCode(csvOrder.getProductCode().toLowerCase().trim());
+            csvOrder.setStoreCode(csvOrder.getStoreCode().toLowerCase().trim());
+            mapStoreCodeCsv.put(csvOrder.getStoreCode().toLowerCase().trim(), csvOrder);
+            listStoreCode.add(csvOrder.getStoreCode().trim().toLowerCase());
+            listProductCode.add(csvOrder.getProductCode().trim().toLowerCase());
+            ListPost.add(csvOrder.getPost().trim().toLowerCase());
+            mapProductCodeCsv.put(csvOrder.getProductCode().trim().toLowerCase(), csvOrder);
+            mapKeyCsv.put(sKeyOrderCheck, csvOrder);
+        }
+
+        return setOrder;
+    }
+
 
     private void setMapData(int tenantId, String userId, String typeUploadFile) throws StorageException {
         try {
@@ -344,7 +359,7 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
                     String storeId = mapStoreCodeStoreId.get(storeCode);
                     setMapStorePostCourse(tenantId, csvOrder, post, keyStoreCodePost, storeId, userId);
                 } else {
-                    putMapCsvPostCourse(csvOrder, getStoreCodeWithPostByKey(keyStoreCodePost));
+                    setMapCsvPostCourse(csvOrder, getStoreCodeWithPostByKey(keyStoreCodePost));
                 }
             });
 

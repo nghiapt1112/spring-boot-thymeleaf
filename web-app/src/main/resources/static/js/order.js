@@ -75,17 +75,15 @@ $(function () {
             $("#messagePopup").trigger("click");
             $("#messageErrors").empty();
             messageError = messageError.substring(1, messageError.length - 1);
-            if (messageError.includes(",")) {
-                var messageErrorArray = messageError.split(",");
-                for (var i = 0; i < messageErrorArray.length; i++) {
-                    var indexCodeBegin = messageErrorArray[i].indexOf('"');
-                    var indexCodeEnd = messageErrorArray[i].indexOf('"', indexCodeBegin + 1);
-                    var errorCode = messageErrorArray[i].substring(indexCodeBegin + 1, indexCodeEnd);
-                    var indexContentBegin = messageErrorArray[i].indexOf('"', indexCodeEnd + 1);
-                    var indexContentEnd = messageErrorArray[i].indexOf('"', indexContentBegin + 2);
-                    var errorContent = messageErrorArray[i].substring(indexContentBegin + 1, indexContentEnd);
-                    $("#messageErrors").append('<tr><td>' + errorCode + '</td><td>' + errorContent + '</td></tr>')
-                }
+            var messageErrorArray = messageError.split(",");
+            for (var i = 0; i < messageErrorArray.length; i++) {
+                var indexCodeBegin = messageErrorArray[i].indexOf('"');
+                var indexCodeEnd = messageErrorArray[i].indexOf('"', indexCodeBegin + 1);
+                var errorCode = messageErrorArray[i].substring(indexCodeBegin + 1, indexCodeEnd);
+                var indexContentBegin = messageErrorArray[i].indexOf('"', indexCodeEnd + 1);
+                var indexContentEnd = messageErrorArray[i].indexOf('"', indexContentBegin + 2);
+                var errorContent = messageErrorArray[i].substring(indexContentBegin + 1, indexContentEnd);
+                $("#messageErrors").append('<tr><td>' + errorCode + '</td><td>' + errorContent + '</td></tr>')
             }
         });
     });
