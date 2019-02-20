@@ -88,7 +88,7 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
 
     @Override
     public String store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename()) + "_" + System.currentTimeMillis();
+        String filename = StringUtils.stripFilenameExtension(file.getOriginalFilename()) + "_" + System.currentTimeMillis() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
