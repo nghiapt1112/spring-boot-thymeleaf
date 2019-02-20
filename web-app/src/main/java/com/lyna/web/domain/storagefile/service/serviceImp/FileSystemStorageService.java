@@ -122,7 +122,6 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
             int status;
 
             if (checkExistsMapError()) {
-
                 setMapData(tenantId, userId, typeUploadFile);
                 setDataOrder(tenantId, userId, typeUploadFile);
 
@@ -266,26 +265,30 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
     }
 
     private void checkDataCsv(int row, CsvOrder csvOrder) {
-        if (csvOrder.getPost() == null
-                || csvOrder.getPost().isEmpty()
-                || csvOrder.getQuantity() == null
+        if (csvOrder.getStoreCode() == null
+                || csvOrder.getStoreCode().isEmpty()) {
+            setMapError(01 + row, "行目 " + row + " に店舗コードが不正");
+        }
+
+        if (csvOrder.getQuantity() == null
                 || csvOrder.getQuantity().isEmpty()
-                || csvOrder.getStoreCode() == null
-                || csvOrder.getStoreCode().isEmpty()
-                || !isNumeric(csvOrder.getQuantity())
-        ) {
-            setMapError(401, "行目 " + row + " にデータが不正");
+                || !isNumeric(csvOrder.getQuantity())) {
+            setMapError(02 + row, "行目 " + row + " に数量が不正");
         }
 
         if (csvOrder.getOrderDate() == null
                 || csvOrder.getOrderDate().isEmpty()
                 || converStringToDate(csvOrder.getOrderDate().trim().toLowerCase()) == null) {
-            setMapError(402, "行目 " + row + "に 注文日付 データが不正");
+            setMapError(03 + row, "行目 " + row + " に日付が不正");
         }
 
         if (csvOrder.getProductCode() == null
                 || csvOrder.getProductCode().isEmpty()) {
-            setMapError(403, "行目 " + row + "に 商品コード データが不正");
+            setMapError(04 + row, "行目 " + row + " に商品コードが不正");
+        }
+
+        if (csvOrder.getPost() == null || csvOrder.getPost().isEmpty()) {
+            setMapError(05 + row, "行目 " + row + " にポストが不正");
         }
     }
 
