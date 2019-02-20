@@ -21,7 +21,7 @@ public abstract class BaseStorageService extends BaseService {
     @Autowired
     private PostCourseRepository postCourseRepository;
 
-    public Map<Object, String> getMapCsvPostCourseId() {
+    public Map<Object, String> mapCsvPostCourseId() {
         return mapCsvPostCourseId;
     }
 
