@@ -226,14 +226,17 @@ public class FileDeliveryStorageService extends BaseStorageService implements St
         mapCsvPostCourseId().forEach((csv, postCourseId) -> {
             List<OrderDetail> orderDetails = orderRepository.getMapByPostCourseIdOrderDateTenantId(postCourseId, ((CsvDelivery) csv).getOrderDate(), tenantId);
             if (orderDetails != null && orderDetails.size() > 0) {
+
                 Map<String, BigDecimal> mapProductAmount = orderDetails.stream().parallel().collect(Collectors.toMap(p -> p.productId, p -> p.getAmount()));
                 String orderId = orderDetails.get(0).getOrderId();
 
                 mapOrderIdProductIdAmount.put(orderId, mapProductAmount);
                 String deliveryId = deliveryRepository.checkExistByOrderIdAndOrderDate(orderId, ((CsvDelivery) csv).getOrderDate());
-                if (deliveryId != null)
+
+                if (deliveryId != null) {
                     mapDeliveryIdCsv.put(deliveryId, csv);
-                else {
+                    mapDeliveryIdOrderId.put(deliveryId, orderId);
+                } else {
                     Delivery delivery = new Delivery();
                     delivery.setOrderId(orderId);
                     delivery.setTenantId(tenantId);
@@ -241,9 +244,8 @@ public class FileDeliveryStorageService extends BaseStorageService implements St
                     delivery.setCreateUser(userId);
                     mapDeliveryIdCsv.put(delivery.getDeliveryId(), csv);
                     deliveryIterable.add(delivery);
+                    mapDeliveryIdOrderId.put(delivery.getDeliveryId(), orderId);
                 }
-                mapDeliveryIdOrderId.put(deliveryId, orderId);
-
             }
         });
     }
