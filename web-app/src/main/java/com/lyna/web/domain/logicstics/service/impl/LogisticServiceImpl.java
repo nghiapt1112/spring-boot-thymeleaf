@@ -12,9 +12,6 @@ import com.lyna.web.domain.view.PackageName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +50,7 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
 
         // show original delivery.
         List<LogisticAggregate> deliveryOriginalView = deliveryView.stream()
-                .filter(el -> !logisticPackagesByOrderId.entrySet().contains(el.getOrderId()))
+                .filter(el -> !logisticPackagesByOrderId.keySet().contains(el.getOrderId()))
                 .map(el -> LogisticAggregate.fromDeliveryView(el, pkgName, deliveryPackagesByOrderId))
                 .distinct()
                 .collect(Collectors.toList());
