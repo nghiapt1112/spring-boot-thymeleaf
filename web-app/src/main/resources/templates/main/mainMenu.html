@@ -116,10 +116,12 @@
                         <div class="box-body">
                             <div class="panel with-nav-tabs panel-primary">
                                 <div class="panel-heading">
+                                    <button id="logisticsButtonClickTranfer" style="display: none"></button>
                                     <ul class="nav nav-tabs">
-                                        <li class="active"><a data-toggle="tab" href="#tab1primary"
-                                                              onclick="onLogistics()"
-                                                              th:href="@{/#tab1primary}">物量</a>
+                                        <li class="active" id="logisticsButtonClick"><a data-toggle="tab"
+                                                                                        href="#tab1primary"
+                                                                                        onclick="onLogistics()"
+                                                                                        th:href="@{/#tab1primary}">物量</a>
                                         </li>
                                         <li><a data-toggle="tab" href="#tab2primary" onclick="onOrderDetails()"
                                                th:href="@{/#tab2primary}">発注データ明細</a></li>
@@ -128,7 +130,8 @@
                                 <div class="panel-body">
                                     <div class="tab-content">
                                         <div class="tab-pane fade in active" id="tab1primary">
-                                            <table class="table table-bordered" id="table-logistics">
+                                            <table class="table table-bordered" id="table-logistics"
+                                                   style="width: 100%">
                                                 <thead style="background: #337ab7">
                                                 <tr>
                                                     <th>日付</th>
@@ -162,21 +165,24 @@
                                                     <td th:text="${logistic.getCourseName()}"></td>
                                                 </tr>
                                                 </tbody>
-                                                    <tfoot th:if="${not #lists.isEmpty(logisticData)}">
-                                                    <tr>
-                                                        <th style="color: black ! important; text-align: left ! important">合計</th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"
-                                                            th:each="item: ${packageTypes}"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                        <th style="color: black ! important; text-align: left ! important"></th>
-                                                    </tr>
-                                                    </tfoot>
-
+                                                <tr th:if="${not #lists.isEmpty(logisticData)}">
+                                                    <th style="color: black ! important; text-align: left ! important">
+                                                        合計
+                                                    </th>
+                                                    <th style="color: black ! important; text-align: left ! important"></th>
+                                                    <th style="color: black ! important; text-align: left ! important"></th>
+                                                    <th class="columnSumFooter"
+                                                        style="color: black ! important; text-align: left ! important"></th>
+                                                    <th class="columnSumFooter"
+                                                        style="color: black ! important; text-align: left ! important"></th>
+                                                    <th class="columnSumFooter"
+                                                        style="color: black ! important; text-align: left ! important" th:each="item: ${packageTypes}"></th>
+                                                    <th class="columnSumFooter"
+                                                        style="color: black ! important; text-align: left ! important"></th>
+                                                    <th class="columnSumFooter"
+                                                        style="color: black ! important; text-align: left ! important"></th>
+                                                    <th style="color: black ! important; text-align: left ! important"></th>
+                                                </tr>
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="tab2primary">
@@ -218,6 +224,7 @@
     </div>
 </div>
 <footer th:replace="layout :: footer"></footer>
+<script th:src="@{/js/utils/string-utils.js}"></script>
 <script th:src="@{/js/utils/table-utils.js}" type="text/javascript"></script>
 <script th:src="@{/js/export-data-mainmenu.js}" type="text/javascript"></script>
 <script th:src="@{/js/mainMenu.js}" type="text/javascript"></script>
