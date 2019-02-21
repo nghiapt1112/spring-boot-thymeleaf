@@ -3,9 +3,11 @@ $('.columnSum').each(function (index) {
     item.push(index + 8);
 });
 
-function exportDataMainmenu(tableId, sortDefaultColumn, fileName, item) {
+function exportDataMainmenu(tableId, sortDefaultColumn, fileName, boOleansSrollX, booleansCrollCollapse, item) {
     $(tableId).DataTable({
         destroy: true,
+        'scrollX': boOleansSrollX,
+        'scrollCollapse': booleansCrollCollapse,
         'dom': 'lBfrtip',
         'buttons': [
             {
@@ -20,42 +22,37 @@ function exportDataMainmenu(tableId, sortDefaultColumn, fileName, item) {
         "footerCallback": function (row, data, start, end, display) {
             if (tableId === "#table-logistics") {
                 var arrayDisplay = [];
-                for(i = 0; i < display.length; i++){
-                    if(end <= i){
+                for (i = 0; i < display.length; i++) {
+                    if (end <= i) {
                         break;
                     }
-                    for(j = 0; j < data.length; j++){
-                        if(display[i] === j){
+                    for (j = 0; j < data.length; j++) {
+                        if (display[i] === j) {
                             arrayDisplay.push(data[j]);
                         }
                     }
                 }
-                var api = this.api();
                 var columns = document.querySelectorAll(".columnSum");
                 for (i = 0; i < columns.length; i++) {
                     var sumColumn = 0;
                     var colNo = i + 3;
-                    for(j = 0; j < arrayDisplay.length; j++){
-                        sumColumn = parseFloat(sumColumn) + parseFloat((arrayDisplay[j])[colNo]);
+                    for (j = 0; j < arrayDisplay.length; j++) {
+                        if (isNotEmpty((arrayDisplay[j])[colNo])) {
+                            sumColumn = parseFloat(sumColumn) + parseFloat((arrayDisplay[j])[colNo]);
+                        }
                     }
                     sumColumn = sumColumn.toFixed(2);
                     var index = sumColumn.toString().indexOf(".");
                     if ('0' != (sumColumn.toString().substring(index + 2))) {
-                        $(api.column(colNo).footer()).html(
-                            sumColumn
-                        );
+                        $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
                     } else {
-                        var resultNumber;
                         if ('0' != (sumColumn.toString().substring(index + 1, index + 2))) {
-                            resultNumber = sumColumn.toString().substring(0, sumColumn.length - 1);
-                            $(api.column(colNo).footer()).html(
-                                resultNumber
-                            );
+                            sumColumn = sumColumn.toString().substring(0, sumColumn.length - 1);
+                            $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
                         } else {
-                            resultNumber = sumColumn.toString().substring(0, sumColumn.length - 3);
-                            $(api.column(colNo).footer()).html(
-                                resultNumber
-                            );
+                            sumColumn = sumColumn.toString().substring(0, sumColumn.length - 3);
+                            $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
+
                         }
                     }
                 }

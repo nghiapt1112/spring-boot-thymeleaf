@@ -5,6 +5,16 @@ $(document).ready(function () {
     $("#max").datepicker({
         format: 'yyyy/mm/dd'
     });
+
+    var width = $(".dataTables_scrollHeadInner").width();
+    $("#logisticsButtonClick").click(function () {
+        $(this).closest("body").find("#logisticsButtonClickTranfer").trigger("click")
+    });
+    $("#logisticsButtonClickTranfer").click(function () {
+        $(this).closest("body").find(".dataTables_scrollHeadInner").css("width", width);
+        $(this).closest("body").find(".dataTables_scrollHeadInner").find("table").css("width", width);
+
+    })
 });
 
 onLogistics();
@@ -122,14 +132,13 @@ function searchMainMenu() {
     window.location.replace(logisticAPI)
 }
 
-exportDataMainmenu();
 
 function onLogistics() {
-    exportDataMainmenu('#table-logistics',0, '物量');
+    exportDataMainmenu('#table-logistics', 0, '物量', true, true);
 }
 
-function onOrderDetails(){
-    exportDataMainmenu('#table-order',0, '発注データ明細');
+function onOrderDetails() {
+    exportDataMainmenu('#table-order', 0, '発注データ明細', false, false);
 }
 
 
