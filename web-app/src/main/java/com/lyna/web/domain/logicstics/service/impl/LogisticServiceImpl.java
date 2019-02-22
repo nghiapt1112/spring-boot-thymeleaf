@@ -61,6 +61,7 @@ public class LogisticServiceImpl extends BaseService implements LogisticService 
         HashMap<String, Object> val = new HashMap<>();
         val.put(LOGISTIC_DATA, aggregates);
         List<PackageName> orderByPkgName = pkgName.stream()
+                .parallel()
                 .sorted(Comparator.comparing(PackageName::getName))
                 .collect(Collectors.toList());
         val.put(PKG_TYPE, orderByPkgName);
