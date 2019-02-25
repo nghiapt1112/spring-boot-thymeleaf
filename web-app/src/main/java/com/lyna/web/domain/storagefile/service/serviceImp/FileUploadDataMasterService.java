@@ -80,7 +80,6 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
             Reader reader = new InputStreamReader(inputStream);
             mapData = new HashMap<>();
             mapError = new HashMap<>();
-
             if (type == 3) {
                 initDataStore();
                     Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
@@ -278,9 +277,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         while (storeIterator.hasNext()) {
             CsvStore csvStore = storeIterator.next();
             int row = 1;
-            if (csvStore.getPost() == null
-                    || csvStore.getPost().isEmpty()
-                    || csvStore.getStoreName() == null
+            if (csvStore.getStoreName() == null
                     || csvStore.getStoreName().isEmpty()
                     || csvStore.getPersonInCharge() == null
                     || csvStore.getPersonInCharge().isEmpty()
@@ -296,7 +293,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                     || csvStore.getStoreCode().isEmpty()
 
             ) {
-                mapError.put(500, "行目 " + row + " にデータが不正");
+                mapError.put(666, "行目 " + row + " にデータが不正");
             }
             row++;
 
