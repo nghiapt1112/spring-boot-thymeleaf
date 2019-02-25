@@ -50,7 +50,7 @@ let addRow = function () {
 
         let emPost = document.createElement('em');
         emPost.classList.add('error');
-        emPost.textContent = '“便”は必須です。';
+        emPost.textContent = '便は必須です。';
 
         spanPost.appendChild(spanPost_child);
 
