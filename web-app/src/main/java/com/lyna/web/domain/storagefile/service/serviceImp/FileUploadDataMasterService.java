@@ -1,6 +1,7 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.product.Product;
@@ -27,7 +28,12 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -82,17 +88,17 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
             mapError = new HashMap<>();
             if (type == 3) {
                 initDataStore();
-                    Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
+                Iterator<CsvStore> storeIterator = storeRepository.getMapStore(reader);
                 processUploadStore(storeIterator);
                 if (mapError.size() == 0) {
-                    setDataStore(user);
+                    setDataStore(user, typeUploadFile);
                 }
             } else if (type == 4) {
                 initDataProduct();
                 Iterator<CsvProduct> productIterator = productRepository.getMapProduct(reader);
                 processUploadProduct(productIterator);
                 if (mapError.size() == 0) {
-                    setDataProduct(user);
+                    setDataProduct(user, typeUploadFile);
                 }
 
             } else if (type == 5) {
@@ -100,7 +106,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
                 Iterator<CsvPackage> packageIterator = packageRepository.getMapPackage(reader);
                 processUploadPackage(packageIterator);
                 if (mapError.size() == 0) {
-                    setDataPackage(user);
+                    setDataPackage(user, typeUploadFile);
                 }
             }
         } catch (Exception ex) {
@@ -109,7 +115,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         return mapError;
     }
 
-    private void setDataPackage(User currentUser) {
+    private void setDataPackage(User currentUser, String typeUploadFile) {
         listPackageName = listPackageName.stream().distinct().collect(Collectors.toList());
 
         List<Package> packagesInDb = packageRepository.getAllByNameAndTenantId(listPackageName, currentUser.getTenantId());
@@ -125,7 +131,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         }
         for (Package p : packagesInDb) {
             CsvPackage csvPackage = (CsvPackage) mapData.get(p.getName().toLowerCase().trim());
-            if (csvPackage != null) {
+            if (typeUploadFile.equals(Constants.UPDATE_DATA) && csvPackage != null) {
                 p.setName(csvPackage.getPackageName());
                 p.setUnit(csvPackage.getUnit());
                 p.setEmptyWeight(csvPackage.getEmptyWeight());
@@ -142,7 +148,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
     }
 
 
-    private void setDataProduct(User currentUser) {
+    private void setDataProduct(User currentUser, String typeUploadFile) {
         listProductCode = listProductCode.stream().distinct().collect(Collectors.toList());
 
         List<Product> productsInDb = productRepository.getProductsByProductCode(currentUser.getTenantId(), listProductCode);
@@ -158,7 +164,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         }
         for (Product product : productsInDb) {
             CsvProduct csvProduct = (CsvProduct) mapData.get(product.getCode().toLowerCase().trim());
-            if (csvProduct != null) {
+            if (typeUploadFile.equals(Constants.UPDATE_DATA) && csvProduct != null) {
                 product.setCode(csvProduct.getProductCode());
                 product.setName(csvProduct.getProductName());
                 product.setUnit(csvProduct.getUnit());
@@ -176,7 +182,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
     }
 
 
-    private void setDataStore(User currentUser) {
+    private void setDataStore(User currentUser, String typeUploadFile) {
         listStoreCode = listStoreCode.stream().distinct().collect(Collectors.toList());
 
         List<Store> storesInDb = storeRepository.getAll(currentUser.getTenantId(), listStoreCode);
@@ -193,7 +199,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         }
         for (Store store : storesInDb) {
             CsvStore csvStore = (CsvStore) mapData.get(store.getCode().toLowerCase().trim());
-            if (csvStore != null) {
+            if (typeUploadFile.equals(Constants.UPDATE_DATA) && csvStore != null) {
                 store.setName(csvStore.getStoreName());
                 store.setArea(csvStore.getArea());
                 store.setMajorArea(csvStore.getMajorArea());
