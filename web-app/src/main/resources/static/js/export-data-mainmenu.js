@@ -21,41 +21,47 @@ function exportDataMainmenu(tableId, sortDefaultColumn, fileName, boOleansSrollX
         ],
         "footerCallback": function (row, data, start, end, display) {
             if (tableId === "#table-logistics") {
-                var arrayDisplay = [];
-                for (i = 0; i < display.length; i++) {
-                    if (end <= i) {
-                        break;
-                    }
-                    for (j = 0; j < data.length; j++) {
-                        if (display[i] === j) {
-                            arrayDisplay.push(data[j]);
+                if(display.length > 0){
+                    $("#columnSumFooterDisplay").show();
+                    var arrayDisplay = [];
+                    for (i = 0; i < display.length; i++) {
+                        for (j = 0; j < data.length; j++) {
+                            if (display[i] === j) {
+                                arrayDisplay.push(data[j]);
+                            }
                         }
                     }
-                }
-                var columns = document.querySelectorAll(".columnSum");
-                for (i = 0; i < columns.length; i++) {
-                    var sumColumn = 0;
-                    var colNo = i + 3;
-                    for (j = 0; j < arrayDisplay.length; j++) {
-                        if (isNotEmpty((arrayDisplay[j])[colNo])) {
-                            sumColumn = parseFloat(sumColumn) + parseFloat((arrayDisplay[j])[colNo]);
+                    var columns = document.querySelectorAll(".columnSum");
+                    for (i = 0; i < columns.length; i++) {
+                        var total = 0;
+                        var colNo = i + 3;
+                        for (j = 0; j < arrayDisplay.length; j++) {
+                            total = total + parseFloat((arrayDisplay[j])[colNo]);
                         }
-                    }
-                    sumColumn = sumColumn.toFixed(2);
-                    var index = sumColumn.toString().indexOf(".");
-                    if ('0' != (sumColumn.toString().substring(index + 2))) {
-                        $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
-                    } else {
-                        if ('0' != (sumColumn.toString().substring(index + 1, index + 2))) {
-                            sumColumn = sumColumn.toString().substring(0, sumColumn.length - 1);
-                            $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
-                        } else {
-                            sumColumn = sumColumn.toString().substring(0, sumColumn.length - 3);
-                            $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(sumColumn);
+                        if(total.toString().includes(".")){
+                            var index = total.toString().indexOf(".");
+                            if(total.toString().substring(index + 3).length > 0){
+                                total = total.toFixed(2);
+                                if ('0' != (total.toString().substring(index + 2))) {
+                                    $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(total);
+                                } else {
+                                    if ('0' != (total.toString().substring(index + 1, index + 2))) {
+                                        total = total.toString().substring(0, total.length - 1);
+                                        $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(total);
+                                    } else {
+                                        total = total.toString().substring(0, total.length - 3);
+                                        $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(total);
+                                    }
+                                }
 
+                            }
                         }
+                        $(this).closest("body").find(".columnSumFooter:eq(" + i + ")").text(total);
                     }
+                }else{
+                    $("#columnSumFooterDisplay").hide();
                 }
+
             }
         },
         'paging': true,
