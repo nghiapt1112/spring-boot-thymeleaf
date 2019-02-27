@@ -202,6 +202,7 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
             if (typeUploadFile.equals(Constants.UPDATE_DATA) && csvStore != null) {
                 store.setName(csvStore.getStoreName());
                 store.setArea(csvStore.getArea());
+                store.setAddress(csvStore.getAddress());
                 store.setMajorArea(csvStore.getMajorArea());
                 store.setPhoneNumber(csvStore.getPhoneNumber());
                 store.setPersonCharge(csvStore.getPersonInCharge());
