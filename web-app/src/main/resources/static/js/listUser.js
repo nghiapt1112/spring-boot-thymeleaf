@@ -1,21 +1,20 @@
 $(document).ready(function () {
-
-    var arrayStoreNumber = [1,2];
+    var arrayStoreNumber = [1, 2];
     $("body").find(".storeModel").each(function (item) {
         arrayStoreNumber.push(item + 3);
-    })
+    });
     $("#table-user").DataTable({
-        'scrollX':        true,
+        'scrollX': true,
         'scrollCollapse': true,
-        'fixedColumns':   {
+        'fixedColumns': {
             'leftColumns': 3,
         },
         'dom': 'lBfrtip',
         'buttons': [
             {
-                extend : 'excel',
+                extend: 'excel',
                 filename: 'ユーザー一覧',
-                title : null,
+                title: null,
                 exportOptions: {
                     columns: arrayStoreNumber
                 }
@@ -44,19 +43,48 @@ $(document).ready(function () {
 
     });
     $("body").find(".buttons-excel").find("span").text("EXCEL出力");
-
-    $(".checkBoxAll:eq(2)").click(function () {
-        if ($(this).is(":checked")){
+    var checkboxsOfPageCurrent;
+    $('.checkBoxAll:eq(2)').click(function () {
+        checkboxsOfPageCurrent = $(this).closest('body').find('tbody:eq(1)').find(".chkCheckBoxId");
+        if ($(this).is(":checked")) {
+            $('body').find(".checkBoxAll").prop('checked', true);
             $('body').find('tbody:eq(1)').find(".chkCheckBoxId").prop('checked', true);
-        } else{
+            if (checkboxsOfPageCurrent.length > 0) {
+                for (i = 0; i < checkboxsOfPageCurrent.length; i++) {
+                    $(this).closest('body').find('tbody:eq(0)').find(".chkCheckBoxId:eq(" + i + ")").attr("checked", true);
+                }
+            }
+        } else {
+            $('body').find(".checkBoxAll").prop('checked', false);
             $('body').find('tbody:eq(1)').find(".chkCheckBoxId").prop('checked', false);
+            if (checkboxsOfPageCurrent.length > 0) {
+                for (i = 0; i < checkboxsOfPageCurrent.length; i++) {
+                    $(this).closest('body').find('tbody:eq(0)').find(".chkCheckBoxId:eq(" + i + ")").attr("checked", false);
+                }
+            }
         }
-    })
+    });
+    $("body").on("click", ".chkCheckBoxId", function () {
+        var userId = $(this).val();
+        checkboxsOfPageCurrent = $(this).closest('body').find('tbody:eq(1)').find(".chkCheckBoxId");
+        if ($(this).is(":checked")) {
+            for (i = 0; i < checkboxsOfPageCurrent.length; i++) {
+                if (checkboxsOfPageCurrent[i].value === userId) {
+                    $(this).closest('body').find('tbody:eq(0)').find(".chkCheckBoxId:eq(" + i + ")").attr("checked", true);
+                }
+            }
+        } else {
+            for (i = 0; i < checkboxsOfPageCurrent.length; i++) {
+                if (checkboxsOfPageCurrent[i].value === userId) {
+                    $(this).closest('body').find('tbody:eq(0)').find(".chkCheckBoxId:eq(" + i + ")").attr("checked", false);
+                }
+            }
+        }
+    });
     $("body").on("click", "#delete", function () {
         var pickedOne = false;
         var objectIds = [];
         var inputs = $('body').find('tbody:eq(1)').find(".chkCheckBoxId");
-        console.log(inputs.length);
         for (var i = 0, l = inputs.length; i < l; i++) {
             if (inputs[i].checked) {
                 pickedOne = true;
