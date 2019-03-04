@@ -84,8 +84,11 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             throw new StorageException(Constants.PARSE_CSV_FAILED);
 
         }
-        Map<String, Integer> hashMap = csvParser.getHeaderMap().entrySet().stream().
-                sorted(Comparator.comparing(Map.Entry::getValue))
+        Map<String, Integer> hashMap = csvParser
+                .getHeaderMap()
+                .entrySet()
+                .stream().parallel().
+                        sorted(Comparator.comparing(Map.Entry::getValue))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
         return hashMap;
@@ -93,7 +96,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
 
     @Override
     public List<CSVRecord> getDataOrder(Reader reader) {
-        CSVParser csvParser = null;
+        CSVParser csvParser;
         try {
             csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
             return csvParser.getRecords();
@@ -215,7 +218,7 @@ public class OrderRepositoryImpl extends BaseRepository<Order, String> implement
             log.error(ex.getMessage());
             throw new StorageException(Constants.PARSE_CSV_FAILED);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

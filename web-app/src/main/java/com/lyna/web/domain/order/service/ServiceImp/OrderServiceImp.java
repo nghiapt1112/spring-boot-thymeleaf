@@ -56,8 +56,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public String getOrderIdByPostCourseIdAndTenantId(String postCourseId, String productId, int tenantId) {
-        return orderRepository.getByPostCourseIdOrderDateTenantId(postCourseId, productId, tenantId);
+    public String getOrderIdByPostCourseIdAndOrderDateWithTenantId(String postCourseId, String orderDate, int tenantId) {
+        return orderRepository.getByPostCourseIdOrderDateTenantId(postCourseId, orderDate, tenantId);
     }
 
     @Override

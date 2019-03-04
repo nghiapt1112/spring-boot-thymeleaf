@@ -23,7 +23,7 @@ public interface OrderService {
 
     List<CSVRecord> getDataOrder(Reader reader);
 
-    String getOrderIdByPostCourseIdAndTenantId(String postCourseId, String productId, int tenantId);
+    String getOrderIdByPostCourseIdAndOrderDateWithTenantId(String postCourseId, String orderDate, int tenantId);
 
     void saveAll(Set<Order> orderIterable);
 }

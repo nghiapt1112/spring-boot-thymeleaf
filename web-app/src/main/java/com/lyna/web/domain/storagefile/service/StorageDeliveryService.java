@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface StorageDeliveryService {
     Map<Integer, String> store(User user, MultipartFile file, String typeUploadFile);
+
+    int getExtension(MultipartFile file);
 }

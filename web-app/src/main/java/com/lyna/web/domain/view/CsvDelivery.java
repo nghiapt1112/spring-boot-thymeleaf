@@ -31,4 +31,7 @@ public class CsvDelivery {
 
     @CsvBindByName(column = "ケース")
     private String caseP;
+
+    @CsvBindByName(column = "段ボール")
+    private String cardBox;
 }

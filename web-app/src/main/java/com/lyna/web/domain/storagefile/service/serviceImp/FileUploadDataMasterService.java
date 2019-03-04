@@ -1,11 +1,11 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
-import com.lyna.commons.infrustructure.service.BaseService;
 import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.mpackage.Package;
 import com.lyna.web.domain.mpackage.repository.PackageRepository;
 import com.lyna.web.domain.product.Product;
 import com.lyna.web.domain.product.repository.ProductRepository;
+import com.lyna.web.domain.reader.service.impl.BaseReaderService;
 import com.lyna.web.domain.storagefile.StorageProperties;
 import com.lyna.web.domain.storagefile.exeption.StorageException;
 import com.lyna.web.domain.storagefile.service.UploadDataService;
@@ -25,20 +25,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 import java.util.stream.Collectors;
-
+import java.util.HashMap;
 
 @Service
-public class FileUploadDataMasterService extends BaseService implements UploadDataService {
+public class FileUploadDataMasterService extends BaseReaderService implements UploadDataService {
 
     private final Path rootLocation;
 
@@ -46,7 +46,6 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
     List<String> listProductCode;
     List<String> listPackageName;
     Map<String, Object> mapData;
-    Map<Integer, String> mapError;
 
     @Autowired
     private StoreRepository storeRepository;
@@ -147,7 +146,6 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         packageRepository.saveAll(packages);
     }
 
-
     private void setDataProduct(User currentUser, String typeUploadFile) {
         listProductCode = listProductCode.stream().distinct().collect(Collectors.toList());
 
@@ -180,7 +178,6 @@ public class FileUploadDataMasterService extends BaseService implements UploadDa
         }
         productRepository.saveAll(products);
     }
-
 
     private void setDataStore(User currentUser, String typeUploadFile) {
         listStoreCode = listStoreCode.stream().distinct().collect(Collectors.toList());

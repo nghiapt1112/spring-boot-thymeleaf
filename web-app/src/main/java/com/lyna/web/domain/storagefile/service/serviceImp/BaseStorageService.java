@@ -1,64 +1,29 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
-import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.postCourse.PostCourse;
 import com.lyna.web.domain.postCourse.repository.PostCourseRepository;
-import com.lyna.web.domain.view.CsvOrder;
+import com.lyna.web.domain.reader.service.impl.BaseReaderService;
+import com.lyna.web.domain.storagefile.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BaseStorageService extends BaseService {
-
-    private Set<PostCourse> postCoursesIterable;
-    private Map<Integer, String> mapError;
-    private Map<Object, String> mapCsvPostCourseId;
-    private Map<String, String> setStoreCodePost;
+public abstract class BaseStorageService extends BaseReaderService {
+    protected Set<PostCourse> postCoursesIterable;
+    protected Map<Object, String> mapCsvPostCourseId;
+    protected Map<String, String> setStoreCodePost;
 
     @Autowired
     private PostCourseRepository postCourseRepository;
 
-    public Map<Object, String> mapCsvPostCourseId() {
-        return mapCsvPostCourseId;
-    }
-
-    public String getMapCsvPostCourse(CsvOrder csvOrder) {
-        return mapCsvPostCourseId.get(csvOrder);
-    }
-
-    public void setMapCsvPostCourse(Object csvData, String postCourseId) {
-        mapCsvPostCourseId.put(csvData, postCourseId);
-    }
-
-    public Set<PostCourse> getPostCoursesIterable() {
-        return postCoursesIterable;
-    }
-
-    public void putPostCoursesIterable(PostCourse postCourse) {
-        postCoursesIterable.add(postCourse);
-    }
-
-    public boolean checkExistsPostCoursesIterable() {
-        return postCoursesIterable.isEmpty();
-    }
-
-    public boolean checkExistsMapError() {
-        return mapError == null || mapError.size() == 0;
-    }
-
-    public int getSizeMapError() {
-        return mapError.size();
-    }
-
-    public Map<Integer, String> getMapError() {
-        return mapError;
-    }
-
-    public void setMapError(Integer errorCode, String strCode) {
-        mapError.put(errorCode, strCode);
+    public BaseStorageService(StorageProperties properties) {
+        super(properties);
     }
 
     public void innitDataGeneral() {
@@ -73,12 +38,12 @@ public abstract class BaseStorageService extends BaseService {
         if (postCourseId == null)
             postCourseId = getPostCourseId(tenantId, storeId, post, userId);
         setStoreCodePost.put(skey, postCourseId);
-        setMapCsvPostCourse(csvData, postCourseId);
+        mapCsvPostCourseId.put(csvData, postCourseId);
     }
 
     private String getPostCourseId(int tenantId, String storeId, String post, String userId) {
         PostCourse postCourse = new PostCourse(tenantId, storeId, post, userId);
-        putPostCoursesIterable(postCourse);
+        postCoursesIterable.add(postCourse);
         return postCourse.getPostCourseId();
     }
 
@@ -89,4 +54,17 @@ public abstract class BaseStorageService extends BaseService {
     public String getStoreCodeWithPostByKey(String keyStoreCodePost) {
         return setStoreCodePost.get(keyStoreCodePost);
     }
+
+    public boolean checkExistsMapError() {
+        return mapError == null || mapError.size() == 0;
+    }
+
+    protected int getExtensionFile(MultipartFile file) {
+        String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        if (extension.equals(Constants.FILE_EXTENSION.EXCEL_XLSX) || extension.equals(Constants.FILE_EXTENSION.EXCEL_XLS))
+            return Constants.FILE_EXTENSION.EXCEL;
+        else
+            return Constants.FILE_EXTENSION.CSV;
+    }
+
 }

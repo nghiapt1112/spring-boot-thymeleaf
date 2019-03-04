@@ -21,4 +21,22 @@ public final class Constants {
         public static final Integer UPDATED = 3;
         public static final Integer IMPORT = 4;
     }
+
+    public static final class FILE_EXTENSION {
+        public static final Integer EXCEL = 1;
+        public static final Integer CSV = 2;
+        public static final String EXCEL_XLSX= "xlsx";
+        public static final String EXCEL_XLS= "xls";
+    }
+
+    public static final class FILE_DELIVERY {
+        public static final Integer ORDER_DATE = 0;
+        public static final Integer STORE_CODE = 1;
+        public static final Integer STORE_NAME = 2;
+        public static final Integer POST = 3;
+        public static final Integer TRAY = 4;
+        public static final Integer CASE = 5;
+        public static final Integer CARD_BOX = 6;
+        public static final Integer BOX = 7;
+    }
 }
