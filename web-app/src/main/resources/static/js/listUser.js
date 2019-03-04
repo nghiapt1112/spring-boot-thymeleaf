@@ -56,7 +56,6 @@ $(document).ready(function () {
         var pickedOne = false;
         var objectIds = [];
         var inputs = $('body').find('tbody:eq(1)').find(".chkCheckBoxId");
-        console.log(inputs.length);
         for (var i = 0, l = inputs.length; i < l; i++) {
             if (inputs[i].checked) {
                 pickedOne = true;

@@ -3,6 +3,8 @@ package com.lyna.web.application;
 import com.lyna.commons.infrustructure.controller.AbstractCustomController;
 import com.lyna.commons.utils.Constants;
 import com.lyna.commons.utils.DataUtils;
+import com.lyna.web.domain.reader.service.ReaderDeliveryService;
+import com.lyna.web.domain.reader.service.ReaderOrderService;
 import com.lyna.web.domain.storagefile.exeption.StorageFileNotFoundException;
 import com.lyna.web.domain.storagefile.service.StorageDeliveryService;
 import com.lyna.web.domain.storagefile.service.StorageService;
@@ -37,12 +39,19 @@ public class FileUploadController extends AbstractCustomController {
     private final StorageService storageService;
     private final UploadDataService uploadDataService;
     private final StorageDeliveryService storageDeliveryService;
+    private final ReaderDeliveryService readerDeliveryService;
+    private final ReaderOrderService readerOrderService;
 
     @Autowired
-    public FileUploadController(StorageService storageService, UploadDataService uploadDataService, StorageDeliveryService storageDeliveryService) {
+    public FileUploadController(StorageService storageService,
+                                UploadDataService uploadDataService,
+                                StorageDeliveryService storageDeliveryService,
+                                ReaderDeliveryService readerDeliveryService, ReaderOrderService readerOrderService) {
         this.storageService = storageService;
         this.uploadDataService = uploadDataService;
         this.storageDeliveryService = storageDeliveryService;
+        this.readerDeliveryService = readerDeliveryService;
+        this.readerOrderService = readerOrderService;
     }
 
     @GetMapping("/")
@@ -67,18 +76,29 @@ public class FileUploadController extends AbstractCustomController {
 
     @PostMapping("/file")
     public String handleFile(Model model, @RequestParam("file") MultipartFile file, @RequestParam("typeUploadFile") String typeUploadFile) {
-        Map<String, Integer> headerMap = storageService.getMapHeader(file);
-        List<CSVRecord> mapData = storageService.getMapData(file);
-        String fileName = storageService.store(file);
-        Set<Iterator<String>> data = mapData.stream().map(CSVRecord::iterator).collect(Collectors.toSet());
+        int extensionFile = storageService.getExtension(file);
+        Map<String, Integer> headerMap = storageService.getMapHeader(file, extensionFile);
+        String fileName = storageService.storeFileServer(file);
+
+        if (extensionFile == Constants.FILE_EXTENSION.CSV) {
+            List<CSVRecord> mapData = storageService.getMapData(file);
+            Set<Iterator<String>> data = mapData.stream().map(CSVRecord::iterator).collect(Collectors.toSet());
+            if (mapData.size() > 0) {
+                model.addAttribute("mapData", data);
+            }
+        }
+        /*else if (extensionFile == Constants.FILE_EXTENSION.EXCEL) {
+            Set<Iterator<String>> data = readerOrderService.getMapData(file);
+            if (data.size() > 0) {
+                model.addAttribute("mapData", data);
+            }
+        }*/
+
         model.addAttribute("headerOrder", storageService.getMapHeader());
         model.addAttribute("fileName", fileName);
         model.addAttribute("typeUpload", typeUploadFile);
+        model.addAttribute("headerData", headerMap.keySet().toArray());
 
-        if (mapData.size() > 0) {
-            model.addAttribute("headerData", headerMap.keySet().toArray());
-            model.addAttribute("mapData", data);
-        }
         return MATCHING_ORDER;
     }
 
@@ -98,12 +118,17 @@ public class FileUploadController extends AbstractCustomController {
     }
 
     @PostMapping("/file/delivery")
-    //@IsAdmin
     public ResponseEntity<Object> handleFileUploadDelivery(Model model, @RequestParam("file") MultipartFile file,
                                                            @RequestParam("typeUploadFile") String typeUploadFile,
                                                            UsernamePasswordAuthenticationToken principal) throws IOException {
         User user = (User) principal.getPrincipal();
-        Map<Integer, String> mapError = storageDeliveryService.store(user, file, typeUploadFile);
+        Map<Integer, String> mapError;
+        int extensionFile = storageDeliveryService.getExtension(file);
+        if (extensionFile == Constants.FILE_EXTENSION.CSV)
+            mapError = storageDeliveryService.store(user, file, typeUploadFile);
+        else
+            mapError = readerDeliveryService.readAndSaveDataDelivery(user, file, typeUploadFile);
+
         return getResponseMessage(model, mapError);
     }
 
