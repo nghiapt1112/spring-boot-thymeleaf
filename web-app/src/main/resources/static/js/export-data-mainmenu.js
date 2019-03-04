@@ -36,7 +36,9 @@ function exportDataMainmenu(tableId, sortDefaultColumn, fileName, boOleansSrollX
                         var total = 0;
                         var colNo = i + 3;
                         for (j = 0; j < arrayDisplay.length; j++) {
-                            total = total + parseFloat((arrayDisplay[j])[colNo]);
+                            if(isNotEmpty((arrayDisplay[j])[colNo])){
+                                total = total + parseFloat((arrayDisplay[j])[colNo]);
+                            }
                         }
                         if(total.toString().includes(".")){
                             var index = total.toString().indexOf(".");
