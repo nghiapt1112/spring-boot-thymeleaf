@@ -69,9 +69,11 @@ var btnPackage = document.getElementById("packageBtn");
 var span = document.getElementsByClassName("close")[0];
 
 btnPackage.onclick = function () {
+    $('#progressBar').text('');
+    $('#progressBar').css('width', '0%');
     modal.style.display = "block";
-    document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
+    $('input[type=file]').val('');
 };
 
 span.onclick = function () {
