@@ -122,7 +122,7 @@
                                                                                         href="#tab1primary"
                                                                                         th:href="@{/#tab1primary}">物量</a>
                                         </li>
-                                        <li><a data-toggle="tab" href="#tab2primary" onclick="onOrderDetails()"
+                                        <li id="orderButtonClick"><a data-toggle="tab" href="#tab2primary"
                                                th:href="@{/#tab2primary}">発注データ明細</a></li>
                                     </ul>
                                 </div>
@@ -185,10 +185,10 @@
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="tab2primary">
-                                            <table class="table table-bordered" id="table-order">
+                                            <table class="table table-bordered" id="table-order" style="width: 100%">
                                                 <thead style="background: #337ab7">
                                                 <tr>
-                                                    <th>日付</th>
+                                                    <th id="setWidthHederForOrder">日付</th>
                                                     <th>店舗</th>
                                                     <th>便</th>
                                                     <th>商品</th>
