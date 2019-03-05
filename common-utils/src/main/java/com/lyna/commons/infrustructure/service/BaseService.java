@@ -18,9 +18,9 @@ public abstract class BaseService {
     @Autowired
     private MessageSource messageSource;
 
-    public String toStr(String p) {
-        String val = env.getProperty(p);
-        return StringUtils.isEmpty(val) ? p : val;
+    public String toStr(String message) {
+        String val = messageSource.getMessage(message, null, message, LocaleContextHolder.getLocale());
+        return StringUtils.isEmpty(val) ? message : val;
     }
 
     public Integer toInteger(String p) {
