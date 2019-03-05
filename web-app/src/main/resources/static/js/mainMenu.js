@@ -86,6 +86,8 @@ var btnOrder = document.getElementById("myBtn");
 var btnDelivery = document.getElementById("deliveryBtn");
 var els = document.getElementsByClassName("close");
 btnOrder.onclick = function () {
+    $('#progressBar').text('');
+    $('#progressBar').css('width', '0%');
     modal.style.display = "block";
     document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
@@ -99,13 +101,13 @@ for (var i = 0; i < els.length; i++) {
 }
 
 btnDelivery.onclick = function () {
+    $('#progressBar').text('');
+    $('#progressBar').css('width', '0%');
     modal.style.display = "block";
     document.getElementById("quizID").value = "2";
     $('#alertMsg').text('');
     $('input[type=file]').val('');
 };
-
-
 
 window.onclick = function (event) {
     if (event.target == modal) {

@@ -80,9 +80,11 @@ var btnStore = document.getElementById("storeBtn");
 var span = document.getElementsByClassName("close")[0];
 
 btnStore.onclick = function () {
+    $('#progressBar').text('');
+    $('#progressBar').css('width', '0%');
     modal.style.display = "block";
-    document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
+    $('input[type=file]').val('');
 };
 
 span.onclick = function () {

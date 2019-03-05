@@ -17,7 +17,6 @@ $(function () {
 
             value = $("#quizID").val();
             var url = "/upload/file/product";
-
             // Ajax call for file uploaling
             var ajaxReq = $.ajax({
                 url: url,
@@ -70,9 +69,11 @@ var btnProduct = document.getElementById("productBtn");
 var span = document.getElementsByClassName("close")[0];
 
 btnProduct.onclick = function () {
+    $('#progressBar').text('');
+    $('#progressBar').css('width', '0%');
     modal.style.display = "block";
-    document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
+    $('input[type=file]').val('');
 };
 
 span.onclick = function () {
