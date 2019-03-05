@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Repository
@@ -34,7 +35,7 @@ public class ReaderDeliveryServiceImpl extends BaseStorageDeliveryService implem
         List<ExcelDelivery> delivers;
 
         if (file.isEmpty()) {
-            mapError.put(500, toStr("err.csv.fileEmpty.msg"));
+            mapError.put(500, toStr("CSVファイルが空です。"));
         }
 
         delivers = readExcelDelivery(file);
@@ -101,12 +102,14 @@ public class ReaderDeliveryServiceImpl extends BaseStorageDeliveryService implem
 
     public void validateDataAndSetMap(List<ExcelDelivery> delivers) {
         AtomicReference<HashSet<String>> setDelivery = new AtomicReference<>(new HashSet<>());
+        AtomicInteger row = new AtomicInteger(1);
 
         delivers.forEach(excelDelivery -> {
-            int row = 1;
-            validateData(row, excelDelivery);
-            row++;
-            setDelivery.set(setDataWithCsvDelivery(excelDelivery, setDelivery.get()));
+            validateData(row.get(), excelDelivery);
+            row.getAndIncrement();
+
+            if (!checkExistsMapError())
+                setDelivery.set(setDataWithCsvDelivery(excelDelivery, setDelivery.get()));
         });
     }
 
@@ -122,6 +125,7 @@ public class ReaderDeliveryServiceImpl extends BaseStorageDeliveryService implem
             List<ExcelDelivery> deliveryIterator = readExcelDelivery(file);
 
             if (deliveryIterator.size() > 0) {
+
                 validateDataAndSetMap(deliveryIterator);
 
                 saveDataDeliveryAndWithSaveTrainingData(tenantId, userId, typeUploadFile);

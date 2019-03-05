@@ -1,6 +1,5 @@
 package com.lyna.web.domain.storagefile.service.serviceImp;
 
-import com.lyna.commons.utils.Constants;
 import com.lyna.web.domain.delivery.repository.DeliveryRepository;
 import com.lyna.web.domain.reader.service.impl.BaseStorageDeliveryService;
 import com.lyna.web.domain.storagefile.StorageProperties;
@@ -45,7 +44,7 @@ public class FileDeliveryStorageService extends BaseStorageDeliveryService imple
         initDataDelivery();
 
         if (file.isEmpty()) {
-            mapError.put(500, toStr("err.csv.fileEmpty.msg") + filename);
+            mapError.put(500, "CSVファイルが空です。");
         }
 
         if (filename.contains("..")) {
@@ -58,23 +57,22 @@ public class FileDeliveryStorageService extends BaseStorageDeliveryService imple
             validateDataUploadDelivery(deliveryIterator);
             saveDataDeliveryAndWithSaveTrainingData(tenantId, userId, typeUploadFile);
         } catch (Exception ex) {
-            mapError.put(502, toStr(READ_FILE_FAILED));
+            mapError.put(502, "ファイルの読み込み中にエラーが発生しました。");
         }
         return mapError;
     }
 
     private void validateDataUploadDelivery(Iterator<CsvDelivery> deliveryIterator) {
         HashSet<String> setDelivery = new HashSet<>();
+        int row = 1;
 
         while (deliveryIterator.hasNext()) {
             CsvDelivery csvDelivery = deliveryIterator.next();
-            int row = 1;
             validateData(row, csvDelivery);
             row++;
 
-            setDelivery = setDataWithCsvDelivery(csvDelivery, setDelivery);
+            if (!checkExistsMapError())
+                setDelivery = setDataWithCsvDelivery(csvDelivery, setDelivery);
         }
     }
-
-
 }

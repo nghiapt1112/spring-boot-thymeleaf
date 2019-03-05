@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
 public abstract class BaseService {
     @Autowired
     protected Environment env;
-    protected Map<Integer, String> mapError;
+    protected Map<Integer, String> mapError = new HashMap<>();
     @Autowired
     private MessageSource messageSource;
 

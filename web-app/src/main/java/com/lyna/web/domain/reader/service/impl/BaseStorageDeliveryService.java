@@ -37,7 +37,6 @@ public abstract class BaseStorageDeliveryService extends BaseStorageService {
     protected Set<Store> storeIterable;
     protected Set<Delivery> deliveryIterable;
     protected Set<DeliveryDetail> deliveryDetailIterable;
-    protected String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     protected Map<String, Map<String, BigDecimal>> mapOrderPackageIdAmount;
     protected Map<String, String> setStoreCodePost;
     protected Map<String, String> mapStoreCodeStoreId;
@@ -154,13 +153,14 @@ public abstract class BaseStorageDeliveryService extends BaseStorageService {
         if (mapError.size() == 0) {
             try {
                 setMapDataDelivery(tenantId, userId, typeUploadFile);
-                if (!storeIterable.isEmpty() || !postCoursesIterable.isEmpty() || !deliveryIterable.isEmpty() || !deliveryDetailIterable.isEmpty()) {
+
+                if (!deliveryIterable.isEmpty() && !deliveryDetailIterable.isEmpty()) {
                     saveDataDelivery();
                 }
 
                 if (mapOrderIdProductIdAmount.size() > 0 && mapOrderPackageIdAmount.size() > 0)
                     trainingService.saveMap(mapOrderIdProductIdAmount, mapOrderPackageIdAmount, tenantId, userId);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 throw new StorageException(" CSVファイルの保存に失敗しました。");
             }
         }
