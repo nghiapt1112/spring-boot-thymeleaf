@@ -82,24 +82,30 @@ $(function () {
 });
 
 var modal = document.getElementById('myModal');
-var btn = document.getElementById("myBtn");
-var btndelivery = document.getElementById("deliveryBtn");
-var span = document.getElementsByClassName("close")[0];
-btn.onclick = function () {
+var btnOrder = document.getElementById("myBtn");
+var btnDelivery = document.getElementById("deliveryBtn");
+var els = document.getElementsByClassName("close");
+btnOrder.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "1";
     $('#alertMsg').text('');
+    $('input[type=file]').val('');
 };
 
-btndelivery.onclick = function () {
+for (var i = 0; i < els.length; i++) {
+    els[i].onclick = function () {
+        modal.style.display = "none";
+    }
+}
+
+btnDelivery.onclick = function () {
     modal.style.display = "block";
     document.getElementById("quizID").value = "2";
     $('#alertMsg').text('');
+    $('input[type=file]').val('');
 };
 
-span.onclick = function () {
-    modal.style.display = "none";
-};
+
 
 window.onclick = function (event) {
     if (event.target == modal) {

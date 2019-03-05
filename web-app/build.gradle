@@ -43,6 +43,14 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
 
 
+
+// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.1'
+
+// https://mvnrepository.com/artifact/org.apache.poi/poi
+    compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
+
+
     implementation('org.springframework.data:spring-data-commons:2.0.9.RELEASE')
 }
 
