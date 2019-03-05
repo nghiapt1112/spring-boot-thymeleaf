@@ -3,6 +3,7 @@ package com.lyna.web.domain.trainningData.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyna.commons.infrustructure.service.BaseService;
+import com.lyna.web.domain.stores.exception.StoreException;
 import com.lyna.web.domain.trainningData.Training;
 import com.lyna.web.domain.trainningData.repository.TrainingRepository;
 import com.lyna.web.domain.trainningData.service.TrainingService;
@@ -32,8 +33,8 @@ public class TrainingServiceImpl extends BaseService implements TrainingService 
         mapOrderIdProductIdAmount.forEach((orderId, mapProduct) -> {
             Training trainingData = mapTraining.get(orderId);
             ObjectMapper mapper = new ObjectMapper();
-            String jsonInputItems = "";
-            String jsonOutputItems = "";
+            String jsonInputItems;
+            String jsonOutputItems;
             try {
                 jsonInputItems = mapper.writerWithDefaultPrettyPrinter()
                         .writeValueAsString(mapProduct);
@@ -41,7 +42,7 @@ public class TrainingServiceImpl extends BaseService implements TrainingService 
                 jsonOutputItems = mapper.writerWithDefaultPrettyPrinter()
                         .writeValueAsString(mapOrderPackageIdAmount.get(orderId));
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                throw new StoreException(503, "データトレーニング文字列からJsonまで変換するときにエラが発生されました。");
             }
 
             if (trainingData != null) {

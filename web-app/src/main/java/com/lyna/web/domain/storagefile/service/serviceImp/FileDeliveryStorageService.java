@@ -57,7 +57,7 @@ public class FileDeliveryStorageService extends BaseStorageDeliveryService imple
             validateDataUploadDelivery(deliveryIterator);
             saveDataDeliveryAndWithSaveTrainingData(tenantId, userId, typeUploadFile);
         } catch (Exception ex) {
-            mapError.put(502, "CSVファイルを読み取れない。");
+            mapError.put(502, "ファイルの読み込み中にエラーが発生しました。");
         }
         return mapError;
     }

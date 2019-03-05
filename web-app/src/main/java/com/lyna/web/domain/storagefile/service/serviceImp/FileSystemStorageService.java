@@ -19,7 +19,10 @@ import com.lyna.web.domain.stores.repository.StoreRepository;
 import com.lyna.web.domain.user.User;
 import com.lyna.web.domain.view.CsvOrder;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -47,7 +50,6 @@ import static com.lyna.commons.utils.DateTimeUtils.converStringToDate;
 
 @Service
 public class FileSystemStorageService extends BaseStorageService implements StorageService {
-    private String READ_FILE_FAILED = "err.csv.readFileFailed.msg";
     private List<String> listStoreCode;
     private List<String> listProductCode;
     private List<String> ListPost;
@@ -152,7 +154,7 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
                 throw new StorageException("Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StorageException(toStr(READ_FILE_FAILED) + filename, e);
+            throw new StorageException("エラーになっている+" + filename + "ファイルを保存する。");
         }
     }
 
@@ -196,18 +198,18 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         } catch (Exception ex) {
             mapError.put(toInteger("err.csv.saveFileFailed.code"), toStr("err.csv.saveFileFailed.msg"));
         }
-        return null;
+        return new HashMap<>();
     }
 
     @Override
     public List<CSVRecord> getMapData(MultipartFile file) {
-        List<CSVRecord> recordList = null;
+        List<CSVRecord> recordList = new ArrayList<>();
         try (InputStream inputStream = file.getInputStream()) {
             Reader reader = new InputStreamReader(inputStream);
             recordList = orderService.getDataOrder(reader);
             return recordList;
         } catch (Exception ex) {
-            mapError.put(502, toStr(READ_FILE_FAILED));
+            mapError.put(502, "ファイルの読み込み中にエラーが発生しました。");
         }
         return recordList;
     }
@@ -218,7 +220,7 @@ public class FileSystemStorageService extends BaseStorageService implements Stor
         try {
             return fileRepository.readFileHeader(resource.getInputStream());
         } catch (IOException e) {
-            throw new StorageException(toStr(READ_FILE_FAILED));
+            throw new StorageException("ファイル読み取りはエラー");
         }
     }
 
