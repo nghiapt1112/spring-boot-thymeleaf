@@ -6,19 +6,18 @@ $(document).ready(function () {
         format: 'yyyy/mm/dd'
     });
 
-    var width = $(".dataTables_scrollHeadInner").width();
-    $("#logisticsButtonClick").click(function () {
-        $(this).closest("body").find("#logisticsButtonClickTranfer").trigger("click")
+    $("#orderButtonClick").click(function () {
+       var _this = $(this);
+        setTimeout(function () {
+            _this.closest("body").find("#logisticsButtonClickTranfer").trigger("click");
+        },170)
     });
     $("#logisticsButtonClickTranfer").click(function () {
-        $(this).closest("body").find(".dataTables_scrollHeadInner").css("width", width);
-        $(this).closest("body").find(".dataTables_scrollHeadInner").find("table").css("width", width);
-
+        $("#setWidthHederForOrder").click();
     })
+    onLogistics();
+    onOrderDetails();
 });
-
-onLogistics();
-
 $(function () {
     $('button[type=submit]').click(function (e) {
         if (document.getElementById("files").files.length == 0) {
@@ -146,7 +145,7 @@ function onLogistics() {
 }
 
 function onOrderDetails() {
-    exportDataMainmenu('#table-order', 0, '発注データ明細', false, false);
+    exportDataMainmenu('#table-order', 0, '発注データ明細', true, true);
 }
 
 
